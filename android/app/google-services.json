@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "791604879416",
+    "firebase_url": "https://enreda-d3b41.firebaseio.com",
+    "project_id": "enreda-d3b41",
+    "storage_bucket": "enreda-d3b41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791604879416:android:319aa93a85291a6ee086cd",
+        "android_client_info": {
+          "package_name": "org.sic4change.enreda_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791604879416-4kgdq267i6qdutk56llo04qaf6igvq96.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.sic4change.enreda_app",
+            "certificate_hash": "2dea269a3866ed592e82a8ab38f9e6984e2dc4a8"
+          }
+        },
+        {
+          "client_id": "791604879416-gp99r1rsv3maqgdagfjdd6833k1rcj2k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.sic4change.enreda_app",
+            "certificate_hash": "91908c8fab255f84aea4b119267971971fa09afe"
+          }
+        },
+        {
+          "client_id": "791604879416-prbg8doh4veabe80s3m1kj4dqd0td14e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlgBp23w5QCr2kQ40u2xcf9Vs-gocrZGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791604879416-dss8uks22uguoai8ose3cchbkalpmc43.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "791604879416-g9tit6u4qfcjl258daauc68dik9gdldj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.sic4change.enredaApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791604879416:android:5340cb517d0e429fe086cd",
+        "android_client_info": {
+          "package_name": "org.sic4change.enreda_empresas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791604879416-e9v1qjus7ipo2v001ligmab6inuq65h2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.sic4change.enreda_empresas",
+            "certificate_hash": "d79b578705cd073430ea0c6451ebcb48b3a4f607"
+          }
+        },
+        {
+          "client_id": "791604879416-prbg8doh4veabe80s3m1kj4dqd0td14e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlgBp23w5QCr2kQ40u2xcf9Vs-gocrZGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791604879416-dss8uks22uguoai8ose3cchbkalpmc43.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "791604879416-g9tit6u4qfcjl258daauc68dik9gdldj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.sic4change.enredaApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
