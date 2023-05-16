@@ -21,8 +21,8 @@ class _PrecacheAvatarCardState extends State<PrecacheAvatarCard> {
     super.initState();
     profileImage = FadeInImage.assetNetwork(
       placeholder: ImagePath.USER_DEFAULT,
-      width: 120,
-      height: 120,
+      width: 35,
+      height: 35,
       fit: BoxFit.cover,
       image: widget.imageUrl,
     );

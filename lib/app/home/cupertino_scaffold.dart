@@ -40,7 +40,7 @@ class CupertinoScaffold extends StatelessWidget {
           ),
       TabItem.account: (_) => Stack(
             children: const [
-              AccountPage(),
+              //AccountPage(),
             ],
           )
     };

@@ -36,7 +36,7 @@ class Organization {
 
   factory Organization.fromMap(Map<String, dynamic> data, String documentId) {
 
-    final Address? address = new Address(
+    final Address address = Address(
         country: data['address']['country'],
         province: data['address']['province'],
         city: data['address']['city'],
@@ -75,7 +75,7 @@ class Organization {
       valueNature = '';
     }
 
-    nature = new Nature(
+    nature = Nature(
       natureId: natureId,
       label: labelNature,
       value: valueNature,
@@ -107,7 +107,7 @@ class Organization {
       orderScope = 0;
     }
 
-    scope = new Scope(
+    scope = Scope(
       scopeId: scopeId,
       label: labelScope,
       value: valueScope,
@@ -140,7 +140,7 @@ class Organization {
       orderSize = 0;
     }
 
-    size = new SizeOrg(
+    size = SizeOrg(
         sizeId: sizeId,
         label: labelSize,
         value: valueSize,

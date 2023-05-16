@@ -1,19 +1,19 @@
 class ResourcePicture {
-  ResourcePicture({this.resourcePictureId, required this.resourcePhoto});
+  ResourcePicture({this.resourcePictureId, required this.resourcePic});
 
   final String? resourcePictureId;
-  final String resourcePhoto;
+  final String resourcePic;
 
   factory ResourcePicture.fromMap(Map<String, dynamic> data, String documentId) {
     return ResourcePicture(
       resourcePictureId: data['id'],
-      resourcePhoto: data['resourcePhoto']['src'],
+      resourcePic: data['resourcePhoto']['src'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'resourcePhoto': resourcePhoto,
+      'resourcePic': resourcePic,
     };
   }
 }

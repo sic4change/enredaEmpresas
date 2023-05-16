@@ -1,74 +1,48 @@
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
-import 'package:enreda_empresas/app/home/organizations/my_company_resources.dart';
+import 'package:enreda_empresas/app/home/resources/my_resources_page.dart';
+import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
-import 'package:enreda_empresas/app/services/auth.dart';
-import 'package:enreda_empresas/app/services/database.dart';
-import 'package:enreda_empresas/app/sign_in/access/access_page.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CompanyPage extends StatefulWidget {
-  const CompanyPage({Key? key}) : super(key: key);
-
+  const CompanyPage({Key? key, required this.organization, required this.user}) : super(key: key);
+final Organization organization;
+final UserEnreda user;
   @override
-  _CompanyPageState createState() => _CompanyPageState();
+  State<CompanyPage> createState() => _CompanyPageState();
 }
 
 class _CompanyPageState extends State<CompanyPage> {
   BuildContext? myContext;
   String codeDialog = '';
   String valueText = '';
-  Widget? _currentPage = const ControlPanelPage();
 
   String _currentPageTitle = StringConst.CONTROL_PANEL;
   String _selectedPageName = StringConst.CONTROL_PANEL;
+  Widget? _currentPage;
 
-  late UserEnreda _userEnreda;
   late TextTheme textTheme;
 
   @override
   void initState() {
+    _currentPage = ControlPanelPage(organization: widget.organization, user: widget.user,);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-    final database = Provider.of<Database>(context, listen: false);
     textTheme = Theme.of(context).textTheme;
-
-    return StreamBuilder<User?>(
-        stream: Provider.of<AuthBase>(context).authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return StreamBuilder<UserEnreda>(
-              stream: database.userEnredaStreamByUserId(auth.currentUser!.uid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  _userEnreda = snapshot.data!;
-                  return Responsive.isDesktop(context) ||
-                          Responsive.isDesktopS(context)
-                      ? _buildDesktopLayout(_userEnreda)
-                      : _buildMobileLayout(_userEnreda, context);
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            );
-          } else if (!snapshot.hasData) {
-            return const AccessPage();
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+    return Responsive.isDesktop(context) ||
+        Responsive.isDesktopS(context)
+        ? _buildDesktopLayout(widget.organization, widget.user)
+        : Container();
   }
 
-  Widget _buildDesktopLayout(UserEnreda userEnreda) {
+  Widget _buildDesktopLayout(Organization organization, UserEnreda user) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Flex(
@@ -77,14 +51,11 @@ class _CompanyPageState extends State<CompanyPage> {
           children: [
             Expanded(
               flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildMyControlPanel(userEnreda),
-                  ],
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildMyControlPanel(organization, user),
+                ],
               ),
             ),
             const SpaceW20(),
@@ -95,9 +66,9 @@ class _CompanyPageState extends State<CompanyPage> {
                 child: Container(
                   padding: EdgeInsets.all(Sizes.mainPadding),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.greyLight, width: 1),
+                    border: Border.all(color: AppColors.greyLight2.withOpacity(0.2), width: 1),
                     borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-                    color: AppColors.white,
+                    color: AppColors.altWhite,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -133,7 +104,7 @@ class _CompanyPageState extends State<CompanyPage> {
         ),
         child: ListView(
           children: <Widget>[
-            _buildMyControlPanel(userEnreda),
+            //_buildMyControlPanel(organization),
             const SpaceH20(),
             _currentPageTitle == StringConst.PERSONAL_DATA.toUpperCase() ||
                     _currentPageTitle == StringConst.MY_CV.toUpperCase()
@@ -162,7 +133,7 @@ class _CompanyPageState extends State<CompanyPage> {
     );
   }
 
-  Widget _buildMyControlPanel(UserEnreda? userEnreda) {
+  Widget _buildMyControlPanel(Organization? organization, UserEnreda? user) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: Sizes.mainPadding),
       decoration: const BoxDecoration(
@@ -176,11 +147,12 @@ class _CompanyPageState extends State<CompanyPage> {
             text: StringConst.CONTROL_PANEL,
             imagePath: ImagePath.ICON_CV,
             onTap: () => setState(() {
-              _currentPage = const ControlPanelPage();
+              _currentPage = ControlPanelPage(organization: organization, user: user,);
               _currentPageTitle = StringConst.CONTROL_PANEL;
               _selectedPageName = StringConst.CONTROL_PANEL;
             }),
           ),
+          const SpaceH8(),
           _buildMyControlPanelRow(
             text: StringConst.PARTICIPANTS,
             imagePath: ImagePath.ICON_PROFILE_BLUE,
@@ -190,11 +162,12 @@ class _CompanyPageState extends State<CompanyPage> {
               _selectedPageName = StringConst.PARTICIPANTS;
             }),
           ),
+          const SpaceH8(),
           _buildMyControlPanelRow(
             text: StringConst.RESOURCES,
             imagePath: ImagePath.ICON_COMPETENCIES,
             onTap: () => setState(() {
-              _currentPage = const CompanyResourcesPage();
+              _currentPage = const MyResourcesPage();
               _currentPageTitle = StringConst.RESOURCES;
               _selectedPageName = StringConst.RESOURCES;
             }),
@@ -210,10 +183,12 @@ class _CompanyPageState extends State<CompanyPage> {
       String? imagePath,
       void Function()? onTap}) {
     return Material(
+      borderRadius: BorderRadius.circular(10),
       color: text == _selectedPageName
           ? AppColors.violet
           : AppColors.white,
       child: InkWell(
+        borderRadius: BorderRadius.circular(10),
         splashColor: AppColors.lightLilac,
         highlightColor: AppColors.violet,
         hoverColor: text == _selectedPageName
@@ -221,7 +196,7 @@ class _CompanyPageState extends State<CompanyPage> {
             : AppColors.lightLilac,
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               if (imagePath != null)
@@ -250,3 +225,4 @@ class _CompanyPageState extends State<CompanyPage> {
   }
 
 }
+

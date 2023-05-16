@@ -213,6 +213,7 @@ class StringConst {
   static const String USE_CONDITIONS_URL = "https://firebasestorage.googleapis.com/v0/b/enreda-d3b41.appspot.com/o/condiciones.html?alt=media&token=95f2b0f5-cd12-4a43-80a6-0cb32788f380";
   static const String ADMIN_WEB_URL = 'https://enreda-d3b41.firebaseapp.com/#/login';
   static const String WEB_APP_URL = 'https://enredawebapp.web.app/';
+  static const String WEB_APP_URL_ACCESS = 'https://enredawebapp.web.app/access';
   static const String NEW_WEB_APP_URL = 'https://www.enredas.org/';
 
   //Contact form
@@ -241,7 +242,9 @@ class StringConst {
   static const String BETTER_FROM_APPS = 'enREDa es mejor desde nuestras Apps';
   static const String ACCESS_FROM_BROWSER = 'Acceder desde el navegador';
   static const String ARE_YOU_ADMIN = '¿Eres organización, mentor o administrador?';
+  static const String ARE_YOU_YOUNG = '¿Eres usuario joven?';
   static const String GO_ADMIN_WEB = 'Ir a la web de administración';
+  static const String GO_YOUNG_WEB = 'Ir a la web de jóvenes';
 
   //Packages Names
   static const String ANDROID_PACKAGE_NAME = 'org.sic4change.enreda_app';
@@ -448,7 +451,7 @@ class StringConst {
   // Companies
   static const String CONTROL_PANEL = "Panel de control";
   static const String PARTICIPANTS = "Participantes";
-  static const String WELCOME_COMPANY = "Bienvenida a la aplicación,";
+  static const String WELCOME_COMPANY = "Bienvenido a la aplicación,";
   static const String WELCOME_TEXT = "Esta es tu ventana de administración. Según tu rol, puedes visualizar, editar y eliminar todos los recursos disponibles en esta web. Por favor, procede con precaución.";
 
   static const String LOREM_IMPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque, tortor amet, adipiscing felis nullam. Aliquet commodo est pretium vitae hendrerit fames vitae. Orci, feugiat consectetur aliquet sodales mus sodales a urna.\n\n'
