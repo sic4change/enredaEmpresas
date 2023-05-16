@@ -30,10 +30,10 @@ class ListItemBuilderGrid<T> extends StatelessWidget {
             title: emptyTitle ?? '', message: emptyMessage ?? '');
       }
     } else if (snapshot.hasError) {
-      return EmptyContent(
+      return const EmptyContent(
           title: 'Algo fue mal', message: 'No se pudo cargar los datos');
     }
-    return Center(child: CircularProgressIndicator());
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _build(BuildContext context, List<T> items) {
@@ -56,16 +56,14 @@ class ListItemBuilderGrid<T> extends StatelessWidget {
       return MasonryGridView.count(
         controller: ScrollController(),
         shrinkWrap: constraints.maxWidth < 550 ? true : false,
-        padding: EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4.0),
         itemCount: items.length,
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: 15,
         crossAxisSpacing: 15,
         itemBuilder: (context, index) {
-          return Container(
-              height: index.isEven || constraints.maxWidth < 550
-                  ? tileWidth / 1.3
-                  : tileWidth * 1.5,
+          return SizedBox(
+              height: tileWidth / 1.1,
               child: itemBuilder(context, items[index]));
         },
       );

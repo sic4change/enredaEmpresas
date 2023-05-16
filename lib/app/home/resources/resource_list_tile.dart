@@ -63,8 +63,15 @@ class _ResourceListTileState extends State<ResourceListTile> {
             onTap: widget.onTap,
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.penBlue, width: 1),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.greyAlt.withOpacity(0.15),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: const Offset(1, 1), // changes position of shadow
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,7 +83,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                           topLeft: Radius.circular(10)),
                       color: Colors.white,
                     ),
-                    height: 150,
+                    height: 115,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -124,11 +131,9 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                                 '',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: textTheme.bodyText1?.copyWith(
+                                        style: textTheme.bodySmall?.copyWith(
                                           color: AppColors.greyDark,
                                           height: 1.5,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: fontSize,
                                         ),
                                       ),
                                       Row(
@@ -147,11 +152,9 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style:
-                                                    textTheme.bodyText1?.copyWith(
+                                                    textTheme.bodySmall?.copyWith(
                                                   color: AppColors.greyDark,
                                                   height: 1.5,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: fontSize,
                                                 ),
                                               ),
                                             ),
@@ -161,53 +164,16 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      PopupMenuButton<int>(
-                                        onSelected: (int value) {
-                                          auth.currentUser == null
-                                              ? _displayReportDialogVisitor(context, widget.resource)
-                                              : _displayReportDialog(context, widget.resource);
-                                        },
-                                        itemBuilder: (context) {
-                                          return List.generate(1, (index) {
-                                            return PopupMenuItem(
-                                              value: 1,
-                                              child:
-                                                  Text('Denunciar el recurso',
-                                                    style: textTheme.button?.copyWith(
-                                                      height: 1.5,
-                                                      color: AppColors.red,
-                                                      fontWeight: FontWeight.w700,
-                                                    ),),
-                                            );
-                                          });
-                                        },
-                                        child: Column(
-                                          children: const [
-                                            Icon(
-                                              Icons.more_vert,
-                                              color: AppColors.greyDark,
-                                              size: 20,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                               ],
                             ),
                           ),
                         ),
                         const SpaceH4(),
-                        Container(
-                          height: 80,
+                        SizedBox(
+                          height: 45,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              const SpaceH8(),
                               Padding(
                                 padding: EdgeInsets.only(
                                     left: sidePadding, right: sidePadding),
@@ -217,7 +183,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                   textAlign: TextAlign.left,
                                   maxLines: 1,
                                   style: TextStyle(
-                                      letterSpacing: 1.1,
+                                      letterSpacing: 1,
                                       fontSize: fontSize,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.lilac),
@@ -232,7 +198,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                   textAlign: TextAlign.left,
                                   maxLines: 2,
                                   style: TextStyle(
-                                    letterSpacing: 1.1,
+                                    letterSpacing: 1,
                                     fontSize: fontSize,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.penBlue,
@@ -274,44 +240,15 @@ class _ResourceListTileState extends State<ResourceListTile> {
                           bottomLeft: Radius.circular(10)),
                       color: AppColors.white,
                     ),
-                    height: 50,
+                    height: 40,
                     child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: sidePadding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        auth.currentUser == null
-                            ? IconButton(
-                                icon: const FaIcon(FontAwesomeIcons.heart),
-                                tooltip: 'Me gusta',
-                                color: AppColors.darkGray,
-                                iconSize: 20,
-                                //onPressed: () => showAlertNullUser(context),
-                                onPressed: () => {},
-                              )
-                            : widget.resource.likes
-                                    .contains(auth.currentUser!.uid)
-                                ? IconButton(
-                                    icon: const FaIcon(
-                                        FontAwesomeIcons.solidHeart),
-                                    tooltip: 'Me gusta',
-                                    color: AppColors.red,
-                                    iconSize: 20,
-                                    onPressed: () {
-                                      _removeUserToLike(widget.resource,
-                                          auth.currentUser!.uid);
-                                    },
-                                  )
-                                : IconButton(
-                                    icon: const FaIcon(FontAwesomeIcons.heart),
-                                    tooltip: 'Me gusta',
-                                    color: AppColors.darkGray,
-                                    onPressed: () {
-                                      _addUserToLike(widget.resource);
-                                    },
-                                  ),
-                        const Spacer(),
+                      children: const [
+
+                        Spacer(),
                         // buildShareButton(
                         //     context, widget.resource, AppColors.greyDark),
                       ],
@@ -520,7 +457,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
       );
       try {
         final database = Provider.of<Database>(context, listen: false);
-        await database.addContact(contact);
+        //await database.addContact(contact);
         showAlertDialog(
           context,
           title: 'Mensaje ensaje enviado',
@@ -543,7 +480,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
       final auth = Provider.of<AuthBase>(context, listen: false);
       final database = Provider.of<Database>(context, listen: false);
       resource.likes.add(auth.currentUser!.uid);
-      await database.setResource(resource);
+      //await database.setResource(resource);
       setState(() {
         widget.resource;
       });
@@ -553,7 +490,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
   Future<void> _removeUserToLike(Resource resource, String userId) async {
     final database = Provider.of<Database>(context, listen: false);
     resource.likes.remove(userId);
-    await database.setResource(resource);
+    //await database.setResource(resource);
     setState(() {
       widget.resource;
     });
@@ -669,7 +606,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                               'Tenemos una queja de este recurso: ${resource.title}.  ${valueText}');
                       final database =
                           Provider.of<Database>(context, listen: false);
-                      database.addContact(contact);
+                      //database.addContact(contact);
                       showAlertDialog(
                         context,
                         title: 'Mensaje ensaje enviado',

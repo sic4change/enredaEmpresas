@@ -28,7 +28,7 @@ class Resource {
     required this.start,
     required this.end,
     this.temporality,
-    this.link,
+    this.resourceLink,
     required this.status,
     required this.participants,
     this.assistants,
@@ -72,7 +72,7 @@ class Resource {
     final DateTime start = DateTime.parse(data['start'].toDate().toString());
     final DateTime end =  DateTime.parse(data['end'].toDate().toString());
     final String? temporality = data['temporality'];
-    final String? link = data['link'];
+    final String? resourceLink = data['resourceLink'];
     final String status = data['status'];
     final String? resourcePictureId = data['resourcePictureId'];
     List<String> participants = [];
@@ -94,7 +94,7 @@ class Resource {
       title: title,
       description: description,
       organizer: organizer,
-        organizerType : organizerType,
+      organizerType : organizerType,
       organizerName: organizerName,
       organizerImage: organizerImage,
       promotor: promotor,
@@ -117,7 +117,7 @@ class Resource {
       start: start,
       end: end,
       temporality: temporality,
-      link: link,
+      resourceLink: resourceLink,
       status: status,
       participants: participants,
       assistants: assistants,
@@ -159,7 +159,7 @@ class Resource {
   final DateTime start;
   final DateTime end;
   final String? temporality;
-  final String? link;
+  final String? resourceLink;
   final String status;
   final List<String> participants;
   String? assistants;
@@ -199,7 +199,7 @@ class Resource {
       'start' : start,
       'end' : end,
       'temporality' : temporality,
-      'link' : link,
+      'resourceLink' : resourceLink,
       'status' : status,
       'participants' : participants,
       'assistants' : assistants,

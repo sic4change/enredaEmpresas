@@ -1,50 +1,23 @@
+import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
-import 'package:enreda_empresas/app/services/auth.dart';
-import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-class ControlPanelPage extends StatefulWidget {
-  const ControlPanelPage({super.key});
+class ControlPanelPage extends StatelessWidget {
+  const ControlPanelPage({super.key, required this.organization, required this.user});
 
-  @override
-  State<ControlPanelPage> createState() => _ControlPanelPageState();
-}
-
-class _ControlPanelPageState extends State<ControlPanelPage> {
-  UserEnreda? user;
-  String? myLocation;
-  String? city;
-  String? province;
-  String? country;
+  final Organization? organization;
+  final UserEnreda? user;
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-    final database = Provider.of<Database>(context, listen: false);
 
-    return Stack(
-      children: [
-        StreamBuilder<List<UserEnreda>>(
-            stream: database.userStream(auth.currentUser?.email ?? ''),
-            builder: (context, snapshot) {
-              if (snapshot.hasData &&
-                  snapshot.connectionState == ConnectionState.active) {
-                user = snapshot.data!.isNotEmpty ? snapshot.data!.first : null;
-                var profilePic = user?.profilePic?.src ?? "";
-                return _myWelcomePage(context, user, profilePic);
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
-      ],
-    );
+    return _myWelcomePage(context);
   }
 
-  Widget _myWelcomePage(BuildContext context, UserEnreda? user, String profilePic){
+  Widget _myWelcomePage(BuildContext context){
     final textTheme = Theme.of(context).textTheme;
     String locale = Localizations.localeOf(context).languageCode;
     DateTime now = new DateTime.now();
@@ -84,7 +57,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: Text('${user?.firstName} ${user?.lastName}',
+                          child: Text('${user?.firstName}',
                             style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 35.0,
@@ -114,31 +87,33 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
-                    child: Stack(
-                      children: [
-                        Text('Hoy', style: textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.0,
-                            color: AppColors.penBlue),),
-                        Text(dayOfNow, style: textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 150.0,
-                            color: AppColors.violet),),
-                        Positioned(
-                          top: 120,
-                          child: Text(dayMonth, style: textTheme.bodyLarge?.copyWith(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+                    child: Center(
+                      child: Stack(
+                        children: [
+                          Text('Hoy', style: textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 40.0,
+                              fontSize: 15.0,
                               color: AppColors.penBlue),),
-                        ),
-                        Positioned(
-                            top: 170,
-                            child: Text(dayOfWeek.toUpperCase(), style: textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 15.0,
-                                color: AppColors.penBlue)),)
-                      ],
+                          Text(dayOfNow, style: textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 150.0,
+                              color: AppColors.violet),),
+                          Positioned(
+                            top: 120,
+                            child: Text(dayMonth, style: textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40.0,
+                                color: AppColors.penBlue),),
+                          ),
+                          Positioned(
+                              top: 165,
+                              child: Text(dayOfWeek.toUpperCase(), style: textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 15.0,
+                                  color: AppColors.penBlue)),)
+                        ],
+                      ),
                     ),
                   ),
                 ))
