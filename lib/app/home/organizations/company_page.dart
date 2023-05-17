@@ -1,6 +1,6 @@
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
-import 'package:enreda_empresas/app/home/resources/my_resources_page.dart';
+import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
@@ -167,7 +167,7 @@ class _CompanyPageState extends State<CompanyPage> {
             text: StringConst.RESOURCES,
             imagePath: ImagePath.ICON_COMPETENCIES,
             onTap: () => setState(() {
-              _currentPage = const MyResourcesPage();
+              _currentPage = const MyResourcesListPage();
               _currentPageTitle = StringConst.RESOURCES;
               _selectedPageName = StringConst.RESOURCES;
             }),

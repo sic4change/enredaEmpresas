@@ -258,6 +258,7 @@ class StringConst {
   static const String SALARY = 'Salario';
   static const String DATE = 'Fecha';
   static const String ALWAYS_AVAILABLE = 'Siempre disponible';
+  static const String MODALITY = 'Modalidad';
   static const String LOCATION = 'Localización';
   static String SHARE_TEXT(String title, String resourceId) => 'El recurso "$title" podría interesarte.\n\nhttps://enredawebapp.web.app/resources/$resourceId';
   static const String JOIN_RESOURCE = 'ME INTERESA PARTICIPAR';
