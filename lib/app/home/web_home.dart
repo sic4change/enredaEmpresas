@@ -4,6 +4,7 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/organizations/company_page.dart';
+import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
@@ -18,8 +19,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sidebarx/sidebarx.dart';
 
-import '../common_widgets/custom_icons.dart';
 
 class WebHome extends StatefulWidget {
   const WebHome({Key? key})
@@ -37,6 +38,8 @@ class WebHome extends StatefulWidget {
 
 class _WebHomeState extends State<WebHome> {
   var bodyWidget = [];
+  final _controller = SidebarXController(selectedIndex: 0, extended: true);
+  final _key = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -92,47 +95,85 @@ class _WebHomeState extends State<WebHome> {
 
   Widget _buildContent(BuildContext context, Organization organization, UserEnreda user, String profilePic){
     final auth = Provider.of<AuthBase>(context, listen: false);
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80,
-        elevation: 0.4,
-        backgroundColor: AppColors.white,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Image.asset(
-                ImagePath.LOGO,
-                height: 20,
+    return Builder(
+      builder: (context) {
+        final isSmallScreen = MediaQuery.of(context).size.width < 600;
+        return Scaffold(
+          key: _key,
+          appBar: AppBar(
+            toolbarHeight: 80,
+            elevation: 0.4,
+            backgroundColor: AppColors.white,
+            leading: isSmallScreen ? IconButton(
+              onPressed: () {
+                _key.currentState?.openDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            ) : Container(),
+            title: Row(
+              children: [
+                Image.asset(
+                  ImagePath.LOGO,
+                  height: 20,
+                ),
+                _buildMyCompanyName(context, organization),
+              ],
+            ),
+            actions: <Widget>[
+              InkWell(
+                  onTap: () {
+                  },
+                  child: _buildMyUserFoto(context, profilePic)
               ),
-              _buildMyCompanyName(context, organization),
+              const SizedBox(width: 10),
+              if (!auth.isNullUser)
+                SizedBox(
+                  width: 30,
+                  child: InkWell(
+                    onTap: () => _confirmSignOut(context),
+                    child: Image.asset(
+                      ImagePath.LOGOUT,
+                      height: Sizes.ICON_SIZE_30,
+                    ),),
+                ),
+              const SizedBox(width: 50,)
             ],
           ),
-        ),
-        actions: <Widget>[
-          InkWell(
-              onTap: () {
-                setState(() {
-                  WebHome.selectedIndex.value = 0;
-                });
-              },
-              child: _buildMyUserFoto(context, profilePic)
+          // body: CompanyPage(organization: organization, user: user,),
+          drawer: SideBarWidget(controller: _controller,),
+          body: Row(
+            children: [
+              if(!isSmallScreen) SideBarWidget(controller: _controller),
+              Expanded(child: Center(child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context,child){
+                  switch(_controller.selectedIndex){
+                    case 0: _key.currentState?.closeDrawer();
+                    return ControlPanelPage(organization: organization, user: user,);
+                    case 1: _key.currentState?.closeDrawer();
+                    return const Center(
+                      child: Text('Search',style: TextStyle(color: Colors.grey,fontSize: 40),),
+                    );
+                    case 2: _key.currentState?.closeDrawer();
+                    return const Center(
+                      child: Text('Settings',style: TextStyle(color: Colors.grey,fontSize: 40),),
+                    );
+                    case 3: _key.currentState?.closeDrawer();
+                    return const Center(
+                      child: Text('Theme',style: TextStyle(color: Colors.grey,fontSize: 40),),
+                    );
+                    default:
+                      return const Center(
+                        child: Text('Home',style: TextStyle(color: Colors.grey,fontSize: 40),),
+                      );
+                  }
+                },
+              ),))
+            ],
           ),
-          const SizedBox(width: 10),
-          if (!auth.isNullUser)
-            SizedBox(
-              width: 30,
-              child: InkWell(
-                onTap: () => _confirmSignOut(context),
-                child: Image.asset(
-                  ImagePath.LOGOUT,
-                  height: Sizes.ICON_SIZE_30,
-                ),),
-            ),
-          const SizedBox(width: 50,)
-        ],
-      ),
-      body: CompanyPage(organization: organization, user: user,),
+
+        );
+      }
     );
 
   }
@@ -219,6 +260,99 @@ class _WebHomeState extends State<WebHome> {
     }
   }
 }
+
+
+class SideBarWidget extends StatelessWidget {
+  const SideBarWidget({Key? key, required SidebarXController controller}) : _controller = controller, super(key: key);
+  final SidebarXController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SidebarX(
+      controller: _controller,
+      // theme: const SidebarXTheme(
+      //   decoration: BoxDecoration(
+      //       color: AppColors.altWhite,
+      //   ),
+      //   iconTheme: IconThemeData(
+      //     color: Colors.grey,
+      //   ),
+      //   selectedTextStyle: TextStyle(color: AppColors.lilac),
+      // ),
+      // extendedTheme: const SidebarXTheme(
+      //     width: 200
+      // ),
+      // footerDivider: Divider(color: Colors.grey.withOpacity(0.8), height: 1),
+      // headerBuilder: (context, extended) {
+      //   return const SizedBox(
+      //     height: 50,
+      //   );
+      // },
+      theme: SidebarXTheme(
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.lilac,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        hoverColor: Colors.purple,
+        textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        selectedTextStyle: const TextStyle(color: Colors.white),
+        itemTextPadding: const EdgeInsets.only(left: 30),
+        selectedItemTextPadding: const EdgeInsets.only(left: 30),
+        itemDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.lightTurquoise),
+        ),
+        selectedItemDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: AppColors.ultraLightViolet.withOpacity(0.37),
+          ),
+          gradient:  const LinearGradient(
+            colors: [AppColors.lilac, AppColors.ultraLightViolet],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.28),
+              blurRadius: 30,
+            )
+          ],
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white.withOpacity(0.7),
+          size: 20,
+        ),
+        selectedIconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+      extendedTheme: const SidebarXTheme(
+        width: 200,
+        decoration: BoxDecoration(
+          color: AppColors.turquoise,
+        ),
+      ),
+      footerDivider: Divider(color: Colors.grey.withOpacity(0.8), height: 1),
+      headerBuilder: (context, extended) {
+        return SizedBox(
+          height: 100,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Image.asset('assets/images/avatar.png'),
+          ),
+        );
+      },
+      items: const [
+        SidebarXItem(icon: Icons.home, label: 'Home'),
+        SidebarXItem(icon: Icons.search, label: 'Search'),
+        SidebarXItem(icon: Icons.settings, label: 'Setting'),
+        SidebarXItem(icon: Icons.dark_mode, label: 'Light/Dark Mode'),
+      ],
+    );
+  }
+}
+
 
 Future<void> _unemployedSignOut(BuildContext context) async {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
