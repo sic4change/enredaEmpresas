@@ -1,5 +1,6 @@
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
+import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +29,13 @@ class ControlPanelPage extends StatelessWidget {
     return Column(
       children: [
         Flex(
-          direction: Axis.horizontal,
+          direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 6,
+              flex: Responsive.isMobile(context) ? 0 : 6,
               child: Container(
-                height: 230,
+                height: 260,
                   margin: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -76,9 +77,9 @@ class ControlPanelPage extends StatelessWidget {
                   )),
             ),
             Expanded(
-              flex: 2,
+              flex: Responsive.isMobile(context) ? 0 : 2,
                 child: Container(
-                  height: 230,
+                  height: 260,
                   margin: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,

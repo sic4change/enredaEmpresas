@@ -5,6 +5,7 @@ import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/organizations/company_page.dart';
 import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
+import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
@@ -116,7 +117,7 @@ class _WebHomeState extends State<WebHome> {
                   ImagePath.LOGO,
                   height: 20,
                 ),
-                _buildMyCompanyName(context, organization),
+                !isSmallScreen ? _buildMyCompanyName(context, organization) : Container(),
               ],
             ),
             actions: <Widget>[
@@ -152,20 +153,12 @@ class _WebHomeState extends State<WebHome> {
                     return ControlPanelPage(organization: organization, user: user,);
                     case 1: _key.currentState?.closeDrawer();
                     return const Center(
-                      child: Text('Search',style: TextStyle(color: Colors.grey,fontSize: 40),),
+                      child: Text('Participantes',style: TextStyle(color: Colors.grey,fontSize: 40),),
                     );
                     case 2: _key.currentState?.closeDrawer();
-                    return const Center(
-                      child: Text('Settings',style: TextStyle(color: Colors.grey,fontSize: 40),),
-                    );
-                    case 3: _key.currentState?.closeDrawer();
-                    return const Center(
-                      child: Text('Theme',style: TextStyle(color: Colors.grey,fontSize: 40),),
-                    );
+                    return const MyResourcesListPage();
                     default:
-                      return const Center(
-                        child: Text('Home',style: TextStyle(color: Colors.grey,fontSize: 40),),
-                      );
+                      return const MyResourcesListPage();
                   }
                 },
               ),))
@@ -268,86 +261,66 @@ class SideBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 600;
     return SidebarX(
       controller: _controller,
-      // theme: const SidebarXTheme(
-      //   decoration: BoxDecoration(
-      //       color: AppColors.altWhite,
-      //   ),
-      //   iconTheme: IconThemeData(
-      //     color: Colors.grey,
-      //   ),
-      //   selectedTextStyle: TextStyle(color: AppColors.lilac),
-      // ),
-      // extendedTheme: const SidebarXTheme(
-      //     width: 200
-      // ),
-      // footerDivider: Divider(color: Colors.grey.withOpacity(0.8), height: 1),
-      // headerBuilder: (context, extended) {
-      //   return const SizedBox(
-      //     height: 50,
-      //   );
-      // },
       theme: SidebarXTheme(
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: AppColors.lilac,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(20),
         ),
-        hoverColor: Colors.purple,
-        textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-        selectedTextStyle: const TextStyle(color: Colors.white),
+        hoverColor: AppColors.lightLilac,
+        textStyle: const TextStyle(color: AppColors.penBlue, fontWeight: FontWeight.w800),
+        selectedTextStyle: const TextStyle(color: AppColors.penBlue, fontWeight: FontWeight.w800),
         itemTextPadding: const EdgeInsets.only(left: 30),
         selectedItemTextPadding: const EdgeInsets.only(left: 30),
         itemDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.lightTurquoise),
         ),
         selectedItemDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: AppColors.ultraLightViolet.withOpacity(0.37),
+            color: AppColors.violet,
           ),
-          gradient:  const LinearGradient(
-            colors: [AppColors.lilac, AppColors.ultraLightViolet],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.28),
-              blurRadius: 30,
-            )
-          ],
+          color: AppColors.violet,
         ),
-        iconTheme: IconThemeData(
-          color: Colors.white.withOpacity(0.7),
+        iconTheme: const IconThemeData(
+          color: AppColors.penBlue,
           size: 20,
         ),
         selectedIconTheme: const IconThemeData(
-          color: Colors.white,
+          color: AppColors.penBlue,
           size: 20,
         ),
       ),
       extendedTheme: const SidebarXTheme(
         width: 200,
         decoration: BoxDecoration(
-          color: AppColors.turquoise,
+          color: AppColors.altWhite,
         ),
       ),
       footerDivider: Divider(color: Colors.grey.withOpacity(0.8), height: 1),
       headerBuilder: (context, extended) {
-        return SizedBox(
-          height: 100,
+        return isSmallScreen ? SizedBox(
+          height: 60,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image.asset('assets/images/avatar.png'),
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Image.asset(
+                  ImagePath.LOGO,
+                  height: 20,
+                ),
+              ],
+            ),
           ),
-        );
+        ) : const SizedBox(height: 10,);
       },
       items: const [
-        SidebarXItem(icon: Icons.home, label: 'Home'),
-        SidebarXItem(icon: Icons.search, label: 'Search'),
-        SidebarXItem(icon: Icons.settings, label: 'Setting'),
-        SidebarXItem(icon: Icons.dark_mode, label: 'Light/Dark Mode'),
+        SidebarXItem(icon: Icons.home, label: 'Panel de control'),
+        SidebarXItem(icon: Icons.search, label: 'Participantes'),
+        SidebarXItem(icon: Icons.settings, label: 'Mis recursos'),
       ],
     );
   }

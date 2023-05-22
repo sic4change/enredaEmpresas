@@ -1,4 +1,6 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
+import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/show_back_icon.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/models/city.dart';
@@ -14,6 +16,7 @@ import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -124,7 +127,8 @@ class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
                                         clipBehavior: Clip.hardEdge,
                                         elevation: 0.0,
                                         backgroundColor: Colors.transparent,
-                                        child: Stack(
+                                        child:
+                                        Stack(
                                           children: [
                                             Center(
                                               child: Container(
@@ -138,13 +142,7 @@ class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
                                                     borderRadius:
                                                     BorderRadius.circular(
                                                         20.0),
-                                                    boxShadow: const <BoxShadow>[
-                                                      BoxShadow(
-                                                        color: Colors.black26,
-                                                        blurRadius: 4.0,
-                                                        offset: Offset(0.0, 1.0),
-                                                      ),
-                                                    ]),
+                                                    ),
                                                 padding: EdgeInsets.all(
                                                     Sizes.mainPadding),
                                                 child: resource.organizerImage !=
@@ -168,12 +166,12 @@ class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
                                                     _buildHeader(),
                                                     const SpaceH30(),
                                                     const Divider(),
-                                                    const SpaceH30(),
-                                                    Flexible(
+                                                    Expanded(
                                                         child:
-                                                        _buildBody()),
+                                                        Responsive.isMobile(context) || Responsive.isTablet(context)
+                                                            ? _buildDetailsListViewMobile(context, resource)
+                                                            : _buildDetailsListViewWeb(context, resource)),
                                                     const SpaceH30(),
-                                                    _buildActionButtons(),
                                                   ],
                                                 )
                                                     : const Center(
@@ -255,200 +253,267 @@ class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildDetailsListViewWeb(BuildContext context, Resource resource) {
+    double fontSize = responsiveSize(context, 12, 15, md: 14);
     TextTheme textTheme = Theme.of(context).textTheme;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 6,
-          child: SingleChildScrollView(
-            controller: ScrollController(),
-            child: Text(
-              resource.description,
-              style: textTheme.bodyText1,
-            ),
-          ),
-        ),
-        const SpaceW30(),
-        Expanded(
-          flex: 4,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              border: Border.all(
-                color: AppColors.greyLight,
-              ),
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SpaceH30(),
-                  Text(
-                    StringConst.RESOURCE_TYPE.toUpperCase(),
-                    style: textTheme.bodyText1?.copyWith(
-                        color: AppColors.penBlue, fontWeight: FontWeight.bold),
-                  ),
-                  const SpaceH8(),
-                  Text('${resource.resourceTypeName}', style: textTheme.bodyText1,),
-                  const SpaceH30(),
-                  Text(
-                    StringConst.LOCATION.toUpperCase(),
-                    style: textTheme.bodyText1?.copyWith(
-                        color: AppColors.penBlue, fontWeight: FontWeight.bold),
-                  ),
-                  const SpaceH8(),
-                  Text(_getLocationText(resource), style: textTheme.bodyText1,),
-                  const SpaceH30(),
-                  Text(
-                    StringConst.CAPACITY.toUpperCase(),
-                    style: textTheme.bodyText1?.copyWith(
-                        color: AppColors.penBlue, fontWeight: FontWeight.bold),
-                  ),
-                  const SpaceH8(),
-                  Text('${resource.capacity}', style: textTheme.bodyText1,),
-                  const SpaceH30(),
-                  Text(
-                    StringConst.DATE.toUpperCase(),
-                    style: textTheme.bodyText1?.copyWith(
-                        color: AppColors.penBlue, fontWeight: FontWeight.bold),
-                  ),
-                  const SpaceH8(),
-                  DateFormat('dd/MM/yyyy').format(resource.start) ==
-                      '31/12/2050'
-                      ? Text(
-                    StringConst.ALWAYS_AVAILABLE,
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodyText1,
-                  )
-                      : Text(
-                    '${DateFormat('dd/MM/yyyy').format(resource.start)} - ${DateFormat('dd/MM/yyyy').format(resource.end)}',
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodyText1,
-                  ),
-                  const SpaceH30(),
-                  Text(
-                    StringConst.CONTRACT_TYPE.toUpperCase(),
-                    style: textTheme.bodyText1?.copyWith(
-                        color: AppColors.penBlue, fontWeight: FontWeight.bold),
-                  ),
-                  const SpaceH8(),
-                  Text(
-                    resource.contractType == null ||
-                        resource.contractType!.isEmpty
-                        ? 'Sin especificar'
-                        : resource.contractType!,
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodyText1,
-                  ),
-                  const SpaceH30(),
-                  Text(
-                    StringConst.SALARY.toUpperCase(),
-                    style: textTheme.bodyText1?.copyWith(
-                        color: AppColors.penBlue, fontWeight: FontWeight.bold),
-                  ),
-                  const SpaceH8(),
-                  Text(
-                    resource.salary == null || resource.salary!.isEmpty
-                        ? 'Sin especificar'
-                        : resource.salary!,
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodyText1,
-                  ),
-                  const SpaceH30(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-    /*
-            if (resource.organizerName != null)
-              Center(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 80.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: Responsive.isMobile(context) ? 2 : 4,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 30, right: 30.0),
+              child: SingleChildScrollView(
                 child: Text(
-                  'Recomienda: ${resource.organizerName}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: Constants.textPrimary),
+                  resource.description,
+                  textAlign: TextAlign.left,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: AppColors.greyTxtAlt,
+                    height: 1.5,
+                    fontSize: fontSize,
+                  ),
                 ),
               ),
-              */
+            ),
+          ),
+          Expanded(
+            flex: Responsive.isMobile(context) ? 2 : 2,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.only(top: 30),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.greyDark, width: 1),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextTitle(
+                        title: StringConst.RESOURCE_TYPE.toUpperCase()),
+                    CustomTextBody(text: '${resource.resourceTypeName}'),
+                    const SpaceH16(),
+                    CustomTextTitle(title: StringConst.LOCATION.toUpperCase()),
+                    Row(
+                      children: [
+                        CustomTextBody(text: '${resource.countryName}'),
+                        const CustomTextBody(text: ', '),
+                        CustomTextBody(
+                            text: '${resource.provinceName}'),
+                      ],
+                    ),
+                    const SpaceH16(),
+                    CustomTextTitle(title: StringConst.MODALITY.toUpperCase()),
+                    CustomTextBody(text: resource.modality),
+                    const SpaceH16(),
+                    CustomTextTitle(title: StringConst.CAPACITY.toUpperCase()),
+                    CustomTextBody(text: '${resource.capacity}'),
+                    const SpaceH16(),
+                    CustomTextTitle(title: StringConst.DATE.toUpperCase()),
+                    DateFormat('dd/MM/yyyy').format(resource.start) ==
+                        '31/12/2050'
+                        ? const CustomTextBody(
+                      text: StringConst.ALWAYS_AVAILABLE,
+                    )
+                        : Row(
+                      children: [
+                        CustomTextBody(
+                            text: DateFormat('dd/MM/yyyy')
+                                .format(resource.start)),
+                        const SpaceW4(),
+                        const CustomTextBody(text: '-'),
+                        const SpaceW4(),
+                        CustomTextBody(
+                            text: DateFormat('dd/MM/yyyy')
+                                .format(resource.end))
+                      ],
+                    ),
+                    const SpaceH16(),
+                    (resource.contractType != null && resource.contractType != '')
+                        ? CustomTextTitle(
+                        title: StringConst.CONTRACT_TYPE.toUpperCase())
+                        : Container(),
+                    (resource.contractType != null && resource.contractType != '')
+                        ? CustomTextBody(text: '${resource.contractType}')
+                        : Container(),
+                    const SpaceH4(),
+                    (resource.contractType != null && resource.contractType != '')
+                        ? const SpaceH16()
+                        : Container(),
+                    CustomTextTitle(title: StringConst.DURATION.toUpperCase()),
+                    CustomTextBody(text: resource.duration),
+                    (resource.salary != null && resource.salary != '')
+                        ? Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextTitle(
+                            title: StringConst.SALARY.toUpperCase()),
+                        CustomTextBody(text: '${resource.salary}')
+                      ],
+                    )
+                        : Container(),
+                    const SpaceH4(),
+                    (resource.salary != null && resource.salary != '')
+                        ? const SpaceH16()
+                        : Container(),
+                    resource.temporality == null
+                        ? const SizedBox(
+                      height: 0,
+                    )
+                        : CustomTextBody(text: '${resource.temporality}')
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _buildActionButtons() {
-    final auth = Provider.of<AuthBase>(context);
-    final userId = auth.currentUser?.uid ?? '';
-    final textTheme = Theme.of(context).textTheme;
-
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 6,
-          child: Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () => {},
-                  style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all(resource.participants.contains(userId)
-                          ? AppColors.chatDarkBlue : AppColors.turquoise),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Text(
-                      resource.participants.contains(userId)
-                          ? StringConst.QUIT_RESOURCE
-                          : StringConst.JOIN_RESOURCE,
-                      style: textTheme.bodyText1?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                ),
+  Widget _buildDetailsListViewMobile(BuildContext context, Resource resource) {
+    double fontSize = responsiveSize(context, 12, 15, md: 14);
+    TextTheme textTheme = Theme.of(context).textTheme;
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 30, right: 30.0),
+            child: Text(
+              resource.description,
+              textAlign: TextAlign.left,
+              style: textTheme.bodyText1?.copyWith(
+                color: AppColors.greyTxtAlt,
+                height: 1.5,
+                fontWeight: FontWeight.w400,
+                fontSize: fontSize,
               ),
-              const SpaceW30(),
-              InkWell(
-                mouseCursor: MaterialStateMouseCursor.clickable,
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 4,
-                    top: 2,
-                    right: 4,
-                    bottom: 2,
-                  ),
-                  child: Column(
-                    children: [
-                      (resource.likes.contains(userId))
-                          ? const Icon(
-                        Icons.favorite,
-                        color: AppColors.red,
-                        size: 30,
-                      )
-                          : const Icon(Icons.favorite_outline_outlined,
-                          color: AppColors.darkGray, size: 30),
-                    ],
-                  ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.only(top: 30),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyDark, width: 1),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextTitle(title: StringConst.RESOURCE_TYPE.toUpperCase()),
+                CustomTextBody(text: '${resource.resourceTypeName}'),
+                const SpaceH16(),
+                CustomTextTitle(title: StringConst.LOCATION.toUpperCase()),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextBody(text: resource.modality),
+                    resource.modality == StringConst.ONLINE
+                        ? Container()
+                        : Row(
+                      children: [
+                        CustomTextBody(text: '${resource.countryName}'),
+                        const CustomTextBody(text: ', '),
+                        CustomTextBody(text: '${resource.provinceName}'),
+                      ],
+                    ),
+                  ],
                 ),
+                const SpaceH16(),
+                CustomTextTitle(title: StringConst.CAPACITY.toUpperCase()),
+                CustomTextBody(text: '${resource.capacity}'),
+                const SpaceH16(),
+                CustomTextTitle(title: StringConst.DURATION.toUpperCase()),
+                CustomTextBody(text: resource.duration),
+                const SpaceH16(),
+                (resource.contractType != null && resource.contractType != '')
+                    ? CustomTextTitle(
+                    title: StringConst.CONTRACT_TYPE.toUpperCase())
+                    : Container(),
+                (resource.contractType != null && resource.contractType != '')
+                    ? CustomTextBody(text: '${resource.contractType}')
+                    : Container(),
+                const SpaceH4(),
+                (resource.contractType != null && resource.contractType != '')
+                    ? const SpaceH16()
+                    : Container(),
+                (resource.salary != null && resource.salary != '')
+                    ? Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextTitle(
+                        title: StringConst.SALARY.toUpperCase()),
+                    CustomTextBody(text: '${resource.salary}')
+                  ],
+                )
+                    : Container(),
+                const SpaceH4(),
+                (resource.salary != null && resource.salary != '')
+                    ? const SpaceH16()
+                    : Container(),
+                CustomTextTitle(title: StringConst.DATE.toUpperCase()),
+                DateFormat('dd/MM/yyyy').format(resource.start) == '31/12/2050'
+                    ? const CustomTextBody(
+                  text: StringConst.ALWAYS_AVAILABLE,
+                )
+                    : Row(
+                  children: [
+                    CustomTextBody(
+                        text: DateFormat('dd/MM/yyyy')
+                            .format(resource.start)),
+                    const SpaceW4(),
+                    const CustomTextBody(text: '-'),
+                    const SpaceW4(),
+                    CustomTextBody(
+                        text: DateFormat('dd/MM/yyyy').format(resource.end))
+                  ],
+                ),
+                resource.temporality == null
+                    ? const SizedBox(
+                  height: 0,
+                )
+                    : CustomTextBody(text: '${resource.temporality}')
+              ],
+            ),
+          ),
+          const SpaceH20(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              EnredaButton(
+                buttonTitle: StringConst.JOIN_RESOURCE,
+                onPressed: () => {},
               ),
             ],
           ),
-        ),
-        Expanded(
-          flex: 4,
-          child: Container(),
-        )
-      ],
+          const SpaceH20(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              //buildShareButton(context, resource, AppColors.darkBlue),
+              IconButton(
+                icon: const FaIcon(FontAwesomeIcons.heart),
+                tooltip: 'Me gusta',
+                color: AppColors.penBlue,
+                iconSize: 24,
+                onPressed: () => {},
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
+
 
   Widget _buildMenuButton(BuildContext context, Resource resource) {
     final auth = Provider.of<AuthBase>(context, listen: false);
@@ -536,51 +601,6 @@ class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
             ],
           );
         });
-  }
-
-  String _getLocationText(Resource resource) {
-    switch (resource.modality) {
-      case StringConst.FACE_TO_FACE:
-      case StringConst.BLENDED:
-        {
-          if (resource.cityName != null) {
-            return '${resource.cityName}, ${resource.provinceName}, ${resource.countryName}';
-          }
-
-          if (resource.cityName == null && resource.provinceName != null) {
-            return '${resource.provinceName}, ${resource.countryName}';
-          }
-
-          if (resource.provinceName == null && resource.countryName != null) {
-            return resource.countryName!;
-          }
-
-          if (resource.provinceName != null) {
-            return resource.provinceName!;
-          } else if (resource.countryName != null) {
-            return resource.countryName!;
-          }
-          return resource.modality;
-        }
-
-      case StringConst.ONLINE_FOR_COUNTRY:
-        return StringConst.ONLINE_FOR_COUNTRY
-            .replaceAll('país', resource.countryName!);
-
-      case StringConst.ONLINE_FOR_PROVINCE:
-        return StringConst.ONLINE_FOR_PROVINCE.replaceAll(
-            'provincia', '${resource.provinceName!}, ${resource.countryName!}');
-
-      case StringConst.ONLINE_FOR_CITY:
-        return StringConst.ONLINE_FOR_CITY.replaceAll('ciudad',
-            '${resource.cityName!}, ${resource.provinceName!}, ${resource.countryName!}');
-
-      case StringConst.ONLINE:
-        return StringConst.ONLINE;
-
-      default:
-        return resource.modality;
-    }
   }
 
   Future<void> _displayReportDialogVisitor(
