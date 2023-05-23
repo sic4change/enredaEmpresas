@@ -62,6 +62,7 @@ abstract class Database {
      Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId);
      Stream<List<City>> citiesProvinceStream(String? provinceId);
      Stream<List<UserEnreda>> userStream(String? email);
+     Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList);
 //   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
@@ -219,6 +220,7 @@ class FirestoreDatabase implements Database {
           sort: (lhs, rhs) => lhs.maximumDate.compareTo(rhs.maximumDate),
         );
 
+
 //   @override
 //   Stream<List<Resource>> likeResourcesStream(String userId) =>
 //       _service.collectionStream(
@@ -350,6 +352,17 @@ class FirestoreDatabase implements Database {
       sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
     );
   }
+
+  @override
+  Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList) {
+    return _service.collectionStream<UserEnreda>(
+      path: APIPath.users(),
+      queryBuilder: (query) => query.where('resources', arrayContainsAny: resourceIdList),
+      builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
+      );
+    }
+
 
   @override
   Stream<Organization> organizationStreamById(String? organizationId) =>

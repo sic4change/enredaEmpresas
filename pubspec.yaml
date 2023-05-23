@@ -53,6 +53,9 @@ dependencies:
   url_launcher: ^6.1.11
   country_code_picker: ^3.0.0
   date_time_picker: ^2.1.0
+  sidebarx: ^0.15.0
+  fluttertoast: ^8.2.1
+  share_plus: ^7.0.1
 
 
 dev_dependencies:
