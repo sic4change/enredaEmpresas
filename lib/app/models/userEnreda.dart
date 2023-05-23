@@ -7,7 +7,7 @@ class UserEnreda {
   UserEnreda({
     required this.email,
     this.firstName,
-    // this.lastName,
+    this.lastName,
     // this.gender,
     // this.userId,
     // this.profilePic,
@@ -27,7 +27,8 @@ class UserEnreda {
     this.role,
     // this.showChatWelcome,
     // this.competencies = const {},
-    // this.education,
+    //this.education,
+    this.educationName,
     // this.dataOfInterest = const [],
     // this.languages = const [],
     // this.aboutMe,
@@ -40,7 +41,7 @@ class UserEnreda {
     final String? role = data['role'];
 
     final String? firstName = data['firstName'];
-    // final String? lastName = data['lastName'];
+    final String? lastName = data['lastName'];
     // final String? gender = data['gender'];
     // final String? userId = data['userId'];
     // final String? unemployedType = data['unemployedType'];
@@ -51,6 +52,14 @@ class UserEnreda {
     } catch (e) {
       photo = '';
     }
+
+    String educationName;
+    try {
+      educationName = data['education']['label'];
+    } catch (e) {
+      educationName = '';
+    }
+
     // final String? phone = data['phone'];
     // final DateTime? birthday =
     //     DateTime.parse(data['birthday'].toDate().toString());
@@ -100,7 +109,7 @@ class UserEnreda {
     //     city: city,
     //     postalCode: postalCode);
     //
-    // final Education education = new Education(
+    // final Education education = Education(
     //   label: data['education']['label'],
     //   value: data['education']['value'],
     //   order: data['education']['order'],
@@ -138,7 +147,7 @@ class UserEnreda {
     return UserEnreda(
       email: email,
       firstName: firstName,
-      // lastName: lastName,
+      lastName: lastName,
       // gender: gender,
       // userId: userId,
          photo: photo,
@@ -158,7 +167,8 @@ class UserEnreda {
       // certifications: certifications,
       // showChatWelcome: showChatWelcome,
       // competencies: competencies,
-      // education: education,
+      //education: education,
+      educationName: educationName,
       // dataOfInterest: dataOfInterest,
       // languages: languages,
       // aboutMe: aboutMe,
@@ -168,10 +178,11 @@ class UserEnreda {
 
   final String email;
   final String? firstName;
-  // final String? lastName;
+  final String? lastName;
   // final String? gender;
   // final String? userId;
      String? photo;
+     String? educationName;
   // final ProfilePic? profilePic;
   // final Education? education;
   // final String? phone;
@@ -200,7 +211,7 @@ class UserEnreda {
     return {
       'email': email,
       'firstName': firstName,
-      // 'lastName': lastName,
+      'lastName': lastName,
       // 'gender': gender,
       // 'userId': userId,
       // //'profilePic': profilePic.toMap(),
@@ -218,7 +229,7 @@ class UserEnreda {
       // 'dataOfInterest': dataOfInterest,
       // 'languages': languages,
       // 'aboutMe': aboutMe,
-      // 'education': education?.toMap(),
+      //'education': education?.toMap(),
       'organization': organization,
     };
   }
@@ -230,7 +241,7 @@ class UserEnreda {
   UserEnreda copyWith({
     String? email,
     String? firstName,
-    // String? lastName,
+    String? lastName,
     // String? gender,
     // String? userId,
     // ProfilePic? profilePic,
@@ -249,7 +260,7 @@ class UserEnreda {
     String? role,
     // bool? showChatWelcome,
     // Map<String, String>? competencies,
-    // Education? education,
+    Education? education,
     // List<String>? dataOfInterest,
     // List<String>? languages,
     // String? aboutMe,
@@ -259,7 +270,7 @@ class UserEnreda {
     return UserEnreda(
       email: email ?? this.email,
       firstName: firstName ?? this.firstName,
-      // lastName: lastName ?? this.lastName,
+      lastName: lastName ?? this.lastName,
       // gender: gender ?? this.gender,
       // userId: userId ?? this.userId,
       // profilePic: profilePic ?? this.profilePic,
@@ -278,7 +289,7 @@ class UserEnreda {
       role: role ?? this.role,
       // showChatWelcome: showChatWelcome ?? this.showChatWelcome,
       // competencies: competencies ?? this.competencies,
-      // education: education ?? this.education,
+      //education: education ?? this.education,
       // dataOfInterest: dataOfInterest ?? this.dataOfInterest,
       // languages: languages ?? this.languages,
       // aboutMe: aboutMe ?? this.aboutMe,

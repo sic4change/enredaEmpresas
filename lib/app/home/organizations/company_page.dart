@@ -1,5 +1,6 @@
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
+import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
@@ -157,7 +158,7 @@ class _CompanyPageState extends State<CompanyPage> {
             text: StringConst.PARTICIPANTS,
             imagePath: ImagePath.ICON_PROFILE_BLUE,
             onTap: () => setState(() {
-              _currentPage = Container();
+              _currentPage = const ParticipantsListPage();
               _currentPageTitle = StringConst.PARTICIPANTS;
               _selectedPageName = StringConst.PARTICIPANTS;
             }),

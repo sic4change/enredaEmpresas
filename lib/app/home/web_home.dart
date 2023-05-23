@@ -5,6 +5,7 @@ import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/organizations/company_page.dart';
 import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
+import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
@@ -152,9 +153,7 @@ class _WebHomeState extends State<WebHome> {
                     case 0: _key.currentState?.closeDrawer();
                     return ControlPanelPage(organization: organization, user: user,);
                     case 1: _key.currentState?.closeDrawer();
-                    return const Center(
-                      child: Text('Participantes',style: TextStyle(color: Colors.grey,fontSize: 40),),
-                    );
+                    return const ParticipantsListPage();
                     case 2: _key.currentState?.closeDrawer();
                     return const MyResourcesListPage();
                     default:
