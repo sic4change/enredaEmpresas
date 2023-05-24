@@ -5,8 +5,6 @@ import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/resources/build_share_button.dart';
-import 'package:enreda_empresas/app/home/resources/resource_actions.dart';
 import 'package:enreda_empresas/app/models/contact.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
@@ -16,7 +14,6 @@ import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ResourceListTile extends StatefulWidget {
@@ -48,8 +45,6 @@ class _ResourceListTileState extends State<ResourceListTile> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 15, 15, md: 13);
     double sidePadding = responsiveSize(context, 15, 20, md: 17);
@@ -63,6 +58,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
             onTap: widget.onTap,
             child: Container(
               decoration: BoxDecoration(
+                border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(

@@ -9,16 +9,16 @@ class UserEnreda {
     this.firstName,
     this.lastName,
     // this.gender,
-    // this.userId,
+    this.userId,
     // this.profilePic,
        this.photo,
-    // this.phone,
+    this.phone,
     // this.birthday,
     // this.country,
     // this.province,
     // this.city,
     // this.postalCode,
-    // this.address,
+    this.address,
     // this.specificInterests = const [],
     // this.interests = const [],
     // this.abilities,
@@ -33,6 +33,7 @@ class UserEnreda {
     // this.languages = const [],
     // this.aboutMe,
     this.organization,
+    required this.resources,
   });
 
   factory UserEnreda.fromMap(Map<String, dynamic> data, String documentId) {
@@ -43,7 +44,7 @@ class UserEnreda {
     final String? firstName = data['firstName'];
     final String? lastName = data['lastName'];
     // final String? gender = data['gender'];
-    // final String? userId = data['userId'];
+    final String? userId = data['userId'];
     // final String? unemployedType = data['unemployedType'];
     //
     String photo;
@@ -60,13 +61,18 @@ class UserEnreda {
       educationName = '';
     }
 
-    // final String? phone = data['phone'];
+    List<String> resources = [];
+    if (data['resources'] != null) {
+      data['resources'].forEach((resource) {resources.add(resource.toString());});
+    }
+
+    final String? phone = data['phone'];
     // final DateTime? birthday =
     //     DateTime.parse(data['birthday'].toDate().toString());
-    // final String? country = data['address']['country'];
-    // final String? province = data['address']['province'];
-    // final String? city = data['address']['city'];
-    // final String? postalCode = data['address']['postalCode'];
+    final String? country = data['address']['country'];
+    final String? province = data['address']['province'];
+    final String? city = data['address']['city'];
+    final String? postalCode = data['address']['postalCode'];
     //
     // List<String> abilities = [];
     // try {
@@ -103,12 +109,12 @@ class UserEnreda {
     // }
     //
     // final ProfilePic profilePic = new ProfilePic(src: photo, title: 'photo.jpg');
-    // final Address address = new Address(
-    //     country: country,
-    //     province: province,
-    //     city: city,
-    //     postalCode: postalCode);
-    //
+    final Address address = Address(
+        country: country,
+        province: province,
+        city: city,
+        postalCode: postalCode);
+
     // final Education education = Education(
     //   label: data['education']['label'],
     //   value: data['education']['value'],
@@ -149,15 +155,15 @@ class UserEnreda {
       firstName: firstName,
       lastName: lastName,
       // gender: gender,
-      // userId: userId,
+      userId: userId,
          photo: photo,
       // profilePic: profilePic,
-      // phone: phone,
+      phone: phone,
       // birthday: birthday,
       // country: country,
       // province: province,
       // city: city,
-      // address: address,
+      address: address,
       // postalCode: postalCode,
       // specificInterests: specificInterests,
       // interests: interests,
@@ -173,6 +179,7 @@ class UserEnreda {
       // languages: languages,
       // aboutMe: aboutMe,
       organization: organization,
+      resources: resources,
     );
   }
 
@@ -180,18 +187,18 @@ class UserEnreda {
   final String? firstName;
   final String? lastName;
   // final String? gender;
-  // final String? userId;
+  final String? userId;
      String? photo;
      String? educationName;
   // final ProfilePic? profilePic;
   // final Education? education;
-  // final String? phone;
+  final String? phone;
   // final DateTime? birthday;
   // final String? country;
   // final String? province;
   // final String? city;
   // final String? postalCode;
-  // final Address? address;
+  final Address? address;
   // final List<String> interests;
   // final List<String> specificInterests;
   // final String? unemployedType;
@@ -204,6 +211,7 @@ class UserEnreda {
   // final List<String> languages;
   // final String? aboutMe;
   final String? organization;
+  final List<String> resources;
 
   Map<String, dynamic> toMap() {
     // InterestsUserEnreda interestUserEnreda = InterestsUserEnreda(
@@ -213,11 +221,11 @@ class UserEnreda {
       'firstName': firstName,
       'lastName': lastName,
       // 'gender': gender,
-      // 'userId': userId,
+      'userId': userId,
       // //'profilePic': profilePic.toMap(),
-      // 'phone': phone,
+      'phone': phone,
       // 'birthday': birthday,
-      // 'address': address?.toMap(),
+      'address': address?.toMap(),
       // 'interests': interestUserEnreda.toMap(),
       // 'unemployedType': unemployedType,
       // 'abilities': abilities,
@@ -231,6 +239,7 @@ class UserEnreda {
       // 'aboutMe': aboutMe,
       //'education': education?.toMap(),
       'organization': organization,
+      'resources': resources,
     };
   }
 
@@ -243,10 +252,10 @@ class UserEnreda {
     String? firstName,
     String? lastName,
     // String? gender,
-    // String? userId,
+    String? userId,
     // ProfilePic? profilePic,
     // String? photo,
-    // String? phone,
+    String? phone,
     // DateTime? birthday,
     // String? country,
     // String? province,
@@ -256,6 +265,7 @@ class UserEnreda {
     // List<String>? specificInterests,
     // List<String>? interests,
     // List<String>? abilities,
+    List<String>? resources,
     // String? unemployedType,
     String? role,
     // bool? showChatWelcome,
@@ -272,16 +282,16 @@ class UserEnreda {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       // gender: gender ?? this.gender,
-      // userId: userId ?? this.userId,
+      userId: userId ?? this.userId,
       // profilePic: profilePic ?? this.profilePic,
       // photo: photo ?? this.photo,
-      // phone: phone ?? this.phone,
+      phone: phone ?? this.phone,
       // birthday: birthday ?? this.birthday,
       // country: country ?? this.country,
       // province: province ?? this.province,
       // city: city ?? this.city,
       // postalCode: postalCode ?? this.postalCode,
-      // address: address ?? this.address,
+      address: address ?? this.address,
       // specificInterests: specificInterests ?? this.specificInterests,
       // interests: interests ?? this.interests,
       // abilities: abilities ?? this.abilities,
@@ -294,6 +304,7 @@ class UserEnreda {
       // languages: languages ?? this.languages,
       // aboutMe: aboutMe ?? this.aboutMe,
       organization: organization ?? this.organization,
+      resources: resources ?? this.resources,
     );
   }
 }

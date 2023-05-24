@@ -1,7 +1,8 @@
 part of values;
 
 class AppColors {
-  static const Color primaryColor = Color(0xFF00CCCC);
+  //static const Color primaryColor = Color(0xFF00CCCC);
+  static const Color primaryColor = Color(0xFFE3E4F2);
   //Shades of primary color
   static const Color primary200 = Color(0xFF00CCCC);
   static const Color primary300 = Color(0xFF00CCCC);
@@ -27,6 +28,7 @@ class AppColors {
   static const Color offWhite = Color(0xFFF3F3F3);
   static const Color darkWhite = Color(0xFFDFDFDF);
   static const Color offWhite200 = Color(0xFFE5E5DB);
+  static const Color lightWhite = Color(0xFFF2F2F2);
 
   //Green
   static const Color greenLight = Color(0xFFA4F5F6);

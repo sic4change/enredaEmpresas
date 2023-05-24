@@ -296,10 +296,10 @@ class SideBarWidget extends StatelessWidget {
       extendedTheme: const SidebarXTheme(
         width: 200,
         decoration: BoxDecoration(
-          color: AppColors.altWhite,
+          color: AppColors.white,
         ),
       ),
-      footerDivider: Divider(color: Colors.grey.withOpacity(0.8), height: 1),
+      footerDivider: Divider(color: Colors.grey.withOpacity(0.5), height: 1),
       headerBuilder: (context, extended) {
         return isSmallScreen ? SizedBox(
           height: 60,

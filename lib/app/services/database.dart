@@ -63,6 +63,7 @@ abstract class Database {
      Stream<List<City>> citiesProvinceStream(String? provinceId);
      Stream<List<UserEnreda>> userStream(String? email);
      Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList);
+     Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
 //   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
@@ -362,6 +363,16 @@ class FirestoreDatabase implements Database {
       sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
       );
     }
+
+  @override
+  Stream<List<UserEnreda>> participantsByResourceStream(String resourceId) {
+    return _service.collectionStream<UserEnreda>(
+      path: APIPath.users(),
+      queryBuilder: (query) => query.where('resources', arrayContains: resourceId),
+      builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
+    );
+  }
 
 
   @override

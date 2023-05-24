@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enreda_empresas/app/common_widgets/build_share_button.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
+import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
@@ -22,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_widgets/precached_avatar.dart';
+
 class MyResourcesListPage extends StatefulWidget {
   const MyResourcesListPage({super.key});
 
@@ -31,6 +35,7 @@ class MyResourcesListPage extends StatefulWidget {
 
 class _MyResourcesListPageState extends State<MyResourcesListPage> {
   Widget? _currentPage;
+  List<UserEnreda>? myParticipantsList = [];
 
   @override
   void initState() {
@@ -40,9 +45,31 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: _currentPage,
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      padding: EdgeInsets.all(Sizes.mainPadding),
+      margin: EdgeInsets.all(Sizes.mainPadding),
+      decoration: BoxDecoration(
+        color: AppColors.altWhite,
+        shape: BoxShape.rectangle,
+        border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(StringConst.RESOURCES_CREATED_BY,
+              style: textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0,
+                  color: AppColors.greyDark2),),
+          ),
+          Container(
+              margin: EdgeInsets.only(top: Sizes.mainPadding * 3),
+              child: _currentPage),
+        ],
+      ),
     );
   }
 
@@ -52,15 +79,17 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     return StreamBuilder<UserEnreda>(
         stream: database.userEnredaStreamByUserId(auth.currentUser!.uid),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
           if (snapshot.hasData) {
             var user = snapshot.data!;
             return StreamBuilder<List<Resource>>(
                 stream: database.myResourcesStream(user.organization!),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData)
+                  if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
+                  }
                   if (snapshot.hasData) {
                     return ListItemBuilderGrid<Resource>(
                       snapshot: snapshot,
@@ -320,8 +349,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 40.0, left: 10),
                     padding: const EdgeInsets.all(20.0),
-                    height: 400,
-                    child: const Text('Participantes'),
+                    child: SingleChildScrollView(
+                        child: _buildParticipantsList(context, resource.resourceId)),
                   ))
             ],
           ),
@@ -439,6 +468,82 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               : CustomTextBody(text: '${resource.temporality}')
         ],
       ),
+    );
+  }
+
+  Widget _buildParticipantsList(BuildContext context, String resourceId) {
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder<List<UserEnreda>>(
+      stream: database.participantsByResourceStream(resourceId),
+      builder: (context, snapshot) {
+        return ListItemBuilder(
+            snapshot: snapshot,
+            emptyTitle: 'Sin participantes',
+            emptyMessage: 'Aún no se ha registrado ningún participante',
+            itemBuilder: (context, user) {
+              return  Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    _buildMyUserFoto(context, user.photo!),
+                    const SpaceW20(),
+                    Text('${user.firstName!} ${user.lastName!}'),
+                  ],
+                ),
+              );
+            }
+        );
+      },
+    );
+  }
+
+  Widget _buildMyUserFoto(BuildContext context, String profilePic) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            !kIsWeb ?
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(60)),
+              child:
+              Center(
+                child:
+                profilePic == "" ?
+                Container(
+                  color:  Colors.transparent,
+                  height: 40,
+                  width: 40,
+                  child: Image.asset(ImagePath.USER_DEFAULT),
+                ):
+                CachedNetworkImage(
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                    imageUrl: profilePic),
+              ),
+            ):
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(60)),
+              child:
+              profilePic == "" ?
+              Container(
+                color:  Colors.transparent,
+                height: 40,
+                width: 40,
+                child: Image.asset(ImagePath.USER_DEFAULT),
+              ):
+              PrecacheAvatarCard(
+                imageUrl: profilePic,
+              ),
+            )
+          ],
+        ),
+      ],
     );
   }
 }

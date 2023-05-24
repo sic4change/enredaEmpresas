@@ -448,12 +448,15 @@ class StringConst {
   static const String PERSONAL_DATA = 'Datos personales';
   static const String ABOUT_ME = "Un poco más sobre mí...";
   static const String PROFILE = "Carrera";
+  static const String INVITE_RESOURCE = 'Invitar a un nuevo recurso';
 
   // Companies
   static const String CONTROL_PANEL = "Panel de control";
   static const String PARTICIPANTS = "Participantes";
   static const String WELCOME_COMPANY = "Bienvenido a la aplicación,";
   static const String WELCOME_TEXT = "Esta es tu ventana de administración. Según tu rol, puedes visualizar, editar y eliminar todos los recursos disponibles en esta web. Por favor, procede con precaución.";
+  static const String RESOURCES_CREATED_BY = "Recursos creados";
+  static const String PARTICIPANTS_BY = "Participantes inscritos";
 
   static const String LOREM_IMPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque, tortor amet, adipiscing felis nullam. Aliquet commodo est pretium vitae hendrerit fames vitae. Orci, feugiat consectetur aliquet sodales mus sodales a urna.\n\n'
       'Rhoncus id volutpat, diam adipiscing risus, enim cursus ac. Amet nunc nec eu diam. Tincidunt at vulputate arcu dis justo. Ut egestas ac rhoncus, sapien.';
