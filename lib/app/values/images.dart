@@ -30,6 +30,8 @@ class ImagePath {
   static const String ARROW = '$imageDir/flecha.png';
   static const String USER_DEFAULT = '$imageDir/user_default.jpg';
   static const String IMAGE_DEFAULT = '$imageDir/placeholder-image.png';
+  static const String PHOTO_BUTTON = '$imageDir/photo-button.jpg';
+  static const String CREATE_RESOURCE = '$imageDir/icon-crear-recurso.png';
 
   //Competencies
   static const String EMPTY_BADGE_SAMPLE = '$imageDir/empty_900x503.png';

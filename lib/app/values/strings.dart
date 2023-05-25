@@ -281,28 +281,29 @@ class StringConst {
   static const String ONLINE_FOR_PROVINCE = 'Online para residentes en provincia';
   static const String ONLINE_FOR_CITY = 'Online para residentes en ciudad';
 
-  //Create an account forms
+  //Create an resource forms
   static const String FORM_MENTOR_REGISTER = "Quiero colaborar";
   static const String FORM_ORGANIZATION_REGISTER = "Soy organización";
-  static const String FORM_UNEMPLOYED = "Busco trabajo";
-  static const String FORM_NAME = "Nombre";
+  static const String FORM_CREATE = "Crear recurso";
+  static const String FORM_TITLE = "Título";
   static const String FORM_ORGANIZATION_NAME = "Nombre de la Organización";
   static const String FORM_ORGANIZATION_INFO = "Información de la organización";
   static const String FORM_ORGANIZATION = "Organización";
   static const String FORM_CONTACT_NAME = "Nombre de la persona de contacto";
   static const String FORM_CONTACT_INFO = "Información de contacto";
   static const String FORM_CONTACT = "Contacto";
-  static const String FORM_GENDER = "Género";
-  static const String FORM_GENDER_ERROR = "El género no puede estar vacío";
+  static const String FORM_RESOURCE_TYPE = "Tipo de recurso";
+  static const String FORM_RESOURCE_TYPE_ERROR = "El tipo de recurso no puede estar vacío";
   static const String FORM_LASTNAME = "Apellidos";
   static const String FORM_LASTNAME_ERROR = "Los apellidos no puede estar vacío";
+  static const String FORM_DESCRIPTION_ERROR = "La descripción no puede estar vacía";
   static const String FORM_COMPANY_ERROR = "El campo no puede estar vacío";
   static const String FORM_PHONE = "Teléfono";
   static const String PHONE_ERROR = "El teléfono no puede estar vacío";
   static const String FORM_EMAIL = "Email";
   static const String FORM_EMAIL_ERROR = "El email no puede estar vacío";
-  static const String FORM_BIRTHDAY = "Fecha de nacimiento";
-  static const String FORM_BIRTHDAY_ERROR = "La fecha no puede estar vacío";
+  static const String FORM_START = "Fecha de inicio";
+  static const String FORM_START_ERROR = "La fecha no puede estar vacía";
   static const String FORM_COUNTRY = "País";
   static const String COUNTRY_ERROR = "El país no puede estar vacío";
   static const String FORM_PROVINCE = "Provincia/Estado/Región";
@@ -324,7 +325,7 @@ class StringConst {
   static const String FORM_ACTIVITIES_EMPTY = "Selecciona primero la actividad";
   static const String FORM_ABILITIES_REV = "Aspectos a reforzar";
   static const String FORM_MOTIVATION_ERROR = "Este campo no puede estar vacío";
-  static const String FORM_DEDICATION = "¿Tienes claro a lo que te gustaría dedicarte?";
+  static const String FORM_RESOURCE_CATEGORY = "Categoría del recurso";
   static const String FORM_DEDICATION_REV = "Dedicación";
   static const String FORM_TIME_SEARCHING = "¿Cuánto tiempo llevas buscando empleo?";
   static const String FORM_TIME_SEARCHING_REV = "Búsqueda";
@@ -449,6 +450,7 @@ class StringConst {
   static const String ABOUT_ME = "Un poco más sobre mí...";
   static const String PROFILE = "Carrera";
   static const String INVITE_RESOURCE = 'Invitar a un nuevo recurso';
+  static const String CREATE_RESOURCE = 'Crear un recurso nuevo';
 
   // Companies
   static const String CONTROL_PANEL = "Panel de control";

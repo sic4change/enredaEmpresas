@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enreda_empresas/app/common_widgets/build_share_button.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
+import 'package:enreda_empresas/app/home/resources/create_resource_form/create_resource.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
@@ -35,7 +36,9 @@ class MyResourcesListPage extends StatefulWidget {
 
 class _MyResourcesListPageState extends State<MyResourcesListPage> {
   Widget? _currentPage;
+  bool? isVisible = true;
   List<UserEnreda>? myParticipantsList = [];
+
 
   @override
   void initState() {
@@ -46,6 +49,12 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    double? textSize = responsiveSize(
+      context,
+      Sizes.TEXT_SIZE_18,
+      Sizes.TEXT_SIZE_24,
+      md: Sizes.TEXT_SIZE_20,
+    );
     return Container(
       padding: EdgeInsets.all(Sizes.mainPadding),
       margin: EdgeInsets.all(Sizes.mainPadding),
@@ -53,20 +62,65 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
         color: AppColors.altWhite,
         shape: BoxShape.rectangle,
         border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text(StringConst.RESOURCES_CREATED_BY,
-              style: textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30.0,
-                  color: AppColors.greyDark2),),
+          InkWell(
+            onTap: () => {
+            Navigator.of(this.context).push(
+            MaterialPageRoute<void>(
+            fullscreenDialog: true,
+            builder: ((context) => const ResourceCreationForm()),
+            ),
+            )
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                image: DecorationImage(
+                    image: const AssetImage(ImagePath.PHOTO_BUTTON),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(AppColors.turquoiseButton.withOpacity(0.46), BlendMode.darken)
+                )),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 20),
+                    Text(StringConst.CREATE_RESOURCE,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: AppColors.white,
+                        fontSize: textSize,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      iconSize: 40,
+                        icon: Image.asset(ImagePath.CREATE_RESOURCE),
+                        onPressed: () => {}
+                    ),
+                    const SizedBox(width: 20),
+                  ],
+                ),
+              ),
+            ),
           ),
           Container(
-              margin: EdgeInsets.only(top: Sizes.mainPadding * 3),
+            margin: EdgeInsets.only(top: Sizes.mainPadding * 4),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(StringConst.RESOURCES_CREATED_BY,
+                style: textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    color: AppColors.greyDark2),),
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(top: Sizes.mainPadding * 6),
               child: _currentPage),
         ],
       ),

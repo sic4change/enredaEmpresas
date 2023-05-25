@@ -11,6 +11,20 @@ class ResourceType {
   final String? resourceTypeId;
   final String? updatedby;
 
+  factory ResourceType.fromMap(Map<String, dynamic> data, String documentId) {
+    return ResourceType(
+      resourceTypeId: data['resourceTypeId'],
+      name: data['name'],
+    );
+  }
+
+  @override
+  bool operator == (Object other){
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ResourceType &&
+            other.resourceTypeId == resourceTypeId);
+  }
 
   Map<String, dynamic> toMap() {
     return {

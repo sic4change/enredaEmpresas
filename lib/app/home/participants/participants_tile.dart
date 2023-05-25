@@ -219,46 +219,43 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
                           ),
-                          child: Expanded(
-                            child: widget.user.photo == null ||
-                                    widget.user.photo == ""
-                                ? Container(
-                                    color: Colors.transparent,
-                                    height: 120,
-                                    width: 120,
-                                    child: Image.asset(ImagePath.USER_DEFAULT),
-                                  )
-                                : CachedNetworkImage(
-                                    width: 400,
-                                    fit: BoxFit.cover,
-                                    progressIndicatorBuilder:
-                                        (context, url, downloadProgress) =>
-                                            Container(
-                                              child: Image.asset(
-                                                  ImagePath.IMAGE_DEFAULT),
-                                            ),
-                                    alignment: Alignment.center,
-                                    imageUrl: widget.user.photo!),
-                          ),
+                          child: widget.user.photo == null ||
+                                  widget.user.photo == ""
+                              ? Container(
+                                  color: Colors.transparent,
+                                  height: 120,
+                                  width: 120,
+                                  child: Image.asset(ImagePath.USER_DEFAULT),
+                                )
+                              : CachedNetworkImage(
+                                  width: 400,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Container(
+                                            child: Image.asset(
+                                                ImagePath.IMAGE_DEFAULT),
+                                          ),
+                                  alignment: Alignment.center,
+                                  imageUrl: widget.user.photo!),
                         )
                       : ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
                           ),
-                          child: Expanded(
-                              child: widget.user.photo == null ||
-                                      widget.user.photo == ""
-                                  ? Container(
-                                      color: Colors.transparent,
-                                      height: 120,
-                                      width: 120,
-                                      child:
-                                          Image.asset(ImagePath.USER_DEFAULT),
-                                    )
-                                  : PrecacheResourceCard(
-                                      imageUrl: widget.user.photo!,
-                                    )),
+                          child: widget.user.photo == null ||
+                                  widget.user.photo == ""
+                              ? Container(
+                                  color: Colors.transparent,
+                                  height: 120,
+                                  width: 120,
+                                  child:
+                                      Image.asset(ImagePath.USER_DEFAULT),
+                                )
+                              : PrecacheResourceCard(
+                                  imageUrl: widget.user.photo!,
+                                ),
                         ),
                 ),
                 Container(

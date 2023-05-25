@@ -112,6 +112,8 @@ flutter:
     - assets/app_store_900x503.png
     - assets/user_default.jpg
     - assets/chica-lateral-formulario.png
+    - assets/photo-button.jpg
+    - assets/icon-crear-recurso.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

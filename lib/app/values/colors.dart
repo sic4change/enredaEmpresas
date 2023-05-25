@@ -1,8 +1,7 @@
 part of values;
 
 class AppColors {
-  //static const Color primaryColor = Color(0xFF00CCCC);
-  static const Color primaryColor = Color(0xFFE3E4F2);
+  static const Color primaryColor = Color(0xFF00CCCC);
   //Shades of primary color
   static const Color primary200 = Color(0xFF00CCCC);
   static const Color primary300 = Color(0xFF00CCCC);
@@ -87,6 +86,7 @@ class AppColors {
   static const Color lightTurquoise = Color(0xFFB5F0F0);
   static const Color onHoverTurquoise = Color(0xFFEFFDFA);
   static const Color turquoiseAlt = Color(0xFF00CCCC);
+  static const Color turquoiseButton = Color(0xFF00D0CE);
 
   //Red
   static const Color red = Color(0xFFF1291A);

@@ -3,20 +3,27 @@ class ResourceCategory {
 
   factory ResourceCategory.fromMap(Map<String, dynamic>? data, String documentId) {
     final String name = data?['name'];
-    final String id = data?['id'];
     final int order = data?['order'];
-
+    final String id = documentId;
 
     return ResourceCategory(
         name: name,
-        id: id,
         order: order,
+        id: id,
     );
   }
 
   final String name;
   final String id;
   final int order;
+
+  @override
+  bool operator == (Object other){
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ResourceCategory &&
+            other.id == id);
+  }
 
   Map<String, dynamic> toMap() {
     return {
