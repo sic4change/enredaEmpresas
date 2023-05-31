@@ -19,10 +19,10 @@ class CustomExpandedRow extends StatelessWidget {
             child: Text(
               title,
               maxLines: 3,
-              style: textTheme.bodyText1?.copyWith(
+              style: textTheme.bodySmall?.copyWith(
               height: 1.5,
               color: AppColors.greyDark,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w400,
               fontSize: fontSize,
             ),)),
         const SizedBox(width: 50),
@@ -32,10 +32,10 @@ class CustomExpandedRow extends StatelessWidget {
               text,
               textAlign: TextAlign.right,
               maxLines: 4,
-              style: textTheme.bodyText1?.copyWith(
+              style: textTheme.bodySmall?.copyWith(
                 height: 1.5,
                 color: AppColors.greyDark,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w400,
                 fontSize: fontSize,
               ),
             )),

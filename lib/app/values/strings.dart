@@ -223,7 +223,6 @@ class StringConst {
   static const String ERROR_MESSAGE = "Error al enviar contacto";
   static const String TALK_WITH_US = "Hablemos";
   static const String ANY_QUESTION = "¿Tienes alguna pregunta?";
-  static const String NAME = "Nombre";
   static const String NAME_ERROR = "El nombre no puede estar vacío";
   static const String EMAIL = "Email";
   static const String EMAIL_ERROR = "El email no es válido";
@@ -286,6 +285,8 @@ class StringConst {
   static const String FORM_ORGANIZATION_REGISTER = "Soy organización";
   static const String FORM_CREATE = "Crear recurso";
   static const String FORM_TITLE = "Título";
+  static const String FORM_DURATION = "Duración";
+  static const String FORM_SCHEDULE = "Horario";
   static const String FORM_ORGANIZATION_NAME = "Nombre de la Organización";
   static const String FORM_ORGANIZATION_INFO = "Información de la organización";
   static const String FORM_ORGANIZATION = "Organización";
@@ -302,7 +303,9 @@ class StringConst {
   static const String PHONE_ERROR = "El teléfono no puede estar vacío";
   static const String FORM_EMAIL = "Email";
   static const String FORM_EMAIL_ERROR = "El email no puede estar vacío";
-  static const String FORM_START = "Fecha de inicio";
+  static const String FORM_START = "Comienzo";
+  static const String FORM_END = "Finalización";
+  static const String FORM_MAX = "Fecha máxima de inscripción";
   static const String FORM_START_ERROR = "La fecha no puede estar vacía";
   static const String FORM_COUNTRY = "País";
   static const String COUNTRY_ERROR = "El país no puede estar vacío";
@@ -318,14 +321,18 @@ class StringConst {
   static const String FORM_NATURE_ERROR = "La naturaleza no puede estar vacío";
   static const String FORM_SCOPE_ERROR = "El ámbito territorial no puede estar vacío";
   static const String FORM_SIZE_ERROR = "El tamaño no puede estar vacío";
-  static const String FORM_ABILITIES = "¿Qué aspectos crees que tienes que reforzar?";
-  static const String FORM_INTERESTS_QUESTION = "¿Cuáles son tus intereses?";
+  static const String FORM_INTERESTS_QUESTION = "¿Cuáles son los intereses del recurso?";
+  static const String FORM_INTERESTS = "Intereses";
   static const String FORM_SPECIFIC_INTERESTS = "Intereses específicos";
   static const String FORM_INTEREST_EMPTY = "Selecciona primero tus intereses";
   static const String FORM_ACTIVITIES_EMPTY = "Selecciona primero la actividad";
   static const String FORM_ABILITIES_REV = "Aspectos a reforzar";
   static const String FORM_MOTIVATION_ERROR = "Este campo no puede estar vacío";
   static const String FORM_RESOURCE_CATEGORY = "Categoría del recurso";
+  static const String FORM_DEGREE = "Titulación";
+  static const String FORM_MODALITY = "Modalidad";
+  static const String FORM_CONTRACT = "Tipo de contrato";
+  static const String FORM_SALARY = "Salario";
   static const String FORM_DEDICATION_REV = "Dedicación";
   static const String FORM_TIME_SEARCHING = "¿Cuánto tiempo llevas buscando empleo?";
   static const String FORM_TIME_SEARCHING_REV = "Búsqueda";
@@ -340,13 +347,12 @@ class StringConst {
   static const String FORM_POSITION_CERTIFIER = "Cargo";
 
   static const String FORM_GENERAL_INFO = "Información general";
-  static const String FORM_MOTIVATION = "Motivaciones";
-  static const String FORM_INTERESTS = "Intereses";
+  static const String FORM_ORGANIZER = "Lugar y organizador";
   static const String FORM_REVISION = "Revisión";
   static const String FORM_CONFIRM = "ACEPTAR";
   static const String FORM_NEXT = "SIGUIENTE";
   static const String FORM_BACK = "ATRÁS";
-  static const String FORM_ACCEPTANCE = "Si está conforme con la información proporcionada, por favor, pulse en 'ACEPTAR'. En cualquier otro caso, puede volver 'ATRÁS' y modificar la información.";
+  static const String FORM_ACCEPTANCE = "Si es conforme, pulse en 'ACEPTAR'. Puede volver 'ATRÁS' y modificar la información.";
   static const String FORM_ACCEPTANCE_ERROR = "Debe aceptar las Políticas y Condiciones";
   static const String FORM_ACCEPT_SENTENCE = "Acepto las";
   static const String FORM_ACCEPT_SENTENCE_Y = "y";
