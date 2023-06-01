@@ -287,6 +287,12 @@ class StringConst {
   static const String FORM_TITLE = "Título";
   static const String FORM_DURATION = "Duración";
   static const String FORM_SCHEDULE = "Horario";
+  static const String FORM_PLACE = "Lugar de realización";
+  static const String FORM_CAPACITY = "Aforo";
+  static const String FORM_ADDRESS = "Calle y número";
+  static const String FORM_ORGANIZER_TEXT = "Organizador";
+  static const String FORM_TRUST = "El organizador es de confianza";
+  static const String FORM_LINK = "Link";
   static const String FORM_ORGANIZATION_NAME = "Nombre de la Organización";
   static const String FORM_ORGANIZATION_INFO = "Información de la organización";
   static const String FORM_ORGANIZATION = "Organización";
@@ -294,6 +300,7 @@ class StringConst {
   static const String FORM_CONTACT_INFO = "Información de contacto";
   static const String FORM_CONTACT = "Contacto";
   static const String FORM_RESOURCE_TYPE = "Tipo de recurso";
+  static const String FORM_PROMOTOR = "Promotor";
   static const String FORM_RESOURCE_TYPE_ERROR = "El tipo de recurso no puede estar vacío";
   static const String FORM_LASTNAME = "Apellidos";
   static const String FORM_LASTNAME_ERROR = "Los apellidos no puede estar vacío";

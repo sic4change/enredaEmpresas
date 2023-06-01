@@ -49,16 +49,16 @@ abstract class Database {
 //   Stream<List<Resource>> recommendedResourcesStream(UserEnreda? user);
 //   Stream<UserEnreda> enredaUserStream(String userId);
 //   Stream<List<Certificate>> myCertificatesStream(String userId);
-//   Stream<List<Organization>> organizationsStream();
+     Stream<List<Organization>> organizationsStream();
      Stream<Organization> organizationStream(String organizationId);
      Stream<UserEnreda> mentorStream(String mentorId);
-//   Stream<List<Country>> countriesStream();
+     Stream<List<Country>> countriesStream();
      Stream<List<Country>> countryFormatedStream();
      Stream<Country> countryStream(String? countryId);
-//   Stream<List<Province>> provincesStream();
+     Stream<List<Province>> provincesStream();
      Stream<Province> provinceStream(String? provinceId);
      Stream<List<Province>> provincesCountryStream(String? countryId);
-//   Stream<List<City>> citiesStream();
+     Stream<List<City>> citiesStream();
      Stream<City> cityStream(String? cityId);
      Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId);
      Stream<List<City>> citiesProvinceStream(String? provinceId);
@@ -272,14 +272,14 @@ class FirestoreDatabase implements Database {
 //         builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
 //       );
 //
-//   @override
-//   Stream<List<Organization>> organizationsStream() => _service.collectionStream(
-//     path: APIPath.organizations(),
-//     queryBuilder: (query) => query.where('trust', isEqualTo: true),
-//     builder: (data, documentId) => Organization.fromMap(data, documentId),
-//     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-//   );
-//
+    @override
+    Stream<List<Organization>> organizationsStream() => _service.collectionStream(
+      path: APIPath.organizations(),
+      queryBuilder: (query) => query.where('trust', isEqualTo: true),
+      builder: (data, documentId) => Organization.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+    );
+
     @override
     Stream<Organization> organizationStream(String organizationId) =>
         _service.documentStream<Organization>(
@@ -294,66 +294,100 @@ class FirestoreDatabase implements Database {
           builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
         );
 
-//   @override
-//   Stream<List<Country>> countriesStream() => _service.collectionStream(
-//     path: APIPath.countries(),
-//     queryBuilder: (query) => query.where('coutryId', isNotEqualTo: null),
-//     builder: (data, documentId) => Country.fromMap(data, documentId),
-//     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-//   );
-//
+    @override
+    Stream<List<Country>> countriesStream() => _service.collectionStream(
+      path: APIPath.countries(),
+      queryBuilder: (query) => query.where('coutryId', isNotEqualTo: null),
+      builder: (data, documentId) => Country.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+    );
+
+    @override
+    Stream<List<Country>> countryFormatedStream() => _service.collectionStream(
+      path: APIPath.countries(),
+      queryBuilder: (query) => query.where('name', isNotEqualTo: 'Online'),
+      builder: (data, documentId) => Country.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+    );
+
+    @override
     Stream<Country> countryStream(String? countryId) =>
-        _service.documentStream<Country>(
-          path: APIPath.country(countryId),
-          builder: (data, documentId) => Country.fromMap(data, documentId),
+          _service.documentStream<Country>(
+            path: APIPath.country(countryId),
+            builder: (data, documentId) => Country.fromMap(data, documentId),
+          );
+
+    @override
+    Stream<List<Province>> provincesStream() => _service.collectionStream(
+      path: APIPath.provinces(),
+      queryBuilder: (query) => query.where('provinceId', isNotEqualTo: null),
+      builder: (data, documentId) => Province.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+    );
+
+    @override
+    Stream<Province> provinceStream(String? provinceId) =>
+        _service.documentStream<Province>(
+          path: APIPath.province(provinceId),
+          builder: (data, documentId) => Province.fromMap(data, documentId),
         );
 
-//   @override
-//   Stream<List<Province>> provincesStream() => _service.collectionStream(
-//     path: APIPath.provinces(),
-//     queryBuilder: (query) => query.where('provinceId', isNotEqualTo: null),
-//     builder: (data, documentId) => Province.fromMap(data, documentId),
-//     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-//   );
-//
+    @override
+    Stream<List<Province>> provincesCountryStream(String? countryId) {
 
-  @override
-  Stream<Province> provinceStream(String? provinceId) =>
-      _service.documentStream<Province>(
-        path: APIPath.province(provinceId),
+      if (countryId == null) {
+        return const Stream<List<Province>>.empty();
+      }
+
+      return _service.collectionStream(
+        path: APIPath.provinces(),
         builder: (data, documentId) => Province.fromMap(data, documentId),
+        queryBuilder: (query) => query.where('countryId', isEqualTo: countryId),
+        sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
       );
+    }
 
-//   @override
-//   Stream<List<City>> citiesStream() => _service.collectionStream(
-//     path: APIPath.cities(),
-//     queryBuilder: (query) => query.where('cityId', isNotEqualTo: null),
-//     builder: (data, documentId) => City.fromMap(data, documentId),
-//     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-//   );
-//
-    Stream<City> cityStream(String? cityId) => _service.documentStream<City>(
-      path: APIPath.city(cityId),
+    @override
+    Stream<List<City>> citiesStream() => _service.collectionStream(
+      path: APIPath.cities(),
+      queryBuilder: (query) => query.where('cityId', isNotEqualTo: null),
       builder: (data, documentId) => City.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
     );
 
-  @override
-  Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId) =>
-      _service.documentStream<ResourcePicture>(
-        path: APIPath.resourcePicture(resourcePictureId),
-        builder: (data, documentId) =>
-            ResourcePicture.fromMap(data, documentId),
+    @override
+    Stream<City> cityStream(String? cityId) => _service.documentStream<City>(
+        path: APIPath.city(cityId),
+        builder: (data, documentId) => City.fromMap(data, documentId),
       );
 
-  @override
-  Stream<List<UserEnreda>> userStream(String? email) {
-    return _service.collectionStream<UserEnreda>(
-      path: APIPath.users(),
-      queryBuilder: (query) => query.where('email', isEqualTo: email),
-      builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
-      sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
-    );
-  }
+    @override
+    Stream<List<City>> citiesProvinceStream(String? provinceId) =>
+        _service.collectionStream(
+          path: APIPath.cities(),
+          builder: (data, documentId) => City.fromMap(data, documentId),
+          queryBuilder: (query) =>
+              query.where('provinceId', isEqualTo: provinceId),
+          sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+        );
+
+    @override
+    Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId) =>
+        _service.documentStream<ResourcePicture>(
+          path: APIPath.resourcePicture(resourcePictureId),
+          builder: (data, documentId) =>
+              ResourcePicture.fromMap(data, documentId),
+        );
+
+    @override
+    Stream<List<UserEnreda>> userStream(String? email) {
+      return _service.collectionStream<UserEnreda>(
+        path: APIPath.users(),
+        queryBuilder: (query) => query.where('email', isEqualTo: email),
+        builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
+        sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
+      );
+    }
 
   @override
   Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList) {
@@ -445,35 +479,6 @@ class FirestoreDatabase implements Database {
 //       "certified": certified, 'referenced': referenced});
 //   }
 //
-    @override
-    Stream<List<Country>> countryFormatedStream() => _service.collectionStream(
-      path: APIPath.countries(),
-      queryBuilder: (query) => query.where('name', isNotEqualTo: 'Online'),
-      builder: (data, documentId) => Country.fromMap(data, documentId),
-      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-    );
-
-    @override
-    Stream<List<Province>> provincesCountryStream(String? countryId) {
-      if (countryId == null) return Stream<List<Province>>.empty();
-
-      return _service.collectionStream(
-        path: APIPath.provinces(),
-        builder: (data, documentId) => Province.fromMap(data, documentId),
-        queryBuilder: (query) => query.where('countryId', isEqualTo: countryId),
-        sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-      );
-    }
-
-    @override
-    Stream<List<City>> citiesProvinceStream(String? provinceId) =>
-        _service.collectionStream(
-          path: APIPath.cities(),
-          builder: (data, documentId) => City.fromMap(data, documentId),
-          queryBuilder: (query) =>
-              query.where('provinceId', isEqualTo: provinceId),
-          sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-        );
 
     @override
     Stream<List<Interest>> interestStream() => _service.collectionStream(

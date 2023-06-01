@@ -161,7 +161,13 @@ class Organization {
     );
   }
 
-
+  @override
+  bool operator ==(Object other){
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Organization &&
+            other.organizationId == organizationId);
+  }
 
   Map<String, dynamic> toMap() {
     return {
