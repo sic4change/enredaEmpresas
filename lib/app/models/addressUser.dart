@@ -1,5 +1,5 @@
 class Address {
-  Address({this.city, this.country, this.province, this.postalCode,
+  Address({this.city, this.country, this.province, this.postalCode, this.place
   });
 
   factory Address.fromMap(Map<String, dynamic> data, String documentId) {
@@ -8,12 +8,14 @@ class Address {
     final String country = data['country'];
     final String province = data['province'];
     final String postalCode = data['postalCode'];
+    final String place = data['place'];
 
     return Address(
         city: city,
         country: country,
         province: province,
-        postalCode: postalCode
+        postalCode: postalCode,
+        place: place,
     );
   }
 
@@ -21,6 +23,7 @@ class Address {
   final String? country;
   final String? province;
   final String? postalCode;
+  final String? place;
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +31,7 @@ class Address {
       'country': country,
       'province': province,
       'postalCode' : postalCode,
+      'place' : place,
     };
   }
 }

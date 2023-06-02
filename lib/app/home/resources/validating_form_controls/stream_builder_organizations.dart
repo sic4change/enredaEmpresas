@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../values/values.dart';
 
-Widget streamBuilderDropdownOrganizations (BuildContext context, Organization? selectedOrganization,  functionToWriteBackThings ) {
+Widget streamBuilderDropdownOrganizations (BuildContext context, Organization? selectedOrganization, String organizationId, functionToWriteBackThings ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
   return StreamBuilder<List<Organization>>(
-      stream: database.organizationsStream(),
+      stream: database.filterOrganizationStream(organizationId),
       builder: (context, snapshotOrganizations){
 
         List<DropdownMenuItem<Organization>> organizationItems = [];

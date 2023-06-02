@@ -14,6 +14,7 @@ import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
@@ -37,7 +38,8 @@ const double contactBtnWidthSm = 120.0;
 const double contactBtnWidthMd = 150.0;
 
 class ResourceCreationForm extends StatefulWidget {
-  const ResourceCreationForm({Key? key}) : super(key: key);
+  const ResourceCreationForm({Key? key, required this.organizationId}) : super(key: key);
+  final String? organizationId;
 
   @override
   State<ResourceCreationForm> createState() => _ResourceCreationFormState();
@@ -58,18 +60,21 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
   String? _address;
   String? _organizerText;
   String? _link;
+  String? _phone;
+  String? _email;
+  String? _countryId;
+  String? _provinceId;
+  String? _cityId;
+  String? resourceTypeId;
+  String? resourceCategoryId;
+
+  int currentStep = 0;
+  bool _notExpire = false;
+  bool _trust = true;
 
   DateTime? _start;
   DateTime? _end;
   DateTime? _max;
-  String? _phone;
-  String? _country;
-  String? _province;
-  String? _city;
-
-  int currentStep = 0;
-  bool _toggled = false;
-  bool _trust = true;
 
   List<String> countries = [];
   List<String> provinces = [];
@@ -88,6 +93,8 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
   Country? selectedCountry;
   Province? selectedProvince;
   City? selectedCity;
+
+
   late String countryName;
   late String provinceName;
   late String cityName;
@@ -102,7 +109,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
   late String organizationName;
   String? _interestId;
   int? resourceCategoryValue;
-  String? resourceCategoryId;
   String? organizationId;
 
   TextEditingController textEditingControllerDateInput =
@@ -131,9 +137,9 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     textEditingControllerDateInput.text = "";
     textEditingControllerDateEndInput.text = "";
     textEditingControllerDateMaxInput.text = "";
-    _phone = "";
     resourceCategoryName = "";
     resourceTypeName = "";
+    resourceTypeId = "";
     interestsNames = "";
     organizationName = "";
     selectedContract = "";
@@ -147,14 +153,16 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     _place = "";
     _address = "";
     _capacity = "";
-    _country = "";
-    _province = "";
-    _city = "";
+    _countryId = "";
+    _provinceId = "";
+    _cityId = "";
     countryName = "";
     provinceName = "";
     cityName = "";
     _organizerText = "";
     _link = "";
+    _phone = "";
+    _email = "";
   }
 
   bool _validateAndSaveForm() {
@@ -166,7 +174,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     return false;
   }
 
-  bool _validateAndSaveInterestsForm() {
+  bool _validateAndSaveOrganizerForm() {
     final form = _formKeyOrganizer.currentState;
     if (form!.validate()) {
       form.save();
@@ -175,47 +183,53 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     return false;
   }
 
-  bool _validateCheckField() {
-    final checkKey = _checkFieldKey.currentState;
-    if (checkKey!.validate()) {
-      checkKey.save();
-      return true;
-    }
-    return false;
-  }
 
   Future<void> _submit() async {
-    if (_validateCheckField()) {
       final address = Address(
-        country: _country,
-        province: _province,
-        city: _city,
+        country: _countryId,
+        province: _provinceId,
+        city: _cityId,
+        place: _place,
       );
 
-      final ResourceCategory resourceCategory = ResourceCategory(
-        name: resourceCategoryName,
-        order: resourceCategoryValue!,
-        id: resourceCategoryId!,
+      final newResource = Resource(
+        title: _resourceTitle!,
+        description: _resourceDescription!,
+        contactEmail: _email,
+        contactPhone: _phone,
+        resourceId: "",
+        address: address,
+        assistants: "",
+        capacity: 0,
+        contractType: selectedContract,
+        duration: _duration!,
+        status: 'Disponible',
+        resourceType: resourceTypeId,
+        resourceCategory: resourceCategoryId,
+        maximumDate: _max!,
+        start: _start!,
+        end: _end!,
+        modality: selectedModality!,
+        street: _place,
+        salary: selectedSalary,
+        organizer: widget.organizationId!,
+        link: _link,
+        searchText: "",
+        resourcePictureId: "",
+        notExpire: _notExpire,
+        promotor: organizationId,
+        temporality: _schedule,
+        resourceLink: "",
+        participants: [],
+        organizerType: "Organization",
+        likes: [],
+        place: _place!,
+        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
       );
-
-      // final create_resource_form = UnemployedUser(
-      //     firstName: _resourceTitle,
-      //     lastName: _resourceDescription,
-      //     email: _email,
-      //     phone: _phone,
-      //     gender: genderName,
-      //     birthday: _birthday,
-      //     motivation: motivation,
-      //     interests: interestsSet,
-      //     education: education,
-      //     address: address,
-      //     role: 'Desempleado',
-      //     unemployedType: unemployedType
-      // );
       try {
         final database = Provider.of<Database>(context, listen: false);
         setState(() => isLoading = true);
-        //await database.addUnemployedUser(create_resource_form);
+        await database.addResource(newResource);
         setState(() => isLoading = false);
         showAlertDialog(
           context,
@@ -223,12 +237,9 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
           content: StringConst.FORM_SUCCESS_MAIL,
           defaultActionText: StringConst.FORM_ACCEPT,
         ).then(
-          (value) => {
-            // Navigator.of(this.context).push(
-            //   MaterialPageRoute<void>(
-            //     builder: ((context) => EmailSignInPage()),
-            //   ),
-            // )
+          (value) {
+            Navigator.of(context).pop();
+            return true;
           },
         );
       } on FirebaseException catch (e) {
@@ -236,7 +247,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                 title: StringConst.FORM_ERROR, exception: e)
             .then((value) => Navigator.pop(context));
       }
-    }
   }
 
   void _onCountryChange(CountryCode countryCode) {
@@ -262,7 +272,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
         CustomFlexRowColumn(
           childLeft: customTextFormField(context, _resourceTitle!,
               StringConst.FORM_TITLE, StringConst.NAME_ERROR, nameSetState),
-          childRight: customTextFormField(
+          childRight: customTextFormMultiline(
               context,
               _resourceDescription!,
               StringConst.DESCRIPTION,
@@ -401,7 +411,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
               StringConst.FORM_DURATION,
               StringConst.FORM_COMPANY_ERROR,
               durationSetState),
-          childRight: customTextFormFieldNotValidator(
+          childRight: customTextFormMultilineNotValidator(
               context, _schedule!, StringConst.FORM_SCHEDULE, scheduleSetState),
         ),
         CustomFlexRowColumn(
@@ -415,10 +425,10 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                     fontSize: fontSize,
                   ),
                 ),
-                value: _toggled,
-                onChanged: (bool? value) => setState(() => _toggled = value!)),
+                value: _notExpire,
+                onChanged: (bool? value) => setState(() => _notExpire = value!)),
             childRight: Container()),
-        _toggled == true
+        _notExpire == true
             ? Flex(
                 direction: Responsive.isMobile(context)
                     ? Axis.vertical
@@ -595,8 +605,8 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                              initialDate: DateTime(DateTime.now().year - 5, DateTime.now().month, DateTime.now().day),
+                              firstDate: DateTime(DateTime.now().year - 5, DateTime.now().month, DateTime.now().day),
                               lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
                             );
                             if (pickedDate != null) {
@@ -693,7 +703,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                   StringConst.FORM_PLACE,
                   StringConst.FORM_COMPANY_ERROR,
                   placeSetState),
-              childRight: customTextFormField(
+              childRight: customTextFormFieldNum(
                   context,
                   _capacity!,
                   StringConst.FORM_CAPACITY,
@@ -745,14 +755,57 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
               childLeft: streamBuilderDropdownOrganizations(
                   context,
                   selectedOrganization,
+                  widget.organizationId!,
                   buildOrganizationStreamBuilderSetState),
+              childRight: TextFormField(
+                decoration: InputDecoration(
+                  labelText: StringConst.FORM_ORGANIZER_TEXT,
+                  focusColor: AppColors.lilac,
+                  labelStyle: textTheme.bodySmall?.copyWith(
+                    color: AppColors.greyDark,
+                    fontSize: fontSize,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                initialValue: _organizerText,
+                onChanged: (String? value) => setState(() {
+                  _organizerText = value;
+                }),
+                textCapitalization: TextCapitalization.sentences,
+                keyboardType: TextInputType.name,
+                style: textTheme.bodySmall?.copyWith(
+                  color: AppColors.greyDark,
+                  fontSize: fontSize,
+                ),
+              ),
+            ),
+            _organizerText != "" ?
+            CustomFlexRowColumn(
+              childLeft: customTextFormField(
+                  context,
+                  _phone!,
+                  StringConst.FORM_PHONE,
+                  StringConst.FORM_COMPANY_ERROR,
+                  phoneSetState),
               childRight: customTextFormField(
                   context,
-                  _organizerText!,
-                  StringConst.FORM_ORGANIZER_TEXT,
+                  _email!,
+                  StringConst.FORM_EMAIL,
                   StringConst.FORM_COMPANY_ERROR,
-                  organizerTextSetState),
-            ),
+                  emailSetState),
+            ) : Container(),
             CustomFlexRowColumn(
               childLeft: customTextFormField(
                   context,
@@ -801,9 +854,12 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
           provinceName,
           cityName,
           _address!,
+          organizationName,
           _organizerText!,
           _link!,
           _trust,
+          _phone!,
+          _email!,
         ),
       ],
     );
@@ -816,7 +872,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
       selectedCountry = country;
       countryName = country != null ? country.name : "";
     });
-    _country = country?.countryId;
+    _countryId = country?.countryId;
   }
 
   void _buildProvinceStreamBuilder_setState(Province? province) {
@@ -825,7 +881,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
       selectedProvince = province;
       provinceName = province != null ? province.name : "";
     });
-    _province = province?.provinceId;
+    _provinceId = province?.provinceId;
   }
 
   void _buildCityStreamBuilder_setState(City? city) {
@@ -833,7 +889,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
       selectedCity = city;
       cityName = city != null ? city.name : "";
     });
-    _city = city?.cityId;
+    _cityId = city?.cityId;
   }
 
   void buildResourceCategoryStreamBuilderSetState(
@@ -878,6 +934,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     setState(() {
       selectedResourceType = resourceType;
       resourceTypeName = resourceType != null ? resourceType.name : "";
+      resourceTypeId = resourceType?.resourceTypeId;
     });
   }
 
@@ -909,12 +966,16 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     setState(() => _address = val!);
   }
 
- void organizerTextSetState(String? val) {
-    setState(() => _organizerText = val!);
-  }
-
   void linkSetState(String? val) {
     setState(() => _link = val!);
+  }
+
+  void phoneSetState(String? val) {
+    setState(() => _phone = val!);
+  }
+
+  void emailSetState(String? val) {
+    setState(() => _email = val!);
   }
 
   void _showMultiSelectInterests(BuildContext context) async {
@@ -924,7 +985,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
         return streamBuilderDropdownInterests(context, selectedInterests);
       },
     );
-    print(selectedValues);
     getValuesFromKeyInterests(selectedValues);
   }
 
@@ -939,10 +999,8 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
       interestsNames = concatenate.toString();
       textEditingControllerInterests.text = concatenate.toString();
       interests = interestsIds;
-      this.selectedInterests = selectedValues;
+      selectedInterests = selectedValues;
     });
-    print(interestsNames);
-    print(interestsIds);
   }
 
   List<Step> getSteps() => [
@@ -972,7 +1030,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
       return;
     }
 
-    if (currentStep == 1 && !_validateAndSaveInterestsForm()) {
+    if (currentStep == 1 && !_validateAndSaveOrganizerForm()) {
       return;
     }
 

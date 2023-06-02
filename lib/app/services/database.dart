@@ -50,6 +50,7 @@ abstract class Database {
 //   Stream<UserEnreda> enredaUserStream(String userId);
 //   Stream<List<Certificate>> myCertificatesStream(String userId);
      Stream<List<Organization>> organizationsStream();
+     Stream<List<Organization>> filterOrganizationStream(String organizationId);
      Stream<Organization> organizationStream(String organizationId);
      Stream<UserEnreda> mentorStream(String mentorId);
      Stream<List<Country>> countriesStream();
@@ -106,6 +107,7 @@ abstract class Database {
 //   Future<void> addMentorUser(MentorUser mentorUser);
      Future<void> addOrganizationUser(OrganizationUser organizationUser);
      Future<void> addOrganization(Organization organization);
+     Future<void> addResource(Resource resource);
 //   Future<void> addChatQuestion(ChatQuestion chatQuestion);
 //   Future<void> updateChatQuestion(ChatQuestion chatQuestion);
 //   Future<void> addExperience(Experience experience);
@@ -219,7 +221,7 @@ class FirestoreDatabase implements Database {
           queryBuilder: (query) =>
               query.where('organizer', isEqualTo: organizationId),
           builder: (data, documentId) => Resource.fromMap(data, documentId),
-          sort: (lhs, rhs) => lhs.maximumDate.compareTo(rhs.maximumDate),
+          sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
         );
 
 
@@ -279,6 +281,16 @@ class FirestoreDatabase implements Database {
       builder: (data, documentId) => Organization.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
     );
+
+    @override
+    Stream<List<Organization>> filterOrganizationStream(String organizationId) =>
+        _service.collectionStream(
+          path: APIPath.organizations(),
+          builder: (data, documentId) => Organization.fromMap(data, documentId),
+          queryBuilder: (query) =>
+              query.where('organizationId', isEqualTo: organizationId),
+          sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+        );
 
     @override
     Stream<Organization> organizationStream(String organizationId) =>
@@ -676,6 +688,11 @@ class FirestoreDatabase implements Database {
 //   Future<void> addCertificationRequest(CertificationRequest certificationRequest) =>
 //       _service.addData(path: APIPath.certificationsRequests(), data: certificationRequest.toMap());
 //
+  @override
+  Future<void> addResource(Resource resource) =>
+      _service.addData(path: APIPath.resources(), data: resource.toMap());
+
+
   @override
   Stream<List<UserEnreda>> checkIfUserEmailRegistered(String email) {
     return _service.collectionStream(

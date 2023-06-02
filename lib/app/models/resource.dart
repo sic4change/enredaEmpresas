@@ -1,4 +1,6 @@
 
+import 'package:enreda_empresas/app/models/addressUser.dart';
+
 class Resource {
   Resource({
     required this.title,
@@ -40,6 +42,10 @@ class Resource {
     this.resourcePictureId,
     this.resourcePhoto,
     this.searchText,
+    required this.createdate,
+    this.address,
+    this.link,
+    this.notExpire,
   });
 
   factory Resource.fromMap(Map<String, dynamic> data, String documentId) {
@@ -88,6 +94,15 @@ class Resource {
     final String? contactPhone = data['contactPhone'];
     final String? resourcePhoto = data['resourcePhoto'];
     final String? searchText = data['searchText'];
+    final String? link = data['link'];
+    final bool? notExpire = data['notExpire'];
+    final DateTime createdate = data['createdate'].toDate();
+
+    final Address address = Address(
+        country: country,
+        province: province,
+        city: city,
+        place: place);
 
     return Resource(
       resourceId: documentId,
@@ -129,6 +144,10 @@ class Resource {
       resourcePictureId: resourcePictureId,
       resourcePhoto: resourcePhoto,
       searchText: searchText,
+      link: link,
+      notExpire: notExpire,
+      createdate: createdate,
+      address: address,
     );
   }
 
@@ -171,6 +190,10 @@ class Resource {
   String? resourcePictureId;
   String? resourcePhoto;
   final String? searchText;
+  final String? link;
+  final bool? notExpire;
+  final DateTime createdate;
+  final Address? address;
 
   Map<String, dynamic> toMap() {
     return {
@@ -211,6 +234,10 @@ class Resource {
       'resourcePictureId': resourcePictureId,
       'resourcePhoto': resourcePhoto,
       'searchText': searchText,
+      'link': link,
+      'notExpire': notExpire,
+      'createdate': createdate,
+      'address': address?.toMap(),
     };
   }
 

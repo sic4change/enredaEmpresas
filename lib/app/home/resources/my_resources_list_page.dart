@@ -38,7 +38,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   Widget? _currentPage;
   bool? isVisible = true;
   List<UserEnreda>? myParticipantsList = [];
-
+  String? organizationId;
 
   @override
   void initState() {
@@ -68,12 +68,12 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
         children: [
           InkWell(
             onTap: () => {
-            Navigator.of(this.context).push(
-            MaterialPageRoute<void>(
-            fullscreenDialog: true,
-            builder: ((context) => const ResourceCreationForm()),
-            ),
-            )
+              Navigator.of(this.context).push(
+                MaterialPageRoute<void>(
+                  fullscreenDialog: true,
+                  builder: ((context) => ResourceCreationForm(organizationId: organizationId)),
+                ),
+              )
             },
             child: Container(
               decoration: BoxDecoration(
@@ -150,30 +150,24 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                       fitSmallerLayout: false,
                       itemBuilder: (context, resource) {
                         return StreamBuilder<Organization>(
-                          stream:
-                              database.organizationStream(resource.organizer),
+                          stream: database.organizationStream(resource.organizer),
                           builder: (context, snapshot) {
                             final organization = snapshot.data;
-                            resource.organizerName =
-                                organization == null ? '' : organization.name;
-                            resource.organizerImage =
-                                organization == null ? '' : organization.photo;
+                            organizationId = resource.organizer;
+                            resource.organizerName = organization == null ? '' : organization.name;
+                            resource.organizerImage = organization == null ? '' : organization.photo;
                             resource.setResourceTypeName();
                             resource.setResourceCategoryName();
                             return StreamBuilder<Country>(
-                                stream:
-                                    database.countryStream(resource.country),
+                                stream: database.countryStream(resource.country),
                                 builder: (context, snapshot) {
                                   final country = snapshot.data;
-                                  resource.countryName =
-                                      country == null ? '' : country.name;
+                                  resource.countryName = country == null ? '' : country.name;
                                   return StreamBuilder<Province>(
-                                    stream: database
-                                        .provinceStream(resource.province),
+                                    stream: database.provinceStream(resource.province),
                                     builder: (context, snapshot) {
                                       final province = snapshot.data;
-                                      resource.provinceName =
-                                          province == null ? '' : province.name;
+                                      resource.provinceName = province == null ? '' : province.name;
                                       return StreamBuilder<City>(
                                           stream: database
                                               .cityStream(resource.city),
@@ -199,9 +193,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                                     child: ResourceListTile(
                                                       resource: resource,
                                                       onTap: () => setState(() {
-                                                        _currentPage =
-                                                            _myResourcesPage(
-                                                                resource);
+                                                        _currentPage = _myResourcesPage(resource);
                                                       }),
                                                     ),
                                                   );
