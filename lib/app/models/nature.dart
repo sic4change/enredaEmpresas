@@ -14,7 +14,7 @@ class Nature {
   }
 
   @override
-  bool operator ==(Object other){
+  bool operator == (Object other){
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is Nature &&
@@ -27,4 +27,6 @@ class Nature {
       'value': value,
     };
   }
+
+
 }

@@ -21,7 +21,7 @@ class ControlPanelPage extends StatelessWidget {
   Widget _myWelcomePage(BuildContext context){
     final textTheme = Theme.of(context).textTheme;
     String locale = Localizations.localeOf(context).languageCode;
-    DateTime now = new DateTime.now();
+    DateTime now = DateTime.now();
     String dayOfNow = DateFormat.d(locale).format(now);
     String dayOfWeek = DateFormat.EEEE(locale).format(now);
     String dayMonth = DateFormat.MMMM(locale).format(now);
