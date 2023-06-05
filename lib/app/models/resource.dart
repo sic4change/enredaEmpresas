@@ -18,7 +18,7 @@ class Resource {
     required this.capacity,
     required this.duration,
     required this.modality,
-    required this.place,
+    this.place,
     this.street,
     this.country,
     this.countryName,
@@ -72,7 +72,7 @@ class Resource {
     final String? provinceName = data['provinceName'];
     final String? city = data['address']['city'];
     final String? cityName = data['cityName'];
-    final String place = data['address']['place'];
+    final String? place = data['address']['place'];
     final String? street = data['address']['street'];
     final DateTime maximumDate = data['maximumDate'].toDate();
     final DateTime start = DateTime.parse(data['start'].toDate().toString());
@@ -126,7 +126,6 @@ class Resource {
       provinceName: provinceName,
       city: city,
       cityName: cityName,
-      place: place,
       street: street,
       maximumDate: maximumDate,
       start: start,
@@ -172,7 +171,7 @@ class Resource {
   String? provinceName;
   final String? city;
   String? cityName;
-  final String place;
+  final String? place;
   final String? street;
   final DateTime maximumDate;
   final DateTime start;
@@ -202,22 +201,12 @@ class Resource {
       'description': description,
       'organizer': organizer,
       'organizerType': organizerType,
-      'organizerName': organizerName,
-      'organizerImage': organizerImage,
       'promotor': promotor,
       'resourceType': resourceType,
       'resourceCategory': resourceCategory,
       'capacity' : capacity,
       'duration' : duration,
       'modality' : modality,
-      'country' : country,
-      'countryName' : countryName,
-      'province' : province,
-      'provinceName' : provinceName,
-      'city' : city,
-      'cityName' : cityName,
-      'place' : place,
-      'street' : street,
       'maximumDate' : maximumDate,
       'start' : start,
       'end' : end,
@@ -232,7 +221,6 @@ class Resource {
       'contactEmail' : contactEmail,
       'contactPhone' : contactPhone,
       'resourcePictureId': resourcePictureId,
-      'resourcePhoto': resourcePhoto,
       'searchText': searchText,
       'link': link,
       'notExpire': notExpire,
