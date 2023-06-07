@@ -1,15 +1,11 @@
-
-
-import 'dart:ui';
-
+import 'package:enreda_empresas/app/home/resources/empty_content.dart';
 import 'package:flutter/material.dart';
 
-import 'empty_content.dart';
 
 typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
-class ListItemBuilder<T> extends StatelessWidget {
-  const ListItemBuilder(
+class WrapBuilder<T> extends StatelessWidget {
+  const WrapBuilder(
       {Key? key,
         this.snapshot,
         this.itemBuilder,
@@ -26,7 +22,7 @@ class ListItemBuilder<T> extends StatelessWidget {
     if (snapshot!.hasData) {
       final List<T> items = snapshot!.data!;
       if (items.isNotEmpty) {
-        return _build(items);
+        return _build(items, context);
       } else {
         return EmptyContent(title: emptyTitle!, message: emptyMessage!);
       }
@@ -37,19 +33,20 @@ class ListItemBuilder<T> extends StatelessWidget {
     return const Center(child: CircularProgressIndicator());
   }
 
-  Widget _build(List<T> items) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: items.length + 2,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        if (index == 0 || index == items.length + 1) {
-          return Container();
-        }
-        return Container(
-            alignment: Alignment.centerLeft,
-            child: itemBuilder!(context, items[index - 1]));
-      },
+  Widget _build(List<T> items, context) {
+    return Expanded(
+      child:
+      Wrap(
+        spacing: 5,
+        children: List.generate(
+            items.length + 2, (index) {
+          if (index == 0 || index == items.length + 1) {
+            return Container();
+          }
+            return itemBuilder!(context, items[index - 1]);
+
+          })
+      )
     );
   }
 }

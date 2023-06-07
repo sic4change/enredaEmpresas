@@ -17,14 +17,7 @@ class ImagePath {
   static const String APP_STORE_BUTTON = "$imageDir/app_store_900x503.png";
   static const String PLAY_STORE_BUTTON = "$imageDir/play_store_900x503.png";
 
-  // Onboarding
-  static const String PAGE_1 = '$imageDir/ilustracion-vista-2.png';
-  static const String PAGE_3 = '$imageDir/ilustracion-vista-3.png';
-  static const String PAGE_2 = '$imageDir/ilustracion-vista-4.png';
-  static const String BLOB_1 = '$imageDir/fondo-verde-vista-1.png';
-  static const String BLOB_2 = '$imageDir/fondo-verde-vista-2.png';
-  static const String BLOB_3 = '$imageDir/fondo-verde-vista-3.png';
-  static const String BLOB_4 = '$imageDir/fondo-verde-vista-4.png';
+  // Resource detail
   static const String LOGO_ALONE = '$imageDir/enreda-logo-alone.png';
   static const String LOGO_TEXT = '$imageDir/enreda-logo-text.png';
   static const String ARROW = '$imageDir/flecha.png';
@@ -32,6 +25,9 @@ class ImagePath {
   static const String IMAGE_DEFAULT = '$imageDir/placeholder-image.png';
   static const String PHOTO_BUTTON = '$imageDir/photo-button.jpg';
   static const String CREATE_RESOURCE = '$imageDir/icon-crear-recurso.png';
+  static const String DOWNLOAD_RESOURCE = '$imageDir/icon-descargar.png';
+  static const String EDIT_RESOURCE = '$imageDir/icon-editar.png';
+  static const String DELETE_RESOURCE = '$imageDir/icon-eliminar.png';
 
   //Competencies
   static const String EMPTY_BADGE_SAMPLE = '$imageDir/empty_900x503.png';

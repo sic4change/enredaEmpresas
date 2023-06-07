@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
+import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
@@ -46,7 +47,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    double fontSize = responsiveSize(context, 15, 15, md: 13);
+    double fontSize = responsiveSize(context, 12, 13, md: 12);
     double sidePadding = responsiveSize(context, 15, 20, md: 17);
 
     return Scaffold(
@@ -122,11 +123,12 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                     children: [
                                       Text(
                                         widget.resource.promotor != null
-                                            ? widget.resource.promotor!
-                                            : widget.resource.organizerName ??
-                                                '',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                          ? widget.resource.promotor != ""
+                                              ? widget.resource.promotor!
+                                              : widget.resource.organizerName!
+                                          : widget.resource.organizerName!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                         style: textTheme.bodySmall?.copyWith(
                                           color: AppColors.greyDark,
                                           height: 1.5,
@@ -236,19 +238,45 @@ class _ResourceListTileState extends State<ResourceListTile> {
                           bottomLeft: Radius.circular(10)),
                       color: AppColors.white,
                     ),
-                    height: 40,
-                    child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: sidePadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-
-                        Spacer(),
-                        // buildShareButton(
-                        //     context, widget.resource, AppColors.greyDark),
+                    height: 45,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: 130,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: AppColors.greyLight2.withOpacity(0.2),
+                                  width: 1),
+                              borderRadius: BorderRadius.circular(Sizes.mainPadding),
+                            ),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(4.0),
+                            margin: const EdgeInsets.only(top: 4.0, bottom: 4.0, left: 15.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 8,
+                                  width: 8,
+                                  decoration: BoxDecoration(
+                                    color: widget.resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
+                                    borderRadius: BorderRadius.circular(Sizes.mainPadding),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                    widget.resource.status,
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: AppColors.greyAlt,
+                                      fontSize: fontSize,
+                                    ),),
+                              ],
+                            )),
                       ],
-                    ),
                     ),
                   )
                 ],

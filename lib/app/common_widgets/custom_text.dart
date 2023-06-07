@@ -55,14 +55,11 @@ class CustomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = responsiveSize(context, 14, 15, md: 14);
     TextTheme textTheme = Theme.of(context).textTheme;
     return Text(
       title,
-      style: textTheme.bodyText1?.copyWith(
+      style: textTheme.bodySmall?.copyWith(
         color: AppColors.greyAlt,
-        height: 1.5,
-        fontSize: fontSize,
       ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,

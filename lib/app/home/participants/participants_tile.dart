@@ -177,7 +177,6 @@ class ParticipantsListTile extends StatefulWidget {
 }
 
 class _ParticipantsListTileState extends State<ParticipantsListTile> {
-
   @override
   void initState() {
     super.initState();
@@ -196,7 +195,8 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
           onTap: widget.onTap,
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
+              border: Border.all(
+                  color: AppColors.greyLight2.withOpacity(0.3), width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               color: Colors.white,
               boxShadow: [
@@ -211,10 +211,10 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
-                  height: Responsive.isMobile(context) ? 200: 150,
-                  child: !kIsWeb
-                      ? ClipRRect(
+                !kIsWeb
+                    ? Expanded(
+                        flex: 3,
+                        child: ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
@@ -238,8 +238,11 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
                                           ),
                                   alignment: Alignment.center,
                                   imageUrl: widget.user.photo!),
-                        )
-                      : ClipRRect(
+                        ),
+                      )
+                    : Expanded(
+                        flex: 3,
+                        child: ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
@@ -250,57 +253,50 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
                                   color: Colors.transparent,
                                   height: 120,
                                   width: 120,
-                                  child:
-                                      Image.asset(ImagePath.USER_DEFAULT),
+                                  child: Image.asset(ImagePath.USER_DEFAULT),
                                 )
                               : PrecacheResourceCard(
                                   imageUrl: widget.user.photo!,
                                 ),
                         ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10)),
-                    color: Colors.white,
-                  ),
-                  height: 115,
+                      ),
+                Expanded(
+                  flex: 3,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 45,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: sidePadding, right: sidePadding),
-                              child: Text(
-                                '${widget.user.firstName!} ${widget.user.lastName!}',
-                                textAlign: TextAlign.left,
-                                maxLines: 1,
-                                style: textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.greyDark2),
-                              ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: sidePadding, right: sidePadding),
+                            child: Text(
+                              '${widget.user.firstName!} ${widget.user.lastName!}',
+                              textAlign: TextAlign.left,
+                              maxLines: 1,
+                              style: textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.greyDark2),
                             ),
-                            const SpaceH4(),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: sidePadding, left: sidePadding),
-                              child: Text(
-                                widget.user.educationName?.toUpperCase() ?? '',
-                                textAlign: TextAlign.left,
-                                maxLines: 2,
-                                style: textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.penBlue),
-                              ),
+                          ),
+                          const SpaceH4(),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                right: sidePadding, left: sidePadding),
+                            child: Text(
+                              widget.user.educationName?.toUpperCase() ?? '',
+                              textAlign: TextAlign.left,
+                              maxLines: 2,
+                              style: textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.penBlue),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -312,5 +308,4 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
       ),
     );
   }
-
 }

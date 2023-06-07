@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/participants/participants_tile.dart';
+import 'package:enreda_empresas/app/home/participants/resources_participants.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
@@ -51,13 +52,12 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(StringConst.PARTICIPANTS_BY,
-              style: textTheme.bodyLarge?.copyWith(
+              style: textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 30.0,
                   color: AppColors.greyDark2),),
           ),
           Container(
-              margin: EdgeInsets.only(top: Sizes.mainPadding * 3),
+              margin: EdgeInsets.only(top: Sizes.mainPadding * 2),
               child: _currentPage),
         ],
       ),
@@ -92,7 +92,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                   itemBuilder: (context, user) {
                     return ParticipantsListTile(user: user,
                         onTap: () => setState(() {
-                      _currentPage = _buildMyProfile(user);
+                      _currentPage = _buildParticipantProfile(user);
                     })
                     );
                   }
@@ -102,199 +102,178 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
     });
   }
 
-  Widget _buildMyProfile(UserEnreda? user) {
+  Widget _buildParticipantProfile(UserEnreda? user) {
     final textTheme = Theme.of(context).textTheme;
-    double? textSize = responsiveSize(
-      context,
-      Sizes.TEXT_SIZE_14,
-      Sizes.TEXT_SIZE_18,
-      md: Sizes.TEXT_SIZE_15,
-    );
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.grey,
-              ),
-              onPressed: () => setState(() {
-                _currentPage = _buildResourcesList(context);
-              }),
-            ),
-          ),
-          Container(
-            height: 250,
-            padding: EdgeInsets.symmetric(vertical: Sizes.mainPadding),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.greyLight, width: 1),
-              borderRadius: const BorderRadius.only(topRight: Radius.circular(15.0), topLeft: Radius.circular(15.0),),
-              color: AppColors.white,
-            ),
-            child: Flex(
-              direction:  Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 250,
+          child: Flex(
+            direction:  Responsive.isMobile(context) || Responsive.isTablet(context)  ? Axis.vertical : Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InkWell(
-                      mouseCursor: MaterialStateMouseCursor.clickable,
-                      // onTap: () => !kIsWeb
-                      //     ? _displayPickImageDialog()
-                      //     : _onImageButtonPressed(ImageSource.gallery),
-                      child: Container(
-                        width: Responsive.isMobile(context) ? 70 : 120,
-                        height: Responsive.isMobile(context) ? 70 : 120,
-                        color: Colors.white,
-                        margin: Responsive.isMobile(context) ?  const EdgeInsets.all(10.0) :  const EdgeInsets.all(30.0),
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(120),
-                              ),
+                    Positioned(
+                      top: 0,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: AppColors.greyDark,
+                        ),
+                        onPressed: () => setState(() {
+                          _currentPage = _buildResourcesList(context);
+                        }),
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(120),
+                          ),
+                          child:
+                          !kIsWeb ? ClipRRect(
+                            borderRadius: const BorderRadius.all(Radius.circular(60)),
+                            child:
+                            Center(
                               child:
-                              !kIsWeb ?
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(60)),
-                                child:
-                                Center(
-                                  child:
-                                  user?.photo == "" ?
-                                  Container(
-                                    color:  Colors.transparent,
-                                    height: Responsive.isMobile(context) ? 90 : 120,
-                                    width: Responsive.isMobile(context) ? 90 : 120,
-                                    child: Image.asset(ImagePath.USER_DEFAULT),
-                                  ):
-                                  CachedNetworkImage(
-                                      width: Responsive.isMobile(context) ? 90 : 120,
-                                      height: Responsive.isMobile(context) ? 90 : 120,
-                                      fit: BoxFit.cover,
-                                      alignment: Alignment.center,
-                                      imageUrl: user?.photo ?? ""),
-                                ),
+                              user?.photo == "" ?
+                              Container(
+                                color:  Colors.transparent,
+                                height: Responsive.isMobile(context) ? 90 : 120,
+                                width: Responsive.isMobile(context) ? 90 : 120,
+                                child: Image.asset(ImagePath.USER_DEFAULT),
                               ):
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(60)),
-                                child:
-                                Center(
-                                  child:
-                                  user?.photo == "" ?
-                                  Container(
-                                    color:  Colors.transparent,
-                                    height: Responsive.isMobile(context) ? 90 : 120,
-                                    width: Responsive.isMobile(context) ? 90 : 120,
-                                    child: Image.asset(ImagePath.USER_DEFAULT),
-                                  ):
-                                  FadeInImage.assetNetwork(
-                                    placeholder: ImagePath.USER_DEFAULT,
-                                    width: Responsive.isMobile(context) ? 90 : 120,
-                                    height: Responsive.isMobile(context) ? 90 : 120,
-                                    fit: BoxFit.cover,
-                                    image: user?.photo ?? "",
-                                  ),
-                                ),
+                              CachedNetworkImage(
+                                  width: Responsive.isMobile(context) ? 90 : 120,
+                                  height: Responsive.isMobile(context) ? 90 : 120,
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center,
+                                  imageUrl: user?.photo ?? ""),
+                            ),
+                          ):
+                          ClipRRect(
+                            borderRadius: const BorderRadius.all(Radius.circular(60)),
+                            child:
+                            Center(
+                              child:
+                              user?.photo == "" ?
+                              Container(
+                                color:  Colors.transparent,
+                                height: Responsive.isMobile(context) ? 90 : 120,
+                                width: Responsive.isMobile(context) ? 90 : 120,
+                                child: Image.asset(ImagePath.USER_DEFAULT),
+                              ):
+                              FadeInImage.assetNetwork(
+                                placeholder: ImagePath.USER_DEFAULT,
+                                width: Responsive.isMobile(context) ? 90 : 120,
+                                height: Responsive.isMobile(context) ? 90 : 120,
+                                fit: BoxFit.cover,
+                                image: user?.photo ?? "",
                               ),
                             ),
-                            Positioned(
-                              left: Responsive.isMobile(context) ? 0 : 6,
-                              top: Responsive.isMobile(context) ? 0 : 6,
-                              child: Container(
-                                padding: const EdgeInsets.all(2.0),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  shape: BoxShape.circle,
-                                  border:
-                                  Border.all(color: AppColors.penBlue, width: 1.0),
-                                ),
-                                child: const Icon(
-                                  Icons.mode_edit_outlined,
-                                  size: 22,
-                                  color: AppColors.penBlue,
-                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${user!.firstName} ${user.lastName}',
+                            style: textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold, color: AppColors.chatDarkGray),
+                          ),
+                          const SizedBox(height: 8,),
+                          Text(
+                            '${user.educationName}'.toUpperCase(),
+                            style: textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold, color: AppColors.penBlue),
+                          ),
+                          const SizedBox(height: 30,),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.violet, // Background color
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(StringConst.INVITE_RESOURCE.toUpperCase(),
+                              style: textTheme.titleLarge?.copyWith(
+                                color: AppColors.penBlue,
+                                letterSpacing: 1.1,
+                                fontWeight: FontWeight.w700,
                               ),
+                            ),
+                            SizedBox(width: Responsive.isMobile(context) ? 5 : 20),
+                            IconButton(
+                                iconSize: 40,
+                                icon: Image.asset(ImagePath.CREATE_RESOURCE),
+                                onPressed: () => {}
                             ),
                           ],
                         ),
                       ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${user!.firstName} ${user.lastName}',
-                          style: textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold, color: AppColors.chatDarkGray),
-                        ),
-                        const SizedBox(height: 8,),
-                        Text(
-                          '${user.educationName}'.toUpperCase(),
-                          style: textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold, color: AppColors.penBlue),
-                        ),
-
-                      ],
-                    ),
                   ],
                 ),
-                const Spacer(),
-                const SpaceH20(),
-                ElevatedButton(
-                  onPressed: () => {},
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(StringConst.INVITE_RESOURCE.toUpperCase(),
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: AppColors.penBlue,
-                            fontSize: textSize,
-                            letterSpacing: 1.1,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 5,),
-                        IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: AppColors.penBlue,
-                            ),
-                            onPressed: () => {}
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                const SpaceH20(),
-                const Divider(),
-              ],
-            ),
+              ),
+            ],
           ),
-          _buildPersonalData(context, user)
-        ],
-      ),
+        ),
+        SizedBox(
+          height: Responsive.isMobile(context) || Responsive.isTablet(context) ? 400 : 250,
+          child: Flex(
+            direction:  Responsive.isMobile(context) || Responsive.isTablet(context) ? Axis.vertical : Axis.horizontal,
+            children: [
+              Expanded(
+                flex: Responsive.isMobile(context) || Responsive.isTablet(context) ? 1 : 1,
+                child: _buildPersonalData(context, user)
+              ),
+              Expanded(
+                flex: Responsive.isMobile(context) || Responsive.isTablet(context) ? 1 : 3,
+                child: _buildResourcesParticipant(context, user))
+            ],
+          ),
+        )
+      ],
     );
   }
 
   Widget _buildPersonalData(BuildContext context, UserEnreda user) {
     final textTheme = Theme.of(context).textTheme;
-
     return Container(
-      width: 250,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.greyTxtAlt, width: 1),
+        border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
         borderRadius: const BorderRadius.all(Radius.circular(15.0)),
         color: AppColors.white,
       ),
@@ -303,11 +282,11 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            StringConst.PERSONAL_DATA.toUpperCase(),
-            style: textTheme.bodyText1?.copyWith(
+            StringConst.PERSONAL_DATA,
+            style: textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: Responsive.isDesktop(context) ? 18 : 14.0,
-              color: AppColors.darkLilac,
+              color: AppColors.penBlue,
             ),
           ),
           const SpaceH20(),
@@ -377,7 +356,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                             color: Colors.black.withOpacity(0.7),
                             size: 16,
                           ),
-                          SpaceW4(),
+                          const SpaceW4(),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -392,5 +371,33 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
               });
         });
   }
-  
+
+  Widget _buildResourcesParticipant(BuildContext context, UserEnreda user) {
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      margin: Responsive.isMobile(context) || Responsive.isTablet(context) ? const EdgeInsets.only(top: 20) : const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
+        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+        color: AppColors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            StringConst.RESOURCES_PARTICIPANT,
+            style: textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: Responsive.isDesktop(context) ? 18 : 14.0,
+              color: AppColors.penBlue,
+            ),
+          ),
+          const SizedBox(height: 10,),
+          ParticipantResourcesPage(participantId: user.userId),
+        ],
+      ),
+    );
+  }
 }

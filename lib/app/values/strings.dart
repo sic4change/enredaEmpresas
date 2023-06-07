@@ -18,6 +18,7 @@ class StringConst {
   static const String EMAIL_URL = "mailto:<$DEV_EMAIL>?subject=&body=";
 
   static const String MY_RESOURCES = "Mis Recursos";
+  static const String RESOURCES_PARTICIPANT = "Se ha inscrito a los siguientes recursos:";
   static const String FAVORITES = "Favoritos";
   static const String RECOMMENDED = "Recomendados";
 
@@ -368,6 +369,7 @@ class StringConst {
   static const String FORM_ACCEPT = "Aceptar";
   static const String FORM_ERROR= "Error al crea la cuenta";
   static const String FORM_SELECT= "Seleccionar";
+  static const String AVAILABLE = "Disponibilidad";
 
   static const List<String> RESOURCE_TYPES = [
     'Oferta de empleo',

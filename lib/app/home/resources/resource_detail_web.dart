@@ -31,7 +31,7 @@ class ResourceDetailPageWeb extends StatefulWidget {
 }
 
 class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
   late Resource resource;
 
   final _formKey = GlobalKey<FormState>();
@@ -239,8 +239,10 @@ class _ResourceDetailPageWebState extends State<ResourceDetailPageWeb> {
         const SpaceH24(),
         Text(
           resource.promotor != null
-              ? resource.promotor!
-              : resource.organizerName ?? '',
+              ? resource.promotor != ""
+                  ? resource.promotor!
+                  : resource.organizerName!
+              : resource.organizerName!,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(

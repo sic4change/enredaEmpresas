@@ -44,7 +44,8 @@ abstract class Database {
 //   Stream<List<Resource>> resourcesStream();
 //   //Stream<List<Resource>> filteredResourcesStream(FilterResource filter);
 //   Stream<List<Resource>> filteredResourcesCategoryStream(FilterResource filter);
-     Stream<List<Resource>> myResourcesStream(String userId);
+     Stream<List<Resource>> myResourcesStream(String organizationId);
+     Stream<List<Resource>> participantsResourcesStream(String userId);
 //   Stream<List<Resource>> likeResourcesStream(String userId);
 //   Stream<List<Resource>> recommendedResourcesStream(UserEnreda? user);
 //   Stream<UserEnreda> enredaUserStream(String userId);
@@ -65,6 +66,7 @@ abstract class Database {
      Stream<List<City>> citiesProvinceStream(String? provinceId);
      Stream<List<UserEnreda>> userStream(String? email);
      Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList);
+     Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
 //   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
@@ -79,6 +81,7 @@ abstract class Database {
      Stream<List<Education>> educationStream();
      Stream<List<ResourceType>> resourceTypeStream();
      Stream<List<Interest>> interestStream();
+     Stream<List<Interest>> interestsStream(String? interestId);
 //   Stream<List<Activity>> professionsActivitiesStream();
 //   Stream<Activity> activityStreamProfessionId(String? activityId);
      Stream<List<SpecificInterest>> specificInterestStream(String? interestId);
@@ -223,6 +226,16 @@ class FirestoreDatabase implements Database {
           builder: (data, documentId) => Resource.fromMap(data, documentId),
           sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
         );
+
+    @override
+  Stream<List<Resource>> participantsResourcesStream(String userId) =>
+      _service.collectionStream(
+        path: APIPath.resources(),
+        queryBuilder: (query) => query.where('participants', arrayContains: userId),
+        builder: (data, documentId) => Resource.fromMap(data, documentId),
+        sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
+      );
+
 
 
 //   @override
@@ -421,6 +434,16 @@ class FirestoreDatabase implements Database {
     );
   }
 
+  @override
+  Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList) {
+    return _service.collectionStream<Resource>(
+      path: APIPath.resources(),
+      queryBuilder: (query) => query.where('participants', arrayContainsAny: participantsIdList),
+      builder: (data, documentId) => Resource.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.title.compareTo(rhs.title),
+    );
+  }
+
 
   @override
   Stream<Organization> organizationStreamById(String? organizationId) =>
@@ -499,6 +522,17 @@ class FirestoreDatabase implements Database {
       builder: (data, documentId) => Interest.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
     );
+
+  @override
+  Stream<List<Interest>> interestsStream(String? interestId) =>
+      _service.collectionStream(
+        path: APIPath.interests(),
+        queryBuilder: (query) =>
+            query.where('interestId', isEqualTo: interestId),
+        builder: (data, documentId) =>
+            Interest.fromMap(data, documentId),
+        sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+      );
 
   @override
   Stream<List<SpecificInterest>> specificInterestStream(String? interestId) =>

@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chips_choice/chips_choice.dart';
+import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/build_share_button.dart';
+import 'package:enreda_empresas/app/common_widgets/custom_chip.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/resources/create_resource_form/create_resource.dart';
@@ -9,6 +12,8 @@ import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
+import 'package:enreda_empresas/app/models/interest.dart';
+import 'package:enreda_empresas/app/models/interests.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
@@ -38,7 +43,10 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   Widget? _currentPage;
   bool? isVisible = true;
   List<UserEnreda>? myParticipantsList = [];
+  List<String>? interestsIdsList = [];
   String? organizationId;
+  final List<Interest> _interests = [];
+  List<String> interestSelectedName = [];
 
   @override
   void initState() {
@@ -49,12 +57,6 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    double? textSize = responsiveSize(
-      context,
-      Sizes.TEXT_SIZE_18,
-      Sizes.TEXT_SIZE_24,
-      md: Sizes.TEXT_SIZE_20,
-    );
     return Container(
       padding: EdgeInsets.all(Sizes.mainPadding),
       margin: EdgeInsets.all(Sizes.mainPadding),
@@ -90,9 +92,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                   children: [
                     const SizedBox(width: 20),
                     Text(StringConst.CREATE_RESOURCE,
-                      style: textTheme.bodyLarge?.copyWith(
+                      style: textTheme.headlineSmall?.copyWith(
                         color: AppColors.white,
-                        fontSize: textSize,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -100,7 +101,14 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                     IconButton(
                       iconSize: 40,
                         icon: Image.asset(ImagePath.CREATE_RESOURCE),
-                        onPressed: () => {}
+                        onPressed: () => {
+                          Navigator.of(this.context).push(
+                            MaterialPageRoute<void>(
+                              fullscreenDialog: true,
+                              builder: ((context) => ResourceCreationForm(organizationId: organizationId)),
+                            ),
+                          )
+                        }
                     ),
                     const SizedBox(width: 20),
                   ],
@@ -113,9 +121,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(StringConst.RESOURCES_CREATED_BY,
-                style: textTheme.bodyLarge?.copyWith(
+                style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
                     color: AppColors.greyDark2),),
             ),
           ),
@@ -138,85 +145,122 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
           }
           if (snapshot.hasData) {
             var user = snapshot.data!;
-            return StreamBuilder<List<Resource>>(
-                stream: database.myResourcesStream(user.organization!),
+            return   StreamBuilder<List<Interest>>(
+                stream: database.interestStream(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
                   if (snapshot.hasData) {
-                    return ListItemBuilderGrid<Resource>(
-                      snapshot: snapshot,
-                      fitSmallerLayout: false,
-                      itemBuilder: (context, resource) {
-                        return StreamBuilder<Organization>(
-                          stream: database.organizationStream(resource.organizer),
-                          builder: (context, snapshot) {
-                            final organization = snapshot.data;
-                            organizationId = resource.organizer;
-                            resource.organizerName = organization == null ? '' : organization.name;
-                            resource.organizerImage = organization == null ? '' : organization.photo;
-                            resource.setResourceTypeName();
-                            resource.setResourceCategoryName();
-                            return StreamBuilder<Country>(
-                                stream: database.countryStream(resource.country),
-                                builder: (context, snapshot) {
-                                  final country = snapshot.data;
-                                  resource.countryName = country == null ? '' : country.name;
-                                  return StreamBuilder<Province>(
-                                    stream: database.provinceStream(resource.province),
-                                    builder: (context, snapshot) {
-                                      final province = snapshot.data;
-                                      resource.provinceName = province == null ? '' : province.name;
-                                      return StreamBuilder<City>(
-                                          stream: database
-                                              .cityStream(resource.city),
-                                          builder: (context, snapshot) {
-                                            final city = snapshot.data;
-                                            resource.cityName =
-                                                city == null ? '' : city.name;
-                                            return StreamBuilder<
-                                                    ResourcePicture>(
-                                                stream: database
-                                                    .resourcePictureStream(
-                                                        resource
-                                                            .resourcePictureId),
-                                                builder: (context, snapshot) {
-                                                  final resourcePicture =
-                                                      snapshot.data;
-                                                  resource.resourcePhoto =
-                                                      resourcePicture
-                                                          ?.resourcePic;
-                                                  return Container(
-                                                    key: Key(
-                                                        'resource-${resource.resourceId}'),
-                                                    child: ResourceListTile(
-                                                      resource: resource,
-                                                      onTap: () => setState(() {
-                                                        _currentPage = _myResourcesPage(resource);
-                                                      }),
-                                                    ),
-                                                  );
-                                                });
-                                          });
-                                    },
-                                  );
-                                });
-                          },
-                        );
-                      },
-                      emptyTitle: 'Sin recursos',
-                      emptyMessage: 'Aún no has creado ningún recurso',
-                    );
+                    for (var interest in snapshot.data!) {
+                      if (!_interests.any((element) =>
+                      element.interestId == interest.interestId)) {
+                        _interests.add(interest);
+                      }
+                    }
                   }
-                  return const Center(child: CircularProgressIndicator());
+                  return StreamBuilder<List<Resource>>(
+                      stream: database.myResourcesStream(user.organization!),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasData) {
+                          return ListItemBuilderGrid<Resource>(
+                            snapshot: snapshot,
+                            fitSmallerLayout: false,
+                            itemBuilder: (context, resource) {
+                              return StreamBuilder<Organization>(
+                                stream: database.organizationStream(
+                                    resource.organizer),
+                                builder: (context, snapshot) {
+                                  final organization = snapshot.data;
+                                  organizationId = resource.organizer;
+                                  resource.organizerName =
+                                  organization == null ? '' : organization.name;
+                                  resource.organizerImage =
+                                  organization == null ? '' : organization.photo;
+                                  List<String> interestsSelected = [];
+                                  if (interestsSelected.isEmpty) {
+                                    interestsSelected = resource.interests!;
+                                    List<String> interestSelectedName = [];
+                                    _interests.where((interest) =>
+                                        interestsSelected.any((interestId) => interestId == interest.interestId)).forEach((interest) {
+                                      interestSelectedName.add(interest.name);
+                                    });
+                                    //interestsSelected.clear();
+                                    interestsSelected.addAll(interestSelectedName);
+                                  }
+                                  resource.setResourceTypeName();
+                                  resource.setResourceCategoryName();
+                                  return StreamBuilder<Country>(
+                                      stream: database.countryStream(
+                                          resource.country),
+                                      builder: (context, snapshot) {
+                                        final country = snapshot.data;
+                                        resource.countryName =
+                                        country == null ? '' : country.name;
+                                        return StreamBuilder<Province>(
+                                          stream: database.provinceStream(
+                                              resource.province),
+                                          builder: (context, snapshot) {
+                                            final province = snapshot.data;
+                                            resource.provinceName =
+                                            province == null ? '' : province
+                                                .name;
+                                            return StreamBuilder<City>(
+                                                stream: database
+                                                    .cityStream(resource.city),
+                                                builder: (context, snapshot) {
+                                                  final city = snapshot.data;
+                                                  resource.cityName =
+                                                  city == null ? '' : city.name;
+                                                  return StreamBuilder<
+                                                      ResourcePicture>(
+                                                      stream: database
+                                                          .resourcePictureStream(
+                                                          resource
+                                                              .resourcePictureId),
+                                                      builder: (context,
+                                                          snapshot) {
+                                                        final resourcePicture =
+                                                            snapshot.data;
+                                                        resource.resourcePhoto =
+                                                            resourcePicture
+                                                                ?.resourcePic;
+                                                        return Container(
+                                                          key: Key(
+                                                              'resource-${resource
+                                                                  .resourceId}'),
+                                                          child: ResourceListTile(
+                                                            resource: resource,
+                                                            onTap: () =>
+                                                                setState(() {
+                                                                  _currentPage =
+                                                                      _myResourcesPage(resource, interestsSelected);
+                                                                }),
+                                                          ),
+                                                        );
+                                                      });
+                                                });
+                                          },
+                                        );
+                                      });
+                                },
+                              );
+                            },
+                            emptyTitle: 'Sin recursos',
+                            emptyMessage: 'Aún no has creado ningún recurso',
+                          );
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      });
                 });
           }
           return const Center(child: CircularProgressIndicator());
         });
   }
 
-  Widget _myResourcesPage(Resource resource) {
+
+  Widget _myResourcesPage(Resource resource, List<String> interestsSelected) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
@@ -275,7 +319,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                   textAlign: TextAlign.center,
                                   maxLines:
                                       Responsive.isMobile(context) ? 2 : 1,
-                                  style: textTheme.bodyText1?.copyWith(
+                                  style: textTheme.bodySmall?.copyWith(
                                     letterSpacing: 1.2,
                                     color: AppColors.greyTxtAlt,
                                     height: 1.5,
@@ -291,8 +335,10 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                 children: [
                                   Text(
                                     resource.promotor != null
+                                        ? resource.promotor != ""
                                         ? resource.promotor!
-                                        : resource.organizerName ?? '',
+                                        : resource.organizerName!
+                                        : resource.organizerName!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -327,22 +373,17 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                           ? 0
                                           : 4,
                                       child: _buildDetailResource(
-                                          context, resource)),
+                                          context, resource, interestsSelected)),
                                   SizedBox(
                                     height: 600,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                             flex:
-                                                Responsive.isMobile(context) ||
-                                                        Responsive.isTablet(
-                                                            context) ||
-                                                        Responsive.isDesktopS(
-                                                            context)
-                                                    ? 0
-                                                    : 2,
+                                                Responsive.isMobile(context) || Responsive.isTablet(context) ||
+                                                        Responsive.isDesktopS(context) ? 0 : 2,
                                             child: _buildDetailCard(
                                                 context, resource)),
                                       ],
@@ -376,6 +417,30 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                 ),
                               ),
                             ),
+                      Positioned(
+                        right: 0,
+                        child: IconButton(
+                            iconSize: 40,
+                            icon: Image.asset(ImagePath.DELETE_RESOURCE),
+                            onPressed: () => {}
+                        ),
+                      ),
+                      Positioned(
+                        right: 50,
+                        child: IconButton(
+                            iconSize: 40,
+                            icon: Image.asset(ImagePath.DOWNLOAD_RESOURCE),
+                            onPressed: () => {}
+                        ),
+                      ),
+                      Positioned(
+                        right: 100,
+                        child: IconButton(
+                            iconSize: 40,
+                            icon: Image.asset(ImagePath.EDIT_RESOURCE),
+                            onPressed: () => {}
+                        ),
+                      ),
                     ],
                   )),
               Expanded(
@@ -396,7 +461,15 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                     margin: const EdgeInsets.only(top: 40.0, left: 10),
                     padding: const EdgeInsets.all(20.0),
                     child: SingleChildScrollView(
-                        child: _buildParticipantsList(context, resource.resourceId)),
+                        child: Stack(
+                          children: [
+                            CustomTextTitle(title: StringConst.PARTICIPANTS.toUpperCase()),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 30.0),
+                              child: _buildParticipantsList(context, resource.resourceId),
+                            ),
+                          ],
+                        )),
                   ))
             ],
           ),
@@ -405,27 +478,63 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     );
   }
 
-  Widget _buildDetailResource(BuildContext context, Resource resource) {
-    double fontSize = responsiveSize(context, 12, 15, md: 14);
+  Widget _buildDetailResource(BuildContext context, Resource resource, List<String> interestsSelected) {
     TextTheme textTheme = Theme.of(context).textTheme;
-
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            resource.description,
-            textAlign: TextAlign.left,
-            style: textTheme.bodySmall?.copyWith(
-              color: AppColors.greyTxtAlt,
-              height: 1.5,
-              fontSize: fontSize,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              resource.description,
+              textAlign: TextAlign.left,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.greyTxtAlt,
+                height: 1.5,
+              ),
             ),
           ),
-          const SizedBox(
-            height: 30,
+          _buildInterests(context, interestsSelected),
+          Column(
+            children: [
+              CustomTextTitle(title: StringConst.AVAILABLE.toUpperCase()),
+              Container(
+                  width: 130,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                        color: AppColors.greyLight2.withOpacity(0.2),
+                        width: 1),
+                    borderRadius: BorderRadius.circular(Consts.padding),
+                  ),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.only(top: 4.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 8,
+                        width: 8,
+                        decoration: BoxDecoration(
+                          color: resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
+                          borderRadius: BorderRadius.circular(Consts.padding),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      CustomTextBody(text: resource.status),
+                    ],
+                  )),
+            ],
           ),
-          buildShareButton(context, resource, AppColors.darkGray),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: buildShareButton(context, resource, AppColors.darkGray),
+          ),
           const SizedBox(
             height: 30,
           ),
@@ -527,19 +636,66 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
             emptyTitle: 'Sin participantes',
             emptyMessage: 'Aún no se ha registrado ningún participante',
             itemBuilder: (context, user) {
-              return  Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    _buildMyUserFoto(context, user.photo!),
-                    const SpaceW20(),
-                    Text('${user.firstName!} ${user.lastName!}'),
-                  ],
+              return  Container(
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                      color: AppColors.greyLight2.withOpacity(0.2),
+                      width: 1),
+                  borderRadius: BorderRadius.circular(Consts.padding * 2),
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      _buildMyUserFoto(context, user.photo!),
+                      const SpaceW20(),
+                      Text('${user.firstName!} ${user.lastName!}'),
+                    ],
+                  ),
                 ),
               );
             }
         );
       },
+    );
+  }
+
+  Widget _buildInterests(BuildContext context, List<String> interestsSelected) {
+    return Container(
+      padding: EdgeInsets.all(Sizes.mainPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextTitle(title: StringConst.FORM_INTERESTS.toUpperCase()),
+          const SpaceH20(),
+          _interests.isNotEmpty ?
+          Container(
+            alignment: Alignment.centerLeft,
+            child: ChipsChoice<String>.multiple(
+              padding: const EdgeInsets.all(0.0),
+              value: interestsSelected,
+              onChanged: (val) {},
+              choiceItems: C2Choice.listFrom<String, String>(
+                source: _interests.map((e) => e.name).toList(),
+                value: (i, v) => v,
+                label: (i, v) => v,
+                tooltip: (i, v) => v,
+              ),
+              choiceBuilder: (item, i) =>
+                  CustomChip(
+                    label: item.label,
+                    selected: item.selected,
+                    onSelect: item.select!,
+                  ),
+              wrapped: true,
+              runSpacing: 8,
+            ),
+          ) : Container(),
+        ],
+      ),
     );
   }
 

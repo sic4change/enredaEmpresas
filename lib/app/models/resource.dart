@@ -46,6 +46,7 @@ class Resource {
     this.address,
     this.link,
     this.notExpire,
+    this.interests,
   });
 
   factory Resource.fromMap(Map<String, dynamic> data, String documentId) {
@@ -84,6 +85,10 @@ class Resource {
     List<String> participants = [];
     if (data['participants'] != null) {
       data['participants'].forEach((participant) {participants.add(participant.toString());});
+    }
+    List<String>? interests = [];
+    if (data['interests'] != null) {
+      data['interests'].forEach((interest) {interests.add(interest.toString());});
     }
     final String assistants = data['assistants'].toString();
     List<String> likes = [];
@@ -135,6 +140,7 @@ class Resource {
       status: status,
       participants: participants,
       assistants: assistants,
+      interests: interests,
       likes: likes,
       salary: salary,
       contractType: contractType,
@@ -180,6 +186,7 @@ class Resource {
   final String? resourceLink;
   final String status;
   final List<String> participants;
+  final List<String>? interests;
   String? assistants;
   final List<String> likes;
   final String? contractType;
@@ -214,6 +221,7 @@ class Resource {
       'resourceLink' : resourceLink,
       'status' : status,
       'participants' : participants,
+      'interests' : interests,
       'assistants' : assistants,
       'likes' : likes,
       'contractType' : contractType,
