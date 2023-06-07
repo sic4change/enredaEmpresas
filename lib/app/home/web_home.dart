@@ -317,9 +317,9 @@ class SideBarWidget extends StatelessWidget {
         ) : const SizedBox(height: 10,);
       },
       items: const [
-        SidebarXItem(icon: Icons.home, label: 'Panel de control'),
-        SidebarXItem(icon: Icons.search, label: 'Participantes'),
-        SidebarXItem(icon: Icons.settings, label: 'Mis recursos'),
+        SidebarXItem(icon: Icons.view_quilt, label: 'Panel de control'),
+        SidebarXItem(icon: Icons.supervisor_account, label: 'Participantes'),
+        SidebarXItem(icon: Icons.card_travel, label: 'Mis recursos'),
       ],
     );
   }

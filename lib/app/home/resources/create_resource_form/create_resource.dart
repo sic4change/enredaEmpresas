@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
@@ -48,7 +47,6 @@ class ResourceCreationForm extends StatefulWidget {
 class _ResourceCreationFormState extends State<ResourceCreationForm> {
   final _formKey = GlobalKey<FormState>();
   final _formKeyOrganizer = GlobalKey<FormState>();
-  final _checkFieldKey = GlobalKey<FormState>();
   bool isLoading = false;
 
   String? _resourceTitle;
@@ -111,18 +109,12 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
   int? resourceCategoryValue;
   String? organizationId;
 
-  TextEditingController textEditingControllerDateInput =
-      TextEditingController();
-  TextEditingController textEditingControllerDateEndInput =
-      TextEditingController();
-  TextEditingController textEditingControllerDateMaxInput =
-      TextEditingController();
-  TextEditingController textEditingControllerAbilities =
-      TextEditingController();
-  TextEditingController textEditingControllerInterests =
-      TextEditingController();
-  TextEditingController textEditingControllerSpecificInterests =
-      TextEditingController();
+  TextEditingController textEditingControllerDateInput = TextEditingController();
+  TextEditingController textEditingControllerDateEndInput = TextEditingController();
+  TextEditingController textEditingControllerDateMaxInput = TextEditingController();
+  TextEditingController textEditingControllerAbilities = TextEditingController();
+  TextEditingController textEditingControllerInterests = TextEditingController();
+  TextEditingController textEditingControllerSpecificInterests = TextEditingController();
 
   @override
   void initState() {
@@ -220,6 +212,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
         temporality: _schedule,
         resourceLink: "",
         participants: [],
+        interests: interests,
         organizerType: "Organización",
         likes: [],
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
@@ -245,10 +238,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                 title: StringConst.FORM_ERROR, exception: e)
             .then((value) => Navigator.pop(context));
       }
-  }
-
-  void _onCountryChange(CountryCode countryCode) {
-    phoneCode = countryCode.toString();
   }
 
   /*
@@ -448,7 +437,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                             //icon of text field
                             labelText: StringConst.FORM_START,
                             //label text of field
-                            labelStyle: textTheme.button?.copyWith(
+                            labelStyle: textTheme.bodySmall?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
@@ -470,7 +459,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                           ),
                           readOnly: true,
                           //set it true, so that user will not able to edit text
-                          style: textTheme.button?.copyWith(
+                          style: textTheme.bodySmall?.copyWith(
                             height: 1.5,
                             color: AppColors.greyDark,
                             fontWeight: FontWeight.w400,
@@ -484,7 +473,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                               lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
                             );
                             if (pickedDate != null) {
-                              print(pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                               _formattedStartDate = DateFormat('dd-MM-yyyy').format(pickedDate);
                               setState(() {
                                 textEditingControllerDateInput.text = _formattedStartDate; //set output date to TextField value.
@@ -510,7 +498,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                             //icon of text field
                             labelText: StringConst.FORM_END,
                             //label text of field
-                            labelStyle: textTheme.button?.copyWith(
+                            labelStyle: textTheme.bodySmall?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
@@ -532,7 +520,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                           ),
                           readOnly: true,
                           //set it true, so that user will not able to edit text
-                          style: textTheme.button?.copyWith(
+                          style: textTheme.bodySmall?.copyWith(
                             height: 1.5,
                             color: AppColors.greyDark,
                             fontWeight: FontWeight.w400,
@@ -546,7 +534,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                               lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
                             );
                             if (pickedDate != null) {
-                              print(pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                               _formattedEndDate = DateFormat('dd-MM-yyyy').format(pickedDate);
                               setState(() {
                                 textEditingControllerDateEndInput.text = _formattedEndDate; //set output date to TextField value.
@@ -572,7 +559,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                             //icon of text field
                             labelText: StringConst.FORM_MAX,
                             //label text of field
-                            labelStyle: textTheme.button?.copyWith(
+                            labelStyle: textTheme.bodySmall?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
@@ -594,7 +581,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                           ),
                           readOnly: true,
                           //set it true, so that user will not able to edit text
-                          style: textTheme.button?.copyWith(
+                          style: textTheme.bodySmall?.copyWith(
                             height: 1.5,
                             color: AppColors.greyDark,
                             fontWeight: FontWeight.w400,
@@ -608,7 +595,6 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                               lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
                             );
                             if (pickedDate != null) {
-                              print(pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                               _formattedMaxDate = DateFormat('dd-MM-yyyy').format(pickedDate);
                               setState(() {
                                 textEditingControllerDateMaxInput.text = _formattedMaxDate; //set output date to TextField value.
@@ -711,14 +697,14 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
             selectedModality != "Online"
                 ? CustomFlexRowColumn(
                     childLeft: streamBuilderForCountry(context, selectedCountry,
-                        _buildCountryStreamBuilder_setState),
+                        buildCountryStreamBuilderSetState),
                     childRight:
                         selectedModality != 'Online para residentes en país'
                             ? streamBuilderForProvince(
                                 context,
                                 selectedCountry,
                                 selectedProvince,
-                                _buildProvinceStreamBuilder_setState)
+                                buildProvinceStreamBuilderSetState)
                             : Container())
                 : Container(),
             selectedModality != "Online"
@@ -732,7 +718,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                                 selectedCountry,
                                 selectedProvince,
                                 selectedCity,
-                                _buildCityStreamBuilder_setState)
+                                buildCityStreamBuilderSetState)
                             : Container(),
                     childRight:
                         selectedModality != 'Online para residentes en país' &&
@@ -805,11 +791,10 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                   emailSetState),
             ) : Container(),
             CustomFlexRowColumn(
-              childLeft: customTextFormField(
+              childLeft: customTextFormFieldNotValidator(
                   context,
                   _link!,
                   StringConst.FORM_LINK,
-                  StringConst.FORM_COMPANY_ERROR,
                   linkSetState),
               childRight: CheckboxListTile(
                   title: Text(
@@ -863,7 +848,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     );
   }
 
-  void _buildCountryStreamBuilder_setState(Country? country) {
+  void buildCountryStreamBuilderSetState(Country? country) {
     setState(() {
       selectedProvince = null;
       selectedCity = null;
@@ -873,7 +858,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     _countryId = country?.countryId;
   }
 
-  void _buildProvinceStreamBuilder_setState(Province? province) {
+  void buildProvinceStreamBuilderSetState(Province? province) {
     setState(() {
       selectedCity = null;
       selectedProvince = province;
@@ -882,7 +867,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     _provinceId = province?.provinceId;
   }
 
-  void _buildCityStreamBuilder_setState(City? city) {
+  void buildCityStreamBuilderSetState(City? city) {
     setState(() {
       selectedCity = city;
       cityName = city != null ? city.name : "";
@@ -1180,7 +1165,7 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
                               ? Positioned(
                                   top: screenHeight * 0.45,
                                   left: -10,
-                                  child: Container(
+                                  child: SizedBox(
                                     height: 300 * 0.50,
                                     child: ClipRRect(
                                       child:
@@ -1211,56 +1196,3 @@ class _ResourceCreationFormState extends State<ResourceCreationForm> {
     );
   }
 }
-
-// Expanded(
-//   flex: Responsive.isMobile(context) ? 0 : 1,
-//   child: Padding(
-//     padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-//     child: TextFormField(
-//       decoration: InputDecoration(
-//         labelText: StringConst.FORM_PHONE,
-//         prefixIcon:CountryCodePicker(
-//           onChanged: _onCountryChange,
-//           initialSelection: 'ES',
-//           countryFilter: const ['ES', 'PE', 'GT'],
-//           showFlagDialog: true,
-//         ),
-//         focusColor: AppColors.turquoise,
-//         labelStyle: textTheme.button?.copyWith(
-//           height: 1.5,
-//           color: AppColors.greyDark,
-//           fontWeight: FontWeight.w400,
-//           fontSize: fontSize,
-//         ),
-//         focusedBorder: OutlineInputBorder(
-//           borderRadius: BorderRadius.circular(5.0),
-//           borderSide: const BorderSide(
-//             color: AppColors.greyUltraLight,
-//           ),
-//         ),
-//         enabledBorder: OutlineInputBorder(
-//           borderRadius: BorderRadius.circular(5.0),
-//           borderSide: const BorderSide(
-//             color: AppColors.greyUltraLight,
-//             width: 1.0,
-//           ),
-//         ),
-//       ),
-//       initialValue: _phone,
-//       validator: (value) =>
-//       value!.isNotEmpty ? null : StringConst.PHONE_ERROR,
-//       onSaved: (value) => _phone = phoneCode +' '+ value!,
-//       textCapitalization: TextCapitalization.sentences,
-//       keyboardType: TextInputType.phone,
-//       style: textTheme.button?.copyWith(
-//         height: 1.5,
-//         color: AppColors.greyDark,
-//         fontWeight: FontWeight.w400,
-//         fontSize: fontSize,
-//       ),
-//       inputFormatters: <TextInputFormatter>[
-//         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-//       ],
-//     ),
-//   ),
-// ),

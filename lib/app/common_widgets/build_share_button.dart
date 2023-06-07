@@ -91,7 +91,7 @@ Widget buildShareButton(BuildContext context, Resource resource, Color color) {
       ];
     },
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Icon(
           FontAwesomeIcons.share,
