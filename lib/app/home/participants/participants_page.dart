@@ -121,17 +121,14 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Positioned(
-                      top: 0,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: AppColors.greyDark,
-                        ),
-                        onPressed: () => setState(() {
-                          _currentPage = _buildResourcesList(context);
-                        }),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: AppColors.greyDark,
                       ),
+                      onPressed: () => setState(() {
+                        _currentPage = _buildResourcesList(context);
+                      }),
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
