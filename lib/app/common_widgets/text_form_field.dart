@@ -116,7 +116,7 @@ Widget customTextFormMultiline(BuildContext context, String formValue, String la
   );
 }
 
-Widget customTextFormFieldNum(BuildContext context, String formValue, String labelText, String errorText, functionSetState) {
+Widget customTextFormFieldNum(BuildContext context, int formValue, String labelText, String errorText, functionSetState) {
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 13, 15, md: 14);
   return TextFormField(
@@ -141,7 +141,7 @@ Widget customTextFormFieldNum(BuildContext context, String formValue, String lab
         ),
       ),
     ),
-    initialValue: formValue,
+    initialValue: formValue.toString(),
     validator: (value) =>
     value!.isNotEmpty ? null : errorText,
     onSaved: (String? val) => functionSetState(val),

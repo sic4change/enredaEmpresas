@@ -15,9 +15,9 @@ class Resource {
     this.resourceCategory,
     this.resourceTypeName,
     this.resourceCategoryName,
-    required this.capacity,
-    required this.duration,
-    required this.modality,
+    this.capacity,
+    this.duration,
+    this.modality,
     this.place,
     this.street,
     this.country,
@@ -26,15 +26,15 @@ class Resource {
     this.provinceName,
     this.city,
     this.cityName,
-    required this.maximumDate,
-    required this.start,
-    required this.end,
+    this.maximumDate,
+    this.start,
+    this.end,
     this.temporality,
     this.resourceLink,
     required this.status,
-    required this.participants,
+    this.participants,
     this.assistants,
-    required this.likes,
+    this.likes,
     this.contractType,
     this.salary,
     this.contactEmail,
@@ -47,6 +47,7 @@ class Resource {
     this.link,
     this.notExpire,
     this.interests,
+    this.degree,
   });
 
   factory Resource.fromMap(Map<String, dynamic> data, String documentId) {
@@ -64,9 +65,9 @@ class Resource {
     final String? salary = data['salary'];
     final String? resourceTypeName = data['resourceTypeName'];
     final String? resourceCategoryName = data['resourceCategoryName'];
-    final int capacity = data['capacity'];
-    final String duration = data['duration'];
-    final String modality = data['modality'];
+    final int? capacity = data['capacity'];
+    final String? duration = data['duration'];
+    final String? modality = data['modality'];
     final String? country = data['address']['country'];
     final String? countryName = data['countryName'];
     final String? province = data['address']['province'];
@@ -75,14 +76,15 @@ class Resource {
     final String? cityName = data['cityName'];
     final String? place = data['address']['place'];
     final String? street = data['address']['street'];
-    final DateTime maximumDate = data['maximumDate'].toDate();
-    final DateTime start = DateTime.parse(data['start'].toDate().toString());
-    final DateTime end =  DateTime.parse(data['end'].toDate().toString());
+    final DateTime? maximumDate = data['maximumDate'].toDate();
+    final DateTime? start = DateTime.parse(data['start'].toDate().toString());
+    final DateTime? end =  DateTime.parse(data['end'].toDate().toString());
     final String? temporality = data['temporality'];
     final String? resourceLink = data['resourceLink'];
     final String status = data['status'];
     final String? resourcePictureId = data['resourcePictureId'];
-    List<String> participants = [];
+    final String? degree = data['degree'];
+    List<String>? participants = [];
     if (data['participants'] != null) {
       data['participants'].forEach((participant) {participants.add(participant.toString());});
     }
@@ -91,7 +93,7 @@ class Resource {
       data['interests'].forEach((interest) {interests.add(interest.toString());});
     }
     final String assistants = data['assistants'].toString();
-    List<String> likes = [];
+    List<String>? likes = [];
     if (data['likes'] != null) {
       data['likes'].forEach((like) {likes.add(like.toString());});
     }
@@ -107,7 +109,9 @@ class Resource {
         country: country,
         province: province,
         city: city,
-        place: place);
+        place: place,
+        street: street
+    );
 
     return Resource(
       resourceId: documentId,
@@ -153,6 +157,7 @@ class Resource {
       notExpire: notExpire,
       createdate: createdate,
       address: address,
+      degree: degree,
     );
   }
 
@@ -168,9 +173,9 @@ class Resource {
   String? resourceCategory;
   String? resourceTypeName;
   String? resourceCategoryName;
-  final int capacity;
-  final String duration;
-  final String modality;
+  final int? capacity;
+  final String? duration;
+  final String? modality;
   final String? country;
   String? countryName;
   final String? province;
@@ -179,16 +184,16 @@ class Resource {
   String? cityName;
   final String? place;
   final String? street;
-  final DateTime maximumDate;
-  final DateTime start;
-  final DateTime end;
+  final DateTime? maximumDate;
+  final DateTime? start;
+  final DateTime? end;
   final String? temporality;
   final String? resourceLink;
   final String status;
-  final List<String> participants;
+  final List<String>? participants;
   final List<String>? interests;
   String? assistants;
-  final List<String> likes;
+  final List<String>? likes;
   final String? contractType;
   final String? salary;
   final String? contactEmail;
@@ -197,6 +202,7 @@ class Resource {
   String? resourcePhoto;
   final String? searchText;
   final String? link;
+  final String? degree;
   final bool? notExpire;
   final DateTime createdate;
   final Address? address;
@@ -231,6 +237,7 @@ class Resource {
       'resourcePictureId': resourcePictureId,
       'searchText': searchText,
       'link': link,
+      'degree': degree,
       'notExpire': notExpire,
       'createdate': createdate,
       'address': address?.toMap(),

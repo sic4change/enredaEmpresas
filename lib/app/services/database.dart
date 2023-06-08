@@ -71,6 +71,8 @@ abstract class Database {
 //   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
+     Stream<ResourceType> resourceTypeStreamById(String? resourceTypeId);
+     Stream<ResourceCategory> resourceCategoryStreamById(String? resourceCategoryId);
      Stream<List<Nature>> natureStream();
      Stream<List<Scope>> scopeStream();
      Stream<List<SizeOrg>> sizeStream();
@@ -104,8 +106,8 @@ abstract class Database {
 //   Future<void> uploadUserAvatar(String userId, Uint8List data);
 //   Future<void> addContact(Contact contact);
 //   Future<void> addResource(Resource resource);
-//   Future<void> setResource(Resource resource);
-//   Future<void> deleteResource(Resource resource);
+     Future<void> setResource(Resource resource);
+     Future<void> deleteResource(Resource resource);
 //   Future<void> addUnemployedUser(UnemployedUser create_resource_form);
 //   Future<void> addMentorUser(MentorUser mentorUser);
      Future<void> addOrganizationUser(OrganizationUser organizationUser);
@@ -130,14 +132,14 @@ class FirestoreDatabase implements Database {
 //   Future<void> addResource(Resource resource) =>
 //       _service.addData(path: APIPath.resources(), data: resource.toMap());
 //
-//   @override
-//   Future<void> setResource(Resource resource) => _service.updateData(
-//       path: APIPath.resource(resource.resourceId), data: resource.toMap());
-//
-//   @override
-//   Future<void> deleteResource(Resource resource) =>
-//       _service.deleteData(path: APIPath.resource(resource.resourceId));
-//
+  @override
+  Future<void> setResource(Resource resource) => _service.updateData(
+      path: APIPath.resource(resource.resourceId), data: resource.toMap());
+
+  @override
+  Future<void> deleteResource(Resource resource) =>
+      _service.deleteData(path: APIPath.resource(resource.resourceId));
+
 //   @override
 //   Stream<List<Resource>> resourcesStream() {
 //     return _service.collectionStream(
@@ -459,6 +461,22 @@ class FirestoreDatabase implements Database {
         path: APIPath.user(userId!),
         builder: (data, documentId) =>
             UserEnreda.fromMap(data, documentId),
+      );
+
+  @override
+  Stream<ResourceType> resourceTypeStreamById(String? resourceTypeId) =>
+      _service.documentStream<ResourceType>(
+        path: APIPath.resourceType(resourceTypeId!),
+        builder: (data, documentId) =>
+            ResourceType.fromMap(data, documentId),
+      );
+
+  @override
+  Stream<ResourceCategory> resourceCategoryStreamById(String? resourceCategoryId) =>
+      _service.documentStream<ResourceCategory>(
+        path: APIPath.resourceCategory(resourceCategoryId!),
+        builder: (data, documentId) =>
+            ResourceCategory.fromMap(data, documentId),
       );
 
   //
