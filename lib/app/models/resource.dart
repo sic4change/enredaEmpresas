@@ -5,7 +5,7 @@ class Resource {
   Resource({
     required this.title,
     required this.description,
-    required this.resourceId,
+    this.resourceId,
     required this.organizer,
     this.organizerType,
     this.organizerName,
@@ -31,7 +31,7 @@ class Resource {
     this.end,
     this.temporality,
     this.resourceLink,
-    required this.status,
+    this.status,
     this.participants,
     this.assistants,
     this.likes,
@@ -81,7 +81,7 @@ class Resource {
     final DateTime? end =  DateTime.parse(data['end'].toDate().toString());
     final String? temporality = data['temporality'];
     final String? resourceLink = data['resourceLink'];
-    final String status = data['status'];
+    final String? status = data['status'];
     final String? resourcePictureId = data['resourcePictureId'];
     final String? degree = data['degree'];
     List<String>? participants = [];
@@ -161,7 +161,7 @@ class Resource {
     );
   }
 
-  final String resourceId;
+  final String? resourceId;
   final String title;
   final String organizer;
   String? organizerType;
@@ -189,7 +189,7 @@ class Resource {
   final DateTime? end;
   final String? temporality;
   final String? resourceLink;
-  final String status;
+  final String? status;
   final List<String>? participants;
   final List<String>? interests;
   String? assistants;
@@ -209,7 +209,6 @@ class Resource {
 
   Map<String, dynamic> toMap() {
     return {
-      'resourceId': resourceId,
       'title': title,
       'description': description,
       'organizer': organizer,
@@ -225,21 +224,16 @@ class Resource {
       'end' : end,
       'temporality' : temporality,
       'resourceLink' : resourceLink,
-      'status' : status,
       'participants' : participants,
       'interests' : interests,
-      'assistants' : assistants,
-      'likes' : likes,
       'contractType' : contractType,
       'salary' : salary,
       'contactEmail' : contactEmail,
       'contactPhone' : contactPhone,
-      'resourcePictureId': resourcePictureId,
-      'searchText': searchText,
+      //'resourcePictureId': resourcePictureId,
       'link': link,
       'degree': degree,
       'notExpire': notExpire,
-      'createdate': createdate,
       'address': address?.toMap(),
     };
   }

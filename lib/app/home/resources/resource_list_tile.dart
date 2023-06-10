@@ -269,7 +269,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                    widget.resource.status,
+                                    widget.resource.status!,
                                     style: textTheme.bodySmall?.copyWith(
                                       color: AppColors.greyAlt,
                                       fontSize: fontSize,

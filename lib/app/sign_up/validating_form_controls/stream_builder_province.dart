@@ -1,5 +1,6 @@
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/province.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -8,21 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-Widget streamBuilderForProvince (BuildContext context, Country? selectedCountry, Province? selectedProvince,  functionToWriteBackThings ) {
+Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId, Province? selectedProvince,  functionToWriteBackThings, Resource resource ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
   return StreamBuilder<List<Province>>(
-      stream: database.provincesCountryStream(selectedCountry?.countryId),
+      stream: database.provincesCountryStream(selectedCountryId),
       builder: (context, snapshotProvinces) {
 
         List<DropdownMenuItem<Province>> provinceItems = [];
-        if (snapshotProvinces.hasData && selectedCountry != null) {
-          provinceItems = snapshotProvinces.data!.map((Province p) =>
-              DropdownMenuItem<Province>(
-                value: p,
-                child: Text(p.name),
-              )
+        if (snapshotProvinces.hasData && selectedCountryId != null && snapshotProvinces.data![0].countryId == selectedCountryId) {
+          provinceItems = snapshotProvinces.data!.map((Province province) {
+            if (selectedProvince == null && province.provinceId == resource.address?.province) {
+              selectedProvince = province;
+            }
+            return DropdownMenuItem<Province>(
+                value: province,
+                child: Text(province.name),
+              );
+          }
           ).toList();
         }
 

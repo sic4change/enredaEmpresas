@@ -65,7 +65,7 @@ abstract class Database {
      Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId);
      Stream<List<City>> citiesProvinceStream(String? provinceId);
      Stream<List<UserEnreda>> userStream(String? email);
-     Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList);
+     Stream<List<UserEnreda>> userParticipantsStream(List<String?> resourceIdList);
      Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
 //   //Stream<Organization> organizationStreamByEmail(String? email);
@@ -134,11 +134,11 @@ class FirestoreDatabase implements Database {
 //
   @override
   Future<void> setResource(Resource resource) => _service.updateData(
-      path: APIPath.resource(resource.resourceId), data: resource.toMap());
+      path: APIPath.resource(resource.resourceId!), data: resource.toMap());
 
   @override
   Future<void> deleteResource(Resource resource) =>
-      _service.deleteData(path: APIPath.resource(resource.resourceId));
+      _service.deleteData(path: APIPath.resource(resource.resourceId!));
 
 //   @override
 //   Stream<List<Resource>> resourcesStream() {
@@ -417,7 +417,7 @@ class FirestoreDatabase implements Database {
     }
 
   @override
-  Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList) {
+  Stream<List<UserEnreda>> userParticipantsStream(List<String?> resourceIdList) {
     return _service.collectionStream<UserEnreda>(
       path: APIPath.users(),
       queryBuilder: (query) => query.where('resources', arrayContainsAny: resourceIdList),

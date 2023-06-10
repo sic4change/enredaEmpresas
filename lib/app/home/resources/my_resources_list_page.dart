@@ -444,7 +444,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                               Navigator.of(this.context).push(
                                 MaterialPageRoute<void>(
                                   fullscreenDialog: true,
-                                  builder: ((context) => EditResource(organizer: organizer!, resourceId: resource.resourceId,)),
+                                  builder: ((context) => EditResource(organizer: organizer!, resourceId: resource.resourceId!,)),
                                 ),
                               )
                           },
@@ -475,7 +475,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                             CustomTextTitle(title: StringConst.PARTICIPANTS.toUpperCase()),
                             Padding(
                               padding: const EdgeInsets.only(top: 30.0),
-                              child: _buildParticipantsList(context, resource.resourceId),
+                              child: _buildParticipantsList(context, resource.resourceId!),
                             ),
                           ],
                         )),
@@ -535,7 +535,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      CustomTextBody(text: resource.status),
+                      CustomTextBody(text: resource.status!),
                     ],
                   )),
             ],

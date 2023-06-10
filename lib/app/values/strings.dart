@@ -294,6 +294,7 @@ class StringConst {
   static const String FORM_ADDRESS = "Calle y número";
   static const String FORM_ORGANIZER_TEXT = "Organizador";
   static const String FORM_TRUST = "El organizador es de confianza";
+  static const String FORM_NOT_EXPIRE = "El recurso no expira";
   static const String FORM_LINK = "Link";
   static const String FORM_ORGANIZATION_NAME = "Nombre de la Organización";
   static const String FORM_ORGANIZATION_INFO = "Información de la organización";

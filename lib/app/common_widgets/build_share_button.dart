@@ -42,7 +42,7 @@ Widget buildShareButton(BuildContext context, Resource resource, Color color) {
       switch (value) {
         case 1:
           Clipboard.setData(ClipboardData(
-              text: StringConst.RESOURCE_LINK(resource.resourceId)));
+              text: StringConst.RESOURCE_LINK(resource.resourceId!)));
           _showToast();
           break;
         case 2:

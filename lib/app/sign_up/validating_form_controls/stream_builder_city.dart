@@ -1,6 +1,7 @@
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/province.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -9,21 +10,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-Widget streamBuilderForCity (BuildContext context, Country? selectedCountry, Province? selectedProvince, City? selectedCity,  functionToWriteBackThings ) {
+Widget streamBuilderForCity (BuildContext context, String? selectedCountryId, String? selectedProvinceId, City? selectedCity,  functionToWriteBackThings, Resource resource ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
   return StreamBuilder<List<City>>(
-      stream: database.citiesProvinceStream(selectedProvince?.provinceId),
+      stream: database.citiesProvinceStream(selectedProvinceId),
       builder: (context, snapshotCities){
 
         List<DropdownMenuItem<City>> cityItems = [];
-        if (snapshotCities.hasData && selectedProvince != null) {
-          cityItems = snapshotCities.data!.map((City c) =>
-              DropdownMenuItem<City>(
-                value: c,
-                child: Text(c.name),
-              )
+        if (snapshotCities.hasData && selectedProvinceId != null &&
+            snapshotCities.data![0].provinceId == selectedProvinceId &&
+            snapshotCities.data![0].countryId == selectedCountryId) {
+          cityItems = snapshotCities.data!.map((City city) {
+            if (selectedCity == null && city.cityId == resource.address?.city ) {
+              selectedCity = city;
+            }
+            return DropdownMenuItem<City>(
+                value: city,
+                child: Text(city.name),
+              );
+          }
           ).toList();
         }
         return DropdownButtonFormField<City>(

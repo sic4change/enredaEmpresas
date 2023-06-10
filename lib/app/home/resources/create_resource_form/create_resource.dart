@@ -266,14 +266,14 @@ class _CreateResourceState extends State<CreateResource> {
               StringConst.FORM_LASTNAME_ERROR,
               descriptionSetState),
         ),
-        CustomFlexRowColumn(
-          childLeft: streamBuilderDropdownResourceType(context,
-              selectedResourceType, buildResourceTypeStreamBuilderSetState),
-          childRight: streamBuilderDropdownResourceCategory(
-              context,
-              selectedResourceCategory,
-              buildResourceCategoryStreamBuilderSetState),
-        ),
+        // CustomFlexRowColumn(
+        //   childLeft: streamBuilderDropdownResourceType(context,
+        //       selectedResourceType, buildResourceTypeStreamBuilderSetState),
+        //   childRight: streamBuilderDropdownResourceCategory(
+        //       context,
+        //       selectedResourceCategory,
+        //       buildResourceCategoryStreamBuilderSetState),
+        // ),
         CustomFlexRowColumn(
           childLeft: resourceTypeName == "Formación"
               ? DropdownButtonFormField<String>(
@@ -689,52 +689,52 @@ class _CreateResourceState extends State<CreateResource> {
                   placeSetState),
               childRight: customTextFormFieldNum(
                   context,
-                  _capacity!,
+                  _capacity!.toString(),
                   StringConst.FORM_CAPACITY,
                   StringConst.FORM_COMPANY_ERROR,
                   capacitySetState),
             ),
-            selectedModality != "Online"
-                ? CustomFlexRowColumn(
-                    childLeft: streamBuilderForCountry(context, selectedCountry,
-                        buildCountryStreamBuilderSetState),
-                    childRight:
-                        selectedModality != 'Online para residentes en país'
-                            ? streamBuilderForProvince(
-                                context,
-                                selectedCountry,
-                                selectedProvince,
-                                buildProvinceStreamBuilderSetState)
-                            : Container())
-                : Container(),
-            selectedModality != "Online"
-                ? CustomFlexRowColumn(
-                    childLeft:
-                        selectedModality != 'Online para residentes en país' &&
-                                selectedModality !=
-                                    'Online para residentes en provincia'
-                            ? streamBuilderForCity(
-                                context,
-                                selectedCountry,
-                                selectedProvince,
-                                selectedCity,
-                                buildCityStreamBuilderSetState)
-                            : Container(),
-                    childRight:
-                        selectedModality != 'Online para residentes en país' &&
-                                selectedModality !=
-                                    'Online para residentes en provincia' &&
-                                selectedModality !=
-                                    'Online para residentes en ciudad'
-                            ? customTextFormField(
-                                context,
-                                _address!,
-                                StringConst.FORM_ADDRESS,
-                                StringConst.FORM_COMPANY_ERROR,
-                                addressSetState)
-                            : Container(),
-                  )
-                : Container(),
+            // selectedModality != "Online"
+            //     ? CustomFlexRowColumn(
+            //         childLeft: streamBuilderForCountry(context, selectedCountry,
+            //             buildCountryStreamBuilderSetState),
+            //         childRight:
+            //             selectedModality != 'Online para residentes en país'
+            //                 ? streamBuilderForProvince(
+            //                     context,
+            //                     selectedCountry,
+            //                     selectedProvince,
+            //                     buildProvinceStreamBuilderSetState)
+            //                 : Container())
+            //     : Container(),
+            // selectedModality != "Online"
+            //     ? CustomFlexRowColumn(
+            //         childLeft:
+            //             selectedModality != 'Online para residentes en país' &&
+            //                     selectedModality !=
+            //                         'Online para residentes en provincia'
+            //                 ? streamBuilderForCity(
+            //                     context,
+            //                     selectedCountry,
+            //                     selectedProvince,
+            //                     selectedCity,
+            //                     buildCityStreamBuilderSetState)
+            //                 : Container(),
+            //         childRight:
+            //             selectedModality != 'Online para residentes en país' &&
+            //                     selectedModality !=
+            //                         'Online para residentes en provincia' &&
+            //                     selectedModality !=
+            //                         'Online para residentes en ciudad'
+            //                 ? customTextFormField(
+            //                     context,
+            //                     _address!,
+            //                     StringConst.FORM_ADDRESS,
+            //                     StringConst.FORM_COMPANY_ERROR,
+            //                     addressSetState)
+            //                 : Container(),
+            //       )
+            //     : Container(),
             CustomFlexRowColumn(
               childLeft: streamBuilderDropdownOrganizations(
                   context,
@@ -832,7 +832,7 @@ class _CreateResourceState extends State<CreateResource> {
           _duration!,
           _schedule!,
           _place!,
-          _capacity!,
+          _capacity!.toString(),
           countryName,
           provinceName,
           cityName,

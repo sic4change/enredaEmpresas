@@ -21,9 +21,9 @@ class ResourceType {
   @override
   bool operator == (Object other){
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
+        (other.runtimeType == this.runtimeType &&
             other is ResourceType &&
-            other.resourceTypeId == resourceTypeId);
+            other.resourceTypeId == this.resourceTypeId);
   }
 
   Map<String, dynamic> toMap() {
