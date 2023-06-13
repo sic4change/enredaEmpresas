@@ -1,11 +1,9 @@
 import 'package:enreda_empresas/app/app_theme.dart';
 import 'package:enreda_empresas/app/common_widgets/error_page.dart';
 import 'package:enreda_empresas/app/home/home_page.dart';
-import 'package:enreda_empresas/app/home/resources/resource_detail_web.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/services/firebase_options.dart';
-import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

@@ -1,35 +1,40 @@
-import 'package:enreda_empresas/app/models/country.dart';
+import 'package:enreda_empresas/app/models/gender.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
+import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
-import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../values/values.dart';
 
-Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCountry,  functionToWriteBackThings ) {
+Widget streamBuilderDropdownResourceTypeCreate (BuildContext context, ResourceType? selectedResourceType, functionToWriteBackThings ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
-  return StreamBuilder<List<Country>>(
-      stream: database.countryFormatedStream(),
-      builder: (context, snapshotCountries){
+  return StreamBuilder<List<ResourceType>>(
+      stream: database.resourceTypeStream(),
+      builder: (context, snapshotResourceTypes){
 
-        List<DropdownMenuItem<Country>> countryItems = [];
-        if (snapshotCountries.hasData) {
-          countryItems = snapshotCountries.data!.map((Country c) =>
-              DropdownMenuItem<Country>(
-                value: c,
-                child: Text(c.name),
-              ))
+        List<DropdownMenuItem<ResourceType>> resourceTypeItems = [];
+        if(snapshotResourceTypes.hasData) {
+          resourceTypeItems = snapshotResourceTypes.data!.map((ResourceType resourceType) {
+            return DropdownMenuItem<ResourceType>(
+              value: resourceType,
+              child: Text(resourceType.name),
+            );
+          })
               .toList();
         }
 
-        return DropdownButtonFormField<Country>(
-          hint: const Text(StringConst.FORM_COUNTRY),
+        // si el selectedValue no está en la lista, entonces lo volvemos nulo
+
+        return DropdownButtonFormField<ResourceType>(
+          hint: const Text(StringConst.FORM_RESOURCE_TYPE),
           isExpanded: true,
-          value: selectedCountry,
-          items: countryItems,
-          validator: (value) => selectedCountry != null ? null : StringConst.COUNTRY_ERROR,
+          value: selectedResourceType,
+          items: resourceTypeItems,
+          validator: (value) => selectedResourceType != null ? null : StringConst.FORM_RESOURCE_TYPE_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,

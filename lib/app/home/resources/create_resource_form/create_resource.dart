@@ -4,10 +4,10 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_organizations.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_category.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_type.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_type_create.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
@@ -52,10 +52,10 @@ class _CreateResourceState extends State<CreateResource> {
   String? _resourceTitle;
   String? _resourceDescription;
   String? _duration;
-  String? _schedule;
+  String? _temporality;
   String? _place;
   int? _capacity;
-  String? _address;
+  String? _street;
   String? _organizerText;
   String? _link;
   String? _phone;
@@ -83,7 +83,7 @@ class _CreateResourceState extends State<CreateResource> {
   String writtenEmail = '';
   ResourceCategory? selectedResourceCategory;
   Organization? selectedOrganization;
-  String? selectedDegree;
+  String? _degree;
   String? selectedModality;
   String? selectedContract;
   String? selectedSalary;
@@ -121,7 +121,7 @@ class _CreateResourceState extends State<CreateResource> {
     super.initState();
     _resourceTitle = "";
     _duration = "";
-    _schedule = "";
+    _temporality = "";
     _resourceDescription = "";
     _start = DateTime.now();
     _end = DateTime.now();
@@ -139,11 +139,11 @@ class _CreateResourceState extends State<CreateResource> {
     _formattedStartDate = "";
     _formattedEndDate = "";
     _formattedMaxDate = "";
-    selectedDegree = "";
+    _degree = "";
     selectedContract = "";
     selectedSalary = "";
     _place = "";
-    _address = "";
+    _street = "";
     _capacity = 0;
     _countryId = "";
     _provinceId = "";
@@ -182,6 +182,7 @@ class _CreateResourceState extends State<CreateResource> {
         province: _provinceId,
         city: _cityId,
         place: _place,
+        street: _street,
       );
 
       final newResource = Resource(
@@ -205,12 +206,11 @@ class _CreateResourceState extends State<CreateResource> {
         salary: selectedSalary,
         organizer: widget.organizationId!,
         link: _link,
-        searchText: "",
         resourcePictureId: "",
         notExpire: _notExpire,
+        degree: _degree,
         promotor: _organizerText,
-        temporality: _schedule,
-        resourceLink: "",
+        temporality: _temporality,
         participants: [],
         interests: interests,
         organizerType: "Organización",
@@ -240,11 +240,6 @@ class _CreateResourceState extends State<CreateResource> {
       }
   }
 
-  /*
-    Avoid call to database if email not properly written.
-    Return empty stream if email not properly written
-  */
-
   Widget _buildForm(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -266,19 +261,19 @@ class _CreateResourceState extends State<CreateResource> {
               StringConst.FORM_LASTNAME_ERROR,
               descriptionSetState),
         ),
-        // CustomFlexRowColumn(
-        //   childLeft: streamBuilderDropdownResourceType(context,
-        //       selectedResourceType, buildResourceTypeStreamBuilderSetState),
-        //   childRight: streamBuilderDropdownResourceCategory(
-        //       context,
-        //       selectedResourceCategory,
-        //       buildResourceCategoryStreamBuilderSetState),
-        // ),
+        CustomFlexRowColumn(
+          childLeft: streamBuilderDropdownResourceTypeCreate(context,
+              selectedResourceType, buildResourceTypeStreamBuilderSetState),
+          childRight: streamBuilderDropdownResourceCategoryCreate(
+              context,
+              selectedResourceCategory,
+              buildResourceCategoryStreamBuilderSetState),
+        ),
         CustomFlexRowColumn(
           childLeft: resourceTypeName == "Formación"
               ? DropdownButtonFormField<String>(
                   hint: const Text(StringConst.FORM_DEGREE),
-                  value: selectedDegree == "" ? null : selectedDegree,
+                  value: _degree == "" ? null : _degree,
                   items: strings.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -293,7 +288,7 @@ class _CreateResourceState extends State<CreateResource> {
                       ),
                     );
                   }).toList(),
-                  validator: (value) => selectedDegree != null
+                  validator: (value) => _degree != null
                       ? null
                       : StringConst.FORM_MOTIVATION_ERROR,
                   onChanged: (value) => buildDegreeStreamBuilderSetState(value),
@@ -399,12 +394,12 @@ class _CreateResourceState extends State<CreateResource> {
               StringConst.FORM_COMPANY_ERROR,
               durationSetState),
           childRight: customTextFormMultilineNotValidator(
-              context, _schedule!, StringConst.FORM_SCHEDULE, scheduleSetState),
+              context, _temporality!, StringConst.FORM_SCHEDULE, scheduleSetState),
         ),
         CustomFlexRowColumn(
             childLeft: CheckboxListTile(
                 title: Text(
-                  'El recurso expira',
+                  'El recurso no expira',
                   style: textTheme.bodySmall?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
@@ -694,47 +689,47 @@ class _CreateResourceState extends State<CreateResource> {
                   StringConst.FORM_COMPANY_ERROR,
                   capacitySetState),
             ),
-            // selectedModality != "Online"
-            //     ? CustomFlexRowColumn(
-            //         childLeft: streamBuilderForCountry(context, selectedCountry,
-            //             buildCountryStreamBuilderSetState),
-            //         childRight:
-            //             selectedModality != 'Online para residentes en país'
-            //                 ? streamBuilderForProvince(
-            //                     context,
-            //                     selectedCountry,
-            //                     selectedProvince,
-            //                     buildProvinceStreamBuilderSetState)
-            //                 : Container())
-            //     : Container(),
-            // selectedModality != "Online"
-            //     ? CustomFlexRowColumn(
-            //         childLeft:
-            //             selectedModality != 'Online para residentes en país' &&
-            //                     selectedModality !=
-            //                         'Online para residentes en provincia'
-            //                 ? streamBuilderForCity(
-            //                     context,
-            //                     selectedCountry,
-            //                     selectedProvince,
-            //                     selectedCity,
-            //                     buildCityStreamBuilderSetState)
-            //                 : Container(),
-            //         childRight:
-            //             selectedModality != 'Online para residentes en país' &&
-            //                     selectedModality !=
-            //                         'Online para residentes en provincia' &&
-            //                     selectedModality !=
-            //                         'Online para residentes en ciudad'
-            //                 ? customTextFormField(
-            //                     context,
-            //                     _address!,
-            //                     StringConst.FORM_ADDRESS,
-            //                     StringConst.FORM_COMPANY_ERROR,
-            //                     addressSetState)
-            //                 : Container(),
-            //       )
-            //     : Container(),
+            selectedModality != "Online"
+                ? CustomFlexRowColumn(
+                    childLeft: streamBuilderForCountryCreate(context, selectedCountry,
+                        buildCountryStreamBuilderSetState),
+                    childRight:
+                        selectedModality != 'Online para residentes en país'
+                            ? streamBuilderForProvinceCreate(
+                                context,
+                                selectedCountry,
+                                selectedProvince,
+                                buildProvinceStreamBuilderSetState)
+                            : Container())
+                : Container(),
+            selectedModality != "Online"
+                ? CustomFlexRowColumn(
+                    childLeft:
+                        selectedModality != 'Online para residentes en país' &&
+                                selectedModality !=
+                                    'Online para residentes en provincia'
+                            ? streamBuilderForCityCreate(
+                                context,
+                                selectedCountry,
+                                selectedProvince,
+                                selectedCity,
+                                buildCityStreamBuilderSetState)
+                            : Container(),
+                    childRight:
+                        selectedModality != 'Online para residentes en país' &&
+                                selectedModality !=
+                                    'Online para residentes en provincia' &&
+                                selectedModality !=
+                                    'Online para residentes en ciudad'
+                            ? customTextFormField(
+                                context,
+                                _street!,
+                                StringConst.FORM_ADDRESS,
+                                StringConst.FORM_COMPANY_ERROR,
+                                addressSetState)
+                            : Container(),
+                  )
+                : Container(),
             CustomFlexRowColumn(
               childLeft: streamBuilderDropdownOrganizations(
                   context,
@@ -775,7 +770,7 @@ class _CreateResourceState extends State<CreateResource> {
                 ),
               ),
             ),
-            _organizerText != "" ?
+            _organizerText != ""  ?
             CustomFlexRowColumn(
               childLeft: customTextFormField(
                   context,
@@ -791,11 +786,11 @@ class _CreateResourceState extends State<CreateResource> {
                   emailSetState),
             ) : Container(),
             CustomFlexRowColumn(
-              childLeft: customTextFormFieldNotValidator(
+              childLeft: _organizerText != "" ? customTextFormFieldNotValidator(
                   context,
                   _link!,
                   StringConst.FORM_LINK,
-                  linkSetState),
+                  linkSetState) : Container(),
               childRight: CheckboxListTile(
                   title: Text(
                     StringConst.FORM_TRUST,
@@ -822,7 +817,7 @@ class _CreateResourceState extends State<CreateResource> {
           _resourceDescription!,
           resourceTypeName,
           resourceCategoryName,
-          selectedDegree!,
+          _degree!,
           selectedContract!,
           selectedSalary!,
           interestsNames,
@@ -830,13 +825,13 @@ class _CreateResourceState extends State<CreateResource> {
           _formattedEndDate,
           _formattedMaxDate,
           _duration!,
-          _schedule!,
+          _temporality!,
           _place!,
           _capacity!.toString(),
           countryName,
           provinceName,
           cityName,
-          _address!,
+          _street!,
           organizationName,
           _organizerText!,
           _link!,
@@ -897,7 +892,7 @@ class _CreateResourceState extends State<CreateResource> {
 
   void buildDegreeStreamBuilderSetState(String? degree) {
     setState(() {
-      selectedDegree = degree;
+      _degree = degree;
     });
   }
 
@@ -934,19 +929,19 @@ class _CreateResourceState extends State<CreateResource> {
   }
 
   void scheduleSetState(String? val) {
-    setState(() => _schedule = val!);
+    setState(() => _temporality = val!);
   }
 
   void placeSetState(String? val) {
     setState(() => _place = val!);
   }
 
-  void capacitySetState(int? val) {
-    setState(() => _capacity = val!);
+  void capacitySetState(String? val) {
+    setState(() => _capacity = int.parse(val!));
   }
 
   void addressSetState(String? val) {
-    setState(() => _address = val!);
+    setState(() => _street = val!);
   }
 
   void linkSetState(String? val) {
@@ -965,7 +960,7 @@ class _CreateResourceState extends State<CreateResource> {
     final selectedValues = await showDialog<Set<Interest>>(
       context: context,
       builder: (BuildContext context) {
-        return streamBuilderDropdownInterests(context, selectedInterests);
+        return streamBuilderDropdownInterestsCreate(context, selectedInterests);
       },
     );
     getValuesFromKeyInterests(selectedValues);
@@ -1180,17 +1175,6 @@ class _CreateResourceState extends State<CreateResource> {
                   ],
                 ),
               ),
-              // Responsive.isTablet(context) || Responsive.isMobile(context) ? Container() :
-              // Positioned(
-              //   top: screenHeight * 0.51,
-              //   left: Responsive.isDesktopS(context) ? screenWidth * 0.06 : screenWidth * 0.09,
-              //   child: Container(
-              //     height: 300,
-              //     child: ClipRRect(
-              //       child: Image.asset(ImagePath.CHICA_LATERAL),
-              //     ),
-              //   ),
-              // ),
             ],
           )),
     );

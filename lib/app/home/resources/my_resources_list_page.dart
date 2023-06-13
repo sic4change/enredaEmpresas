@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chips_choice/chips_choice.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/build_share_button.dart';
-import 'package:enreda_empresas/app/common_widgets/custom_chip.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/resources/create_resource_form/create_resource.dart';
@@ -10,11 +8,11 @@ import 'package:enreda_empresas/app/home/resources/edit_resource/edit_resource.d
 import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
+import 'package:enreda_empresas/app/home/resources/resource_interests_stream.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
-import 'package:enreda_empresas/app/models/interests.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
@@ -238,7 +236,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                                             onTap: () =>
                                                                 setState(() {
                                                                   _currentPage =
-                                                                      _buildResourcePage(resource, interestsSelected);
+                                                                      _buildResourcePage(resource);
                                                                 }),
                                                           ),
                                                         );
@@ -262,7 +260,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
         });
   }
 
-  Widget _buildResourcePage(Resource resource, List<String> interestsSelected) {
+  Widget _buildResourcePage(Resource resource) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
@@ -375,7 +373,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                           ? 0
                                           : 4,
                                       child: _buildDetailResource(
-                                          context, resource, interestsSelected)),
+                                          context, resource)),
                                   SizedBox(
                                     height: 600,
                                     child: Column(
@@ -431,17 +429,9 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                         right: 50,
                         child: IconButton(
                             iconSize: 40,
-                            icon: Image.asset(ImagePath.DOWNLOAD_RESOURCE),
-                            onPressed: () => {}
-                        ),
-                      ),
-                      Positioned(
-                        right: 100,
-                        child: IconButton(
-                            iconSize: 40,
                             icon: Image.asset(ImagePath.EDIT_RESOURCE),
                             onPressed: () => {
-                              Navigator.of(this.context).push(
+                              Navigator.of(context).push(
                                 MaterialPageRoute<void>(
                                   fullscreenDialog: true,
                                   builder: ((context) => EditResource(organizer: organizer!, resourceId: resource.resourceId!,)),
@@ -487,7 +477,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     );
   }
 
-  Widget _buildDetailResource(BuildContext context, Resource resource, List<String> interestsSelected) {
+  Widget _buildDetailResource(BuildContext context, Resource resource) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -506,49 +496,72 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               ),
             ),
           ),
-          _buildInterests(context, interestsSelected),
-          Column(
-            children: [
-              CustomTextTitle(title: StringConst.AVAILABLE.toUpperCase()),
-              Container(
-                  width: 130,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: AppColors.greyLight2.withOpacity(0.2),
-                        width: 1),
-                    borderRadius: BorderRadius.circular(Consts.padding),
-                  ),
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(8.0),
-                  margin: const EdgeInsets.only(top: 4.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 8,
-                        width: 8,
-                        decoration: BoxDecoration(
-                          color: resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
-                          borderRadius: BorderRadius.circular(Consts.padding),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      CustomTextBody(text: resource.status!),
-                    ],
-                  )),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: buildShareButton(context, resource, AppColors.darkGray),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
+          _buildInformationResource(context, resource),
         ],
       ),
+    );
+  }
+
+  Widget _buildInformationResource(BuildContext context, Resource resource) {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          StringConst.FORM_INTERESTS.toUpperCase(),
+          style: textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.penBlue,
+          ),
+        ),
+        const SizedBox(height: 10,),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: InterestsByResource(interestsIdList: resource.interests!,),
+        ),
+        const SizedBox(height: 10,),
+        Text(
+          StringConst.AVAILABLE.toUpperCase(),
+          style: textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.penBlue,
+          ),
+        ),
+        Container(
+            width: 130,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                  color: AppColors.greyLight2.withOpacity(0.2),
+                  width: 1),
+              borderRadius: BorderRadius.circular(Consts.padding),
+            ),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(4.0),
+            margin: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 8,
+                  width: 8,
+                  decoration: BoxDecoration(
+                    color: resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
+                    borderRadius: BorderRadius.circular(Consts.padding),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                CustomTextBody(text: resource.status!),
+              ],
+            )),
+        const SizedBox(height: 30,),
+        buildShareButton(context, resource, AppColors.darkGray),
+        const SizedBox(
+          height: 30,
+        ),
+      ],
     );
   }
 
@@ -659,7 +672,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      _buildMyUserFoto(context, user.photo!),
+                      _buildMyUserPhoto(context, user.photo!),
                       const SpaceW20(),
                       Text('${user.firstName!} ${user.lastName!}'),
                     ],
@@ -672,43 +685,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     );
   }
 
-  Widget _buildInterests(BuildContext context, List<String> interestsSelected) {
-    return Container(
-      padding: EdgeInsets.all(Sizes.mainPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextTitle(title: StringConst.FORM_INTERESTS.toUpperCase()),
-          const SpaceH20(),
-          _interests.isNotEmpty ?
-          Container(
-            alignment: Alignment.centerLeft,
-            child: ChipsChoice<String>.multiple(
-              padding: const EdgeInsets.all(0.0),
-              value: interestsSelected,
-              onChanged: (val) {},
-              choiceItems: C2Choice.listFrom<String, String>(
-                source: _interests.map((e) => e.name).toList(),
-                value: (i, v) => v,
-                label: (i, v) => v,
-                tooltip: (i, v) => v,
-              ),
-              choiceBuilder: (item, i) =>
-                  CustomChip(
-                    label: item.label,
-                    selected: item.selected,
-                    onSelect: item.select!,
-                  ),
-              wrapped: true,
-              runSpacing: 8,
-            ),
-          ) : Container(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMyUserFoto(BuildContext context, String profilePic) {
+  Widget _buildMyUserPhoto(BuildContext context, String profilePic) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -750,6 +727,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               ):
               PrecacheAvatarCard(
                 imageUrl: profilePic,
+                width: 35,
+                height: 35,
               ),
             )
           ],

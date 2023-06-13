@@ -1,7 +1,6 @@
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/province.dart';
-import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -10,31 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-Widget streamBuilderForCity (BuildContext context, String? selectedCountryId, String? selectedProvinceId, City? selectedCity,  functionToWriteBackThings, Resource resource ) {
+Widget streamBuilderForCityCreate (BuildContext context, Country? selectedCountry, Province? selectedProvince, City? selectedCity,  functionToWriteBackThings ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
   return StreamBuilder<List<City>>(
-      stream: database.citiesProvinceStream(selectedProvinceId),
+      stream: database.citiesProvinceStream(selectedProvince?.provinceId),
       builder: (context, snapshotCities){
 
         List<DropdownMenuItem<City>> cityItems = [];
-        if (snapshotCities.hasData && selectedProvinceId != null &&
-            snapshotCities.data![0].provinceId == selectedProvinceId &&
-            snapshotCities.data![0].countryId == selectedCountryId) {
-          cityItems = snapshotCities.data!.map((City city) {
-            if (selectedCity == null && city.cityId == resource.address?.city ) {
-              selectedCity = city;
-            }
-            return DropdownMenuItem<City>(
-                value: city,
-                child: Text(city.name),
-              );
-          }
+        if (snapshotCities.hasData && selectedProvince != null) {
+          cityItems = snapshotCities.data!.map((City c) =>
+              DropdownMenuItem<City>(
+                value: c,
+                child: Text(c.name),
+              )
           ).toList();
         }
         return DropdownButtonFormField<City>(
-          hint: Text(StringConst.FORM_CITY),
+          hint: const Text(StringConst.FORM_CITY),
           isExpanded: true,
           value: selectedCity,
           items: cityItems,
@@ -52,13 +45,13 @@ Widget streamBuilderForCity (BuildContext context, String? selectedCountryId, St
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),

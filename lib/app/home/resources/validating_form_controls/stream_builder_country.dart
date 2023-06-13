@@ -1,4 +1,5 @@
 import 'package:enreda_empresas/app/models/country.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -6,7 +7,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCountry,  functionToWriteBackThings ) {
+Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, functionToWriteBackThings, Resource resource ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -16,16 +17,20 @@ Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCou
 
         List<DropdownMenuItem<Country>> countryItems = [];
         if (snapshotCountries.hasData) {
-          countryItems = snapshotCountries.data!.map((Country c) =>
-              DropdownMenuItem<Country>(
-                value: c,
-                child: Text(c.name),
-              ))
+          countryItems = snapshotCountries.data!.map((Country country) {
+            if (selectedCountry == null && country.countryId == resource.address?.country) {
+              selectedCountry = country;
+            }
+            return DropdownMenuItem<Country>(
+                value: country,
+                child: Text(country.name),
+              );
+          })
               .toList();
         }
 
         return DropdownButtonFormField<Country>(
-          hint: const Text(StringConst.FORM_COUNTRY),
+          hint: Text(StringConst.FORM_COUNTRY),
           isExpanded: true,
           value: selectedCountry,
           items: countryItems,
@@ -42,13 +47,13 @@ Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCou
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),

@@ -3,7 +3,6 @@ import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/organizations/company_page.dart';
 import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
@@ -45,10 +44,7 @@ class _WebHomeState extends State<WebHome> {
 
   @override
   void initState() {
-    bodyWidget = [
-     // const CompanyPage(organization: organization,),
-      //const AccountPage(),
-    ];
+    bodyWidget = [];
     super.initState();
   }
 
@@ -141,7 +137,6 @@ class _WebHomeState extends State<WebHome> {
               const SizedBox(width: 50,)
             ],
           ),
-          // body: CompanyPage(organization: organization, user: user,),
           drawer: SideBarWidget(controller: _controller,),
           body: Row(
             children: [
@@ -156,6 +151,8 @@ class _WebHomeState extends State<WebHome> {
                     return const ParticipantsListPage();
                     case 2: _key.currentState?.closeDrawer();
                     return const MyResourcesListPage();
+                    case 3: _key.currentState?.closeDrawer();
+                    return const Text('Mi perfil');
                     default:
                       return const MyResourcesListPage();
                   }
@@ -212,6 +209,8 @@ class _WebHomeState extends State<WebHome> {
               ):
               PrecacheAvatarCard(
                 imageUrl: profilePic,
+                width: 35,
+                height: 35,
               ),
             )
           ],
@@ -295,6 +294,7 @@ class SideBarWidget extends StatelessWidget {
       ),
       extendedTheme: const SidebarXTheme(
         width: 200,
+        padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           color: AppColors.white,
         ),
@@ -320,6 +320,7 @@ class SideBarWidget extends StatelessWidget {
         SidebarXItem(icon: Icons.view_quilt, label: 'Panel de control'),
         SidebarXItem(icon: Icons.supervisor_account, label: 'Participantes'),
         SidebarXItem(icon: Icons.card_travel, label: 'Mis recursos'),
+        SidebarXItem(icon: Icons.account_circle_sharp, label: 'Mi perfil'),
       ],
     );
   }

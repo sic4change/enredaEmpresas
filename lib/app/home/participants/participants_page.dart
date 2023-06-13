@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
+import 'package:enreda_empresas/app/home/participants/my_cv_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_tile.dart';
 import 'package:enreda_empresas/app/home/participants/resources_participants.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
@@ -247,7 +248,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
           ),
         ),
         SizedBox(
-          height: Responsive.isMobile(context) || Responsive.isTablet(context) ? 400 : 250,
+          height: Responsive.isMobile(context) || Responsive.isTablet(context) ? 500 : 250,
           child: Flex(
             direction:  Responsive.isMobile(context) || Responsive.isTablet(context) ? Axis.vertical : Axis.horizontal,
             children: [
@@ -257,10 +258,13 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
               ),
               Expanded(
                 flex: Responsive.isMobile(context) || Responsive.isTablet(context) ? 1 : 3,
-                child: _buildResourcesParticipant(context, user))
+                child: _buildResourcesParticipant(context, user)),
+              Expanded(
+                  flex: Responsive.isMobile(context) || Responsive.isTablet(context) ? 1 : 1,
+                  child: _buildCvParticipant(context, user)),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -393,6 +397,49 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
           ),
           const SizedBox(height: 10,),
           ParticipantResourcesPage(participantId: user.userId),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCvParticipant(BuildContext context, UserEnreda user) {
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      margin: Responsive.isMobile(context) || Responsive.isTablet(context) ? const EdgeInsets.only(top: 20) : const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
+        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+        color: AppColors.white,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            StringConst.MY_CV,
+            style: textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: Responsive.isDesktop(context) ? 18 : 14.0,
+              color: AppColors.penBlue,
+            ),
+          ),
+          const SizedBox(height: 10,),
+          IconButton(
+            iconSize: 40,
+            icon: const Icon(
+              Icons.pages,
+              color: AppColors.penBlue,
+            ),
+            onPressed: () => {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  fullscreenDialog: true,
+                  builder: ((context) => MyCurriculumPage(user: user)),
+                ),
+              )
+            },
+          ),
         ],
       ),
     );

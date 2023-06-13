@@ -12,6 +12,7 @@ class EmptyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: EdgeInsets.only(left: Sizes.mainPadding, right: Sizes.mainPadding),
       child: Center(
@@ -20,18 +21,19 @@ class EmptyContent extends StatelessWidget {
           children: <Widget>[
             Text(
               title,
-              style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.greyDark
+              textAlign: TextAlign.center,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.greyTxtAlt,
+                fontWeight: FontWeight.w800,
+                height: 1.5,
               ),
             ),
             Text(
               message,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                color: AppColors.red,
+              textAlign: TextAlign.center,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.penBlue,
+                height: 1.5,
               ),
             ),
           ],

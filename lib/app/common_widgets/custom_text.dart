@@ -15,7 +15,7 @@ class CustomTextTitle extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 4.0),
       child: Text(
         title,
-        style: textTheme.bodyText1?.copyWith(
+        style: textTheme.bodySmall?.copyWith(
           color: AppColors.greyViolet,
           height: 1.5,
           fontWeight: FontWeight.w600,
@@ -39,7 +39,7 @@ class CustomTextBody extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Text(
       text,
-      style: textTheme.bodyText1?.copyWith(
+      style: textTheme.bodySmall?.copyWith(
         color: AppColors.greyAlt,
         height: 1.5,
         fontSize: fontSize,

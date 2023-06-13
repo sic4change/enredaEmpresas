@@ -216,6 +216,7 @@ class Resource {
       'promotor': promotor,
       'resourceType': resourceType,
       'resourceCategory': resourceCategory,
+      'assistants': assistants,
       'capacity' : capacity,
       'duration' : duration,
       'modality' : modality,
@@ -230,11 +231,12 @@ class Resource {
       'salary' : salary,
       'contactEmail' : contactEmail,
       'contactPhone' : contactPhone,
-      //'resourcePictureId': resourcePictureId,
+      'resourcePictureId': resourcePictureId,
       'link': link,
       'degree': degree,
       'notExpire': notExpire,
       'address': address?.toMap(),
+      'createdate': createdate,
     };
   }
 

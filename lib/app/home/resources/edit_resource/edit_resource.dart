@@ -8,6 +8,7 @@ import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.d
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_organizations.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_province.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_category.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_type.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
@@ -20,9 +21,8 @@ import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/services/database.dart';
-import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_city.dart';
-import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_country.dart';
-import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_province.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_city.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_country.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -69,6 +69,9 @@ class _EditResourceState extends State<EditResource> {
   String? _place;
   int? _capacity;
   String? _street;
+  String? _organizer;
+  String? _organizerType;
+  String? _resourceLink;
   String? _organizerText;
   String? _link;
   String? _phone;
@@ -83,11 +86,16 @@ class _EditResourceState extends State<EditResource> {
   DateTime? _max;
   DateTime? _createdate;
   String? _modality;
+  String? _resourcePictureId;
+  String? _assistants;
+  String? _status;
+
   String _countryName = "";
   String _provinceName = "";
   String _cityName = "";
 
   List<String> interests = [];
+  List<String> _participants = [];
   Set<Interest> selectedInterests = {};
   ResourceCategory? selectedResourceCategory;
   Organization? selectedOrganization;
@@ -155,7 +163,7 @@ class _EditResourceState extends State<EditResource> {
       modality: _modality!,
       address: address,
       capacity: _capacity,
-      organizer: widget.organizer.organizationId!,
+      organizer: _organizer!,
       promotor: _organizerText,
       link: _link,
       contactEmail: _email,
@@ -163,7 +171,13 @@ class _EditResourceState extends State<EditResource> {
       contractType: _contractType,
       salary: _salary,
       degree: _degree,
+      resourcePictureId: _resourcePictureId,
       createdate: _createdate!,
+      resourceLink: _resourceLink,
+      organizerType: _organizerType,
+      participants: _participants,
+      assistants: _assistants,
+      status: _status,
     );
     try {
       final database = Provider.of<Database>(context, listen: false);
@@ -853,7 +867,7 @@ class _EditResourceState extends State<EditResource> {
     final selectedValues = await showDialog<Set<Interest>>(
       context: context,
       builder: (BuildContext context) {
-        return streamBuilderDropdownInterests(context, selectedInterests);
+        return streamBuilderDropdownInterests(context, interests, selectedInterests, resource);
       },
     );
     getValuesFromKeyInterests(selectedValues);
@@ -933,8 +947,15 @@ class _EditResourceState extends State<EditResource> {
             _link = resource.link ?? '';
             _phone = resource.contactPhone ?? '';
             _email = resource.contactEmail ?? '';
+            _resourcePictureId = resource.resourcePictureId ?? '';
             _notExpire = resource.notExpire ?? false;
             _createdate = resource.createdate;
+            _organizer = resource.organizer;
+            _organizerType = resource.organizerType ?? '';
+            _resourceLink = resource.resourceLink ?? '';
+            _participants = resource.participants ?? [];
+            _assistants = resource.assistants ?? '';
+            _status = resource.status ?? '';
             return _buildContent(context);
           } else {
             return Container();
