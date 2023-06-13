@@ -1,4 +1,6 @@
 import 'package:enreda_empresas/app/models/country.dart';
+import 'package:enreda_empresas/app/models/province.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -6,30 +8,36 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCountry,  functionToWriteBackThings ) {
+
+Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId, Province? selectedProvince,  functionToWriteBackThings, Resource resource ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
-  return StreamBuilder<List<Country>>(
-      stream: database.countryFormatedStream(),
-      builder: (context, snapshotCountries){
+  return StreamBuilder<List<Province>>(
+      stream: database.provincesCountryStream(selectedCountryId),
+      builder: (context, snapshotProvinces) {
 
-        List<DropdownMenuItem<Country>> countryItems = [];
-        if (snapshotCountries.hasData) {
-          countryItems = snapshotCountries.data!.map((Country c) =>
-              DropdownMenuItem<Country>(
-                value: c,
-                child: Text(c.name),
-              ))
-              .toList();
+        List<DropdownMenuItem<Province>> provinceItems = [];
+        if (snapshotProvinces.hasData && selectedCountryId != null && snapshotProvinces.data![0].countryId == selectedCountryId) {
+          provinceItems = snapshotProvinces.data!.map((Province province) {
+            if (selectedProvince == null && province.provinceId == resource.address?.province) {
+              selectedProvince = province;
+            }
+            return DropdownMenuItem<Province>(
+                value: province,
+                child: Text(province.name),
+              );
+          }
+          ).toList();
         }
 
-        return DropdownButtonFormField<Country>(
-          hint: const Text(StringConst.FORM_COUNTRY),
+        return DropdownButtonFormField<Province>(
+          hint: Text(StringConst.FORM_PROVINCE),
           isExpanded: true,
-          value: selectedCountry,
-          items: countryItems,
-          validator: (value) => selectedCountry != null ? null : StringConst.COUNTRY_ERROR,
+          value: selectedProvince,
+          items: provinceItems,
+          validator: (value) => selectedProvince != null ?
+          null : StringConst.PROVINCE_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
@@ -42,13 +50,13 @@ Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCou
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),
@@ -61,5 +69,6 @@ Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCou
             fontSize: fontSize,
           ),
         );
-      });
+      }
+  );
 }

@@ -1,4 +1,5 @@
 import 'package:enreda_empresas/app/models/gender.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../values/values.dart';
 
-Widget streamBuilderDropdownResourceType (BuildContext context, ResourceType? selectedResourceType,  functionToWriteBackThings ) {
+Widget streamBuilderDropdownResourceType (BuildContext context, ResourceType? selectedResourceType,  functionToWriteBackThings, Resource resource ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -17,13 +18,19 @@ Widget streamBuilderDropdownResourceType (BuildContext context, ResourceType? se
 
         List<DropdownMenuItem<ResourceType>> resourceTypeItems = [];
         if(snapshotResourceTypes.hasData) {
-          resourceTypeItems = snapshotResourceTypes.data!.map((ResourceType resourceType) =>
-              DropdownMenuItem<ResourceType>(
+          resourceTypeItems = snapshotResourceTypes.data!.map((ResourceType resourceType) {
+            if (selectedResourceType == null && resourceType.resourceTypeId == resource.resourceType) {
+              selectedResourceType = resourceType;
+            }
+            return DropdownMenuItem<ResourceType>(
                 value: resourceType,
                 child: Text(resourceType.name),
-              ))
+              );
+          })
               .toList();
         }
+
+        // si el selectedValue no está en la lista, entonces lo volvemos nulo
 
         return DropdownButtonFormField<ResourceType>(
           hint: const Text(StringConst.FORM_RESOURCE_TYPE),

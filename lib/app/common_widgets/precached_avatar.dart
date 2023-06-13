@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 class PrecacheAvatarCard extends StatefulWidget {
   PrecacheAvatarCard({
     this.imageUrl = "",
+    this.width = 0,
+    this.height = 0,
   });
 
   final String imageUrl;
+  final double width;
+  final double height;
 
   @override
   _PrecacheAvatarCardState createState() => _PrecacheAvatarCardState();
@@ -21,8 +25,8 @@ class _PrecacheAvatarCardState extends State<PrecacheAvatarCard> {
     super.initState();
     profileImage = FadeInImage.assetNetwork(
       placeholder: ImagePath.USER_DEFAULT,
-      width: 35,
-      height: 35,
+      width: widget.width,
+      height: widget.height,
       fit: BoxFit.cover,
       image: widget.imageUrl,
     );
@@ -44,8 +48,7 @@ class _PrecacheAvatarCardState extends State<PrecacheAvatarCard> {
   Widget defaultChild() {
       return ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(60)),
-        child:
-        Center(
+        child: Center(
           child: profileImage,
         ),
       );

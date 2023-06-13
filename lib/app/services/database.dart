@@ -36,6 +36,7 @@ import 'package:enreda_empresas/app/services/firestore_service.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/models/activity.dart';
 import 'package:enreda_empresas/app/models/resourcePicture.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:async/async.dart' show StreamGroup;
 
@@ -65,12 +66,15 @@ abstract class Database {
      Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId);
      Stream<List<City>> citiesProvinceStream(String? provinceId);
      Stream<List<UserEnreda>> userStream(String? email);
-     Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList);
+     Stream<List<UserEnreda>> userParticipantsStream(List<String?> resourceIdList);
      Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList);
+     Stream<List<Interest>> resourcesInterestsStream(List<String?> participantsIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
 //   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
+     Stream<ResourceType> resourceTypeStreamById(String? resourceTypeId);
+     Stream<ResourceCategory> resourceCategoryStreamById(String? resourceCategoryId);
      Stream<List<Nature>> natureStream();
      Stream<List<Scope>> scopeStream();
      Stream<List<SizeOrg>> sizeStream();
@@ -89,13 +93,13 @@ abstract class Database {
 //   Stream<List<Question>> questionsStream();
 //   Stream<Question> questionStream(String id);
 //   //Stream<List<Choice>> choicesStream(String path, String? typeId, String? subtypeId);
-//   Stream<List<Experience>> myExperiencesStream(String userId);
-//   Stream<List<Competency>> competenciesStream();
+     Stream<List<Experience>> myExperiencesStream(String userId);
+     Stream<List<Competency>> competenciesStream();
 //   Stream<Competency> competencyStream(String id);
 //   Stream<Activity> activityStream(String id);
 //   Stream<List<ChatQuestion>> chatQuestionsStream(String userId);
 //   Stream<CertificationRequest> certificationRequestStream(String certificationRequestId);
-//   Stream<List<CertificationRequest>> myCertificationRequestStream(String userId);
+     Stream<List<CertificationRequest>> myCertificationRequestStream(String userId);
 //   Stream<List<ResourceCategory>> getCategoriesResources();
 //
 //   Future<void> setUserEnreda(UserEnreda userEnreda);
@@ -104,8 +108,8 @@ abstract class Database {
 //   Future<void> uploadUserAvatar(String userId, Uint8List data);
 //   Future<void> addContact(Contact contact);
 //   Future<void> addResource(Resource resource);
-//   Future<void> setResource(Resource resource);
-//   Future<void> deleteResource(Resource resource);
+     Future<void> setResource(Resource resource);
+     Future<void> deleteResource(Resource resource);
 //   Future<void> addUnemployedUser(UnemployedUser create_resource_form);
 //   Future<void> addMentorUser(MentorUser mentorUser);
      Future<void> addOrganizationUser(OrganizationUser organizationUser);
@@ -130,14 +134,14 @@ class FirestoreDatabase implements Database {
 //   Future<void> addResource(Resource resource) =>
 //       _service.addData(path: APIPath.resources(), data: resource.toMap());
 //
-//   @override
-//   Future<void> setResource(Resource resource) => _service.updateData(
-//       path: APIPath.resource(resource.resourceId), data: resource.toMap());
-//
-//   @override
-//   Future<void> deleteResource(Resource resource) =>
-//       _service.deleteData(path: APIPath.resource(resource.resourceId));
-//
+  @override
+  Future<void> setResource(Resource resource) => _service.updateData(
+      path: APIPath.resource(resource.resourceId!), data: resource.toMap());
+
+  @override
+  Future<void> deleteResource(Resource resource) =>
+      _service.deleteData(path: APIPath.resource(resource.resourceId!));
+
 //   @override
 //   Stream<List<Resource>> resourcesStream() {
 //     return _service.collectionStream(
@@ -415,7 +419,7 @@ class FirestoreDatabase implements Database {
     }
 
   @override
-  Stream<List<UserEnreda>> userParticipantsStream(List<String> resourceIdList) {
+  Stream<List<UserEnreda>> userParticipantsStream(List<String?> resourceIdList) {
     return _service.collectionStream<UserEnreda>(
       path: APIPath.users(),
       queryBuilder: (query) => query.where('resources', arrayContainsAny: resourceIdList),
@@ -444,6 +448,16 @@ class FirestoreDatabase implements Database {
     );
   }
 
+  @override
+  Stream<List<Interest>> resourcesInterestsStream(List<String?> interestsIdList) {
+    return _service.collectionStream<Interest>(
+      path: APIPath.interests(),
+      queryBuilder: (query) => query.where('interestId', whereIn: interestsIdList),
+      builder: (data, documentId) => Interest.fromMap(data, documentId),
+      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+    );
+  }
+
 
   @override
   Stream<Organization> organizationStreamById(String? organizationId) =>
@@ -453,22 +467,31 @@ class FirestoreDatabase implements Database {
             Organization.fromMap(data, documentId),
       );
 
+
   @override
-  Stream<UserEnreda> userEnredaStreamByUserId(String? userId) =>
-      _service.documentStream<UserEnreda>(
-        path: APIPath.user(userId!),
+  Stream<ResourceType> resourceTypeStreamById(String? resourceTypeId) =>
+      _service.documentStream<ResourceType>(
+        path: APIPath.resourceType(resourceTypeId!),
         builder: (data, documentId) =>
-            UserEnreda.fromMap(data, documentId),
+            ResourceType.fromMap(data, documentId),
       );
 
-  //
-  // Stream<UserEnreda> userEnredaStreamByUserId(String? userId) {
-  //   return _service.documentStreamByField(
-  //     path: APIPath.users(),
-  //     builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
-  //     queryBuilder: (query) => query.where('userId', isEqualTo: userId),
-  //   );
-  // }
+  @override
+  Stream<ResourceCategory> resourceCategoryStreamById(String? resourceCategoryId) =>
+      _service.documentStream<ResourceCategory>(
+        path: APIPath.resourceCategory(resourceCategoryId!),
+        builder: (data, documentId) =>
+            ResourceCategory.fromMap(data, documentId),
+      );
+
+  @override
+  Stream<UserEnreda> userEnredaStreamByUserId(String? userId) {
+    return _service.documentStreamByField(
+      path: APIPath.users(),
+      builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
+      queryBuilder: (query) => query.where('userId', isEqualTo: userId),
+    );
+  }
 
 //   @override
 //   Stream<CertificationRequest> certificationRequestStream(String certificationRequestId) =>
@@ -476,16 +499,16 @@ class FirestoreDatabase implements Database {
 //         path: APIPath.certificationRequest(certificationRequestId),
 //         builder: (data, documentId) => CertificationRequest.fromMap(data, documentId),
 //       );
-//
-//   @override
-//   Stream<List<CertificationRequest>> myCertificationRequestStream(String userId) =>
-//       _service.collectionStream(
-//         path: APIPath.certificationsRequests(),
-//         queryBuilder: (query) => query.where('unemployedRequesterId', isEqualTo: userId),
-//         builder: (data, documentId) => CertificationRequest.fromMap(data, documentId),
-//         sort: (lhs, rhs) => lhs.certifierName.compareTo(rhs.certifierName),
-//       );
-//
+
+    @override
+    Stream<List<CertificationRequest>> myCertificationRequestStream(String userId) =>
+        _service.collectionStream(
+          path: APIPath.certificationsRequests(),
+          queryBuilder: (query) => query.where('unemployedRequesterId', isEqualTo: userId),
+          builder: (data, documentId) => CertificationRequest.fromMap(data, documentId),
+          sort: (lhs, rhs) => lhs.certifierName.compareTo(rhs.certifierName),
+        );
+
 //   @override
 //   Future<void> addUserEnreda(UserEnreda userEnreda) =>
 //       _service.addData(path: APIPath.tests(), data: userEnreda.toMap());
@@ -737,16 +760,16 @@ class FirestoreDatabase implements Database {
     );
   }
 
-//   @override
-//   Stream<List<Experience>> myExperiencesStream(String userId) =>
-//       _service.collectionStream(
-//         path: APIPath.experiences(),
-//         queryBuilder: (query) =>
-//             query.where('userId', isEqualTo: userId),
-//         builder: (data, documentId) => Experience.fromMap(data, documentId),
-//         sort: (lhs, rhs) => rhs.startDate.compareTo(lhs.startDate),
-//       );
-//
+  @override
+  Stream<List<Experience>> myExperiencesStream(String userId) =>
+      _service.collectionStream(
+        path: APIPath.experiences(),
+        queryBuilder: (query) =>
+            query.where('userId', isEqualTo: userId),
+        builder: (data, documentId) => Experience.fromMap(data, documentId),
+        sort: (lhs, rhs) => rhs.startDate.compareTo(lhs.startDate),
+      );
+
 //   @override
 //   Future<void> addExperience(Experience experience) =>
 //       _service.addData(path: APIPath.experiences(), data: experience.toMap());
@@ -760,14 +783,14 @@ class FirestoreDatabase implements Database {
 //       _service.deleteData(path: APIPath.experience(experience.id!));
 //
 //
-//   @override
-//   Stream<List<Competency>> competenciesStream() => _service.collectionStream(
-//     path: APIPath.competencies(),
-//     builder: (data, documentId) => Competency.fromMap(data, documentId),
-//     queryBuilder: (query) => query,
-//     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-//   );
-//
+  @override
+  Stream<List<Competency>> competenciesStream() => _service.collectionStream(
+    path: APIPath.competencies(),
+    builder: (data, documentId) => Competency.fromMap(data, documentId),
+    queryBuilder: (query) => query,
+    sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+  );
+
 //   @override
 //   Stream<Competency> competencyStream(String id) =>
 //       _service.documentStream<Competency>(

@@ -57,6 +57,9 @@ dependencies:
   fluttertoast: ^8.2.1
   share_plus: ^7.0.1
   chips_choice: ^3.0.0
+  pdf: ^3.9.0
+  open_file: ^3.1.0
+  printing: ^5.10.1
 
 
 dev_dependencies:

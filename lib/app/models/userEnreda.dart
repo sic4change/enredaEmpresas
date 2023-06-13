@@ -8,30 +8,30 @@ class UserEnreda {
     required this.email,
     this.firstName,
     this.lastName,
-    // this.gender,
+    this.gender,
     this.userId,
-    // this.profilePic,
-       this.photo,
+    this.profilePic,
+    this.photo,
     this.phone,
-    // this.birthday,
-    // this.country,
-    // this.province,
-    // this.city,
-    // this.postalCode,
+    this.birthday,
+    this.country,
+    this.province,
+    this.city,
+    this.postalCode,
     this.address,
-    // this.specificInterests = const [],
-    // this.interests = const [],
-    // this.abilities,
-    // this.certifications,
-    // this.unemployedType,
+    this.specificInterests = const [],
+    this.interests = const [],
+    this.abilities,
+    this.certifications,
+    this.unemployedType,
     this.role,
     // this.showChatWelcome,
-    // this.competencies = const {},
+    this.competencies = const {},
     //this.education,
     this.educationName,
-    // this.dataOfInterest = const [],
-    // this.languages = const [],
-    // this.aboutMe,
+    this.dataOfInterest = const [],
+    this.languages = const [],
+    this.aboutMe,
     this.organization,
     required this.resources,
   });
@@ -43,10 +43,10 @@ class UserEnreda {
 
     final String? firstName = data['firstName'];
     final String? lastName = data['lastName'];
-    // final String? gender = data['gender'];
+    final String? gender = data['gender'];
     final String? userId = data['userId'];
-    // final String? unemployedType = data['unemployedType'];
-    //
+    final String? unemployedType = data['unemployedType'];
+
     String photo;
     try {
       photo = data['profilePic']['src'];
@@ -67,48 +67,47 @@ class UserEnreda {
     }
 
     final String? phone = data['phone'];
-    // final DateTime? birthday =
-    //     DateTime.parse(data['birthday'].toDate().toString());
+    final DateTime? birthday = DateTime.parse(data['birthday'].toDate().toString());
     final String? country = data['address']['country'];
     final String? province = data['address']['province'];
     final String? city = data['address']['city'];
     final String? postalCode = data['address']['postalCode'];
-    //
-    // List<String> abilities = [];
-    // try {
-    //   data['motivation']['abilities'].forEach((ability) {
-    //     abilities.add(ability.toString());
-    //   });
-    // } catch (e) {
-    //   print('user not abilities');
-    // }
-    //
-    // List<String> interests = [];
-    // try {
-    //   data['interests']['interests'].forEach((interest) {
-    //     interests.add(interest.toString());
-    //   });
-    // } catch (e) {
-    //   print('user not intersts');
-    // }
-    //
-    // List<String> specificInterests = [];
-    // try {
-    //   data['interests']['specificInterests'].forEach((specificInterest) {
-    //     specificInterests.add(specificInterest.toString());
-    //   });
-    // } catch (e) {
-    //   print('user not specific intersts');
-    // }
-    //
-    // List<String> certifications = [];
-    // try {
-    //   data['certifications'].forEach((certification) {certifications.add(certification.toString());});
-    // } catch (e) {
-    //   print('user does not have certifications');
-    // }
-    //
-    // final ProfilePic profilePic = new ProfilePic(src: photo, title: 'photo.jpg');
+
+    List<String> abilities = [];
+    try {
+      data['motivation']['abilities'].forEach((ability) {
+        abilities.add(ability.toString());
+      });
+    } catch (e) {
+      print('user not abilities');
+    }
+
+    List<String> interests = [];
+    try {
+      data['interests']['interests'].forEach((interest) {
+        interests.add(interest.toString());
+      });
+    } catch (e) {
+      print('user not interests');
+    }
+
+    List<String> specificInterests = [];
+    try {
+      data['interests']['specificInterests'].forEach((specificInterest) {
+        specificInterests.add(specificInterest.toString());
+      });
+    } catch (e) {
+      print('user not specific intersts');
+    }
+
+    List<String> certifications = [];
+    try {
+      data['certifications'].forEach((certification) {certifications.add(certification.toString());});
+    } catch (e) {
+      print('user does not have certifications');
+    }
+
+    final ProfilePic profilePic = new ProfilePic(src: photo, title: 'photo.jpg');
     final Address address = Address(
         country: country,
         province: province,
@@ -122,62 +121,62 @@ class UserEnreda {
     // );
     //
     // final bool? showChatWelcome = data['showChatWelcome'];
-    //
-    // Map<String, String> competencies = {};
-    // if (data['competencies'] != null) {
-    //   (data['competencies'] as Map<String, dynamic>).forEach((key, value) {
-    //     competencies[key] = value;
-    //   });
-    // }
-    //
-    // List<String> dataOfInterest = [];
-    // try {
-    //   data['dataOfInterest'].forEach((interest) {
-    //     dataOfInterest.add(interest.toString());
-    //   });
-    // } catch (e) {
-    //   print('user does not have data of interest');
-    // }
-    //
-    // List<String> languages = [];
-    // try {
-    //   data['languages'].forEach((language) {
-    //     languages.add(language.toString());
-    //   });
-    // } catch (e) {
-    //   print('user does not have languages');
-    // }
-    //
-    // final String? aboutMe = data['aboutMe'];
+
+    Map<String, String> competencies = {};
+    if (data['competencies'] != null) {
+      (data['competencies'] as Map<String, dynamic>).forEach((key, value) {
+        competencies[key] = value;
+      });
+    }
+
+    List<String> dataOfInterest = [];
+    try {
+      data['dataOfInterest'].forEach((interest) {
+        dataOfInterest.add(interest.toString());
+      });
+    } catch (e) {
+      print('user does not have data of interest');
+    }
+
+    List<String> languages = [];
+    try {
+      data['languages'].forEach((language) {
+        languages.add(language.toString());
+      });
+    } catch (e) {
+      print('user does not have languages');
+    }
+
+    final String? aboutMe = data['aboutMe'];
 
     return UserEnreda(
       email: email,
       firstName: firstName,
       lastName: lastName,
-      // gender: gender,
+      gender: gender,
       userId: userId,
-         photo: photo,
-      // profilePic: profilePic,
+      photo: photo,
+      profilePic: profilePic,
       phone: phone,
-      // birthday: birthday,
-      // country: country,
-      // province: province,
-      // city: city,
+      birthday: birthday,
+      country: country,
+      province: province,
+      city: city,
       address: address,
-      // postalCode: postalCode,
-      // specificInterests: specificInterests,
-      // interests: interests,
-      // unemployedType: unemployedType,
+      postalCode: postalCode,
+      specificInterests: specificInterests,
+      interests: interests,
+      unemployedType: unemployedType,
       role: role,
-      // abilities: abilities,
-      // certifications: certifications,
+      abilities: abilities,
+      certifications: certifications,
       // showChatWelcome: showChatWelcome,
-      // competencies: competencies,
+      competencies: competencies,
       //education: education,
       educationName: educationName,
-      // dataOfInterest: dataOfInterest,
-      // languages: languages,
-      // aboutMe: aboutMe,
+      dataOfInterest: dataOfInterest,
+      languages: languages,
+      aboutMe: aboutMe,
       organization: organization,
       resources: resources,
     );
@@ -186,57 +185,57 @@ class UserEnreda {
   final String email;
   final String? firstName;
   final String? lastName;
-  // final String? gender;
+  final String? gender;
   final String? userId;
-     String? photo;
-     String? educationName;
-  // final ProfilePic? profilePic;
+  String? photo;
+  String? educationName;
+  final ProfilePic? profilePic;
   // final Education? education;
   final String? phone;
-  // final DateTime? birthday;
-  // final String? country;
-  // final String? province;
-  // final String? city;
-  // final String? postalCode;
+  final DateTime? birthday;
+  final String? country;
+  final String? province;
+  final String? city;
+  final String? postalCode;
   final Address? address;
-  // final List<String> interests;
-  // final List<String> specificInterests;
-  // final String? unemployedType;
-  // final List<String>? abilities;
-  // final List<String>? certifications;
+  final List<String> interests;
+  final List<String> specificInterests;
+  final String? unemployedType;
+  final List<String>? abilities;
+  final List<String>? certifications;
   final String? role;
   // bool? showChatWelcome;
-  // final Map<String, String> competencies;
-  // final List<String> dataOfInterest;
-  // final List<String> languages;
-  // final String? aboutMe;
+  final Map<String, String> competencies;
+  final List<String> dataOfInterest;
+  final List<String> languages;
+  final String? aboutMe;
   final String? organization;
   final List<String> resources;
 
   Map<String, dynamic> toMap() {
-    // InterestsUserEnreda interestUserEnreda = InterestsUserEnreda(
-    //     interests: interests, specificInterests: specificInterests);
+    InterestsUserEnreda interestUserEnreda = InterestsUserEnreda(
+        interests: interests, specificInterests: specificInterests);
     return {
       'email': email,
       'firstName': firstName,
       'lastName': lastName,
-      // 'gender': gender,
+      'gender': gender,
       'userId': userId,
-      // //'profilePic': profilePic.toMap(),
+      //'profilePic': profilePic.toMap(),
       'phone': phone,
-      // 'birthday': birthday,
+      'birthday': birthday,
       'address': address?.toMap(),
-      // 'interests': interestUserEnreda.toMap(),
-      // 'unemployedType': unemployedType,
-      // 'abilities': abilities,
-      // 'certifications': certifications,
+      'interests': interestUserEnreda.toMap(),
+      'unemployedType': unemployedType,
+      'abilities': abilities,
+      'certifications': certifications,
       'role': role,
-      // 'unemployedType': unemployedType,
+      //'unemployedType': unemployedType,
       // 'showChatWelcome': showChatWelcome,
-      // 'competencies': competencies,
-      // 'dataOfInterest': dataOfInterest,
-      // 'languages': languages,
-      // 'aboutMe': aboutMe,
+      'competencies': competencies,
+      'dataOfInterest': dataOfInterest,
+      'languages': languages,
+      'aboutMe': aboutMe,
       //'education': education?.toMap(),
       'organization': organization,
       'resources': resources,
@@ -251,29 +250,29 @@ class UserEnreda {
     String? email,
     String? firstName,
     String? lastName,
-    // String? gender,
+    String? gender,
     String? userId,
-    // ProfilePic? profilePic,
+    ProfilePic? profilePic,
     // String? photo,
     String? phone,
-    // DateTime? birthday,
-    // String? country,
-    // String? province,
-    // String? city,
-    // String? postalCode,
-    // Address? address,
-    // List<String>? specificInterests,
-    // List<String>? interests,
-    // List<String>? abilities,
+    DateTime? birthday,
+    String? country,
+    String? province,
+    String? city,
+    String? postalCode,
+    Address? address,
+    List<String>? specificInterests,
+    List<String>? interests,
+    List<String>? abilities,
     List<String>? resources,
-    // String? unemployedType,
+    String? unemployedType,
     String? role,
     // bool? showChatWelcome,
-    // Map<String, String>? competencies,
+    Map<String, String>? competencies,
     Education? education,
-    // List<String>? dataOfInterest,
-    // List<String>? languages,
-    // String? aboutMe,
+    List<String>? dataOfInterest,
+    List<String>? languages,
+    String? aboutMe,
     String? organization,
 
   }) {
@@ -281,28 +280,28 @@ class UserEnreda {
       email: email ?? this.email,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
-      // gender: gender ?? this.gender,
+      gender: gender ?? this.gender,
       userId: userId ?? this.userId,
-      // profilePic: profilePic ?? this.profilePic,
+      profilePic: profilePic ?? this.profilePic,
       // photo: photo ?? this.photo,
       phone: phone ?? this.phone,
-      // birthday: birthday ?? this.birthday,
-      // country: country ?? this.country,
-      // province: province ?? this.province,
-      // city: city ?? this.city,
-      // postalCode: postalCode ?? this.postalCode,
+      birthday: birthday ?? this.birthday,
+      country: country ?? this.country,
+      province: province ?? this.province,
+      city: city ?? this.city,
+      postalCode: postalCode ?? this.postalCode,
       address: address ?? this.address,
-      // specificInterests: specificInterests ?? this.specificInterests,
-      // interests: interests ?? this.interests,
-      // abilities: abilities ?? this.abilities,
-      // unemployedType: unemployedType ?? this.unemployedType,
+      specificInterests: specificInterests ?? this.specificInterests,
+      interests: interests ?? this.interests,
+      abilities: abilities ?? this.abilities,
+      unemployedType: unemployedType ?? this.unemployedType,
       role: role ?? this.role,
       // showChatWelcome: showChatWelcome ?? this.showChatWelcome,
-      // competencies: competencies ?? this.competencies,
+      competencies: competencies ?? this.competencies,
       //education: education ?? this.education,
-      // dataOfInterest: dataOfInterest ?? this.dataOfInterest,
-      // languages: languages ?? this.languages,
-      // aboutMe: aboutMe ?? this.aboutMe,
+      dataOfInterest: dataOfInterest ?? this.dataOfInterest,
+      languages: languages ?? this.languages,
+      aboutMe: aboutMe ?? this.aboutMe,
       organization: organization ?? this.organization,
       resources: resources ?? this.resources,
     );

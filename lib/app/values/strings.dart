@@ -285,6 +285,7 @@ class StringConst {
   static const String FORM_MENTOR_REGISTER = "Quiero colaborar";
   static const String FORM_ORGANIZATION_REGISTER = "Soy organización";
   static const String FORM_CREATE = "Crear recurso";
+  static const String FORM_EDIT = "Editar recurso";
   static const String FORM_TITLE = "Título";
   static const String FORM_DURATION = "Duración";
   static const String FORM_SCHEDULE = "Horario";
@@ -293,6 +294,7 @@ class StringConst {
   static const String FORM_ADDRESS = "Calle y número";
   static const String FORM_ORGANIZER_TEXT = "Organizador";
   static const String FORM_TRUST = "El organizador es de confianza";
+  static const String FORM_NOT_EXPIRE = "El recurso no expira";
   static const String FORM_LINK = "Link";
   static const String FORM_ORGANIZATION_NAME = "Nombre de la Organización";
   static const String FORM_ORGANIZATION_INFO = "Información de la organización";
@@ -358,6 +360,7 @@ class StringConst {
   static const String FORM_ORGANIZER = "Lugar y organizador";
   static const String FORM_REVISION = "Revisión";
   static const String FORM_CONFIRM = "ACEPTAR";
+  static const String FORM_UPDATE = "ACTUALIZAR";
   static const String FORM_NEXT = "SIGUIENTE";
   static const String FORM_BACK = "ATRÁS";
   static const String FORM_ACCEPTANCE = "Si es conforme, pulse en 'ACEPTAR'. Puede volver 'ATRÁS' y modificar la información.";
@@ -366,6 +369,8 @@ class StringConst {
   static const String FORM_ACCEPT_SENTENCE_Y = "y";
   static const String FORM_SUCCESS = "¡Registro exitoso!";
   static const String FORM_SUCCESS_MAIL = "Por favor revisa tu correo electrónico.";
+  static const String FORM_SUCCESS_CREATED = "El recurso fue creado exitosamente.";
+  static const String FORM_SUCCESS_UPDATED = "El recurso fue actualizado exitosamente.";
   static const String FORM_ACCEPT = "Aceptar";
   static const String FORM_ERROR= "Error al crea la cuenta";
   static const String FORM_SELECT= "Seleccionar";

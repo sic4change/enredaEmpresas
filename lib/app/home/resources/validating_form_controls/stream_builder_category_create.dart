@@ -1,35 +1,38 @@
-import 'package:enreda_empresas/app/models/country.dart';
+import 'package:enreda_empresas/app/models/dedication.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
+import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
-import 'package:enreda_empresas/app/values/strings.dart';
-import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../values/strings.dart';
+import '../../../values/values.dart';
 
-Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCountry,  functionToWriteBackThings ) {
+Widget streamBuilderDropdownResourceCategoryCreate (BuildContext context, ResourceCategory? selectedResourceCategory,  functionToWriteBackThings ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
-  return StreamBuilder<List<Country>>(
-      stream: database.countryFormatedStream(),
-      builder: (context, snapshotCountries){
+  return StreamBuilder<List<ResourceCategory>>(
+      stream: database.resourceCategoryStream(),
+      builder: (context, snapshotResourceCategory){
 
-        List<DropdownMenuItem<Country>> countryItems = [];
-        if (snapshotCountries.hasData) {
-          countryItems = snapshotCountries.data!.map((Country c) =>
-              DropdownMenuItem<Country>(
-                value: c,
-                child: Text(c.name),
-              ))
+        List<DropdownMenuItem<ResourceCategory>> resourceCategoryItems = [];
+        if (snapshotResourceCategory.hasData) {
+          resourceCategoryItems = snapshotResourceCategory.data!.map((ResourceCategory resourceCategory) {
+            return DropdownMenuItem<ResourceCategory>(
+              value: resourceCategory,
+              child: Text(resourceCategory.name),
+            );
+          })
               .toList();
         }
 
-        return DropdownButtonFormField<Country>(
-          hint: const Text(StringConst.FORM_COUNTRY),
-          isExpanded: true,
-          value: selectedCountry,
-          items: countryItems,
-          validator: (value) => selectedCountry != null ? null : StringConst.COUNTRY_ERROR,
+
+        return DropdownButtonFormField<ResourceCategory>(
+          hint: const Text(StringConst.FORM_RESOURCE_CATEGORY),
+          value: selectedResourceCategory,
+          items: resourceCategoryItems,
+          validator: (value) => selectedResourceCategory != null ? null : StringConst.FORM_MOTIVATION_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
@@ -42,13 +45,13 @@ Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCou
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),
@@ -56,8 +59,8 @@ Widget streamBuilderForCountryCreate (BuildContext context, Country? selectedCou
           ),
           style: textTheme.button?.copyWith(
             height: 1.5,
-            fontWeight: FontWeight.w400,
             color: AppColors.greyDark,
+            fontWeight: FontWeight.w400,
             fontSize: fontSize,
           ),
         );

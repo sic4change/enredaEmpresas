@@ -10,7 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Widget buildShareButton(BuildContext context, Resource resource, Color color) {
-  _showToast() {
+  showToast() {
     FToast fToast = FToast().init(context);
 
     Widget toast = Container(
@@ -42,8 +42,8 @@ Widget buildShareButton(BuildContext context, Resource resource, Color color) {
       switch (value) {
         case 1:
           Clipboard.setData(ClipboardData(
-              text: StringConst.RESOURCE_LINK(resource.resourceId)));
-          _showToast();
+              text: StringConst.RESOURCE_LINK(resource.resourceId!)));
+          showToast();
           break;
         case 2:
           shareResource(resource);
@@ -79,7 +79,7 @@ Widget buildShareButton(BuildContext context, Resource resource, Color color) {
               ),
               const SpaceW16(),
               Text('Compartir',
-                style: textTheme.bodyText1?.copyWith(
+                style: textTheme.bodySmall?.copyWith(
                   color: AppColors.greyDark,
                   height: 1.5,
                   fontWeight: FontWeight.w400,
@@ -100,7 +100,7 @@ Widget buildShareButton(BuildContext context, Resource resource, Color color) {
         ),
         const SizedBox(width: 10),
         Text('Compartir',
-          style: textTheme.bodyText1?.copyWith(
+          style: textTheme.bodySmall?.copyWith(
             color: AppColors.greyDark,
             height: 1.5,
             fontWeight: FontWeight.w400,

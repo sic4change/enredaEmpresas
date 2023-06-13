@@ -223,11 +223,11 @@ class _OrganizationRegisteringState extends State<OrganizationRegistering> {
               CustomPadding(
                   child: customTextFormField(context, _name!, StringConst.FORM_ORGANIZATION, StringConst.NAME_ERROR, _name_setState)),
               CustomFlexRowColumn(
-                  childLeft: streamBuilderForCountry(context, selectedCountry, _buildCountryStreamBuilder_setState),
-                  childRight: streamBuilderForProvince(context, selectedCountry, selectedProvince, _buildProvinceStreamBuilder_setState)
+                  childLeft: streamBuilderForCountryCreate(context, selectedCountry, _buildCountryStreamBuilder_setState),
+                  childRight: streamBuilderForProvinceCreate(context, selectedCountry, selectedProvince, _buildProvinceStreamBuilder_setState)
               ),
               CustomFlexRowColumn(
-                childLeft: streamBuilderForCity(context, selectedCountry, selectedProvince, selectedCity, _buildCityStreamBuilder_setState),
+                childLeft: streamBuilderForCityCreate(context, selectedCountry, selectedProvince, selectedCity, _buildCityStreamBuilder_setState),
                 childRight: customTextFormField(context, _postalCode!, StringConst.FORM_POSTAL_CODE, StringConst.POSTAL_CODE_ERROR, _postalCode_setState),
               ),
               CustomFlexRowColumn(

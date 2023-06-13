@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-Widget streamBuilderForProvince (BuildContext context, Country? selectedCountry, Province? selectedProvince,  functionToWriteBackThings ) {
+Widget streamBuilderForProvinceCreate (BuildContext context, Country? selectedCountry, Province? selectedProvince,  functionToWriteBackThings ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -27,7 +27,7 @@ Widget streamBuilderForProvince (BuildContext context, Country? selectedCountry,
         }
 
         return DropdownButtonFormField<Province>(
-          hint: Text(StringConst.FORM_PROVINCE),
+          hint: const Text(StringConst.FORM_PROVINCE),
           isExpanded: true,
           value: selectedProvince,
           items: provinceItems,
@@ -45,13 +45,13 @@ Widget streamBuilderForProvince (BuildContext context, Country? selectedCountry,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),

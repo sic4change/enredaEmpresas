@@ -1,6 +1,7 @@
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 
 Widget customTextFormField(BuildContext context, String formValue, String labelText, String errorText, functionSetState) {
@@ -141,9 +142,12 @@ Widget customTextFormFieldNum(BuildContext context, String formValue, String lab
         ),
       ),
     ),
-    initialValue: formValue,
+    initialValue: formValue.toString(),
     validator: (value) =>
     value!.isNotEmpty ? null : errorText,
+    inputFormatters: <TextInputFormatter>[
+      FilteringTextInputFormatter.digitsOnly
+    ],
     onSaved: (String? val) => functionSetState(val),
     textCapitalization: TextCapitalization.sentences,
     keyboardType: TextInputType.number,

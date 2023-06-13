@@ -269,7 +269,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                    widget.resource.status,
+                                    widget.resource.status!,
                                     style: textTheme.bodySmall?.copyWith(
                                       color: AppColors.greyAlt,
                                       fontSize: fontSize,
@@ -309,7 +309,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
           } else if (resource.countryName != null) {
             return resource.countryName!;
           }
-          return resource.modality;
+          return resource.modality!;
         }
 
       case StringConst.ONLINE_FOR_COUNTRY:
@@ -328,7 +328,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
         return StringConst.ONLINE;
 
       default:
-        return resource.modality;
+        return resource.modality!;
     }
   }
 
@@ -503,7 +503,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
     } else {
       final auth = Provider.of<AuthBase>(context, listen: false);
       final database = Provider.of<Database>(context, listen: false);
-      resource.likes.add(auth.currentUser!.uid);
+      resource.likes?.add(auth.currentUser!.uid);
       //await database.setResource(resource);
       setState(() {
         widget.resource;
@@ -513,7 +513,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
 
   Future<void> _removeUserToLike(Resource resource, String userId) async {
     final database = Provider.of<Database>(context, listen: false);
-    resource.likes.remove(userId);
+    resource.likes?.remove(userId);
     //await database.setResource(resource);
     setState(() {
       widget.resource;

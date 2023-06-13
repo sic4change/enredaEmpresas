@@ -1,5 +1,5 @@
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
-import 'package:enreda_empresas/app/home/participants/list_item_builder_horizontal.dart';
+import 'package:enreda_empresas/app/home/participants/wrap_builder.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';

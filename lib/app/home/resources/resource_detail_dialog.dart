@@ -281,7 +281,7 @@ Widget _buildDetailsListViewWeb(BuildContext context, Resource resource) {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomTextBody(text: resource.modality),
+                      CustomTextBody(text: resource.modality!),
                       resource.modality == StringConst.ONLINE
                           ? Container()
                           : Row(
@@ -299,7 +299,7 @@ Widget _buildDetailsListViewWeb(BuildContext context, Resource resource) {
                   CustomTextBody(text: '${resource.capacity}'),
                   const SpaceH16(),
                   CustomTextTitle(title: StringConst.DURATION.toUpperCase()),
-                  CustomTextBody(text: resource.duration),
+                  CustomTextBody(text: resource.duration!),
                   const SpaceH16(),
                   (resource.contractType != null && resource.contractType != '')
                       ? CustomTextTitle(
@@ -328,7 +328,7 @@ Widget _buildDetailsListViewWeb(BuildContext context, Resource resource) {
                       ? const SpaceH16()
                       : Container(),
                   CustomTextTitle(title: StringConst.DATE.toUpperCase()),
-                  DateFormat('dd/MM/yyyy').format(resource.start) ==
+                  DateFormat('dd/MM/yyyy').format(resource.start!) ==
                           '31/12/2050'
                       ? const CustomTextBody(
                           text: StringConst.ALWAYS_AVAILABLE,
@@ -337,13 +337,13 @@ Widget _buildDetailsListViewWeb(BuildContext context, Resource resource) {
                           children: [
                             CustomTextBody(
                                 text: DateFormat('dd/MM/yyyy')
-                                    .format(resource.start)),
+                                    .format(resource.start!)),
                             const SpaceW4(),
                             const CustomTextBody(text: '-'),
                             const SpaceW4(),
                             CustomTextBody(
                                 text: DateFormat('dd/MM/yyyy')
-                                    .format(resource.end))
+                                    .format(resource.end!))
                           ],
                         ),
                   resource.temporality == null
@@ -400,7 +400,7 @@ Widget _buildDetailsListViewMobile(BuildContext context, Resource resource) {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextBody(text: resource.modality),
+                  CustomTextBody(text: resource.modality!),
                   resource.modality == StringConst.ONLINE
                       ? Container()
                       : Row(
@@ -417,7 +417,7 @@ Widget _buildDetailsListViewMobile(BuildContext context, Resource resource) {
               CustomTextBody(text: '${resource.capacity}'),
               const SpaceH16(),
               CustomTextTitle(title: StringConst.DURATION.toUpperCase()),
-              CustomTextBody(text: resource.duration),
+              CustomTextBody(text: resource.duration!),
               const SpaceH16(),
               (resource.contractType != null && resource.contractType != '')
                   ? CustomTextTitle(
@@ -446,7 +446,7 @@ Widget _buildDetailsListViewMobile(BuildContext context, Resource resource) {
                   ? const SpaceH16()
                   : Container(),
               CustomTextTitle(title: StringConst.DATE.toUpperCase()),
-              DateFormat('dd/MM/yyyy').format(resource.start) == '31/12/2050'
+              DateFormat('dd/MM/yyyy').format(resource.start!) == '31/12/2050'
                   ? const CustomTextBody(
                       text: StringConst.ALWAYS_AVAILABLE,
                     )
@@ -454,12 +454,12 @@ Widget _buildDetailsListViewMobile(BuildContext context, Resource resource) {
                       children: [
                         CustomTextBody(
                             text: DateFormat('dd/MM/yyyy')
-                                .format(resource.start)),
+                                .format(resource.start!)),
                         const SpaceW4(),
                         const CustomTextBody(text: '-'),
                         const SpaceW4(),
                         CustomTextBody(
-                            text: DateFormat('dd/MM/yyyy').format(resource.end))
+                            text: DateFormat('dd/MM/yyyy').format(resource.end!))
                       ],
                     ),
               resource.temporality == null

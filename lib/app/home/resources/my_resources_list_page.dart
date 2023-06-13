@@ -1,19 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chips_choice/chips_choice.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/build_share_button.dart';
-import 'package:enreda_empresas/app/common_widgets/custom_chip.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/resources/create_resource_form/create_resource.dart';
+import 'package:enreda_empresas/app/home/resources/edit_resource/edit_resource.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
+import 'package:enreda_empresas/app/home/resources/resource_interests_stream.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
-import 'package:enreda_empresas/app/models/interests.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
@@ -45,6 +44,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   List<UserEnreda>? myParticipantsList = [];
   List<String>? interestsIdsList = [];
   String? organizationId;
+  Organization? organizer;
   final List<Interest> _interests = [];
   List<String> interestSelectedName = [];
 
@@ -73,7 +73,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               Navigator.of(this.context).push(
                 MaterialPageRoute<void>(
                   fullscreenDialog: true,
-                  builder: ((context) => ResourceCreationForm(organizationId: organizationId)),
+                  builder: ((context) => CreateResource(organizationId: organizationId)),
                 ),
               )
             },
@@ -105,7 +105,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                           Navigator.of(this.context).push(
                             MaterialPageRoute<void>(
                               fullscreenDialog: true,
-                              builder: ((context) => ResourceCreationForm(organizationId: organizationId)),
+                              builder: ((context) => CreateResource(organizationId: organizationId)),
                             ),
                           )
                         }
@@ -173,6 +173,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                     resource.organizer),
                                 builder: (context, snapshot) {
                                   final organization = snapshot.data;
+                                  organizer = organization;
                                   organizationId = resource.organizer;
                                   resource.organizerName =
                                   organization == null ? '' : organization.name;
@@ -235,7 +236,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                                             onTap: () =>
                                                                 setState(() {
                                                                   _currentPage =
-                                                                      _myResourcesPage(resource, interestsSelected);
+                                                                      _buildResourcePage(resource);
                                                                 }),
                                                           ),
                                                         );
@@ -259,8 +260,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
         });
   }
 
-
-  Widget _myResourcesPage(Resource resource, List<String> interestsSelected) {
+  Widget _buildResourcePage(Resource resource) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
@@ -373,7 +373,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                           ? 0
                                           : 4,
                                       child: _buildDetailResource(
-                                          context, resource, interestsSelected)),
+                                          context, resource)),
                                   SizedBox(
                                     height: 600,
                                     child: Column(
@@ -422,23 +422,22 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                         child: IconButton(
                             iconSize: 40,
                             icon: Image.asset(ImagePath.DELETE_RESOURCE),
-                            onPressed: () => {}
+                            onPressed: () => _confirmDeleteResource(context, resource),
                         ),
                       ),
                       Positioned(
                         right: 50,
                         child: IconButton(
                             iconSize: 40,
-                            icon: Image.asset(ImagePath.DOWNLOAD_RESOURCE),
-                            onPressed: () => {}
-                        ),
-                      ),
-                      Positioned(
-                        right: 100,
-                        child: IconButton(
-                            iconSize: 40,
                             icon: Image.asset(ImagePath.EDIT_RESOURCE),
-                            onPressed: () => {}
+                            onPressed: () => {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  fullscreenDialog: true,
+                                  builder: ((context) => EditResource(organizer: organizer!, resourceId: resource.resourceId!,)),
+                                ),
+                              )
+                          },
                         ),
                       ),
                     ],
@@ -466,7 +465,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                             CustomTextTitle(title: StringConst.PARTICIPANTS.toUpperCase()),
                             Padding(
                               padding: const EdgeInsets.only(top: 30.0),
-                              child: _buildParticipantsList(context, resource.resourceId),
+                              child: _buildParticipantsList(context, resource.resourceId!),
                             ),
                           ],
                         )),
@@ -478,7 +477,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     );
   }
 
-  Widget _buildDetailResource(BuildContext context, Resource resource, List<String> interestsSelected) {
+  Widget _buildDetailResource(BuildContext context, Resource resource) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -497,49 +496,72 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               ),
             ),
           ),
-          _buildInterests(context, interestsSelected),
-          Column(
-            children: [
-              CustomTextTitle(title: StringConst.AVAILABLE.toUpperCase()),
-              Container(
-                  width: 130,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: AppColors.greyLight2.withOpacity(0.2),
-                        width: 1),
-                    borderRadius: BorderRadius.circular(Consts.padding),
-                  ),
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(8.0),
-                  margin: const EdgeInsets.only(top: 4.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 8,
-                        width: 8,
-                        decoration: BoxDecoration(
-                          color: resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
-                          borderRadius: BorderRadius.circular(Consts.padding),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      CustomTextBody(text: resource.status),
-                    ],
-                  )),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: buildShareButton(context, resource, AppColors.darkGray),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
+          _buildInformationResource(context, resource),
         ],
       ),
+    );
+  }
+
+  Widget _buildInformationResource(BuildContext context, Resource resource) {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          StringConst.FORM_INTERESTS.toUpperCase(),
+          style: textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.penBlue,
+          ),
+        ),
+        const SizedBox(height: 10,),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: InterestsByResource(interestsIdList: resource.interests!,),
+        ),
+        const SizedBox(height: 10,),
+        Text(
+          StringConst.AVAILABLE.toUpperCase(),
+          style: textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.penBlue,
+          ),
+        ),
+        Container(
+            width: 130,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                  color: AppColors.greyLight2.withOpacity(0.2),
+                  width: 1),
+              borderRadius: BorderRadius.circular(Consts.padding),
+            ),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(4.0),
+            margin: const EdgeInsets.only(top: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 8,
+                  width: 8,
+                  decoration: BoxDecoration(
+                    color: resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
+                    borderRadius: BorderRadius.circular(Consts.padding),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                CustomTextBody(text: resource.status!),
+              ],
+            )),
+        const SizedBox(height: 30,),
+        buildShareButton(context, resource, AppColors.darkGray),
+        const SizedBox(
+          height: 30,
+        ),
+      ],
     );
   }
 
@@ -568,25 +590,25 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
           ),
           const SpaceH16(),
           CustomTextTitle(title: StringConst.MODALITY.toUpperCase()),
-          CustomTextBody(text: resource.modality),
+          CustomTextBody(text: resource.modality!),
           const SpaceH16(),
           CustomTextTitle(title: StringConst.CAPACITY.toUpperCase()),
           CustomTextBody(text: '${resource.capacity}'),
           const SpaceH16(),
           CustomTextTitle(title: StringConst.DATE.toUpperCase()),
-          DateFormat('dd/MM/yyyy').format(resource.start) == '31/12/2050'
+          DateFormat('dd/MM/yyyy').format(resource.start!) == '31/12/2050'
               ? const CustomTextBody(
                   text: StringConst.ALWAYS_AVAILABLE,
                 )
               : Row(
                   children: [
                     CustomTextBody(
-                        text: DateFormat('dd/MM/yyyy').format(resource.start)),
+                        text: DateFormat('dd/MM/yyyy').format(resource.start!)),
                     const SpaceW4(),
                     const CustomTextBody(text: '-'),
                     const SpaceW4(),
                     CustomTextBody(
-                        text: DateFormat('dd/MM/yyyy').format(resource.end))
+                        text: DateFormat('dd/MM/yyyy').format(resource.end!))
                   ],
                 ),
           const SpaceH16(),
@@ -601,7 +623,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               ? const SpaceH16()
               : Container(),
           CustomTextTitle(title: StringConst.DURATION.toUpperCase()),
-          CustomTextBody(text: resource.duration),
+          CustomTextBody(text: resource.duration!),
           (resource.salary != null && resource.salary != '')
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -650,7 +672,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      _buildMyUserFoto(context, user.photo!),
+                      _buildMyUserPhoto(context, user.photo!),
                       const SpaceW20(),
                       Text('${user.firstName!} ${user.lastName!}'),
                     ],
@@ -663,43 +685,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     );
   }
 
-  Widget _buildInterests(BuildContext context, List<String> interestsSelected) {
-    return Container(
-      padding: EdgeInsets.all(Sizes.mainPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextTitle(title: StringConst.FORM_INTERESTS.toUpperCase()),
-          const SpaceH20(),
-          _interests.isNotEmpty ?
-          Container(
-            alignment: Alignment.centerLeft,
-            child: ChipsChoice<String>.multiple(
-              padding: const EdgeInsets.all(0.0),
-              value: interestsSelected,
-              onChanged: (val) {},
-              choiceItems: C2Choice.listFrom<String, String>(
-                source: _interests.map((e) => e.name).toList(),
-                value: (i, v) => v,
-                label: (i, v) => v,
-                tooltip: (i, v) => v,
-              ),
-              choiceBuilder: (item, i) =>
-                  CustomChip(
-                    label: item.label,
-                    selected: item.selected,
-                    onSelect: item.select!,
-                  ),
-              wrapped: true,
-              runSpacing: 8,
-            ),
-          ) : Container(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMyUserFoto(BuildContext context, String profilePic) {
+  Widget _buildMyUserPhoto(BuildContext context, String profilePic) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -741,6 +727,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
               ):
               PrecacheAvatarCard(
                 imageUrl: profilePic,
+                width: 35,
+                height: 35,
               ),
             )
           ],
@@ -748,4 +736,30 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
       ],
     );
   }
+
+  Future<void> _deleteResource(BuildContext context, Resource resource) async {
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      await database.deleteResource(resource);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _confirmDeleteResource(BuildContext context, Resource resource) async {
+    final didRequestSignOut = await showAlertDialog(context,
+        title: 'Eliminar recurso: ${resource.title} ',
+        content: 'Si pulsa en Aceptar se procederá a la eliminación completa '
+            'del recurso, esta acción no se podrá deshacer, '
+            '¿Está seguro que quiere continuar?',
+        cancelActionText: 'Cancelar',
+        defaultActionText: 'Aceptar');
+    if (didRequestSignOut == true) {
+      _deleteResource(context, resource);
+      setState(() {
+        _currentPage = _buildResourcesList(context);
+      });
+    }
+  }
+
 }

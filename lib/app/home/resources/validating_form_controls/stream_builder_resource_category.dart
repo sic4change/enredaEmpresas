@@ -1,4 +1,5 @@
 import 'package:enreda_empresas/app/models/dedication.dart';
+import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
@@ -7,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../values/strings.dart';
 import '../../../values/values.dart';
 
-Widget streamBuilderDropdownResourceCategory (BuildContext context, ResourceCategory? selectedResourceCategory,  functionToWriteBackThings ) {
+Widget streamBuilderDropdownResourceCategory (BuildContext context, ResourceCategory? selectedResourceCategory,  functionToWriteBackThings, Resource resource ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -17,16 +18,18 @@ Widget streamBuilderDropdownResourceCategory (BuildContext context, ResourceCate
 
         List<DropdownMenuItem<ResourceCategory>> resourceCategoryItems = [];
         if (snapshotResourceCategory.hasData) {
-          resourceCategoryItems = snapshotResourceCategory.data!.map((ResourceCategory resourceCategory) =>
-              DropdownMenuItem<ResourceCategory>(
+          resourceCategoryItems = snapshotResourceCategory.data!.map((ResourceCategory resourceCategory) {
+            if (selectedResourceCategory == null && resourceCategory.id == resource.resourceCategory) {
+              selectedResourceCategory = resourceCategory;
+            }
+            return DropdownMenuItem<ResourceCategory>(
                 value: resourceCategory,
                 child: Text(resourceCategory.name),
-              ))
+              );
+          })
               .toList();
         }
-
-
-
+        
 
         return DropdownButtonFormField<ResourceCategory>(
           hint: const Text(StringConst.FORM_RESOURCE_CATEGORY),

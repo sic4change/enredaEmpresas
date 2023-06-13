@@ -8,7 +8,7 @@ import '../../values/strings.dart';
 
 Future<void> shareResource(Resource resource) async {
   await Share.share(
-    StringConst.SHARE_TEXT(resource.title, resource.resourceId),
+    StringConst.SHARE_TEXT(resource.title, resource.resourceId!),
     subject: StringConst.APP_NAME,
   );
 }
