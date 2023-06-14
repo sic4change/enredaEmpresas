@@ -1,5 +1,4 @@
 import 'package:enreda_empresas/app/models/country.dart';
-import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -7,7 +6,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, functionToWriteBackThings, Resource resource ) {
+Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, functionToWriteBackThings, genericType ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -18,7 +17,7 @@ Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, 
         List<DropdownMenuItem<Country>> countryItems = [];
         if (snapshotCountries.hasData) {
           countryItems = snapshotCountries.data!.map((Country country) {
-            if (selectedCountry == null && country.countryId == resource.address?.country) {
+            if (selectedCountry == null && country.countryId == genericType.address?.country) {
               selectedCountry = country;
             }
             return DropdownMenuItem<Country>(
@@ -30,7 +29,7 @@ Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, 
         }
 
         return DropdownButtonFormField<Country>(
-          hint: Text(StringConst.FORM_COUNTRY),
+          hint: const Text(StringConst.FORM_COUNTRY),
           isExpanded: true,
           value: selectedCountry,
           items: countryItems,
@@ -47,13 +46,13 @@ Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, 
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),

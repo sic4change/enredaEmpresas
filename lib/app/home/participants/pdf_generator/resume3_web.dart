@@ -232,7 +232,7 @@ Future<Uint8List> generateResume3(
                     padding: const pw.EdgeInsets.only(left: 50, right: 30),
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: pw.MainAxisAlignment.start,
                       children: <pw.Widget>[
                         myExperiences != null && myExperiences.isNotEmpty ? _Category(title: StringConst.MY_EXPERIENCES, color: green) : pw.Container(),
                         for (var experience in myExperiences!)

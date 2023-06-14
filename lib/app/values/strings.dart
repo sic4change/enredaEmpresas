@@ -36,7 +36,8 @@ class StringConst {
   static const String EVALUATE_COMPETENCY = "Evaluar: ";
 
   //Header Section
-  static const String FIRST_NAME = "";
+  static const String FIRST_NAME = "Nombres";
+  static const String LAST_NAME = "Apellidos";
   static const String INTRO = "Te ayudamos a ";
   static const String POSITION = "construir tu futuro.";
   static const String ABOUT_DEV =
@@ -225,6 +226,7 @@ class StringConst {
   static const String TALK_WITH_US = "Hablemos";
   static const String ANY_QUESTION = "¿Tienes alguna pregunta?";
   static const String NAME_ERROR = "El nombre no puede estar vacío";
+  static const String LAST_NAME_ERROR = "El apellido no puede estar vacío";
   static const String EMAIL = "Email";
   static const String EMAIL_ERROR = "El email no es válido";
   static const String EMAIL_REGISTERED = "El email ya se encuentra registrado";
@@ -309,6 +311,7 @@ class StringConst {
   static const String FORM_LASTNAME_ERROR = "Los apellidos no puede estar vacío";
   static const String FORM_DESCRIPTION_ERROR = "La descripción no puede estar vacía";
   static const String FORM_COMPANY_ERROR = "El campo no puede estar vacío";
+  static const String FORM_BIRTHDAY_DATE = "Fecha de nacimiento";
   static const String FORM_PHONE = "Teléfono";
   static const String PHONE_ERROR = "El teléfono no puede estar vacío";
   static const String FORM_EMAIL = "Email";

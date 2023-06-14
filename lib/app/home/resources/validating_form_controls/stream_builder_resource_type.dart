@@ -1,4 +1,3 @@
-import 'package:enreda_empresas/app/models/gender.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/services/database.dart';

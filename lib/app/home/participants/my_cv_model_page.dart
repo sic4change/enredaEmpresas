@@ -73,19 +73,12 @@ class MyCvModelsPage extends StatelessWidget {
   final List<CertificationRequest>? myReferences;
   List<CertificationRequest> myCustomReferences;
   List<int> mySelectedReferences;
-
   int? _selectedEducationIndex;
-
   int? _selectedExperienceIndex;
-
   int? _selectedReferenceIndex;
-
   int? _selectedCompetenciesIndex;
-
   int? _selectedLanguagesIndex;
-
   int? _selectedDataOfInterestIndex;
-
   final bool _isSelectedPhoto = true;
 
   @override
@@ -385,7 +378,7 @@ class MyCvModelsPage extends StatelessWidget {
               Center(child:  Text(
                 user?.educationName?.toUpperCase() ?? '',
                 style: textTheme.bodyMedium?.copyWith(
-                    color: AppColors.darkGray),
+                    color:AppColors.greyAlt, fontWeight: FontWeight.w800,),
               )),
               const SpaceH24(),
               _buildPersonalData(context),
@@ -474,26 +467,13 @@ class MyCvModelsPage extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child:
-                CustomTextTitle(title: StringConst.ABOUT_ME.toUpperCase()),
-              ),
-            ],
-          ),
-          Container(
+          CustomTextTitle(title: StringConst.ABOUT_ME.toUpperCase()),
+          Padding(
             padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.0),
-              color: AppColors.white,
-            ),
-            child: Expanded(
-              child: CustomTextBody(
-                  text: user?.aboutMe != null && user!.aboutMe!.isNotEmpty
-                      ? user!.aboutMe!
-                      : 'Aún no ha añadido información adicional'),
-            ),
+            child: CustomTextBody(
+                text: user?.aboutMe != null && user!.aboutMe!.isNotEmpty
+                    ? user!.aboutMe!
+                    : 'Aún no ha añadido información adicional'),
           ),
         ],
       );
@@ -507,9 +487,7 @@ class MyCvModelsPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextTitle(title: StringConst.PERSONAL_DATA.toUpperCase()),
-        const SpaceH4(),
         Container(
-          padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
             color: AppColors.white,
@@ -524,13 +502,11 @@ class MyCvModelsPage extends StatelessWidget {
                     size: 12.0,
                   ),
                   const SpaceW4(),
-                  Expanded(
-                    child: Text(
-                      user?.email ?? '',
-                      style: textTheme.bodySmall?.copyWith(
-                          fontSize: Responsive.isDesktop(context) ? 14 : 14.0,
-                          color: AppColors.darkGray),
-                    ),
+                  Text(
+                    user?.email ?? '',
+                    style: textTheme.bodySmall?.copyWith(
+                        fontSize: Responsive.isDesktop(context) ? 14 : 14.0,
+                        color: AppColors.darkGray),
                   ),
                 ],
               ),
@@ -543,13 +519,11 @@ class MyCvModelsPage extends StatelessWidget {
                     size: 12.0,
                   ),
                   const SpaceW4(),
-                  Expanded(
-                    child: Text(
-                      user?.phone ?? '',
-                      style: textTheme.bodySmall?.copyWith(
-                          fontSize: Responsive.isDesktop(context) ? 14 : 14.0,
-                          color: AppColors.darkGray),
-                    ),
+                  Text(
+                    user?.phone ?? '',
+                    style: textTheme.bodySmall?.copyWith(
+                        fontSize: Responsive.isDesktop(context) ? 14 : 14.0,
+                        color: AppColors.darkGray),
                   ),
                 ],
               ),
@@ -613,15 +587,13 @@ class MyCvModelsPage extends StatelessWidget {
                     selected: index == _selectedCompetenciesIndex,
                     title: Row(
                       children: [
-                        Expanded(
-                          child: Text(
-                              competenciesNames[index],
-                              style: textTheme.bodySmall
-                                  ?.copyWith(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.darkGray)
-                          ),
+                        Text(
+                            competenciesNames[index],
+                            style: textTheme.bodySmall
+                                ?.copyWith(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.darkGray)
                         ),
                       ],
                     ),
@@ -671,7 +643,8 @@ class MyCvModelsPage extends StatelessWidget {
                   selected: index == _selectedEducationIndex,
                   title: Row(
                     children: [
-                      Expanded(
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -681,12 +654,14 @@ class MyCvModelsPage extends StatelessWidget {
                                 text: TextSpan(
                                     text: '${myEducation![index].activityRole!.toUpperCase()} -',
                                     style: textTheme.bodySmall?.copyWith(
+                                      color: AppColors.greyAlt,
                                       fontSize: 14.0,
                                     ),
                                     children: [
                                       TextSpan(
                                         text: ' ${myEducation![index].activity!.toUpperCase()}',
                                         style: textTheme.bodySmall?.copyWith(
+                                          color: AppColors.greyAlt,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -696,7 +671,7 @@ class MyCvModelsPage extends StatelessWidget {
                             if (myEducation![index].activity != null && myEducation![index].activityRole == null)
                               Text(myEducation![index].activity!,
                                   style: textTheme.bodySmall
-                                      ?.copyWith(fontSize: 14.0, fontWeight: FontWeight.bold)),
+                                      ?.copyWith(fontSize: 14.0, color: AppColors.greyAlt, fontWeight: FontWeight.bold)),
                             if (myEducation![index].activity != null) const SpaceH8(),
                             if (myEducation![index].organization != null && myEducation![index].organization != "") Column(
                               children: [
@@ -704,6 +679,7 @@ class MyCvModelsPage extends StatelessWidget {
                                   myEducation![index].organization!,
                                   style: textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.bold,
+                                    color: AppColors.greyAlt,
                                     fontSize: 14.0,
                                   ),
                                 ),
@@ -715,6 +691,7 @@ class MyCvModelsPage extends StatelessWidget {
                                   ? formatter.format(myEducation![index].endDate!.toDate())
                                   : 'Actualmente'}',
                               style: textTheme.bodySmall?.copyWith(
+                                color: AppColors.greyAlt,
                                 fontSize: 14.0,
                               ),
                             ),
@@ -722,6 +699,7 @@ class MyCvModelsPage extends StatelessWidget {
                             Text(
                               myEducation![index].location,
                               style: textTheme.bodySmall?.copyWith(
+                                color: AppColors.greyAlt,
                                 fontSize: 14.0,
                               ),
                             ),
@@ -769,7 +747,8 @@ class MyCvModelsPage extends StatelessWidget {
                   selected: index == _selectedExperienceIndex,
                   title: Row(
                     children: [
-                      Expanded(
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -779,6 +758,7 @@ class MyCvModelsPage extends StatelessWidget {
                                 text: TextSpan(
                                     text: '${myExperiences![index].activityRole!.toUpperCase()} -',
                                     style: textTheme.bodySmall?.copyWith(
+                                      color: AppColors.greyAlt,
                                       fontSize: 14.0,
                                     ),
                                     children: [
@@ -786,6 +766,7 @@ class MyCvModelsPage extends StatelessWidget {
                                         text: ' ${myExperiences![index].activity!.toUpperCase()}',
                                         style: textTheme.bodySmall?.copyWith(
                                           fontSize: 14.0,
+                                          color: AppColors.greyAlt,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       )
@@ -794,7 +775,7 @@ class MyCvModelsPage extends StatelessWidget {
                             if (myExperiences![index].activity != null && myExperiences![index].activityRole == null)
                               Text( myExperiences![index].position == null || myExperiences![index].position == "" ? '${myExperiences![index].activity!}' : '${myExperiences![index].position}',
                                   style: textTheme.bodySmall
-                                      ?.copyWith(fontSize: 14.0, fontWeight: FontWeight.bold)),
+                                      ?.copyWith(fontSize: 14.0, fontWeight: FontWeight.bold, color: AppColors.greyAlt,)),
                             if (myExperiences![index].position != null || myExperiences![index].activity != null) const SpaceH8(),
                             if (myExperiences![index].organization != null && myExperiences![index].organization != "") Column(
                               children: [
@@ -802,6 +783,7 @@ class MyCvModelsPage extends StatelessWidget {
                                   myExperiences![index].organization!,
                                   style: textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.bold,
+                                    color: AppColors.greyAlt,
                                     fontSize: 14.0,
                                   ),
                                 ),
@@ -813,6 +795,7 @@ class MyCvModelsPage extends StatelessWidget {
                                   ? formatter.format(myExperiences![index].endDate!.toDate())
                                   : 'Actualmente'}',
                               style: textTheme.bodySmall?.copyWith(
+                                color: AppColors.greyAlt,
                                 fontSize: 14.0,
                               ),
                             ),
@@ -820,6 +803,7 @@ class MyCvModelsPage extends StatelessWidget {
                             Text(
                               myExperiences![index].location,
                               style: textTheme.bodySmall?.copyWith(
+                                color: AppColors.greyAlt,
                                 fontSize: 14.0,
                               ),
                             ),
@@ -847,7 +831,6 @@ class MyCvModelsPage extends StatelessWidget {
       children: [
         CustomTextTitle(title: StringConst.DATA_OF_INTEREST.toUpperCase()),
         Container(
-          padding: const EdgeInsets.all(10.0),
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
@@ -860,25 +843,19 @@ class MyCvModelsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 selected: index == _selectedDataOfInterestIndex,
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                          myDataOfInterest[index],
-                          style: textTheme.bodySmall
-                              ?.copyWith(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkGray)
-                      ),
-                    ),
-                  ],
+                title: Text(
+                    myDataOfInterest[index],
+                    style: textTheme.bodySmall
+                        ?.copyWith(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.darkGray)
                 ),
               );
             },
           ) :
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(20.0),
             child: Center(
                 child: Text(
                   'Aquí aparecerá la información de interés',
@@ -899,45 +876,31 @@ class MyCvModelsPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextTitle(title: StringConst.LANGUAGES.toUpperCase()),
-        Container(
-          padding: const EdgeInsets.all(10.0),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.0),
-            color: AppColors.white,
-          ),
-          child: myLanguages.isNotEmpty ?
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: myLanguages.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                selected: index == _selectedLanguagesIndex,
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                          myLanguages[index],
-                          style: textTheme.bodySmall
-                              ?.copyWith(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.darkGray)
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ) :
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Center(
-                child: Text(
-                  'Aquí aparecerán los idiomas',
-                  style: textTheme.bodySmall,
-                )),
-          ),
+        myLanguages.isNotEmpty ?
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: myLanguages.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              selected: index == _selectedLanguagesIndex,
+              title: Text(
+                  myLanguages[index],
+                  style: textTheme.bodySmall
+                      ?.copyWith(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.darkGray)
+              ),
+            );
+          },
+        ) :
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+              child: Text(
+                'Aquí aparecerán los idiomas',
+                style: textTheme.bodySmall,
+              )),
         ),
 
       ],
@@ -951,66 +914,54 @@ class MyCvModelsPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextTitle(title: StringConst.PERSONAL_REFERENCES.toUpperCase()),
-        const SpaceH4(),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.0),
-            color: AppColors.white,
-          ),
-          child: myReferences!.isNotEmpty ?
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: myReferences!.length,
-            itemBuilder: (context, index) {
-              return Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(vertical: 0),
-                child: ListTile(
-                  selected: index == _selectedReferenceIndex,
-                  title: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            CustomTextBold(title: '${myReferences![index].certifierName}'),
-                            const SpaceH4(),
-                            RichText(
-                              text: TextSpan(
-                                  text: '${myReferences![index].certifierPosition.toUpperCase()} -',
+        myReferences!.isNotEmpty ?
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: myReferences!.length,
+          itemBuilder: (context, index) {
+            return Container(
+              alignment: Alignment.centerLeft,
+              child: ListTile(
+                selected: index == _selectedReferenceIndex,
+                title: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        CustomTextBold(title: '${myReferences![index].certifierName}'),
+                        const SpaceH4(),
+                        RichText(
+                          text: TextSpan(
+                              text: '${myReferences![index].certifierPosition.toUpperCase()} -',
+                              style: textTheme.bodySmall?.copyWith(
+                                fontSize: 14.0,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: ' ${myReferences![index].certifierCompany.toUpperCase()}',
                                   style: textTheme.bodySmall?.copyWith(
                                     fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' ${myReferences![index].certifierCompany.toUpperCase()}',
-                                      style: textTheme.bodySmall?.copyWith(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ]),
-                            ),
-                            CustomTextSmall(text: '${myReferences![index].email}'),
-                            myReferences![index].phone != "" ? CustomTextSmall(text: '${myReferences![index].phone}') : Container(),
-                            const SizedBox(height: 10,),
-                          ],
+                                )
+                              ]),
                         ),
-                      ),
-                    ],
-                  ),
+                        CustomTextSmall(text: '${myReferences![index].email}'),
+                        myReferences![index].phone != "" ? CustomTextSmall(text: '${myReferences![index].phone}') : Container(),
+                        const SizedBox(height: 10,),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            },
-          )
-              : const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: CustomTextBody(text: 'Aquí aparecerán las referencias personales'),
               ),
-        ),
+            );
+          },
+        )
+            : const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: CustomTextBody(text: 'Aquí aparecerán las referencias personales'),
+            ),
       ],
     );
   }
