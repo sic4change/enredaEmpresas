@@ -3,7 +3,7 @@ import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/build_share_button.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text_title.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/resources/create_resource_form/create_resource.dart';
+import 'package:enreda_empresas/app/home/resources/create_resource/create_resource.dart';
 import 'package:enreda_empresas/app/home/resources/edit_resource/edit_resource.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';

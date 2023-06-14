@@ -102,15 +102,15 @@ abstract class Database {
      Stream<List<CertificationRequest>> myCertificationRequestStream(String userId);
 //   Stream<List<ResourceCategory>> getCategoriesResources();
 //
-//   Future<void> setUserEnreda(UserEnreda userEnreda);
+     Future<void> setUserEnreda(UserEnreda userEnreda);
 //   Future<void> addUserEnreda(UserEnreda userEnreda);
 //   Future<void> deleteUser(UserEnreda userEnreda);
-//   Future<void> uploadUserAvatar(String userId, Uint8List data);
+     Future<void> uploadUserAvatar(String userId, Uint8List data);
 //   Future<void> addContact(Contact contact);
 //   Future<void> addResource(Resource resource);
      Future<void> setResource(Resource resource);
      Future<void> deleteResource(Resource resource);
-//   Future<void> addUnemployedUser(UnemployedUser create_resource_form);
+//   Future<void> addUnemployedUser(UnemployedUser create_resource);
 //   Future<void> addMentorUser(MentorUser mentorUser);
      Future<void> addOrganizationUser(OrganizationUser organizationUser);
      Future<void> addOrganization(Organization organization);
@@ -513,12 +513,12 @@ class FirestoreDatabase implements Database {
 //   Future<void> addUserEnreda(UserEnreda userEnreda) =>
 //       _service.addData(path: APIPath.tests(), data: userEnreda.toMap());
 //
-//   @override
-//   Future<void> setUserEnreda(UserEnreda userEnreda) {
-//     return _service.updateData(
-//         path: APIPath.user(userEnreda.userId!), data: userEnreda.toMap());
-//   }
-//
+    @override
+    Future<void> setUserEnreda(UserEnreda userEnreda) {
+      return _service.updateData(
+          path: APIPath.user(userEnreda.userId!), data: userEnreda.toMap());
+    }
+
 //   @override
 //   Future<void> deleteUser(UserEnreda userEnreda) {
 //     return _service.deleteData(path: APIPath.user(userEnreda.userId!));
@@ -643,24 +643,25 @@ class FirestoreDatabase implements Database {
         sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
       );
 
-//   Future<void> uploadUserAvatar(String userId, Uint8List data) async {
-//     var firebaseStorageRef =
-//     FirebaseStorage.instance.ref().child('users/$userId/profilePic');
-//     UploadTask uploadTask = firebaseStorageRef.putData(data);
-//     TaskSnapshot taskSnapshot = await uploadTask;
-//     taskSnapshot.ref.getDownloadURL().then(
-//           (value) => {
-//         //print("Done: $value")
-//         _service.updateData(path: APIPath.photoUser(userId), data: {
-//           "profilePic": {
-//             'src': '$value',
-//             'title': 'photo.jpg',
-//           }
-//         })
-//       },
-//     );
-//   }
-//
+    @override
+      Future<void> uploadUserAvatar(String userId, Uint8List data) async {
+        var firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('users/$userId/profilePic');
+        UploadTask uploadTask = firebaseStorageRef.putData(data);
+        TaskSnapshot taskSnapshot = await uploadTask;
+        taskSnapshot.ref.getDownloadURL().then(
+              (value) => {
+            //print("Done: $value")
+            _service.updateData(path: APIPath.photoUser(userId), data: {
+              "profilePic": {
+                'src': '$value',
+                'title': 'photo.jpg',
+              }
+            })
+          },
+        );
+      }
+
 //   @override
 //   Stream<List<Certificate>> myCertificatesStream(String userId) =>
 //       _service.collectionStream(
@@ -726,8 +727,8 @@ class FirestoreDatabase implements Database {
 //       _service.addData(path: APIPath.contacts(), data: contact.toMap());
 //
 //   @override
-//   Future<void> addUnemployedUser(UnemployedUser create_resource_form) =>
-//       _service.addData(path: APIPath.users(), data: create_resource_form.toMap());
+//   Future<void> addUnemployedUser(UnemployedUser create_resource) =>
+//       _service.addData(path: APIPath.users(), data: create_resource.toMap());
 //
 //   @override
 //   Future<void> addMentorUser(MentorUser mentorUser) =>

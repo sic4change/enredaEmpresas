@@ -1,6 +1,4 @@
-import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/province.dart';
-import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -9,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId, Province? selectedProvince,  functionToWriteBackThings, Resource resource ) {
+Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId, Province? selectedProvince,  functionToWriteBackThings, genericType ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -18,9 +16,11 @@ Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId
       builder: (context, snapshotProvinces) {
 
         List<DropdownMenuItem<Province>> provinceItems = [];
-        if (snapshotProvinces.hasData && selectedCountryId != null && snapshotProvinces.data![0].countryId == selectedCountryId) {
+        if (snapshotProvinces.hasData && selectedCountryId != null &&
+            snapshotProvinces.data!.isNotEmpty &&
+            snapshotProvinces.data![0].countryId == selectedCountryId) {
           provinceItems = snapshotProvinces.data!.map((Province province) {
-            if (selectedProvince == null && province.provinceId == resource.address?.province) {
+            if (selectedProvince == null && province.provinceId == genericType.address?.province) {
               selectedProvince = province;
             }
             return DropdownMenuItem<Province>(
@@ -32,7 +32,7 @@ Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId
         }
 
         return DropdownButtonFormField<Province>(
-          hint: Text(StringConst.FORM_PROVINCE),
+          hint: const Text(StringConst.FORM_PROVINCE),
           isExpanded: true,
           value: selectedProvince,
           items: provinceItems,
@@ -50,13 +50,13 @@ Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.greyUltraLight,
                 width: 1.0,
               ),

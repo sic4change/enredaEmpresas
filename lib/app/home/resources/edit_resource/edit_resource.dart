@@ -204,7 +204,6 @@ class _EditResourceState extends State<EditResource> {
 
   Widget _buildForm(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    double fontSize = responsiveSize(context, 14, 16, md: 15);
     List<String> strings = <String>[
       'Sin titulación',
       'Con titulación no oficial',
@@ -218,9 +217,7 @@ class _EditResourceState extends State<EditResource> {
           childLeft: customTextFormField(context, _resourceTitle!,
               StringConst.FORM_TITLE, StringConst.NAME_ERROR, nameSetState),
           childRight: customTextFormMultiline(
-              context,
-              _resourceDescription!,
-              StringConst.DESCRIPTION,
+              context, _resourceDescription!, StringConst.DESCRIPTION,
               StringConst.FORM_LASTNAME_ERROR,
               descriptionSetState),
         ),
@@ -242,11 +239,10 @@ class _EditResourceState extends State<EditResource> {
                       value: value,
                       child: Text(
                         value,
-                        style: textTheme.bodySmall?.copyWith(
+                        style: textTheme.bodyMedium?.copyWith(
                           height: 1.5,
                           color: AppColors.greyDark,
                           fontWeight: FontWeight.w400,
-                          fontSize: fontSize,
                         ),
                       ),
                     );
@@ -258,11 +254,10 @@ class _EditResourceState extends State<EditResource> {
                   iconDisabledColor: AppColors.greyDark,
                   iconEnabledColor: AppColors.primaryColor,
                   decoration: InputDecoration(
-                    labelStyle: textTheme.bodySmall?.copyWith(
+                    labelStyle: textTheme.bodyLarge?.copyWith(
                       height: 1.5,
                       color: AppColors.greyDark,
                       fontWeight: FontWeight.w400,
-                      fontSize: fontSize,
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -278,11 +273,10 @@ class _EditResourceState extends State<EditResource> {
                       ),
                     ),
                   ),
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
                     fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
                   ),
                 )
               : Container(),
@@ -315,11 +309,10 @@ class _EditResourceState extends State<EditResource> {
             decoration: InputDecoration(
               hintText: StringConst.FORM_INTERESTS_QUESTION,
               hintMaxLines: 2,
-              labelStyle: textTheme.bodySmall?.copyWith(
+              labelStyle: textTheme.bodyLarge?.copyWith(
                 color: AppColors.greyDark,
                 height: 1.5,
                 fontWeight: FontWeight.w400,
-                fontSize: fontSize,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -341,11 +334,10 @@ class _EditResourceState extends State<EditResource> {
             onSaved: (value) => value = _interestId,
             maxLines: 2,
             readOnly: true,
-            style: textTheme.bodySmall?.copyWith(
+            style: textTheme.bodyMedium?.copyWith(
               height: 1.5,
               color: AppColors.greyDark,
               fontWeight: FontWeight.w400,
-              fontSize: fontSize,
             ),
           ),
         ),
@@ -363,11 +355,10 @@ class _EditResourceState extends State<EditResource> {
             childLeft: CheckboxListTile(
                 title: Text(
                   'El recurso no expira',
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
                     fontWeight: FontWeight.w700,
-                    fontSize: fontSize,
                   ),
                 ),
                 value: selectedNotExpire,
@@ -392,11 +383,10 @@ class _EditResourceState extends State<EditResource> {
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.calendar_today),
                             labelText: StringConst.FORM_START,
-                            labelStyle: textTheme.bodySmall?.copyWith(
+                            labelStyle: textTheme.bodyLarge?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
-                              fontSize: fontSize,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -412,11 +402,11 @@ class _EditResourceState extends State<EditResource> {
                               ),
                             ),
                           ),
-                          style: textTheme.bodySmall?.copyWith(
+                          style: textTheme.bodyMedium?.copyWith(
                             height: 1.5,
                             color: AppColors.greyDark,
                             fontWeight: FontWeight.w400,
-                            fontSize: fontSize,),
+                          ),
                           locale: const Locale('es', 'ES'),
                           dateMask: 'dd/MM/yyyy',
                           initialValue: _start.toString(),
@@ -444,11 +434,10 @@ class _EditResourceState extends State<EditResource> {
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.calendar_today),
                             labelText: StringConst.FORM_END,
-                            labelStyle: textTheme.bodySmall?.copyWith(
+                            labelStyle: textTheme.bodyLarge?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
-                              fontSize: fontSize,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -464,11 +453,11 @@ class _EditResourceState extends State<EditResource> {
                               ),
                             ),
                           ),
-                          style: textTheme.bodySmall?.copyWith(
+                          style: textTheme.bodyMedium?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
-                              fontSize: fontSize,),
+                          ),
                           locale: const Locale('es', 'ES'),
                           dateMask: 'dd/MM/yyyy',
                           initialValue: _end.toString(),
@@ -496,11 +485,10 @@ class _EditResourceState extends State<EditResource> {
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.calendar_today),
                             labelText: StringConst.FORM_MAX,
-                            labelStyle: textTheme.bodySmall?.copyWith(
+                            labelStyle: textTheme.bodyLarge?.copyWith(
                               height: 1.5,
                               color: AppColors.greyDark,
                               fontWeight: FontWeight.w400,
-                              fontSize: fontSize,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -516,11 +504,11 @@ class _EditResourceState extends State<EditResource> {
                               ),
                             ),
                           ),
-                          style: textTheme.bodySmall?.copyWith(
+                          style: textTheme.bodyMedium?.copyWith(
                             height: 1.5,
                             color: AppColors.greyDark,
                             fontWeight: FontWeight.w400,
-                            fontSize: fontSize,),
+                          ),
                           locale: const Locale('es', 'ES'),
                           dateMask: 'dd/MM/yyyy',
                           initialValue: _max.toString(),
@@ -558,11 +546,10 @@ class _EditResourceState extends State<EditResource> {
                 value: value,
                 child: Text(
                   value,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
                     fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
                   ),
                 ),
               );
@@ -574,11 +561,10 @@ class _EditResourceState extends State<EditResource> {
             iconDisabledColor: AppColors.greyDark,
             iconEnabledColor: AppColors.primaryColor,
             decoration: InputDecoration(
-              labelStyle: textTheme.bodySmall?.copyWith(
+              labelStyle: textTheme.bodyLarge?.copyWith(
                 height: 1.5,
                 color: AppColors.greyDark,
                 fontWeight: FontWeight.w400,
-                fontSize: fontSize,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -594,11 +580,10 @@ class _EditResourceState extends State<EditResource> {
                 ),
               ),
             ),
-            style: textTheme.bodySmall?.copyWith(
+            style: textTheme.bodyMedium?.copyWith(
               height: 1.5,
               color: AppColors.greyDark,
               fontWeight: FontWeight.w400,
-              fontSize: fontSize,
             ),
           ),
           childRight: Container(),
@@ -667,9 +652,8 @@ class _EditResourceState extends State<EditResource> {
             decoration: InputDecoration(
               labelText: StringConst.FORM_ORGANIZER_TEXT,
               focusColor: AppColors.lilac,
-              labelStyle: textTheme.bodySmall?.copyWith(
+              labelStyle: textTheme.bodyLarge?.copyWith(
                 color: AppColors.greyDark,
-                fontSize: fontSize,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -691,9 +675,8 @@ class _EditResourceState extends State<EditResource> {
             }),
             textCapitalization: TextCapitalization.sentences,
             keyboardType: TextInputType.name,
-            style: textTheme.bodySmall?.copyWith(
+            style: textTheme.bodyMedium?.copyWith(
               color: AppColors.greyDark,
-              fontSize: fontSize,
             ),
           ),
         ),
@@ -719,11 +702,10 @@ class _EditResourceState extends State<EditResource> {
           childRight: CheckboxListTile(
               title: Text(
                 StringConst.FORM_TRUST,
-                style: textTheme.bodySmall?.copyWith(
+                style: textTheme.bodyMedium?.copyWith(
                   height: 1.5,
                   color: AppColors.greyDark,
                   fontWeight: FontWeight.w700,
-                  fontSize: fontSize,
                 ),
               ),
               value: _trust,

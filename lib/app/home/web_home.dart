@@ -3,7 +3,8 @@ import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/precached_avatar.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/organizations/control_panel_page.dart';
+import 'package:enreda_empresas/app/home/account/personal_data.dart';
+import 'package:enreda_empresas/app/home/organization/control_panel_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
@@ -152,7 +153,7 @@ class _WebHomeState extends State<WebHome> {
                     case 2: _key.currentState?.closeDrawer();
                     return const MyResourcesListPage();
                     case 3: _key.currentState?.closeDrawer();
-                    return const Text('Mi perfil');
+                    return const PersonalData();
                     default:
                       return const MyResourcesListPage();
                   }
@@ -294,7 +295,6 @@ class SideBarWidget extends StatelessWidget {
       ),
       extendedTheme: const SidebarXTheme(
         width: 200,
-        padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           color: AppColors.white,
         ),
