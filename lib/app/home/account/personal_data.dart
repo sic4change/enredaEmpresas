@@ -84,13 +84,14 @@ class _PersonalDataState extends State<PersonalData> {
                   _postalCode = userEnreda?.address?.postalCode ?? '';
                   return Responsive.isDesktop(context)
                       ? Column(
-                          children: [
+                    children: [
                             Expanded(
                               child: SingleChildScrollView(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    _buildMainDataContainer(context, userEnreda!),
+                                    _buildMainDataContainer(
+                                        context, userEnreda!),
                                   ],
                                 ),
                               ),
@@ -105,8 +106,10 @@ class _PersonalDataState extends State<PersonalData> {
                             child: Column(
                               children: [
                                 _buildMainDataContainer(context, userEnreda!),
-                                const SpaceH40(),
+                                const SpaceH20(),
                                 _buildSaveDataButton(context, userEnreda!),
+                                const SpaceH40(),
+
                               ],
                             ),
                           ),
@@ -510,4 +513,94 @@ class _PersonalDataState extends State<PersonalData> {
     }
   }
 
+  /*Widget _buildMyParameters() {
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: Constants.mainPadding),
+        decoration: BoxDecoration(
+          border: Border.all(color: Constants.lightGray, width: 1),
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'CONFIGURACIÓN DE LA CUENTA',
+                style: textTheme.bodyLarge?.copyWith(color: Constants.penBlue),
+              ),
+            ),
+            Divider(),
+            _buildMyProfileRow(
+              text: 'Cambiar contraseña',
+              onTap: () => _confirmChangePassword(context),
+            ),
+            _buildMyProfileRow(
+              text: 'Política de privacidad',
+              onTap: () => launchURL(StringConst.PRIVACY_URL),
+            ),
+            _buildMyProfileRow(
+              text: 'Condiciones de uso',
+              onTap: () => launchURL(StringConst.USE_CONDITIONS_URL),
+            ),
+            _buildMyProfileRow(
+              text: 'Ayúdanos a mejorar',
+              onTap: () => _displayReportDialog(context),
+            ),
+            _buildMyProfileRow(
+              text: 'Eliminar cuenta',
+              textStyle: textTheme.bodyText1?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Constants.deleteRed,
+                  fontSize: 16.0),
+              onTap: () => _confirmDeleteAccount(context),
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildMyProfileRow(
+      {required String text,
+        TextStyle? textStyle,
+        String? imagePath,
+        void Function()? onTap}) {
+    return Material(
+      color: text == _selectedPageName
+          ? AppColors.lightTurquoise
+          : AppColors.white,
+      child: InkWell(
+        splashColor: AppColors.onHoverTurquoise,
+        highlightColor: AppColors.lightTurquoise,
+        hoverColor: text == _selectedPageName
+            ? AppColors.lightTurquoise
+            : AppColors.onHoverTurquoise,
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.all(14.0),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text(
+                    text,
+                    style: textStyle ??
+                        textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.penBlue,
+                            fontSize: 16.0),
+                  )),
+              if (imagePath != null)
+                Container(
+                  width: 30,
+                  child: Image.asset(
+                    imagePath,
+                    height: Sizes.ICON_SIZE_30,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }*/
 }

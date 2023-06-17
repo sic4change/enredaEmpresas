@@ -30,7 +30,8 @@ Widget resourceRevisionForm(
     String link,
     bool trust,
     String phone,
-    String email
+    String email,
+    String resourcePictureName
 ) {
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
@@ -83,6 +84,8 @@ Widget resourceRevisionForm(
       (email != '') ? CustomExpandedRow(title: StringConst.FORM_EMAIL, text: email) : Container(),
       (link != '') ? const SizedBox(height: Sizes.kDefaultPaddingDouble) : Container(),
       (link != '') ? CustomExpandedRow(title: StringConst.FORM_LINK, text: link) : Container(),
+      const SizedBox(height: Sizes.kDefaultPaddingDouble),
+      CustomExpandedRow(title: StringConst.FORM_RESOURCE_PICTURE, text: resourcePictureName),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
       CustomExpandedRow(title: StringConst.FORM_TRUST, text: trust == true ? "Si" : "No"),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),

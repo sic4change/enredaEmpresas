@@ -9,6 +9,8 @@ import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_organizations.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_province.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resourcePicture.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resourcePicture_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_category.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_type.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
@@ -19,6 +21,7 @@ import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/models/province.dart';
+import 'package:enreda_empresas/app/models/resourcePicture.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_city.dart';
@@ -57,8 +60,6 @@ class _EditResourceState extends State<EditResource> {
   String? _resourceId;
   String? _resourceTitle;
   String? _resourceDescription;
-  String? _resourceCategoryName;
-  String? _resourceTypeName;
   String? _degree;
   String? _contractType;
   String? _salary;
@@ -89,15 +90,13 @@ class _EditResourceState extends State<EditResource> {
   String? _resourcePictureId;
   String? _assistants;
   String? _status;
-
-  String _countryName = "";
-  String _provinceName = "";
-  String _cityName = "";
+  String? interestsNames;
 
   List<String> interests = [];
   List<String> _participants = [];
   Set<Interest> selectedInterests = {};
   ResourceCategory? selectedResourceCategory;
+  late ResourcePicture selectedResourcePicture;
   Organization? selectedOrganization;
 
   ResourceType? selectedResourceType;
@@ -105,20 +104,14 @@ class _EditResourceState extends State<EditResource> {
   Province? selectedProvince;
   City? selectedCity;
 
-  late String interestsNames;
-  late String organizationName;
   String? _interestId;
   int? resourceCategoryValue;
   String? organizationId;
 
-  TextEditingController textEditingControllerDateInput =
-      TextEditingController();
-  TextEditingController textEditingControllerDateEndInput =
-      TextEditingController();
-  TextEditingController textEditingControllerDateMaxInput =
-      TextEditingController();
-  TextEditingController textEditingControllerInterests =
-      TextEditingController();
+  TextEditingController textEditingControllerDateInput = TextEditingController();
+  TextEditingController textEditingControllerDateEndInput = TextEditingController();
+  TextEditingController textEditingControllerDateMaxInput = TextEditingController();
+  TextEditingController textEditingControllerInterests = TextEditingController();
 
   @override
   void initState() {
@@ -202,6 +195,210 @@ class _EditResourceState extends State<EditResource> {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder<Resource>(
+        stream: database.resourceStream(widget.resourceId),
+        builder: (context, snapshotResource) {
+          if (snapshotResource.hasData) {
+            resource = snapshotResource.data!;
+            _resourceId = resource.resourceId;
+            _resourceTitle = resource.title;
+            _duration = resource.duration ?? '';
+            _temporality = resource.temporality ?? '';
+            _resourceDescription = resource.description;
+            _modality = resource.modality;
+            _start = resource.start ?? DateTime.now();
+            _end = resource.end ?? DateTime.now();
+            _max = resource.maximumDate ?? DateTime.now();
+            resourceTypeId = resource.resourceType ?? '';
+            resourceCategoryId = resource.resourceCategory ?? '';
+            interests = resource.interests ?? [];
+            _contractType = resource.contractType ?? '';
+            _salary = resource.salary ?? '';
+            _degree = resource.degree ?? '';
+            _place = resource.address?.place ?? '';
+            _street = resource.address?.street ?? '';
+            _capacity = resource.capacity ?? 0;
+            _countryId = resource.address?.country ?? '';
+            _provinceId = resource.address?.province ?? '';
+            _cityId = resource.address?.city ?? '';
+            _organizerText = resource.promotor ?? '';
+            _link = resource.link ?? '';
+            _phone = resource.contactPhone ?? '';
+            _email = resource.contactEmail ?? '';
+            _resourcePictureId = resource.resourcePictureId ?? '';
+            _notExpire = resource.notExpire ?? false;
+            _createdate = resource.createdate;
+            _organizer = resource.organizer;
+            _organizerType = resource.organizerType ?? '';
+            _resourceLink = resource.resourceLink ?? '';
+            _participants = resource.participants ?? [];
+            _assistants = resource.assistants ?? '';
+            _status = resource.status ?? '';
+
+            return StreamBuilder<List<Interest>>(
+                stream: database.resourcesInterestsStream(interests),
+                builder: (context, snapshotInterest) {
+                  if (snapshotInterest.hasData) {
+                    selectedInterests = snapshotInterest.data!.toSet();
+                    var concatenate = StringBuffer();
+                    for (var item in selectedInterests) {
+                      concatenate.write('${item.name} / ');
+                    }
+                    interestsNames = concatenate.toString();
+                    return StreamBuilder<ResourcePicture>(
+                      stream: database.resourcePictureStream(_resourcePictureId),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            selectedResourcePicture = snapshot.data!;
+                            return _buildContent(context);
+                          }
+                          return Container();
+                        }
+                    );
+                  }
+                  return Container();
+                });
+
+          } else {
+            return Container();
+          }
+        });
+  }
+
+  Widget _buildContent(BuildContext context) {
+    final isLastStep = currentStep == getSteps().length - 1;
+    double screenWidth = widthOfScreen(context);
+    double screenHeight = heightOfScreen(context);
+    double contactBtnWidth = responsiveSize(
+      context,
+      contactBtnWidthSm,
+      contactBtnWidthLg,
+      md: contactBtnWidthMd,
+    );
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return true;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.white,
+            toolbarHeight: Responsive.isMobile(context) ? 50 : 74,
+            iconTheme: const IconThemeData(
+              color: AppColors.greyDark, //change your color here
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Responsive.isMobile(context)
+                    ? Container()
+                    : Padding(
+                  padding: EdgeInsets.all(Sizes.mainPadding),
+                  child: Image.asset(
+                    ImagePath.LOGO,
+                    height: Sizes.HEIGHT_24,
+                  ),
+                ),
+                Responsive.isMobile(context)
+                    ? Container()
+                    : SizedBox(width: Sizes.mainPadding),
+                Container(
+                  padding:
+                  const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                  child: Text(StringConst.FORM_EDIT.toUpperCase(),
+                      style: const TextStyle(color: AppColors.greyDark)),
+                )
+              ],
+            ),
+          ),
+          body: Stack(
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: Responsive.isMobile(context) ||
+                          Responsive.isTablet(context)
+                          ? MediaQuery.of(context).size.height
+                          : MediaQuery.of(context).size.height * 0.70,
+                      width: Responsive.isMobile(context) ||
+                          Responsive.isTablet(context)
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width * 0.70,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(
+                            Sizes.kDefaultPaddingDouble / 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 2,
+                            offset: const Offset(
+                                0, 2), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          Stepper(
+                            type: Responsive.isMobile(context)
+                                ? StepperType.vertical
+                                : StepperType.horizontal,
+                            steps: getSteps(),
+                            currentStep: currentStep,
+                            onStepContinue: onStepContinue,
+                            onStepCancel: onStepCancel,
+                            controlsBuilder: (context, _) {
+                              return Container(
+                                height: Sizes.kDefaultPaddingDouble * 2,
+                                margin: const EdgeInsets.only(
+                                    top: Sizes.kDefaultPaddingDouble * 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal:
+                                    Sizes.kDefaultPaddingDouble / 2),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    if (currentStep == 0)
+                                      EnredaButton(
+                                        buttonTitle: StringConst.CANCEL.toUpperCase(),
+                                        width: contactBtnWidth,
+                                        onPressed: onStepCancel,
+                                      ),
+                                    const SizedBox(
+                                        width: Sizes.kDefaultPaddingDouble),
+                                    isLoading
+                                        ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.primary300,
+                                        ))
+                                        : EnredaButton(
+                                      buttonTitle: StringConst.FORM_UPDATE,
+                                      width: contactBtnWidth,
+                                      buttonColor: AppColors.primaryColor,
+                                      titleColor: AppColors.white,
+                                      onPressed: onStepContinue,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+
   Widget _buildForm(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     List<String> strings = <String>[
@@ -230,7 +427,7 @@ class _EditResourceState extends State<EditResource> {
               buildResourceCategoryStreamBuilderSetState, resource),
         ),
         CustomFlexRowColumn(
-          childLeft: _resourceTypeName == "Formación"
+          childLeft: resourceTypeId == "N9KdlBYmxUp82gOv8oJC"
               ? DropdownButtonFormField<String>(
                   hint: const Text(StringConst.FORM_DEGREE),
                   value: _degree == "" ? null : _degree,
@@ -283,8 +480,8 @@ class _EditResourceState extends State<EditResource> {
           childRight: Container(),
         ),
         CustomFlexRowColumn(
-          childLeft: _resourceTypeName == "Bolsa de empleo" ||
-              _resourceTypeName == "Oferta de empleo"
+          childLeft: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
+              resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
               ? customTextFormField(
                   context,
                   _contractType!,
@@ -292,8 +489,8 @@ class _EditResourceState extends State<EditResource> {
                   StringConst.FORM_COMPANY_ERROR,
                   buildContractStreamBuilderSetState)
               : Container(),
-          childRight: _resourceTypeName == "Bolsa de empleo" ||
-              _resourceTypeName == "Oferta de empleo"
+          childRight: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
+              resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
               ? customTextFormField(
                   context,
                   _salary!,
@@ -302,44 +499,42 @@ class _EditResourceState extends State<EditResource> {
                   buildSalaryStreamBuilderSetState)
               : Container(),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: TextFormField(
-            controller: textEditingControllerInterests,
-            decoration: InputDecoration(
-              hintText: StringConst.FORM_INTERESTS_QUESTION,
-              hintMaxLines: 2,
-              labelStyle: textTheme.bodyLarge?.copyWith(
-                color: AppColors.greyDark,
+        CustomFlexRowColumn(
+            childLeft: streamBuilderDropdownResourcePicture(context,
+              selectedResourcePicture, buildResourcePictureStreamBuilderSetState, resource),
+            childRight: TextFormField(
+              decoration: InputDecoration(
+                labelText: StringConst.FORM_INTERESTS_QUESTION,
+                focusColor: AppColors.lilac,
+                labelStyle: textTheme.bodyLarge?.copyWith(
+                  color: AppColors.greyDark,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.greyUltraLight,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.greyUltraLight,
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              initialValue: interestsNames,
+              onTap: () => {_showMultiSelectInterests(context)},
+              validator: (value) =>
+              value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
+              onSaved: (value) => value = _interestId,
+              readOnly: true,
+              style: textTheme.bodyMedium?.copyWith(
                 height: 1.5,
+                color: AppColors.greyDark,
                 fontWeight: FontWeight.w400,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                  width: 1.0,
-                ),
-              ),
             ),
-            onTap: () => {_showMultiSelectInterests(context)},
-            validator: (value) =>
-                value!.isNotEmpty ? null : StringConst.FORM_MOTIVATION_ERROR,
-            onSaved: (value) => value = _interestId,
-            maxLines: 2,
-            readOnly: true,
-            style: textTheme.bodyMedium?.copyWith(
-              height: 1.5,
-              color: AppColors.greyDark,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
         ),
         CustomFlexRowColumn(
           childLeft: customTextFormField(
@@ -680,25 +875,23 @@ class _EditResourceState extends State<EditResource> {
             ),
           ),
         ),
-        _organizerText != ""
-            ? CustomFlexRowColumn(
-          childLeft: customTextFormField(
-              context,
-              _phone!,
-              StringConst.FORM_PHONE,
-              StringConst.FORM_COMPANY_ERROR,
-              phoneSetState),
-          childRight: customTextFormField(
-              context,
-              _email!,
-              StringConst.FORM_EMAIL,
-              StringConst.FORM_COMPANY_ERROR,
-              emailSetState),
-        )
-            : Container(),
+        _organizerText != "" && _organizerText != null ? CustomFlexRowColumn(
+            childLeft: customTextFormField(
+                context,
+                _phone!,
+                StringConst.FORM_PHONE,
+                StringConst.FORM_COMPANY_ERROR,
+                phoneSetState),
+            childRight: customTextFormField(
+                context,
+                _email!,
+                StringConst.FORM_EMAIL,
+                StringConst.FORM_COMPANY_ERROR,
+                emailSetState),
+          ): Container(),
         CustomFlexRowColumn(
-          childLeft: customTextFormFieldNotValidator(
-              context, _link!, StringConst.FORM_LINK, linkSetState),
+          childLeft: _organizerText != "" && _organizerText != null ? customTextFormFieldNotValidator(
+              context, _link!, StringConst.FORM_LINK, linkSetState): Container(),
           childRight: CheckboxListTile(
               title: Text(
                 StringConst.FORM_TRUST,
@@ -715,7 +908,6 @@ class _EditResourceState extends State<EditResource> {
     );
   }
 
-
   void nameSetState(String? val) {
     setState(() {
       _resourceTitle = val!;
@@ -731,7 +923,6 @@ class _EditResourceState extends State<EditResource> {
   void buildResourceTypeStreamBuilderSetState(ResourceType? resourceType) {
     setState(() {
       selectedResourceType = resourceType;
-      _resourceTypeName = resourceType != null ? resourceType.name : "";
       resourceTypeId = resourceType?.resourceTypeId;
     });
   }
@@ -740,8 +931,6 @@ class _EditResourceState extends State<EditResource> {
       ResourceCategory? resourceCategory) {
     setState(() {
       selectedResourceCategory = resourceCategory;
-      _resourceCategoryName =
-      resourceCategory != null ? resourceCategory.name : "";
       resourceCategoryId = resourceCategory?.id;
     });
     resourceCategoryValue = resourceCategory?.order;
@@ -765,13 +954,11 @@ class _EditResourceState extends State<EditResource> {
     });
   }
 
-
   void buildCountryStreamBuilderSetState(Country? country) {
     setState(() {
       selectedProvince = null;
       selectedCity = null;
       selectedCountry = country;
-      _countryName = country != null ? country.name : "";
     });
     _countryId = country?.countryId;
   }
@@ -780,7 +967,6 @@ class _EditResourceState extends State<EditResource> {
     setState(() {
       selectedCity = null;
       selectedProvince = province;
-      _provinceName = province != null ? province.name : "";
     });
     _provinceId = province?.provinceId;
   }
@@ -788,7 +974,6 @@ class _EditResourceState extends State<EditResource> {
   void buildCityStreamBuilderSetState(City? city) {
     setState(() {
       selectedCity = city;
-      _cityName = city != null ? city.name : "";
     });
     _cityId = city?.cityId;
   }
@@ -796,12 +981,9 @@ class _EditResourceState extends State<EditResource> {
   void buildOrganizationStreamBuilderSetState(Organization? organization) {
     setState(() {
       selectedOrganization = organization;
-      organizationName = organization != null ? organization.name : "";
       organizationId = organization?.organizationId;
     });
   }
-
-
 
   void buildModalityStreamBuilderSetState(String? modality) {
     setState(() {
@@ -843,6 +1025,13 @@ class _EditResourceState extends State<EditResource> {
 
   void emailSetState(String? val) {
     setState(() => _email = val!);
+  }
+
+  void buildResourcePictureStreamBuilderSetState(ResourcePicture? resourcePicture) {
+    setState(() {
+      selectedResourcePicture = resourcePicture!;
+    });
+    _resourcePictureId = resourcePicture?.id;
   }
 
   void _showMultiSelectInterests(BuildContext context) async {
@@ -891,188 +1080,4 @@ class _EditResourceState extends State<EditResource> {
     return true;
   }
 
-
-  @override
-  Widget build(BuildContext context) {
-    final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder<Resource>(
-        stream: database.resourceStream(widget.resourceId),
-        builder: (context, snapshotResource) {
-          if (snapshotResource.hasData) {
-            resource = snapshotResource.data!;
-            _resourceId = resource.resourceId;
-            _resourceTitle = resource.title;
-            _duration = resource.duration ?? '';
-            _temporality = resource.temporality ?? '';
-            _resourceDescription = resource.description;
-            _modality = resource.modality;
-            _start = resource.start ?? DateTime.now();
-            _end = resource.end ?? DateTime.now();
-            _max = resource.maximumDate ?? DateTime.now();
-            resourceTypeId = resource.resourceType ?? '';
-            resourceCategoryId = resource.resourceCategory ?? '';
-            interestsNames = "";
-            organizationName = "";
-            _contractType = resource.contractType ?? '';
-            _salary = resource.salary ?? '';
-            _degree = resource.degree ?? '';
-            _place = resource.address?.place ?? '';
-            _street = resource.street ?? '';
-            _capacity = resource.capacity ?? 0;
-            _countryId = resource.address?.country ?? '';
-            _provinceId = resource.address?.province ?? '';
-            _cityId = resource.address?.city ?? '';
-            _countryName = "";
-            _provinceName = "";
-            _cityName = "";
-            _organizerText = resource.promotor ?? '';
-            _link = resource.link ?? '';
-            _phone = resource.contactPhone ?? '';
-            _email = resource.contactEmail ?? '';
-            _resourcePictureId = resource.resourcePictureId ?? '';
-            _notExpire = resource.notExpire ?? false;
-            _createdate = resource.createdate;
-            _organizer = resource.organizer;
-            _organizerType = resource.organizerType ?? '';
-            _resourceLink = resource.resourceLink ?? '';
-            _participants = resource.participants ?? [];
-            _assistants = resource.assistants ?? '';
-            _status = resource.status ?? '';
-            return _buildContent(context);
-          } else {
-            return Container();
-          }
-        });
-  }
-
-  Widget _buildContent(BuildContext context) {
-    final isLastStep = currentStep == getSteps().length - 1;
-    double screenWidth = widthOfScreen(context);
-    double screenHeight = heightOfScreen(context);
-    double contactBtnWidth = responsiveSize(
-      context,
-      contactBtnWidthSm,
-      contactBtnWidthLg,
-      md: contactBtnWidthMd,
-    );
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pop();
-        return true;
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColors.white,
-            toolbarHeight: Responsive.isMobile(context) ? 50 : 74,
-            iconTheme: const IconThemeData(
-              color: AppColors.greyDark, //change your color here
-            ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Responsive.isMobile(context)
-                    ? Container()
-                    : Padding(
-                        padding: EdgeInsets.all(Sizes.mainPadding),
-                        child: Image.asset(
-                          ImagePath.LOGO,
-                          height: Sizes.HEIGHT_24,
-                        ),
-                      ),
-                Responsive.isMobile(context)
-                    ? Container()
-                    : SizedBox(width: Sizes.mainPadding),
-                Container(
-                  padding:
-                      const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-                  child: Text(StringConst.FORM_EDIT.toUpperCase(),
-                      style: const TextStyle(color: AppColors.greyDark)),
-                )
-              ],
-            ),
-          ),
-          body: Stack(
-            children: [
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      height: Responsive.isMobile(context) ||
-                              Responsive.isTablet(context)
-                          ? MediaQuery.of(context).size.height
-                          : MediaQuery.of(context).size.height * 0.70,
-                      width: Responsive.isMobile(context) ||
-                              Responsive.isTablet(context)
-                          ? MediaQuery.of(context).size.width
-                          : MediaQuery.of(context).size.width * 0.70,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                            Sizes.kDefaultPaddingDouble / 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 2,
-                            offset: const Offset(
-                                0, 2), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Stepper(
-                            type: Responsive.isMobile(context)
-                                ? StepperType.vertical
-                                : StepperType.horizontal,
-                            steps: getSteps(),
-                            currentStep: currentStep,
-                            onStepContinue: onStepContinue,
-                            onStepCancel: onStepCancel,
-                            controlsBuilder: (context, _) {
-                              return Container(
-                                height: Sizes.kDefaultPaddingDouble * 2,
-                                margin: const EdgeInsets.only(
-                                    top: Sizes.kDefaultPaddingDouble * 2),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal:
-                                        Sizes.kDefaultPaddingDouble / 2),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    if (currentStep == 0)
-                                      EnredaButton(
-                                        buttonTitle: StringConst.CANCEL.toUpperCase(),
-                                        width: contactBtnWidth,
-                                        onPressed: onStepCancel,
-                                      ),
-                                    const SizedBox(
-                                        width: Sizes.kDefaultPaddingDouble),
-                                    isLoading
-                                        ? const Center(
-                                            child: CircularProgressIndicator(
-                                            color: AppColors.primary300,
-                                          ))
-                                        : EnredaButton(
-                                            buttonTitle: StringConst.FORM_UPDATE,
-                                            width: contactBtnWidth,
-                                            buttonColor: AppColors.primaryColor,
-                                            titleColor: AppColors.white,
-                                            onPressed: onStepContinue,
-                                          ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )),
-    );
-  }
 }

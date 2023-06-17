@@ -215,8 +215,6 @@ Widget customDatePicker(BuildContext context, DateTime time, String labelText, S
     locale: const Locale('es', 'ES'),
     dateMask: 'dd/MM/yyyy',
     initialValue: time.toString(),
-    // firstDate: time,
-    // lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
     firstDate: DateTime(DateTime.now().year - 100, DateTime.now().month, DateTime.now().day),
     lastDate: DateTime(DateTime.now().year + 100, DateTime.now().month, DateTime.now().day),
     onChanged: (val) => functionSetState(val),

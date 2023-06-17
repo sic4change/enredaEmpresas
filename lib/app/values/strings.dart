@@ -305,6 +305,7 @@ class StringConst {
   static const String FORM_CONTACT_INFO = "Información de contacto";
   static const String FORM_CONTACT = "Contacto";
   static const String FORM_RESOURCE_TYPE = "Tipo de recurso";
+  static const String FORM_RESOURCE_PICTURE = "Foto del recurso";
   static const String FORM_PROMOTOR = "Promotor";
   static const String FORM_RESOURCE_TYPE_ERROR = "El tipo de recurso no puede estar vacío";
   static const String FORM_LASTNAME = "Apellidos";

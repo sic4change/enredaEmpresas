@@ -29,6 +29,7 @@ class ParticipantsListPage extends StatefulWidget {
 
 class _ParticipantsListPageState extends State<ParticipantsListPage> {
   Widget? _currentPage;
+  late UserEnreda organizationUser;
 
   @override
   void initState() {
@@ -74,9 +75,9 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
-        var user = snapshot.data!;
+        organizationUser = snapshot.data!;
         return StreamBuilder<List<Resource>>(
-          stream: database.myResourcesStream(user.organization!),
+          stream: database.myResourcesStream(organizationUser.organization!),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
@@ -396,7 +397,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
             ),
           ),
           const SizedBox(height: 10,),
-          ParticipantResourcesPage(participantId: user.userId),
+          ParticipantResourcesPage(participantId: user.userId!, organizerId: organizationUser.organization!,),
         ],
       ),
     );

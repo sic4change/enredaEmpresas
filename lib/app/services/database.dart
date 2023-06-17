@@ -46,7 +46,7 @@ abstract class Database {
 //   //Stream<List<Resource>> filteredResourcesStream(FilterResource filter);
 //   Stream<List<Resource>> filteredResourcesCategoryStream(FilterResource filter);
      Stream<List<Resource>> myResourcesStream(String organizationId);
-     Stream<List<Resource>> participantsResourcesStream(String userId);
+     Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId);
 //   Stream<List<Resource>> likeResourcesStream(String userId);
 //   Stream<List<Resource>> recommendedResourcesStream(UserEnreda? user);
 //   Stream<UserEnreda> enredaUserStream(String userId);
@@ -64,11 +64,12 @@ abstract class Database {
      Stream<List<City>> citiesStream();
      Stream<City> cityStream(String? cityId);
      Stream<ResourcePicture> resourcePictureStream(String? resourcePictureId);
+     Stream<List<ResourcePicture>> resourcePicturesStream();
      Stream<List<City>> citiesProvinceStream(String? provinceId);
      Stream<List<UserEnreda>> userStream(String? email);
      Stream<List<UserEnreda>> userParticipantsStream(List<String?> resourceIdList);
      Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList);
-     Stream<List<Interest>> resourcesInterestsStream(List<String?> participantsIdList);
+     Stream<List<Interest>> resourcesInterestsStream(List<String?> interestsIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
 //   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
@@ -232,14 +233,16 @@ class FirestoreDatabase implements Database {
         );
 
     @override
-  Stream<List<Resource>> participantsResourcesStream(String userId) =>
+  Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId) =>
       _service.collectionStream(
         path: APIPath.resources(),
-        queryBuilder: (query) => query.where('participants', arrayContains: userId),
+        queryBuilder: (query) {
+              query = query.where('participants', arrayContains: userId).where('organizer', isEqualTo: organizerId);
+              return query;
+            },
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
-
 
 
 //   @override
@@ -407,6 +410,15 @@ class FirestoreDatabase implements Database {
           builder: (data, documentId) =>
               ResourcePicture.fromMap(data, documentId),
         );
+
+    @override
+    Stream<List<ResourcePicture>> resourcePicturesStream() =>
+      _service.collectionStream(
+        path: APIPath.resourcePictures(),
+        queryBuilder: (query) => query.where('role', isEqualTo: "Super Admin"),
+        builder: (data, documentId) => ResourcePicture.fromMap(data, documentId),
+        sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+      );
 
     @override
     Stream<List<UserEnreda>> userStream(String? email) {

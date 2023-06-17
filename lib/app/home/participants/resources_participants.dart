@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ParticipantResourcesPage extends StatelessWidget {
-  const ParticipantResourcesPage({super.key, required this.participantId});
+  const ParticipantResourcesPage({super.key, required this.participantId, required this.organizerId});
 
-  final String? participantId;
+  final String participantId;
+  final String organizerId;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class ParticipantResourcesPage extends StatelessWidget {
     final database = Provider.of<Database>(context, listen: false);
 
     return StreamBuilder<List<Resource>>(
-        stream: database.participantsResourcesStream(participantId!),
+        stream: database.participantsResourcesStream(participantId, organizerId),
         builder: (context, snapshot) {
           return snapshot.connectionState == ConnectionState.active &&
                   snapshot.hasData &&

@@ -2,7 +2,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 
 class PrecacheAvatarCard extends StatefulWidget {
-  PrecacheAvatarCard({
+  const PrecacheAvatarCard({super.key,
     this.imageUrl = "",
     this.width = 0,
     this.height = 0,
@@ -56,55 +56,8 @@ class _PrecacheAvatarCardState extends State<PrecacheAvatarCard> {
 
 }
 
-class PrecacheCompetencyCard extends StatefulWidget {
-  PrecacheCompetencyCard({
-    this.imageUrl = "",
-    this.imageWidth = 0.0,
-  });
-
-  final String imageUrl;
-  final double imageWidth;
-
-  @override
-  _PrecacheCompetencyCardState createState() => _PrecacheCompetencyCardState();
-}
-
-class _PrecacheCompetencyCardState extends State<PrecacheCompetencyCard> {
-
-  late FadeInImage profileImage;
-
-  @override
-  void initState() {
-    super.initState();
-    profileImage = FadeInImage.assetNetwork(
-      width: widget.imageWidth,
-      placeholder: ImagePath.IMAGE_DEFAULT,
-      alignment: Alignment.center,
-      image: widget.imageUrl,
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    precacheImage(profileImage.image, context);
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: defaultChild(),
-    );
-  }
-
-  Widget defaultChild() {
-    return profileImage;
-  }
-
-}
-
 class PrecacheResourceCard extends StatefulWidget {
-  PrecacheResourceCard({
+  const PrecacheResourceCard({super.key,
     this.imageUrl = "",
   });
 
@@ -143,6 +96,61 @@ class _PrecacheResourceCardState extends State<PrecacheResourceCard> {
 
   Widget defaultChild() {
     return resourceImage;
+  }
+
+}
+
+
+class PrecacheResourcePicture extends StatefulWidget {
+  const PrecacheResourcePicture({super.key,
+    this.imageUrl = "",
+    this.width = 0,
+    this.height = 0,
+  });
+
+  final String imageUrl;
+  final double width;
+  final double height;
+
+  @override
+  _PrecacheResourcePictureState createState() => _PrecacheResourcePictureState();
+}
+
+class _PrecacheResourcePictureState extends State<PrecacheResourcePicture> {
+
+  late FadeInImage profileImage;
+
+  @override
+  void initState() {
+    super.initState();
+    profileImage = FadeInImage.assetNetwork(
+      placeholder: ImagePath.USER_DEFAULT,
+      width: widget.width,
+      height: widget.height,
+      fit: BoxFit.cover,
+      image: widget.imageUrl,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    precacheImage(profileImage.image, context);
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: defaultChild(),
+    );
+  }
+
+  Widget defaultChild() {
+    return ClipRRect(
+      child: Center(
+        child: profileImage,
+      ),
+    );
   }
 
 }
