@@ -13,6 +13,7 @@ class APIPath {
   static String provinces() => 'provinces';
   static String city(String? cityId) => 'cities/$cityId';
   static String cities() => 'cities';
+  static String resourcePictures() => 'resourcesPictures';
   static String resourcePicture(String? resourcePictureId) => 'resourcesPictures/$resourcePictureId';
   static String users() => 'users';
   static String user(String userId) => 'users/$userId';

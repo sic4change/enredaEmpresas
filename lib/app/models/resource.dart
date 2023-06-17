@@ -135,7 +135,6 @@ class Resource {
       provinceName: provinceName,
       city: city,
       cityName: cityName,
-      street: street,
       maximumDate: maximumDate,
       start: start,
       end: end,

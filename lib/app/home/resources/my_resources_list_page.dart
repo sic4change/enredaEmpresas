@@ -145,115 +145,92 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
           }
           if (snapshot.hasData) {
             var user = snapshot.data!;
-            return   StreamBuilder<List<Interest>>(
-                stream: database.interestStream(),
+            return StreamBuilder<List<Resource>>(
+                stream: database.myResourcesStream(user.organization!),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    for (var interest in snapshot.data!) {
-                      if (!_interests.any((element) =>
-                      element.interestId == interest.interestId)) {
-                        _interests.add(interest);
-                      }
-                    }
+                  if (!snapshot.hasData) {
+                    return const Center(
+                        child: CircularProgressIndicator());
                   }
-                  return StreamBuilder<List<Resource>>(
-                      stream: database.myResourcesStream(user.organization!),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasData) {
-                          return ListItemBuilderGrid<Resource>(
-                            snapshot: snapshot,
-                            fitSmallerLayout: false,
-                            itemBuilder: (context, resource) {
-                              return StreamBuilder<Organization>(
-                                stream: database.organizationStream(
-                                    resource.organizer),
+                  if (snapshot.hasData) {
+                    return ListItemBuilderGrid<Resource>(
+                      snapshot: snapshot,
+                      fitSmallerLayout: false,
+                      itemBuilder: (context, resource) {
+                        return StreamBuilder<Organization>(
+                          stream: database.organizationStream(
+                              resource.organizer),
+                          builder: (context, snapshot) {
+                            final organization = snapshot.data;
+                            organizer = organization;
+                            organizationId = resource.organizer;
+                            resource.organizerName =
+                            organization == null ? '' : organization.name;
+                            resource.organizerImage =
+                            organization == null ? '' : organization.photo;
+                            resource.setResourceTypeName();
+                            resource.setResourceCategoryName();
+                            return StreamBuilder<Country>(
+                                stream: database.countryStream(
+                                    resource.country),
                                 builder: (context, snapshot) {
-                                  final organization = snapshot.data;
-                                  organizer = organization;
-                                  organizationId = resource.organizer;
-                                  resource.organizerName =
-                                  organization == null ? '' : organization.name;
-                                  resource.organizerImage =
-                                  organization == null ? '' : organization.photo;
-                                  List<String> interestsSelected = [];
-                                  if (interestsSelected.isEmpty) {
-                                    interestsSelected = resource.interests!;
-                                    List<String> interestSelectedName = [];
-                                    _interests.where((interest) =>
-                                        interestsSelected.any((interestId) => interestId == interest.interestId)).forEach((interest) {
-                                      interestSelectedName.add(interest.name);
-                                    });
-                                    //interestsSelected.clear();
-                                    interestsSelected.addAll(interestSelectedName);
-                                  }
-                                  resource.setResourceTypeName();
-                                  resource.setResourceCategoryName();
-                                  return StreamBuilder<Country>(
-                                      stream: database.countryStream(
-                                          resource.country),
-                                      builder: (context, snapshot) {
-                                        final country = snapshot.data;
-                                        resource.countryName =
-                                        country == null ? '' : country.name;
-                                        return StreamBuilder<Province>(
-                                          stream: database.provinceStream(
-                                              resource.province),
+                                  final country = snapshot.data;
+                                  resource.countryName =
+                                  country == null ? '' : country.name;
+                                  return StreamBuilder<Province>(
+                                    stream: database.provinceStream(
+                                        resource.province),
+                                    builder: (context, snapshot) {
+                                      final province = snapshot.data;
+                                      resource.provinceName =
+                                      province == null ? '' : province
+                                          .name;
+                                      return StreamBuilder<City>(
+                                          stream: database
+                                              .cityStream(resource.city),
                                           builder: (context, snapshot) {
-                                            final province = snapshot.data;
-                                            resource.provinceName =
-                                            province == null ? '' : province
-                                                .name;
-                                            return StreamBuilder<City>(
+                                            final city = snapshot.data;
+                                            resource.cityName =
+                                            city == null ? '' : city.name;
+                                            return StreamBuilder<
+                                                ResourcePicture>(
                                                 stream: database
-                                                    .cityStream(resource.city),
-                                                builder: (context, snapshot) {
-                                                  final city = snapshot.data;
-                                                  resource.cityName =
-                                                  city == null ? '' : city.name;
-                                                  return StreamBuilder<
-                                                      ResourcePicture>(
-                                                      stream: database
-                                                          .resourcePictureStream(
-                                                          resource
-                                                              .resourcePictureId),
-                                                      builder: (context,
-                                                          snapshot) {
-                                                        final resourcePicture =
-                                                            snapshot.data;
-                                                        resource.resourcePhoto =
-                                                            resourcePicture
-                                                                ?.resourcePic;
-                                                        return Container(
-                                                          key: Key(
-                                                              'resource-${resource
-                                                                  .resourceId}'),
-                                                          child: ResourceListTile(
-                                                            resource: resource,
-                                                            onTap: () =>
-                                                                setState(() {
-                                                                  _currentPage =
-                                                                      _buildResourcePage(resource);
-                                                                }),
-                                                          ),
-                                                        );
-                                                      });
+                                                    .resourcePictureStream(
+                                                    resource
+                                                        .resourcePictureId),
+                                                builder: (context,
+                                                    snapshot) {
+                                                  final resourcePicture =
+                                                      snapshot.data;
+                                                  resource.resourcePhoto =
+                                                      resourcePicture
+                                                          ?.resourcePic;
+                                                  return Container(
+                                                    key: Key(
+                                                        'resource-${resource
+                                                            .resourceId}'),
+                                                    child: ResourceListTile(
+                                                      resource: resource,
+                                                      onTap: () =>
+                                                          setState(() {
+                                                            _currentPage =
+                                                                _buildResourcePage(resource);
+                                                          }),
+                                                    ),
+                                                  );
                                                 });
-                                          },
-                                        );
-                                      });
-                                },
-                              );
-                            },
-                            emptyTitle: 'Sin recursos',
-                            emptyMessage: 'Aún no has creado ningún recurso',
-                          );
-                        }
-                        return const Center(child: CircularProgressIndicator());
-                      });
+                                          });
+                                    },
+                                  );
+                                });
+                          },
+                        );
+                      },
+                      emptyTitle: 'Sin recursos',
+                      emptyMessage: 'Aún no has creado ningún recurso',
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
                 });
           }
           return const Center(child: CircularProgressIndicator());
@@ -475,6 +452,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
         ],
       ),
     );
+
+
   }
 
   Widget _buildDetailResource(BuildContext context, Resource resource) {
@@ -583,9 +562,11 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
           CustomTextTitle(title: StringConst.LOCATION.toUpperCase()),
           Row(
             children: [
-              CustomTextBody(text: '${resource.countryName}'),
+              CustomTextBody(text: '${resource.cityName}'),
               const CustomTextBody(text: ', '),
               CustomTextBody(text: '${resource.provinceName}'),
+              const CustomTextBody(text: ', '),
+              CustomTextBody(text: '${resource.countryName}'),
             ],
           ),
           const SpaceH16(),
@@ -598,51 +579,32 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
           CustomTextTitle(title: StringConst.DATE.toUpperCase()),
           DateFormat('dd/MM/yyyy').format(resource.start!) == '31/12/2050'
               ? const CustomTextBody(
-                  text: StringConst.ALWAYS_AVAILABLE,
-                )
+            text: StringConst.ALWAYS_AVAILABLE,
+          )
               : Row(
-                  children: [
-                    CustomTextBody(
-                        text: DateFormat('dd/MM/yyyy').format(resource.start!)),
-                    const SpaceW4(),
-                    const CustomTextBody(text: '-'),
-                    const SpaceW4(),
-                    CustomTextBody(
-                        text: DateFormat('dd/MM/yyyy').format(resource.end!))
-                  ],
-                ),
+            children: [
+              CustomTextBody(
+                  text: DateFormat('dd/MM/yyyy').format(resource.start!)),
+              const SpaceW4(),
+              const CustomTextBody(text: '-'),
+              const SpaceW4(),
+              CustomTextBody(
+                  text: DateFormat('dd/MM/yyyy').format(resource.end!))
+            ],
+          ),
           const SpaceH16(),
-          (resource.contractType != null && resource.contractType != '')
-              ? CustomTextTitle(title: StringConst.CONTRACT_TYPE.toUpperCase())
-              : Container(),
-          (resource.contractType != null && resource.contractType != '')
-              ? CustomTextBody(text: '${resource.contractType}')
-              : Container(),
-          const SpaceH4(),
-          (resource.contractType != null && resource.contractType != '')
-              ? const SpaceH16()
-              : Container(),
+          CustomTextTitle(title: StringConst.CONTRACT_TYPE.toUpperCase()),
+          CustomTextBody(text: resource.contractType != null && resource.contractType != ''  ? '${resource.contractType}' : 'Sin especificar' ),
+          const SpaceH16(),
           CustomTextTitle(title: StringConst.DURATION.toUpperCase()),
           CustomTextBody(text: resource.duration!),
-          (resource.salary != null && resource.salary != '')
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomTextTitle(title: StringConst.SALARY.toUpperCase()),
-                    CustomTextBody(text: '${resource.salary}')
-                  ],
-                )
-              : Container(),
-          const SpaceH4(),
-          (resource.salary != null && resource.salary != '')
-              ? const SpaceH16()
-              : Container(),
-          resource.temporality == null
-              ? const SizedBox(
-                  height: 0,
-                )
-              : CustomTextBody(text: '${resource.temporality}')
+          const SpaceH16(),
+          CustomTextTitle(title: StringConst.SALARY.toUpperCase()),
+          CustomTextBody(text: resource.salary != null && resource.salary != ''  ? '${resource.salary}' :  'Sin especificar'),
+          const SpaceH16(),
+          CustomTextTitle(title: StringConst.FORM_SCHEDULE.toUpperCase()),
+          CustomTextBody(text: resource.temporality != null && resource.temporality != ''  ? '${resource.temporality}' :  'Sin especificar'),
+          const SpaceH16(),
         ],
       ),
     );
@@ -761,5 +723,9 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
       });
     }
   }
+
+
+
+
 
 }

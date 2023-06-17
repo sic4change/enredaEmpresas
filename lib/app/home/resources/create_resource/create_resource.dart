@@ -7,6 +7,7 @@ import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_organizations.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resourcePicture_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_type_create.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
@@ -16,6 +17,7 @@ import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/models/province.dart';
+import 'package:enreda_empresas/app/models/resourcePicture.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_city.dart';
@@ -65,6 +67,7 @@ class _CreateResourceState extends State<CreateResource> {
   String? _cityId;
   String? resourceTypeId;
   String? resourceCategoryId;
+  String? resourcePictureId;
 
   int currentStep = 0;
   bool _notExpire = false;
@@ -82,12 +85,14 @@ class _CreateResourceState extends State<CreateResource> {
 
   String writtenEmail = '';
   ResourceCategory? selectedResourceCategory;
+  ResourceType? selectedResourceType;
+  ResourcePicture? selectedResourcePicture;
   Organization? selectedOrganization;
   String? _degree;
-  String? selectedModality;
-  String? selectedContract;
-  String? selectedSalary;
-  ResourceType? selectedResourceType;
+  String? _modality;
+  String? _contractType;
+  String? _salary;
+
   Country? selectedCountry;
   Province? selectedProvince;
   City? selectedCity;
@@ -103,6 +108,7 @@ class _CreateResourceState extends State<CreateResource> {
 
   late String resourceCategoryName;
   late String resourceTypeName;
+  late String resourcePictureName;
   late String interestsNames;
   late String organizationName;
   String? _interestId;
@@ -131,17 +137,13 @@ class _CreateResourceState extends State<CreateResource> {
     textEditingControllerDateMaxInput.text = "";
     resourceCategoryName = "";
     resourceTypeName = "";
+    resourcePictureName = "";
     resourceTypeId = "";
     interestsNames = "";
     organizationName = "";
-    selectedContract = "";
-    selectedSalary = "";
-    _formattedStartDate = "";
-    _formattedEndDate = "";
-    _formattedMaxDate = "";
+    _contractType = "";
+    _salary = "";
     _degree = "";
-    selectedContract = "";
-    selectedSalary = "";
     _place = "";
     _street = "";
     _capacity = 0;
@@ -155,6 +157,9 @@ class _CreateResourceState extends State<CreateResource> {
     _link = "";
     _phone = "";
     _email = "";
+    _formattedStartDate = "";
+    _formattedEndDate = "";
+    _formattedMaxDate = "";
   }
 
   bool _validateAndSaveForm() {
@@ -178,9 +183,9 @@ class _CreateResourceState extends State<CreateResource> {
 
   Future<void> _submit() async {
       final address = Address(
+        city: _cityId,
         country: _countryId,
         province: _provinceId,
-        city: _cityId,
         place: _place,
         street: _street,
       );
@@ -193,8 +198,8 @@ class _CreateResourceState extends State<CreateResource> {
         resourceId: "",
         address: address,
         assistants: "",
-        capacity: 0,
-        contractType: selectedContract,
+        capacity: _capacity,
+        contractType: _contractType,
         duration: _duration!,
         status: 'Disponible',
         resourceType: resourceTypeId,
@@ -202,11 +207,11 @@ class _CreateResourceState extends State<CreateResource> {
         maximumDate: _max!,
         start: _start!,
         end: _end!,
-        modality: selectedModality!,
-        salary: selectedSalary,
+        modality: _modality!,
+        salary: _salary,
         organizer: widget.organizationId!,
         link: _link,
-        resourcePictureId: "",
+        resourcePictureId: resourcePictureId,
         notExpire: _notExpire,
         degree: _degree,
         promotor: _organizerText,
@@ -243,7 +248,7 @@ class _CreateResourceState extends State<CreateResource> {
   Widget _buildForm(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 14, 16, md: 15);
-    List<String> strings = <String>[
+    List<String> degrees = <String>[
       'Sin titulación',
       'Con titulación no oficial',
       'Con titulación oficial'];
@@ -274,7 +279,7 @@ class _CreateResourceState extends State<CreateResource> {
               ? DropdownButtonFormField<String>(
                   hint: const Text(StringConst.FORM_DEGREE),
                   value: _degree == "" ? null : _degree,
-                  items: strings.map<DropdownMenuItem<String>>((String value) {
+                  items: degrees.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -290,7 +295,7 @@ class _CreateResourceState extends State<CreateResource> {
                   }).toList(),
                   validator: (value) => _degree != null
                       ? null
-                      : StringConst.FORM_MOTIVATION_ERROR,
+                      : StringConst.FORM_COMPANY_ERROR,
                   onChanged: (value) => buildDegreeStreamBuilderSetState(value),
                   iconDisabledColor: AppColors.greyDark,
                   iconEnabledColor: AppColors.primaryColor,
@@ -330,7 +335,7 @@ class _CreateResourceState extends State<CreateResource> {
                   resourceTypeName == "Oferta de empleo"
               ? customTextFormField(
                   context,
-                  selectedContract!,
+                  _contractType!,
                   StringConst.FORM_CONTRACT,
                   StringConst.FORM_COMPANY_ERROR,
                   buildContractStreamBuilderSetState)
@@ -339,24 +344,22 @@ class _CreateResourceState extends State<CreateResource> {
                   resourceTypeName == "Oferta de empleo"
               ? customTextFormField(
                   context,
-                  selectedSalary!,
+                  _salary!,
                   StringConst.FORM_SALARY,
                   StringConst.FORM_COMPANY_ERROR,
-                  buildContractStreamBuilderSetState)
+                  buildSalaryStreamBuilderSetState)
               : Container(),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: TextFormField(
+        CustomFlexRowColumn(
+          childLeft: streamBuilderDropdownResourcePictureCreate(context,
+              selectedResourcePicture, buildResourcePictureStreamBuilderSetState),
+          childRight: TextFormField(
             controller: textEditingControllerInterests,
             decoration: InputDecoration(
-              hintText: StringConst.FORM_INTERESTS_QUESTION,
-              hintMaxLines: 2,
-              labelStyle: textTheme.bodySmall?.copyWith(
+              labelText: StringConst.FORM_INTERESTS_QUESTION,
+              focusColor: AppColors.lilac,
+              labelStyle: textTheme.bodyLarge?.copyWith(
                 color: AppColors.greyDark,
-                height: 1.5,
-                fontWeight: FontWeight.w400,
-                fontSize: fontSize,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
@@ -374,15 +377,11 @@ class _CreateResourceState extends State<CreateResource> {
             ),
             onTap: () => {_showMultiSelectInterests(context)},
             validator: (value) =>
-                value!.isNotEmpty ? null : StringConst.FORM_MOTIVATION_ERROR,
+            value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
             onSaved: (value) => value = _interestId,
-            maxLines: 2,
             readOnly: true,
-            style: textTheme.bodySmall?.copyWith(
-              height: 1.5,
+            style: textTheme.bodyMedium?.copyWith(
               color: AppColors.greyDark,
-              fontWeight: FontWeight.w400,
-              fontSize: fontSize,
             ),
           ),
         ),
@@ -423,20 +422,14 @@ class _CreateResourceState extends State<CreateResource> {
                             Sizes.kDefaultPaddingDouble / 2),
                         child: TextFormField(
                           controller: textEditingControllerDateInput,
-                          //editing controller of this TextField
                           validator: (value) => value!.isNotEmpty
                               ? null
-                              : StringConst.FORM_START_ERROR,
+                              : StringConst.FORM_COMPANY_ERROR,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.calendar_today),
-                            //icon of text field
                             labelText: StringConst.FORM_START,
-                            //label text of field
-                            labelStyle: textTheme.bodySmall?.copyWith(
-                              height: 1.5,
+                            labelStyle: textTheme.bodyLarge?.copyWith(
                               color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                              fontSize: fontSize,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -453,12 +446,8 @@ class _CreateResourceState extends State<CreateResource> {
                             ),
                           ),
                           readOnly: true,
-                          //set it true, so that user will not able to edit text
-                          style: textTheme.bodySmall?.copyWith(
-                            height: 1.5,
+                          style: textTheme.bodyMedium?.copyWith(
                             color: AppColors.greyDark,
-                            fontWeight: FontWeight.w400,
-                            fontSize: fontSize,
                           ),
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
@@ -480,24 +469,17 @@ class _CreateResourceState extends State<CreateResource> {
                   Expanded(
                       flex: Responsive.isMobile(context) ? 0 : 1,
                       child: Padding(
-                        padding: const EdgeInsets.all(
-                            Sizes.kDefaultPaddingDouble / 2),
+                        padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
                         child: TextFormField(
                           controller: textEditingControllerDateEndInput,
-                          //editing controller of this TextField
                           validator: (value) => value!.isNotEmpty
                               ? null
-                              : StringConst.FORM_START_ERROR,
+                              : StringConst.FORM_COMPANY_ERROR,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.calendar_today),
-                            //icon of text field
                             labelText: StringConst.FORM_END,
-                            //label text of field
-                            labelStyle: textTheme.bodySmall?.copyWith(
-                              height: 1.5,
+                            labelStyle: textTheme.bodyLarge?.copyWith(
                               color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                              fontSize: fontSize,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -514,12 +496,8 @@ class _CreateResourceState extends State<CreateResource> {
                             ),
                           ),
                           readOnly: true,
-                          //set it true, so that user will not able to edit text
-                          style: textTheme.bodySmall?.copyWith(
-                            height: 1.5,
+                          style: textTheme.bodyMedium?.copyWith(
                             color: AppColors.greyDark,
-                            fontWeight: FontWeight.w400,
-                            fontSize: fontSize,
                           ),
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
@@ -545,20 +523,14 @@ class _CreateResourceState extends State<CreateResource> {
                             Sizes.kDefaultPaddingDouble / 2),
                         child: TextFormField(
                           controller: textEditingControllerDateMaxInput,
-                          //editing controller of this TextField
                           validator: (value) => value!.isNotEmpty
                               ? null
-                              : StringConst.FORM_START_ERROR,
+                              : StringConst.FORM_COMPANY_ERROR,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.calendar_today),
-                            //icon of text field
                             labelText: StringConst.FORM_MAX,
-                            //label text of field
-                            labelStyle: textTheme.bodySmall?.copyWith(
-                              height: 1.5,
+                            labelStyle: textTheme.bodyLarge?.copyWith(
                               color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                              fontSize: fontSize,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
@@ -575,12 +547,8 @@ class _CreateResourceState extends State<CreateResource> {
                             ),
                           ),
                           readOnly: true,
-                          //set it true, so that user will not able to edit text
-                          style: textTheme.bodySmall?.copyWith(
-                            height: 1.5,
+                          style: textTheme.bodyMedium?.copyWith(
                             color: AppColors.greyDark,
-                            fontWeight: FontWeight.w400,
-                            fontSize: fontSize,
                           ),
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
@@ -617,7 +585,7 @@ class _CreateResourceState extends State<CreateResource> {
             CustomFlexRowColumn(
               childLeft: DropdownButtonFormField<String>(
                 hint: const Text(StringConst.FORM_MODALITY),
-                value: selectedModality,
+                value: _modality,
                 items: <String>[
                   'Presencial',
                   'Semipresencial',
@@ -639,7 +607,7 @@ class _CreateResourceState extends State<CreateResource> {
                     ),
                   );
                 }).toList(),
-                validator: (value) => selectedModality != null
+                validator: (value) => _modality != null
                     ? null
                     : StringConst.FORM_COMPANY_ERROR,
                 onChanged: (value) => buildModalityStreamBuilderSetState(value),
@@ -689,12 +657,12 @@ class _CreateResourceState extends State<CreateResource> {
                   StringConst.FORM_COMPANY_ERROR,
                   capacitySetState),
             ),
-            selectedModality != "Online"
+            _modality != "Online"
                 ? CustomFlexRowColumn(
                     childLeft: streamBuilderForCountryCreate(context, selectedCountry,
                         buildCountryStreamBuilderSetState),
                     childRight:
-                        selectedModality != 'Online para residentes en país'
+                        _modality != 'Online para residentes en país'
                             ? streamBuilderForProvinceCreate(
                                 context,
                                 selectedCountry,
@@ -702,11 +670,11 @@ class _CreateResourceState extends State<CreateResource> {
                                 buildProvinceStreamBuilderSetState)
                             : Container())
                 : Container(),
-            selectedModality != "Online"
+            _modality != "Online"
                 ? CustomFlexRowColumn(
                     childLeft:
-                        selectedModality != 'Online para residentes en país' &&
-                                selectedModality !=
+                        _modality != 'Online para residentes en país' &&
+                                _modality !=
                                     'Online para residentes en provincia'
                             ? streamBuilderForCityCreate(
                                 context,
@@ -716,10 +684,10 @@ class _CreateResourceState extends State<CreateResource> {
                                 buildCityStreamBuilderSetState)
                             : Container(),
                     childRight:
-                        selectedModality != 'Online para residentes en país' &&
-                                selectedModality !=
+                        _modality != 'Online para residentes en país' &&
+                                _modality !=
                                     'Online para residentes en provincia' &&
-                                selectedModality !=
+                                _modality !=
                                     'Online para residentes en ciudad'
                             ? customTextFormField(
                                 context,
@@ -818,8 +786,8 @@ class _CreateResourceState extends State<CreateResource> {
           resourceTypeName,
           resourceCategoryName,
           _degree!,
-          selectedContract!,
-          selectedSalary!,
+          _contractType!,
+          _salary!,
           interestsNames,
           _formattedStartDate,
           _formattedEndDate,
@@ -838,6 +806,7 @@ class _CreateResourceState extends State<CreateResource> {
           _trust,
           _phone!,
           _email!,
+          resourcePictureName
         ),
       ],
     );
@@ -874,11 +843,19 @@ class _CreateResourceState extends State<CreateResource> {
       ResourceCategory? resourceCategory) {
     setState(() {
       selectedResourceCategory = resourceCategory;
-      resourceCategoryName =
-          resourceCategory != null ? resourceCategory.name : "";
+      resourceCategoryName = resourceCategory != null ? resourceCategory.name : "";
       resourceCategoryId = resourceCategory?.id;
     });
     resourceCategoryValue = resourceCategory?.order;
+  }
+
+  void buildResourcePictureStreamBuilderSetState(
+      ResourcePicture? resourcePicture) {
+    setState(() {
+      selectedResourcePicture = resourcePicture;
+      resourcePictureName = resourcePicture != null ? resourcePicture.name : "";
+      resourcePictureId = resourcePicture?.id;
+    });
   }
 
   void buildOrganizationStreamBuilderSetState(
@@ -898,13 +875,19 @@ class _CreateResourceState extends State<CreateResource> {
 
   void buildModalityStreamBuilderSetState(String? modality) {
     setState(() {
-      selectedModality = modality;
+      _modality = modality;
     });
   }
 
-  void buildContractStreamBuilderSetState(String? contract) {
+  void buildContractStreamBuilderSetState(String? contractType) {
     setState(() {
-      selectedContract = contract;
+      _contractType = contractType;
+    });
+  }
+
+  void buildSalaryStreamBuilderSetState(String? salary) {
+    setState(() {
+      _salary = salary;
     });
   }
 
