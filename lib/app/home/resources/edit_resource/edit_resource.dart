@@ -500,9 +500,7 @@ class _EditResourceState extends State<EditResource> {
               : Container(),
         ),
         CustomFlexRowColumn(
-            childLeft: streamBuilderDropdownResourcePicture(context,
-              selectedResourcePicture, buildResourcePictureStreamBuilderSetState, resource),
-            childRight: TextFormField(
+            childLeft: TextFormField(
               decoration: InputDecoration(
                 labelText: StringConst.FORM_INTERESTS_QUESTION,
                 focusColor: AppColors.lilac,
@@ -535,6 +533,8 @@ class _EditResourceState extends State<EditResource> {
                 fontWeight: FontWeight.w400,
               ),
             ),
+            childRight: streamBuilderDropdownResourcePicture(context,
+                selectedResourcePicture, buildResourcePictureStreamBuilderSetState, resource),
         ),
         CustomFlexRowColumn(
           childLeft: customTextFormField(

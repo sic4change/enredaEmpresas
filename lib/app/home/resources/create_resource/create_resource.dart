@@ -351,9 +351,7 @@ class _CreateResourceState extends State<CreateResource> {
               : Container(),
         ),
         CustomFlexRowColumn(
-          childLeft: streamBuilderDropdownResourcePictureCreate(context,
-              selectedResourcePicture, buildResourcePictureStreamBuilderSetState),
-          childRight: TextFormField(
+          childLeft: TextFormField(
             controller: textEditingControllerInterests,
             decoration: InputDecoration(
               labelText: StringConst.FORM_INTERESTS_QUESTION,
@@ -384,6 +382,8 @@ class _CreateResourceState extends State<CreateResource> {
               color: AppColors.greyDark,
             ),
           ),
+          childRight: streamBuilderDropdownResourcePictureCreate(context,
+              selectedResourcePicture, buildResourcePictureStreamBuilderSetState),
         ),
         CustomFlexRowColumn(
           childLeft: customTextFormField(

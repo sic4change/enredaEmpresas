@@ -4,6 +4,7 @@ import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/participants/my_cv_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_tile.dart';
 import 'package:enreda_empresas/app/home/participants/resources_participants.dart';
+import 'package:enreda_empresas/app/home/participants/show_invitation_diaglog.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
@@ -222,23 +223,28 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(StringConst.INVITE_RESOURCE.toUpperCase(),
-                              style: textTheme.titleLarge?.copyWith(
-                                color: AppColors.penBlue,
-                                letterSpacing: 1.1,
-                                fontWeight: FontWeight.w700,
+                        child: InkWell(
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) => ShowInvitationDialog(user: user, organizerId: organizationUser.organization!,)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(StringConst.INVITE_RESOURCE.toUpperCase(),
+                                style: textTheme.titleLarge?.copyWith(
+                                  color: AppColors.penBlue,
+                                  letterSpacing: 1.1,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: Responsive.isMobile(context) ? 5 : 20),
-                            IconButton(
-                                iconSize: 40,
-                                icon: Image.asset(ImagePath.CREATE_RESOURCE),
-                                onPressed: () => {}
-                            ),
-                          ],
+                              SizedBox(width: Responsive.isMobile(context) ? 5 : 20),
+                              IconButton(
+                                  iconSize: 40,
+                                  icon: Image.asset(ImagePath.CREATE_RESOURCE),
+                                  onPressed: () => {}
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
