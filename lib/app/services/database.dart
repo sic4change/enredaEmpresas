@@ -105,9 +105,9 @@ abstract class Database {
 //
      Future<void> setUserEnreda(UserEnreda userEnreda);
 //   Future<void> addUserEnreda(UserEnreda userEnreda);
-//   Future<void> deleteUser(UserEnreda userEnreda);
+     Future<void> deleteUser(UserEnreda userEnreda);
      Future<void> uploadUserAvatar(String userId, Uint8List data);
-//   Future<void> addContact(Contact contact);
+     Future<void> addContact(Contact contact);
 //   Future<void> addResource(Resource resource);
      Future<void> setResource(Resource resource);
      Future<void> deleteResource(Resource resource);
@@ -531,11 +531,11 @@ class FirestoreDatabase implements Database {
           path: APIPath.user(userEnreda.userId!), data: userEnreda.toMap());
     }
 
-//   @override
-//   Future<void> deleteUser(UserEnreda userEnreda) {
-//     return _service.deleteData(path: APIPath.user(userEnreda.userId!));
-//   }
-//
+    @override
+    Future<void> deleteUser(UserEnreda userEnreda) {
+      return _service.deleteData(path: APIPath.user(userEnreda.userId!));
+    }
+
 //   @override
 //   Future<void> setCertificationRequest(CertificationRequest certificationRequest) {
 //     return _service.updateData(
@@ -734,10 +734,10 @@ class FirestoreDatabase implements Database {
 //         sort: (lhs, rhs) => rhs.name.compareTo(lhs.name),
 //       );*/
 //
-//   @override
-//   Future<void> addContact(Contact contact) =>
-//       _service.addData(path: APIPath.contacts(), data: contact.toMap());
-//
+    @override
+    Future<void> addContact(Contact contact) =>
+        _service.addData(path: APIPath.contacts(), data: contact.toMap());
+
 //   @override
 //   Future<void> addUnemployedUser(UnemployedUser create_resource) =>
 //       _service.addData(path: APIPath.users(), data: create_resource.toMap());

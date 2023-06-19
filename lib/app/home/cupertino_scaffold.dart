@@ -1,4 +1,3 @@
-import 'package:enreda_empresas/app/account/account_page.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/home/tab_item.dart';
 import 'package:enreda_empresas/app/services/auth.dart';

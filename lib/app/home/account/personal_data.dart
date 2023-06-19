@@ -11,13 +11,14 @@ import 'package:enreda_empresas/app/home/resources/validating_form_controls/stre
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_province.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
+import 'package:enreda_empresas/app/models/contact.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
-import 'package:enreda_empresas/app/utils/responsive.dart';
+import 'package:enreda_empresas/app/utils/functions.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,6 +38,7 @@ class PersonalData extends StatefulWidget {
 
 class _PersonalDataState extends State<PersonalData> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _textFieldController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
   bool isLoading = false;
   String _userId = '';
@@ -82,38 +84,27 @@ class _PersonalDataState extends State<PersonalData> {
                       '${userEnreda?.phone?[0]}${userEnreda?.phone?[1]}${userEnreda?.phone?[2]}';
                   _birthday = _birthday ?? userEnreda?.birthday;
                   _postalCode = userEnreda?.address?.postalCode ?? '';
-                  return Responsive.isDesktop(context)
-                      ? Column(
-                    children: [
-                            Expanded(
-                              child: SingleChildScrollView(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    _buildMainDataContainer(
-                                        context, userEnreda!),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SpaceH36(),
-                            _buildSaveDataButton(context, userEnreda!),
+                  return Container(
+                      padding: EdgeInsets.all(Sizes.mainPadding),
+                      margin: EdgeInsets.all(Sizes.mainPadding),
+                      decoration: BoxDecoration(
+                        color: AppColors.altWhite,
+                        shape: BoxShape.rectangle,
+                        border: Border.all(
+                            color: AppColors.greyLight2.withOpacity(0.3),
+                            width: 1),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _buildMainDataContainer(context, userEnreda!),
+                            const SpaceH40(),
+                            _buildMyParameters(context, userEnreda!),
+                            const SpaceH20(),
                           ],
-                        )
-                      : SingleChildScrollView(
-                          child: Container(
-                            margin: EdgeInsets.all(Sizes.mainPadding),
-                            child: Column(
-                              children: [
-                                _buildMainDataContainer(context, userEnreda!),
-                                const SpaceH20(),
-                                _buildSaveDataButton(context, userEnreda!),
-                                const SpaceH40(),
-
-                              ],
-                            ),
-                          ),
-                        );
+                        ),
+                      ));
                 } else {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -140,36 +131,28 @@ class _PersonalDataState extends State<PersonalData> {
 
   Widget _buildMainDataContainer(BuildContext context, UserEnreda userEnreda) {
     final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: EdgeInsets.all(Sizes.mainPadding),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.greyLight, width: 1),
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        color: Colors.white,
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(Sizes.mainPadding),
-            child: Text(
-              StringConst.PERSONAL_DATA.toUpperCase(),
-              style: textTheme.bodyLarge?.copyWith(
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.topLeft,
+          margin: EdgeInsets.only(top: Sizes.mainPadding),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(StringConst.PERSONAL_DATA,
+              style: textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.penBlue,
-                  fontSize: 16.0),
-            ),
+                  color: AppColors.greyDark2),),
           ),
-          _buildForm(context, userEnreda),
-        ],
-      ),
+        ),
+        _buildForm(context, userEnreda),
+        _buildSaveDataButton(context, userEnreda),
+      ],
     );
   }
 
   Widget _buildForm(BuildContext context, UserEnreda userEnreda) {
     final textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 14, 16, md: 15);
-    //userEnreda.address = Address()
     return Form(
       key: _formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -513,94 +496,205 @@ class _PersonalDataState extends State<PersonalData> {
     }
   }
 
-  /*Widget _buildMyParameters() {
-    return Container(
-        padding: EdgeInsets.symmetric(vertical: Constants.mainPadding),
-        decoration: BoxDecoration(
-          border: Border.all(color: Constants.lightGray, width: 1),
-          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'CONFIGURACIÓN DE LA CUENTA',
-                style: textTheme.bodyLarge?.copyWith(color: Constants.penBlue),
-              ),
+  Widget _buildMyParameters(BuildContext context, UserEnreda user) {
+    final textTheme = Theme.of(context).textTheme;
+    return CustomFlexRowColumn(
+        childLeft: Container(
+            padding: EdgeInsets.all(Sizes.mainPadding),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyLight, width: 1),
+              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+              color: Colors.white,
             ),
-            Divider(),
-            _buildMyProfileRow(
-              text: 'Cambiar contraseña',
-              onTap: () => _confirmChangePassword(context),
-            ),
-            _buildMyProfileRow(
-              text: 'Política de privacidad',
-              onTap: () => launchURL(StringConst.PRIVACY_URL),
-            ),
-            _buildMyProfileRow(
-              text: 'Condiciones de uso',
-              onTap: () => launchURL(StringConst.USE_CONDITIONS_URL),
-            ),
-            _buildMyProfileRow(
-              text: 'Ayúdanos a mejorar',
-              onTap: () => _displayReportDialog(context),
-            ),
-            _buildMyProfileRow(
-              text: 'Eliminar cuenta',
-              textStyle: textTheme.bodyText1?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Constants.deleteRed,
-                  fontSize: 16.0),
-              onTap: () => _confirmDeleteAccount(context),
-            ),
-          ],
-        ));
-  }
-
-  Widget _buildMyProfileRow(
-      {required String text,
-        TextStyle? textStyle,
-        String? imagePath,
-        void Function()? onTap}) {
-    return Material(
-      color: text == _selectedPageName
-          ? AppColors.lightTurquoise
-          : AppColors.white,
-      child: InkWell(
-        splashColor: AppColors.onHoverTurquoise,
-        highlightColor: AppColors.lightTurquoise,
-        hoverColor: text == _selectedPageName
-            ? AppColors.lightTurquoise
-            : AppColors.onHoverTurquoise,
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.all(14.0),
-          child: Row(
-            children: [
-              Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    text,
-                    style: textStyle ??
-                        textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.penBlue,
-                            fontSize: 16.0),
-                  )),
-              if (imagePath != null)
-                Container(
-                  width: 30,
-                  child: Image.asset(
-                    imagePath,
-                    height: Sizes.ICON_SIZE_30,
+                    'CONFIGURACIÓN DE LA CUENTA',
+                    style: textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                      color: AppColors.penBlue),
                   ),
                 ),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    child: const Text('Cambiar contraseña'),
+                    onTap: () => _confirmChangePassword(context),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    child: const Text('Política de privacidad'),
+                    onTap: () => launchURL(StringConst.PRIVACY_URL),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    child: const Text('Condiciones de uso'),
+                    onTap: () => launchURL(StringConst.USE_CONDITIONS_URL),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    child: const Text('Ayúdanos a mejorar'),
+                    onTap: () => _displayReportDialog(context),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    child: const Text('Eliminar cuenta'),
+                    onTap: () => _confirmDeleteAccount(context, user),
+                  ),
+                ),
+              ],
+            )),
+        childRight: Container());
+  }
+
+  Future<void> _changePasword(BuildContext context) async {
+    try {
+      final auth = Provider.of<AuthBase>(context, listen: false);
+      await auth.changePassword();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _deleteAccount(BuildContext context, UserEnreda user) async {
+    try {
+      final auth = Provider.of<AuthBase>(context, listen: false);
+      final database = Provider.of<Database>(context, listen: false);
+      await database.deleteUser(user);
+      await auth.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _confirmChangePassword(BuildContext context) async {
+    final didRequestSignOut = await showAlertDialog(context,
+        title: 'Cambiar contraseña',
+        content: 'Si pulsa en Aceptar se le envirá a su correo las acciones a '
+            'realizar para cambiar su contraseña. Si no aparece, revisa las carpetas de SPAM y Correo no deseado',
+        cancelActionText: 'Cancelar',
+        defaultActionText: 'Aceptar');
+    if (didRequestSignOut == true) {
+      _changePasword(context);
+    }
+  }
+
+  Future<void> _displayReportDialog(BuildContext context) async {
+    final database = Provider.of<Database>(context, listen: false);
+    TextTheme textTheme = Theme.of(context).textTheme;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Ayudanos a mejorar',
+              style: textTheme.button?.copyWith(
+                height: 1.5,
+                color: AppColors.greyDark,
+                fontWeight: FontWeight.w700,
+              ), ),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(
+                hintText: "Escribe tus sugerencias",
+                hintStyle: textTheme.button?.copyWith(
+                  color: AppColors.greyDark,
+                  height: 1.5,
+                  fontWeight: FontWeight.w400,
+                ),),
+              style: textTheme.button?.copyWith(
+                height: 1.5,
+                color: AppColors.greyDark,
+                fontWeight: FontWeight.w400,),
+              minLines: 4,
+              maxLines: 4,
+              textCapitalization: TextCapitalization.sentences,
+              keyboardType: TextInputType.multiline,
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor:
+                  MaterialStateProperty.all<Color>(Colors.white),
+                  backgroundColor:
+                  MaterialStateProperty.all<Color>(AppColors.primaryColor),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text('Cancelar'),
+                ),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor:
+                  MaterialStateProperty.all<Color>(Colors.white),
+                  backgroundColor:
+                  MaterialStateProperty.all<Color>(AppColors.primaryColor),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text('Enviar'),
+                ),
+                onPressed: () {
+                  setState(() {
+                    codeDialog = valueText;
+                    if (valueText.isNotEmpty) {
+                      final auth =
+                      Provider.of<AuthBase>(context, listen: false);
+                      final contact = Contact(
+                          email: auth.currentUser?.email ?? '',
+                          name: auth.currentUser?.displayName ?? '',
+                          text: valueText);
+                      database.addContact(contact);
+                      showAlertDialog(
+                        context,
+                        title: 'Mensaje ensaje enviado',
+                        content:
+                        'Hemos recibido satistactoriamente tu sugerencia. ¡Muchas gracias por tu información!',
+                        defaultActionText: 'Aceptar',
+                      ).then((value) => Navigator.pop(context));
+                    }
+                  });
+                },
+              ),
             ],
-          ),
-        ),
-      ),
-    );
-  }*/
+          );
+        });
+  }
+
+  Future<void> _confirmDeleteAccount(BuildContext context, UserEnreda user) async {
+    final didRequestSignOut = await showAlertDialog(context,
+        title: 'Eliminar cuenta',
+        content: 'Si pulsa en Aceptar se procederá a la eliminación completa '
+            'de su cuenta, esta acción no se podrá deshacer, '
+            '¿Está seguro que quiere continuar?',
+        cancelActionText: 'Cancelar',
+        defaultActionText: 'Aceptar');
+    if (didRequestSignOut == true) {
+      _deleteAccount(context, user);
+    }
+  }
 }

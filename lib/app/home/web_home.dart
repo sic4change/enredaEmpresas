@@ -14,6 +14,7 @@ import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/sign_in/access/access_page.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/utils/functions.dart';
+import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -109,14 +110,17 @@ class _WebHomeState extends State<WebHome> {
               },
               icon: const Icon(Icons.menu),
             ) : Container(),
-            title: Row(
-              children: [
-                Image.asset(
-                  ImagePath.LOGO,
-                  height: 20,
-                ),
-                !isSmallScreen ? _buildMyCompanyName(context, organization) : Container(),
-              ],
+            title: Transform(
+              transform:  Responsive.isMobile(context) ? Matrix4.translationValues(0.0, 0.0, 0.0) : Matrix4.translationValues(-40.0, 0.0, 0.0),
+              child: Row(
+                children: [
+                  Image.asset(
+                    ImagePath.LOGO,
+                    height: 24,
+                  ),
+                  !isSmallScreen ? _buildMyCompanyName(context, organization) : Container(),
+                ],
+              ),
             ),
             actions: <Widget>[
               InkWell(
@@ -127,7 +131,7 @@ class _WebHomeState extends State<WebHome> {
               const SizedBox(width: 10),
               if (!auth.isNullUser)
                 SizedBox(
-                  width: 30,
+                  width: 35,
                   child: InkWell(
                     onTap: () => _confirmSignOut(context),
                     child: Image.asset(
@@ -139,27 +143,30 @@ class _WebHomeState extends State<WebHome> {
             ],
           ),
           drawer: SideBarWidget(controller: _controller,),
-          body: Row(
-            children: [
-              if(!isSmallScreen) SideBarWidget(controller: _controller),
-              Expanded(child: Center(child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context,child){
-                  switch(_controller.selectedIndex){
-                    case 0: _key.currentState?.closeDrawer();
-                    return ControlPanelPage(organization: organization, user: user,);
-                    case 1: _key.currentState?.closeDrawer();
-                    return const ParticipantsListPage();
-                    case 2: _key.currentState?.closeDrawer();
-                    return const MyResourcesListPage();
-                    case 3: _key.currentState?.closeDrawer();
-                    return const PersonalData();
-                    default:
+          body: Padding(
+            padding: Responsive.isMobile(context) ? const EdgeInsets.all(0.0) : const EdgeInsets.only(left: 20.0),
+            child: Row(
+              children: [
+                if(!isSmallScreen) SideBarWidget(controller: _controller),
+                Expanded(child: Center(child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context,child){
+                    switch(_controller.selectedIndex){
+                      case 0: _key.currentState?.closeDrawer();
+                      return ControlPanelPage(organization: organization, user: user,);
+                      case 1: _key.currentState?.closeDrawer();
+                      return const ParticipantsListPage();
+                      case 2: _key.currentState?.closeDrawer();
                       return const MyResourcesListPage();
-                  }
-                },
-              ),))
-            ],
+                      case 3: _key.currentState?.closeDrawer();
+                      return const PersonalData();
+                      default:
+                        return const MyResourcesListPage();
+                    }
+                  },
+                ),))
+              ],
+            ),
           ),
 
         );
