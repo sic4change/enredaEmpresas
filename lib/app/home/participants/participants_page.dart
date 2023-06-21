@@ -217,34 +217,27 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ElevatedButton(
-                      onPressed: () => {},
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) => ShowInvitationDialog(user: user, organizerId: organizationUser.organization!,)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.violet, // Background color
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                        child: InkWell(
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (BuildContext context) => ShowInvitationDialog(user: user, organizerId: organizationUser.organization!,)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(StringConst.INVITE_RESOURCE.toUpperCase(),
-                                style: textTheme.titleLarge?.copyWith(
-                                  color: AppColors.penBlue,
-                                  letterSpacing: 1.1,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(StringConst.INVITE_RESOURCE.toUpperCase(),
+                              style: textTheme.titleLarge?.copyWith(
+                                color: AppColors.penBlue,
+                                letterSpacing: 1.1,
+                                fontWeight: FontWeight.w700,
                               ),
-                              SizedBox(width: Responsive.isMobile(context) ? 5 : 20),
-                              IconButton(
-                                  iconSize: 40,
-                                  icon: Image.asset(ImagePath.CREATE_RESOURCE),
-                                  onPressed: () => {}
-                              ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(width: Responsive.isMobile(context) ? 5 : 20),
+                            SizedBox(height: 40, width: 40, child: Image.asset(ImagePath.CREATE_RESOURCE),)
+                          ],
                         ),
                       ),
                     ),
@@ -403,7 +396,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
             ),
           ),
           const SizedBox(height: 10,),
-          ParticipantResourcesPage(participantId: user.userId!, organizerId: organizationUser.organization!,),
+          ParticipantResourcesList(participantId: user.userId!, organizerId: organizationUser.organization!,),
         ],
       ),
     );

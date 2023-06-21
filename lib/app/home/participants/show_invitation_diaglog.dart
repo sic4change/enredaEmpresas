@@ -44,8 +44,6 @@ dialogContent(BuildContext context, UserEnreda user, String organizerId) {
       ? heightOfScreen(context)
       : heightOfScreen(context) * 0.80;
   TextTheme textTheme = Theme.of(context).textTheme;
-  double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
-  double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
   return Stack(
     children: <Widget>[
       Container(
@@ -66,74 +64,49 @@ dialogContent(BuildContext context, UserEnreda user, String organizerId) {
         child: Column(
           mainAxisSize: MainAxisSize.min, // To make the card compact
           children: <Widget>[
-            Stack(
+            Column(
               children: [
-                Container(
-                  height: 90,
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: <Widget>[
-                      Responsive.isMobile(context) ? SpaceH20() : SpaceH30(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 30.0, left: 30.0),
-                        child: Text(
-                          user.firstName!,
-                          textAlign: TextAlign.center,
-                          maxLines: Responsive.isMobile(context) ? 2 : 1,
-                          style: textTheme.bodyText1?.copyWith(
-                            letterSpacing: 1.2,
-                            color: AppColors.greyTxtAlt,
-                            height: 1.5,
-                            fontWeight: FontWeight.w300,
-                            fontSize: fontSizeTitle,
-                          ),
-                        ),
-                      ),
-                      SpaceH4(),
-                      Expanded(
-                        flex: 8,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              user.lastName!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                letterSpacing: 1.2,
-                                fontSize: fontSizePromotor,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.penBlue,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Row(
                   children: [
                     const Spacer(),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop((false)),
-                      child: Icon(
-                        Icons.close,
-                        color: AppColors.greyTxtAlt,
-                        size: widthOfScreen(context) >= 1024 ? 25 : 20,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop((false)),
+                        child: Icon(
+                          Icons.close,
+                          color: AppColors.greyTxtAlt,
+                          size: widthOfScreen(context) >= 1024 ? 25 : 20,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Responsive.isMobile(context) ? Container() : SpaceH12(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Responsive.isMobile(context) ? SpaceH20() : SpaceH60(),
+                    const Text('Invitar a:'),
+                    const SizedBox(width: 10.0,),
+                    Text(
+                      '${user.firstName!} ${user.lastName!}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleMedium?.copyWith(
+                        color: AppColors.penBlue,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
             const Divider(
               color: AppColors.grey150,
               thickness: 1,
             ),
-            ParticipantResourcesList(participantId: user.userId!, organizerId: organizerId,),
+            ParticipantResourcesList(participant: user, organizerId: organizerId,),
           ],
         ),
       ),

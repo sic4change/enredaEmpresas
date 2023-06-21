@@ -7,8 +7,8 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ParticipantResourcesPage extends StatelessWidget {
-  const ParticipantResourcesPage({super.key, required this.participantId, required this.organizerId});
+class ParticipantResourcesList extends StatelessWidget {
+  const ParticipantResourcesList({super.key, required this.participantId, required this.organizerId});
 
   final String participantId;
   final String organizerId;
