@@ -22,6 +22,7 @@ import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/question.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
+import 'package:enreda_empresas/app/models/resourceInvitation.dart';
 import 'package:enreda_empresas/app/models/resourcetype.dart';
 import 'package:enreda_empresas/app/models/scope.dart';
 import 'package:enreda_empresas/app/models/size.dart';
@@ -122,8 +123,8 @@ abstract class Database {
 //   Future<void> updateExperience(Experience experience);
 //   Future<void> deleteExperience(Experience experience);
 //   Future<void> setCertificationRequest(CertificationRequest certificationRequest);
-//   Future<void> addCertificationRequest(CertificationRequest certificationRequest);
-//   Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced );
+     Future<void> addResourceInvitation(ResourceInvitation resourceInvitation);
+     Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced );
 }
 
 class FirestoreDatabase implements Database {
@@ -542,13 +543,13 @@ class FirestoreDatabase implements Database {
 //         path: APIPath.certificationRequest(certificationRequest.certificationRequestId!), data: certificationRequest.toMap());
 //   }
 //
-//   @override
-//   Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced) {
-//     return _service.updateData(
-//         path: APIPath.certificationRequest(certificationRequest.certificationRequestId!), data: {
-//       "certified": certified, 'referenced': referenced});
-//   }
-//
+  @override
+  Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced) {
+    return _service.updateData(
+        path: APIPath.certificationRequest(certificationRequest.certificationRequestId!), data: {
+      "certified": certified, 'referenced': referenced});
+  }
+
 
     @override
     Stream<List<Interest>> interestStream() => _service.collectionStream(
@@ -753,11 +754,11 @@ class FirestoreDatabase implements Database {
   @override
   Future<void> addOrganizationUser(OrganizationUser organizationUser) =>
       _service.addData(path: APIPath.users(), data: organizationUser.toMap());
-//
-//   @override
-//   Future<void> addCertificationRequest(CertificationRequest certificationRequest) =>
-//       _service.addData(path: APIPath.certificationsRequests(), data: certificationRequest.toMap());
-//
+
+  @override
+  Future<void> addResourceInvitation(ResourceInvitation resourceInvitation) =>
+      _service.addData(path: APIPath.resourcesInvitations(), data: resourceInvitation.toMap());
+
   @override
   Future<void> addResource(Resource resource) =>
       _service.addData(path: APIPath.resources(), data: resource.toMap());
