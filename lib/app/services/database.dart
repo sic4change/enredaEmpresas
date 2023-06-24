@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enreda_empresas/app/common_widgets/remove_diacritics.dart';
 import 'package:enreda_empresas/app/models/ability.dart';
 import 'package:enreda_empresas/app/models/certificate.dart';
@@ -42,19 +44,20 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:async/async.dart' show StreamGroup;
 
 abstract class Database {
-     Stream<Resource> resourceStream(String resourceId);
+     Stream<Resource> resourceStream(String? resourceId);
 //   Stream<List<Resource>> resourcesStream();
 //   //Stream<List<Resource>> filteredResourcesStream(FilterResource filter);
 //   Stream<List<Resource>> filteredResourcesCategoryStream(FilterResource filter);
      Stream<List<Resource>> myResourcesStream(String organizationId);
      Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId);
+     Stream<List<UserEnreda>> getParticipantsByOrganizationStream(List<String?> ids);
 //   Stream<List<Resource>> likeResourcesStream(String userId);
 //   Stream<List<Resource>> recommendedResourcesStream(UserEnreda? user);
 //   Stream<UserEnreda> enredaUserStream(String userId);
 //   Stream<List<Certificate>> myCertificatesStream(String userId);
      Stream<List<Organization>> organizationsStream();
      Stream<List<Organization>> filterOrganizationStream(String organizationId);
-     Stream<Organization> organizationStream(String organizationId);
+     Stream<Organization> organizationStream(String? organizationId);
      Stream<UserEnreda> mentorStream(String mentorId);
      Stream<List<Country>> countriesStream();
      Stream<List<Country>> countryFormatedStream();
@@ -234,7 +237,7 @@ class FirestoreDatabase implements Database {
         );
 
     @override
-  Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId) =>
+    Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId) =>
       _service.collectionStream(
         path: APIPath.resources(),
         queryBuilder: (query) {
@@ -282,9 +285,9 @@ class FirestoreDatabase implements Database {
 //   }
 
     @override
-    Stream<Resource> resourceStream(String resourceId) =>
+    Stream<Resource> resourceStream(String? resourceId) =>
         _service.documentStream<Resource>(
-          path: APIPath.resource(resourceId),
+          path: APIPath.resource(resourceId!),
           builder: (data, documentId) => Resource.fromMap(data, documentId),
         );
 
@@ -314,9 +317,9 @@ class FirestoreDatabase implements Database {
         );
 
     @override
-    Stream<Organization> organizationStream(String organizationId) =>
+    Stream<Organization> organizationStream(String? organizationId) =>
         _service.documentStream<Organization>(
-          path: APIPath.organization(organizationId),
+          path: APIPath.organization(organizationId!),
           builder: (data, documentId) => Organization.fromMap(data, documentId),
         );
 
@@ -435,11 +438,33 @@ class FirestoreDatabase implements Database {
   Stream<List<UserEnreda>> userParticipantsStream(List<String?> resourceIdList) {
     return _service.collectionStream<UserEnreda>(
       path: APIPath.users(),
-      queryBuilder: (query) => query.where('resources', arrayContainsAny: resourceIdList),
+      queryBuilder: (query) {
+
+        return query.where('resources', arrayContainsAny: resourceIdList);
+      },
       builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
       );
     }
+
+  @override
+  Stream<List<UserEnreda>> getParticipantsByOrganizationStream(List<String?> resourceIdList) async* {
+    final collectionPath = FirebaseFirestore.instance.collection(APIPath.users());
+    final batches = <Future<List<UserEnreda>>>[];
+
+    for (var i = 0; i < resourceIdList.length; i += 10) {
+      final batch = resourceIdList.sublist(i, i + 10 < resourceIdList.length ? i + 10 : resourceIdList.length);
+      final futureBatch = collectionPath
+          .where('resources', arrayContainsAny: batch)
+          .get()
+          .then((results) => results.docs.map<UserEnreda>((result) => UserEnreda.fromMap(result.data(), result.id)).toList());
+      batches.add(futureBatch);
+    }
+    final results = await Future.wait(batches);
+    var combinedResults = results.expand((i) => i).toSet().toList();
+    yield combinedResults;
+  }
+
 
   @override
   Stream<List<UserEnreda>> participantsByResourceStream(String resourceId) {

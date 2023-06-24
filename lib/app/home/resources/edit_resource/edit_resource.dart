@@ -96,7 +96,7 @@ class _EditResourceState extends State<EditResource> {
   List<String> _participants = [];
   Set<Interest> selectedInterests = {};
   ResourceCategory? selectedResourceCategory;
-  late ResourcePicture selectedResourcePicture;
+  ResourcePicture? selectedResourcePicture;
   Organization? selectedOrganization;
 
   ResourceType? selectedResourceType;
@@ -164,7 +164,7 @@ class _EditResourceState extends State<EditResource> {
       contractType: _contractType,
       salary: _salary,
       degree: _degree,
-      resourcePictureId: _resourcePictureId,
+      resourcePictureId: selectedResourcePicture?.id ?? resource.resourcePictureId,
       createdate: _createdate!,
       resourceLink: _resourceLink,
       organizerType: _organizerType,
@@ -248,16 +248,17 @@ class _EditResourceState extends State<EditResource> {
                       concatenate.write('${item.name} / ');
                     }
                     interestsNames = concatenate.toString();
-                    return StreamBuilder<ResourcePicture>(
-                      stream: database.resourcePictureStream(_resourcePictureId),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            selectedResourcePicture = snapshot.data!;
-                            return _buildContent(context);
-                          }
-                          return Container();
-                        }
-                    );
+                    return _buildContent(context);
+                    // return StreamBuilder<ResourcePicture>(
+                    //   stream: database.resourcePictureStream(_resourcePictureId),
+                    //     builder: (context, snapshot) {
+                    //       if (snapshot.hasData) {
+                    //         selectedResourcePicture = snapshot.data!;
+                    //         return _buildContent(context);
+                    //       }
+                    //       return Container();
+                    //     }
+                    // );
                   }
                   return Container();
                 });

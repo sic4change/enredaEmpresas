@@ -27,7 +27,7 @@ Widget streamBuilderDropdownResourcePictureCreate (BuildContext context, Resourc
                 children: [
                   !kIsWeb
                       ? ClipRRect(
-                          child: resourcePicture.resourcePic == ""
+                          child: resourcePicture.resourcePhoto == ""
                               ? Container(
                                   color: Colors.transparent,
                                   height: 35,
@@ -42,10 +42,10 @@ Widget streamBuilderDropdownResourcePictureCreate (BuildContext context, Resourc
                                           Image.asset(
                                               ImagePath.IMAGE_DEFAULT),
                                   alignment: Alignment.center,
-                                  imageUrl: resourcePicture.resourcePic),
+                                  imageUrl: resourcePicture.resourcePhoto),
                         )
                       : ClipRRect(
-                          child: resourcePicture.resourcePic == ""
+                          child: resourcePicture.resourcePhoto == ""
                               ? Container(
                                   color: Colors.transparent,
                                   height: 35,
@@ -53,7 +53,7 @@ Widget streamBuilderDropdownResourcePictureCreate (BuildContext context, Resourc
                                   child: Image.asset(ImagePath.IMAGE_DEFAULT),
                                 )
                               : PrecacheResourcePicture(
-                                  imageUrl: resourcePicture.resourcePic,
+                                  imageUrl: resourcePicture.resourcePhoto,
                                   width: 35,
                                   height: 35,
                                 ),
