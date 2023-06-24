@@ -65,7 +65,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                     ),
                     height: 115,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
                           decoration: const BoxDecoration(
@@ -73,12 +73,14 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                 topRight: Radius.circular(10),
                                 topLeft: Radius.circular(10)),
                           ),
-                          height: 60,
+                          height: 50,
                           child: Padding(
                             padding: EdgeInsets.only(
                                 left: sidePadding, right: sidePadding, top: 10),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 widget.resource.organizerImage == null ||
                                         widget.resource.organizerImage!.isEmpty
@@ -151,9 +153,10 @@ class _ResourceListTileState extends State<ResourceListTile> {
                         ),
                         const SpaceH4(),
                         SizedBox(
-                          height: 45,
+                          height: 60,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
@@ -186,6 +189,7 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                   ),
                                 ),
                               ),
+                              const SpaceH8(),
                             ],
                           ),
                         ),

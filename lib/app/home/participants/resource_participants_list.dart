@@ -5,6 +5,7 @@ import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceInvitation.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/database.dart';
+import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,14 +36,19 @@ class _ParticipantResourcesListState extends State<ParticipantResourcesList> {
    String? codeDialog;
    String? valueText;
    int? _selectedCertify;
-   int? _selectedApprove;
    Color _buttonColor = AppColors.primaryColor;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildContents(context),
+        const SizedBox(height: 20.0),
+        const Text('Cursos creados recientemente:'),
+        SizedBox(
+            height: Responsive.isMobile(context) ? MediaQuery.of(context).size.height * 0.6 : MediaQuery.of(context).size.height * 0.4,
+            child: SingleChildScrollView(
+                child: _buildContents(context)
+            )),
         SizedBox(height: Sizes.mainPadding / 2),
         isLoading ? const Padding(
           padding: EdgeInsets.all(30.0),
@@ -102,49 +108,45 @@ class _ParticipantResourcesListState extends State<ParticipantResourcesList> {
             snapshot.connectionState == ConnectionState.active) {
           resourcesList = snapshot.data!;
           return Center(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 20.0),
-                  const Text('Cursos creados recientemente:'),
-                  const SizedBox(height: 20.0),
-                  Wrap(
-                    direction: Axis.vertical,
-                    spacing: 5.0,
-                    children: List<Widget>.generate(
-                      resourcesList.length,
-                      (int index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0),
-                          child: ChoiceChip(
-                            backgroundColor: AppColors.greyLight,
-                            label: Text(
-                              resourcesList[index].title,
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: _textColor,
-                                fontWeight: FontWeight.w600,
-                              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 20.0),
+                Wrap(
+                  direction: Axis.vertical,
+                  spacing: 5.0,
+                  children: List<Widget>.generate(
+                    resourcesList.length,
+                    (int index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: ChoiceChip(
+                          backgroundColor: AppColors.greyLight,
+                          label: Text(
+                            resourcesList[index].title,
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: _textColor,
+                              fontWeight: FontWeight.w600,
                             ),
-                            labelPadding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 5.0),
-                            selected: _selectedCertify == index,
-                            selectedColor: _selectedColor,
-                            onSelected: (value) {
-                              setState(() {
-                                _selectResource(index);
-                                _isSelected = true;
-                                resource = resourcesList[index];
-                              });
-                            },
                           ),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ],
-              ),
+                          labelPadding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 5.0),
+                          selected: _selectedCertify == index,
+                          selectedColor: _selectedColor,
+                          onSelected: (value) {
+                            setState(() {
+                              _selectResource(index);
+                              _isSelected = true;
+                              resource = resourcesList[index];
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ],
             ),
           );
         }

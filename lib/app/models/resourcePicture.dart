@@ -1,16 +1,16 @@
 class ResourcePicture {
-  ResourcePicture({required this.id, required this.resourcePic, required this.name, required this.role});
+  ResourcePicture({required this.id, required this.resourcePhoto, required this.name, required this.role});
 
   factory ResourcePicture.fromMap(Map<String, dynamic> data, String documentId) {
     return ResourcePicture(
       id: data['id'],
-      resourcePic: data['resourcePhoto']['src'],
+      resourcePhoto: data['resourcePhoto']['src'],
       name: data['resourcePhoto']['title'],
       role: data['role'],
     );
   }
   final String id;
-  final String resourcePic;
+  final String resourcePhoto;
   final String name;
   final String role;
 
@@ -25,7 +25,7 @@ class ResourcePicture {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'resourcePic': resourcePic,
+      'resourcePhoto': resourcePhoto,
       'name': name,
       'role': role,
     };

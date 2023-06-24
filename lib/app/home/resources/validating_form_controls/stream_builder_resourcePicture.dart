@@ -24,6 +24,9 @@ Widget streamBuilderDropdownResourcePicture (BuildContext context, ResourcePictu
             if (selectedResourcePicture == null && resourcePicture.id == genericType.resourcePictureId) {
               selectedResourcePicture = resourcePicture;
             }
+            if (selectedResourcePicture != null) {
+              selectedResourcePicture = selectedResourcePicture;
+            }
 
             return DropdownMenuItem<ResourcePicture>(
               value: resourcePicture,
@@ -31,7 +34,7 @@ Widget streamBuilderDropdownResourcePicture (BuildContext context, ResourcePictu
                 children: [
                   !kIsWeb
                       ? ClipRRect(
-                          child: resourcePicture.resourcePic == ""
+                          child: resourcePicture.resourcePhoto == ""
                               ? Container(
                                   color: Colors.transparent,
                                   height: 35,
@@ -45,10 +48,10 @@ Widget streamBuilderDropdownResourcePicture (BuildContext context, ResourcePictu
                                       (context, url, downloadProgress) =>
                                           Image.asset(ImagePath.IMAGE_DEFAULT),
                                   alignment: Alignment.center,
-                                  imageUrl: resourcePicture.resourcePic),
+                                  imageUrl: resourcePicture.resourcePhoto),
                         )
                       : ClipRRect(
-                          child: resourcePicture.resourcePic == ""
+                          child: resourcePicture.resourcePhoto == ""
                               ? Container(
                                   color: Colors.transparent,
                                   height: 35,
@@ -56,7 +59,7 @@ Widget streamBuilderDropdownResourcePicture (BuildContext context, ResourcePictu
                                   child: Image.asset(ImagePath.IMAGE_DEFAULT),
                                 )
                               : PrecacheResourcePicture(
-                                  imageUrl: resourcePicture.resourcePic,
+                                  imageUrl: resourcePicture.resourcePhoto,
                                   width: 35,
                                   height: 35,
                                 ),

@@ -212,6 +212,14 @@ class UserEnreda {
   final String? organization;
   final List<String> resources;
 
+  @override
+  bool operator ==(Object other){
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is UserEnreda &&
+            other.userId == userId);
+  }
+
   Map<String, dynamic> toMap() {
     InterestsUserEnreda interestUserEnreda = InterestsUserEnreda(
         interests: interests, specificInterests: specificInterests);
@@ -306,4 +314,9 @@ class UserEnreda {
       resources: resources ?? this.resources,
     );
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => userId.hashCode;
+
 }

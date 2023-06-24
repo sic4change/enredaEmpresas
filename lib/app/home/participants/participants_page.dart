@@ -85,21 +85,22 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
             }
             final resourceIdList = snapshot.data!.map((e) => e.resourceId).toList();
             return StreamBuilder<List<UserEnreda>>(
-              stream: database.userParticipantsStream(resourceIdList),
+              stream: database.getParticipantsByOrganizationStream(resourceIdList),
               builder: (context, snapshot) {
-                return ListItemBuilderGrid(
-                  snapshot: snapshot,
-                  fitSmallerLayout: false,
-                  emptyTitle: 'Sin participantes',
-                  emptyMessage: 'Aún no se ha registrado ningún participante',
-                  itemBuilder: (context, user) {
-                    return ParticipantsListTile(user: user,
-                        onTap: () => setState(() {
-                      _currentPage = _buildParticipantProfile(user);
-                    })
-                    );
-                  }
-                );
+                if(snapshot.hasData) {
+                  return ListItemBuilderGrid(
+                      snapshot: snapshot,
+                      fitSmallerLayout: false,
+                      itemBuilder: (context, user) {
+                        return ParticipantsListTile(user: user,
+                            onTap: () => setState(() {
+                              _currentPage = _buildParticipantProfile(user);
+                            })
+                        );
+                      }
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
             });
         });
     });
