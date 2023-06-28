@@ -34,7 +34,9 @@ class WrapBuilder<T> extends StatelessWidget {
   }
 
   Widget _build(List<T> items, context) {
-    return Expanded(
+    return Flexible(
+      flex: 1,
+      fit: FlexFit.loose,
       child:
       Wrap(
         spacing: 5,

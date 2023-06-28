@@ -17,9 +17,9 @@ class ResourcePicture {
   @override
   bool operator == (Object other){
     return identical(this, other) ||
-        (other.runtimeType == this.runtimeType &&
+        (other.runtimeType == runtimeType &&
             other is ResourcePicture &&
-            other.id == this.id);
+            other.id == id);
   }
 
   Map<String, dynamic> toMap() {
@@ -30,4 +30,9 @@ class ResourcePicture {
       'role': role,
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => id.hashCode;
+
 }

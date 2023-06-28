@@ -33,4 +33,9 @@ class Province {
       'countryId' : countryId
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => provinceId.hashCode;
+
 }

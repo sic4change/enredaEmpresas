@@ -137,7 +137,6 @@ class _EditResourceState extends State<EditResource> {
       province: _provinceId,
       city: _cityId,
       place: _place,
-      street: _street,
     );
 
     final newResource = Resource(
@@ -171,6 +170,7 @@ class _EditResourceState extends State<EditResource> {
       participants: _participants,
       assistants: _assistants,
       status: _status,
+      street: _street,
     );
     try {
       final database = Provider.of<Database>(context, listen: false);
@@ -219,7 +219,7 @@ class _EditResourceState extends State<EditResource> {
             _salary = resource.salary ?? '';
             _degree = resource.degree ?? '';
             _place = resource.address?.place ?? '';
-            _street = resource.address?.street ?? '';
+            _street = resource.street ?? '';
             _capacity = resource.capacity ?? 0;
             _countryId = resource.address?.country ?? '';
             _provinceId = resource.address?.province ?? '';

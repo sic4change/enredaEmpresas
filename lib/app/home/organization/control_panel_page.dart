@@ -40,11 +40,12 @@ class ControlPanelPage extends StatelessWidget {
           Flex(
             direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
                 flex: Responsive.isMobile(context) ? 0 : 6,
                 child: Container(
-                  height: 260,
+                  height: 255,
                     margin: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       color: AppColors.white,
@@ -62,7 +63,7 @@ class ControlPanelPage extends StatelessWidget {
                             child: Text(StringConst.WELCOME_COMPANY,
                               style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 35.0,
+                              fontSize: Responsive.isMobile(context) ? 25 : 35.0,
                               color: AppColors.greyDark2),),
                           ),
                           Padding(
@@ -70,7 +71,7 @@ class ControlPanelPage extends StatelessWidget {
                             child: Text('${user?.firstName}',
                               style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 35.0,
+                              fontSize: Responsive.isMobile(context) ? 20 : 35.0,
                               color: AppColors.penBlue),),
                           ),
                           Padding(
@@ -88,7 +89,7 @@ class ControlPanelPage extends StatelessWidget {
               Expanded(
                 flex: Responsive.isMobile(context) ? 0 : 2,
                   child: Container(
-                    height: 260,
+                    height: 255,
                     margin: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,

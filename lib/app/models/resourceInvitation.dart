@@ -45,6 +45,14 @@ class ResourceInvitation {
   final String unemployedName;
   final String unemployedEmail;
 
+  @override
+  bool operator ==(Object other){
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ResourceInvitation &&
+            other.resourceInvitationId == resourceInvitationId);
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'resourceId' : resourceId,
@@ -57,4 +65,9 @@ class ResourceInvitation {
       'unemployedEmail' : unemployedEmail,
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => resourceInvitationId.hashCode;
+
 }

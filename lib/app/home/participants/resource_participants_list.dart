@@ -45,7 +45,7 @@ class _ParticipantResourcesListState extends State<ParticipantResourcesList> {
         const SizedBox(height: 20.0),
         const Text('Cursos creados recientemente:'),
         SizedBox(
-            height: Responsive.isMobile(context) ? MediaQuery.of(context).size.height * 0.6 : MediaQuery.of(context).size.height * 0.4,
+            height: Responsive.isMobile(context) ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.4,
             child: SingleChildScrollView(
                 child: _buildContents(context)
             )),

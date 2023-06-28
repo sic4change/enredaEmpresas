@@ -181,4 +181,9 @@ class Organization {
       'size': size?.toMap(),
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => organizationId.hashCode;
+
 }

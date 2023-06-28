@@ -88,16 +88,22 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(width: 20),
+                    Responsive.isMobile(context) ? const SizedBox(width: 10) : const SizedBox(width: 20),
                     Text(StringConst.CREATE_RESOURCE,
-                      style: textTheme.headlineSmall?.copyWith(
+                      style: Responsive.isMobile(context) ? textTheme.titleMedium?.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w800,
+                      ) : Responsive.isTablet(context) ? textTheme.titleLarge?.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w800,
+                      ) : textTheme.headlineSmall?.copyWith(
                         color: AppColors.white,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     const Spacer(),
                     IconButton(
-                      iconSize: 40,
+                      iconSize: Responsive.isMobile(context) ? 20 : 40,
                         icon: Image.asset(ImagePath.CREATE_RESOURCE),
                         onPressed: () => {
                           Navigator.of(this.context).push(
@@ -108,7 +114,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                           )
                         }
                     ),
-                    const SizedBox(width: 20),
+                    Responsive.isMobile(context) ? const SizedBox(width: 0) :const SizedBox(width: 20),
                   ],
                 ),
               ),
@@ -220,7 +226,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                                       onTap: () =>
                                                           setState(() {
                                                             _currentPage =
-                                                                _buildResourcePage(context, resource.resourceId!);
+                                                                _buildResourcePage(context, resource);
                                                           }),
                                                     ),
                                                   );
@@ -243,13 +249,13 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
         });
   }
 
-  Widget _buildResourcePage(BuildContext context, String resourceId) {
+  Widget _buildResourcePage(BuildContext context, Resource resource) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
     final database = Provider.of<Database>(context, listen: false);
     return StreamBuilder<Resource>(
-        stream: database.resourceStream(resourceId),
+        stream: database.resourceStream(resource.resourceId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -259,6 +265,10 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
             Resource resource = snapshot.data!;
             resource.setResourceTypeName();
             resource.setResourceCategoryName();
+            if (resource.resourceId == null) {
+              return const Center(
+                  child: CircularProgressIndicator());
+            }
             return StreamBuilder<Organization>(
               stream: database.organizationStream(resource.organizer),
               builder: (context, snapshot) {

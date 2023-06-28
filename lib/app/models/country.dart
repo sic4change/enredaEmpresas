@@ -34,4 +34,9 @@ class Country {
   String toString() {
     return 'Id: $countryId, Name: $name';
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => countryId.hashCode;
+
 }

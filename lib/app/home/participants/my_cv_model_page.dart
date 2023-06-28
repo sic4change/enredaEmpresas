@@ -488,6 +488,7 @@ class MyCvModelsPage extends StatelessWidget {
       children: [
         CustomTextTitle(title: StringConst.PERSONAL_DATA.toUpperCase()),
         Container(
+          padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
             color: AppColors.white,
