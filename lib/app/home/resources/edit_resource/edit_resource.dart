@@ -36,8 +36,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 const double contactBtnWidthLg = 200.0;
-const double contactBtnWidthSm = 120.0;
-const double contactBtnWidthMd = 150.0;
+const double contactBtnWidthSm = 100.0;
+const double contactBtnWidthMd = 140.0;
 
 class EditResource extends StatefulWidget {
   const EditResource({Key? key, required this.resourceId, required this.organizer}) : super(key: key);

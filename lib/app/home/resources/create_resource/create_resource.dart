@@ -35,8 +35,8 @@ import 'package:provider/provider.dart';
 import 'create_revision_form.dart';
 
 const double contactBtnWidthLg = 200.0;
-const double contactBtnWidthSm = 120.0;
-const double contactBtnWidthMd = 150.0;
+const double contactBtnWidthSm = 100.0;
+const double contactBtnWidthMd = 140.0;
 
 class CreateResource extends StatefulWidget {
   const CreateResource({Key? key, required this.organizationId}) : super(key: key);
@@ -1017,8 +1017,6 @@ class _CreateResourceState extends State<CreateResource> {
   @override
   Widget build(BuildContext context) {
     final isLastStep = currentStep == getSteps().length - 1;
-    double screenWidth = widthOfScreen(context);
-    double screenHeight = heightOfScreen(context);
     double contactBtnWidth = responsiveSize(
       context,
       contactBtnWidthSm,

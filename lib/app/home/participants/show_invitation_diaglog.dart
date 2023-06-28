@@ -70,7 +70,7 @@ dialogContent(BuildContext context, UserEnreda user, String organizerId) {
                   children: [
                     const Spacer(),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                       child: TextButton(
                         onPressed: () => Navigator.of(context).pop((false)),
                         child: Icon(
@@ -82,11 +82,11 @@ dialogContent(BuildContext context, UserEnreda user, String organizerId) {
                     ),
                   ],
                 ),
+                Responsive.isMobile(context) ? Container() : const SpaceH20(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Responsive.isMobile(context) ? SpaceH20() : SpaceH60(),
                     const Text('Invitar a:'),
                     const SizedBox(width: 10.0,),
                     Text(
