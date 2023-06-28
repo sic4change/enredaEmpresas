@@ -36,8 +36,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 const double contactBtnWidthLg = 200.0;
-const double contactBtnWidthSm = 120.0;
-const double contactBtnWidthMd = 150.0;
+const double contactBtnWidthSm = 100.0;
+const double contactBtnWidthMd = 140.0;
 
 class EditResource extends StatefulWidget {
   const EditResource({Key? key, required this.resourceId, required this.organizer}) : super(key: key);
@@ -137,7 +137,6 @@ class _EditResourceState extends State<EditResource> {
       province: _provinceId,
       city: _cityId,
       place: _place,
-      street: _street,
     );
 
     final newResource = Resource(
@@ -171,6 +170,7 @@ class _EditResourceState extends State<EditResource> {
       participants: _participants,
       assistants: _assistants,
       status: _status,
+      street: _street,
     );
     try {
       final database = Provider.of<Database>(context, listen: false);
@@ -219,7 +219,7 @@ class _EditResourceState extends State<EditResource> {
             _salary = resource.salary ?? '';
             _degree = resource.degree ?? '';
             _place = resource.address?.place ?? '';
-            _street = resource.address?.street ?? '';
+            _street = resource.street ?? '';
             _capacity = resource.capacity ?? 0;
             _countryId = resource.address?.country ?? '';
             _provinceId = resource.address?.province ?? '';

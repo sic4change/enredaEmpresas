@@ -37,4 +37,9 @@ class ResourceType {
       'updatedby': updatedby,
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => resourceTypeId.hashCode;
+
 }

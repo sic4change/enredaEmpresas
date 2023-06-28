@@ -94,7 +94,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                       itemBuilder: (context, user) {
                         return ParticipantsListTile(user: user,
                             onTap: () => setState(() {
-                              _currentPage = _buildParticipantProfile(user);
+                              _currentPage = Responsive.isMobile(context) || Responsive.isTablet(context)  ? _buildParticipantProfileMobile(user) : _buildParticipantProfileWeb(user);
                             })
                         );
                       }
@@ -106,7 +106,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
     });
   }
 
-  Widget _buildParticipantProfile(UserEnreda? user) {
+  Widget _buildParticipantProfileWeb(UserEnreda? user) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -270,6 +270,147 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
     );
   }
 
+  Widget _buildParticipantProfileMobile(UserEnreda? user) {
+    final textTheme = Theme.of(context).textTheme;
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: AppColors.greyDark,
+                ),
+                onPressed: () => setState(() {
+                  _currentPage = _buildResourcesList(context);
+                }),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(120),
+                    ),
+                    child:
+                    !kIsWeb ? ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(60)),
+                      child:
+                      Center(
+                        child:
+                        user?.photo == "" ?
+                        Container(
+                          color:  Colors.transparent,
+                          height: Responsive.isMobile(context) ? 90 : 120,
+                          width: Responsive.isMobile(context) ? 90 : 120,
+                          child: Image.asset(ImagePath.USER_DEFAULT),
+                        ):
+                        CachedNetworkImage(
+                            width: Responsive.isMobile(context) ? 90 : 120,
+                            height: Responsive.isMobile(context) ? 90 : 120,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                            imageUrl: user?.photo ?? ""),
+                      ),
+                    ):
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(60)),
+                      child:
+                      Center(
+                        child:
+                        user?.photo == "" ?
+                        Container(
+                          color:  Colors.transparent,
+                          height: Responsive.isMobile(context) ? 90 : 120,
+                          width: Responsive.isMobile(context) ? 90 : 120,
+                          child: Image.asset(ImagePath.USER_DEFAULT),
+                        ):
+                        FadeInImage.assetNetwork(
+                          placeholder: ImagePath.USER_DEFAULT,
+                          width: Responsive.isMobile(context) ? 90 : 120,
+                          height: Responsive.isMobile(context) ? 90 : 120,
+                          fit: BoxFit.cover,
+                          image: user?.photo ?? "",
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, top: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${user!.firstName} ${user.lastName}',
+                      maxLines: 2,
+                      style: textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold, color: AppColors.chatDarkGray),
+                    ),
+                    const SizedBox(height: 8,),
+                    Text(
+                      '${user.educationName}'.toUpperCase(),
+                      maxLines: 2,
+                      style: textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold, color: AppColors.penBlue),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20,),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ShowInvitationDialog(user: user, organizerId: organizationUser.organization!,)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.violet, // Background color
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(StringConst.INVITE_RESOURCE.toUpperCase(),
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColors.penBlue,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(width: Responsive.isMobile(context) ? 5 : 20),
+                      SizedBox(height: 40, width: 40, child: Image.asset(ImagePath.CREATE_RESOURCE),)
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20,),
+          Column(
+            children: [
+              _buildPersonalData(context, user),
+              _buildResourcesParticipant(context, user),
+              _buildCvParticipant(context, user),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildPersonalData(BuildContext context, UserEnreda user) {
     final textTheme = Theme.of(context).textTheme;
     return Container(
@@ -377,7 +518,8 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
   Widget _buildResourcesParticipant(BuildContext context, UserEnreda user) {
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      margin: Responsive.isMobile(context) || Responsive.isTablet(context) ? const EdgeInsets.only(top: 20) : const EdgeInsets.only(left: 20),
+      height: Responsive.isMobile(context) || Responsive.isTablet(context) ? null : 250,
+      margin: Responsive.isMobile(context) || Responsive.isTablet(context) ? const EdgeInsets.symmetric(vertical: 20.0) : const EdgeInsets.only(left: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
@@ -387,6 +529,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             StringConst.RESOURCES_PARTICIPANT,

@@ -75,7 +75,6 @@ class Resource {
     final String? city = data['address']['city'];
     final String? cityName = data['cityName'];
     final String? place = data['address']['place'];
-    final String? street = data['address']['street'];
     final DateTime? maximumDate = data['maximumDate'].toDate();
     final DateTime? start = DateTime.parse(data['start'].toDate().toString());
     final DateTime? end =  DateTime.parse(data['end'].toDate().toString());
@@ -104,13 +103,13 @@ class Resource {
     final String? link = data['link'];
     final bool? notExpire = data['notExpire'];
     final DateTime createdate = data['createdate'].toDate();
+    final String? street = data['street'];
 
     final Address address = Address(
         country: country,
         province: province,
         city: city,
         place: place,
-        street: street
     );
 
     return Resource(
@@ -157,6 +156,7 @@ class Resource {
       createdate: createdate,
       address: address,
       degree: degree,
+      street: street,
     );
   }
 
@@ -206,6 +206,15 @@ class Resource {
   final DateTime createdate;
   final Address? address;
 
+
+  @override
+  bool operator ==(Object other){
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Resource &&
+            other.resourceId == resourceId);
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'title': title,
@@ -236,6 +245,7 @@ class Resource {
       'notExpire': notExpire,
       'address': address?.toMap(),
       'createdate': createdate,
+      'street': street,
     };
   }
 
@@ -356,5 +366,10 @@ class Resource {
       break;
     }
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => resourceId.hashCode;
+
 
 }

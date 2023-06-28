@@ -36,4 +36,9 @@ class City {
       'provinceId' : provinceId,
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => cityId.hashCode;
+
 }

@@ -25,4 +25,9 @@ class Interest {
       'name': name,
     };
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => interestId.hashCode;
+
 }

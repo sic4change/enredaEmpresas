@@ -35,8 +35,8 @@ import 'package:provider/provider.dart';
 import 'create_revision_form.dart';
 
 const double contactBtnWidthLg = 200.0;
-const double contactBtnWidthSm = 120.0;
-const double contactBtnWidthMd = 150.0;
+const double contactBtnWidthSm = 100.0;
+const double contactBtnWidthMd = 140.0;
 
 class CreateResource extends StatefulWidget {
   const CreateResource({Key? key, required this.organizationId}) : super(key: key);
@@ -147,9 +147,9 @@ class _CreateResourceState extends State<CreateResource> {
     _place = "";
     _street = "";
     _capacity = 0;
-    _countryId = "";
-    _provinceId = "";
-    _cityId = "";
+    _countryId = null;
+    _provinceId = null;
+    _cityId = null;
     countryName = "";
     provinceName = "";
     cityName = "";
@@ -187,7 +187,6 @@ class _CreateResourceState extends State<CreateResource> {
         country: _countryId,
         province: _provinceId,
         place: _place,
-        street: _street,
       );
 
       final newResource = Resource(
@@ -201,7 +200,7 @@ class _CreateResourceState extends State<CreateResource> {
         capacity: _capacity,
         contractType: _contractType,
         duration: _duration!,
-        status: 'Disponible',
+        status: 'A actualizar',
         resourceType: resourceTypeId,
         resourceCategory: resourceCategoryId,
         maximumDate: _max!,
@@ -220,6 +219,7 @@ class _CreateResourceState extends State<CreateResource> {
         interests: interests,
         organizerType: "Organización",
         likes: [],
+        street: _street,
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
       );
       try {
@@ -1017,8 +1017,6 @@ class _CreateResourceState extends State<CreateResource> {
   @override
   Widget build(BuildContext context) {
     final isLastStep = currentStep == getSteps().length - 1;
-    double screenWidth = widthOfScreen(context);
-    double screenHeight = heightOfScreen(context);
     double contactBtnWidth = responsiveSize(
       context,
       contactBtnWidthSm,
@@ -1138,20 +1136,6 @@ class _CreateResourceState extends State<CreateResource> {
                               );
                             },
                           ),
-                          Responsive.isTablet(context) ||
-                                  Responsive.isMobile(context)
-                              ? Positioned(
-                                  top: screenHeight * 0.45,
-                                  left: -10,
-                                  child: SizedBox(
-                                    height: 300 * 0.50,
-                                    child: ClipRRect(
-                                      child:
-                                          Image.asset(ImagePath.CHICA_LATERAL),
-                                    ),
-                                  ),
-                                )
-                              : Container(),
                         ],
                       ),
                     ),
