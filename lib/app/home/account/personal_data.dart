@@ -301,7 +301,7 @@ class _PersonalDataState extends State<PersonalData> {
                 ),
               ),
             ),
-            initialValue: _phone.indexOf(' ') < 0
+            initialValue: _phone.indexOf(' ') < 0 && _phone.length > 3
                 ? _phone.substring(3)
                 : _phone.substring(_phone.indexOf(' ') + 1),
             validator: (value) =>
