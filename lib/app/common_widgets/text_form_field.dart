@@ -1,9 +1,8 @@
-import 'package:date_time_picker/date_time_picker.dart';
-import 'package:enreda_empresas/app/utils/adaptative.dart';
-import 'package:enreda_empresas/app/values/strings.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 
 Widget customTextFormField(BuildContext context, String formValue, String labelText, String errorText, functionSetState) {
@@ -184,7 +183,9 @@ Widget customTextFormMultilineNotValidator(BuildContext context, String formValu
 
 Widget customDatePicker(BuildContext context, DateTime time, String labelText, String errorText, functionSetState) {
   TextTheme textTheme = Theme.of(context).textTheme;
-  return DateTimePicker(
+  return DateTimeField(
+    initialValue: time,
+    format: DateFormat('dd/MM/yyyy'),
     decoration: InputDecoration(
       prefixIcon: const Icon(Icons.calendar_today),
       labelText: labelText,
@@ -212,12 +213,16 @@ Widget customDatePicker(BuildContext context, DateTime time, String labelText, S
       color: AppColors.greyDark,
       fontWeight: FontWeight.w400,
     ),
-    locale: const Locale('es', 'ES'),
-    dateMask: 'dd/MM/yyyy',
-    initialValue: time.toString(),
-    firstDate: DateTime(DateTime.now().year - 100, DateTime.now().month, DateTime.now().day),
-    lastDate: DateTime(DateTime.now().year + 100, DateTime.now().month, DateTime.now().day),
-    onChanged: (val) => functionSetState(val),
-    validator: (value) => value!.isNotEmpty ? null : errorText,
+    onShowPicker: (context, currentValue) {
+      return showDatePicker(
+        context: context,
+        locale: Locale('es', 'ES'),
+        firstDate: DateTime(DateTime.now().year - 100, DateTime.now().month, DateTime.now().day),
+        initialDate: currentValue ?? DateTime.now(),
+        lastDate: DateTime(DateTime.now().year + 100, DateTime.now().month, DateTime.now().day),
+      );
+    },
+    onChanged: (dateTime) => functionSetState(dateTime),
+    validator: (value) => value != null ? null : errorText,
   );
 }

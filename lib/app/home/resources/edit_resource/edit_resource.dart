@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_time_picker/date_time_picker.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
-import 'package:enreda_empresas/app/common_widgets/expanded_row.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
@@ -10,7 +9,6 @@ import 'package:enreda_empresas/app/home/resources/validating_form_controls/stre
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_organizations.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_province.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resourcePicture.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resourcePicture_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_category.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_type.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
@@ -40,7 +38,9 @@ const double contactBtnWidthSm = 100.0;
 const double contactBtnWidthMd = 140.0;
 
 class EditResource extends StatefulWidget {
-  const EditResource({Key? key, required this.resourceId, required this.organizer}) : super(key: key);
+  const EditResource(
+      {Key? key, required this.resourceId, required this.organizer})
+      : super(key: key);
   final String resourceId;
   final Organization organizer;
 
@@ -108,10 +108,14 @@ class _EditResourceState extends State<EditResource> {
   int? resourceCategoryValue;
   String? organizationId;
 
-  TextEditingController textEditingControllerDateInput = TextEditingController();
-  TextEditingController textEditingControllerDateEndInput = TextEditingController();
-  TextEditingController textEditingControllerDateMaxInput = TextEditingController();
-  TextEditingController textEditingControllerInterests = TextEditingController();
+  TextEditingController textEditingControllerDateInput =
+      TextEditingController();
+  TextEditingController textEditingControllerDateEndInput =
+      TextEditingController();
+  TextEditingController textEditingControllerDateMaxInput =
+      TextEditingController();
+  TextEditingController textEditingControllerInterests =
+      TextEditingController();
 
   @override
   void initState() {
@@ -163,7 +167,8 @@ class _EditResourceState extends State<EditResource> {
       contractType: _contractType,
       salary: _salary,
       degree: _degree,
-      resourcePictureId: selectedResourcePicture?.id ?? resource.resourcePictureId,
+      resourcePictureId:
+          selectedResourcePicture?.id ?? resource.resourcePictureId,
       createdate: _createdate!,
       resourceLink: _resourceLink,
       organizerType: _organizerType,
@@ -262,7 +267,6 @@ class _EditResourceState extends State<EditResource> {
                   }
                   return Container();
                 });
-
           } else {
             return Container();
           }
@@ -297,18 +301,18 @@ class _EditResourceState extends State<EditResource> {
                 Responsive.isMobile(context)
                     ? Container()
                     : Padding(
-                  padding: EdgeInsets.all(Sizes.mainPadding),
-                  child: Image.asset(
-                    ImagePath.LOGO,
-                    height: Sizes.HEIGHT_24,
-                  ),
-                ),
+                        padding: EdgeInsets.all(Sizes.mainPadding),
+                        child: Image.asset(
+                          ImagePath.LOGO,
+                          height: Sizes.HEIGHT_24,
+                        ),
+                      ),
                 Responsive.isMobile(context)
                     ? Container()
                     : SizedBox(width: Sizes.mainPadding),
                 Container(
                   padding:
-                  const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                      const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
                   child: Text(StringConst.FORM_EDIT.toUpperCase(),
                       style: const TextStyle(color: AppColors.greyDark)),
                 )
@@ -322,11 +326,11 @@ class _EditResourceState extends State<EditResource> {
                   children: [
                     Container(
                       height: Responsive.isMobile(context) ||
-                          Responsive.isTablet(context)
+                              Responsive.isTablet(context)
                           ? MediaQuery.of(context).size.height
                           : MediaQuery.of(context).size.height * 0.70,
                       width: Responsive.isMobile(context) ||
-                          Responsive.isTablet(context)
+                              Responsive.isTablet(context)
                           ? MediaQuery.of(context).size.width
                           : MediaQuery.of(context).size.width * 0.70,
                       decoration: BoxDecoration(
@@ -360,13 +364,14 @@ class _EditResourceState extends State<EditResource> {
                                     top: Sizes.kDefaultPaddingDouble * 2),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal:
-                                    Sizes.kDefaultPaddingDouble / 2),
+                                        Sizes.kDefaultPaddingDouble / 2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: <Widget>[
                                     if (currentStep == 0)
                                       EnredaButton(
-                                        buttonTitle: StringConst.CANCEL.toUpperCase(),
+                                        buttonTitle:
+                                            StringConst.CANCEL.toUpperCase(),
                                         width: contactBtnWidth,
                                         onPressed: onStepCancel,
                                       ),
@@ -374,16 +379,17 @@ class _EditResourceState extends State<EditResource> {
                                         width: Sizes.kDefaultPaddingDouble),
                                     isLoading
                                         ? const Center(
-                                        child: CircularProgressIndicator(
-                                          color: AppColors.primary300,
-                                        ))
+                                            child: CircularProgressIndicator(
+                                            color: AppColors.primary300,
+                                          ))
                                         : EnredaButton(
-                                      buttonTitle: StringConst.FORM_UPDATE,
-                                      width: contactBtnWidth,
-                                      buttonColor: AppColors.primaryColor,
-                                      titleColor: AppColors.white,
-                                      onPressed: onStepContinue,
-                                    ),
+                                            buttonTitle:
+                                                StringConst.FORM_UPDATE,
+                                            width: contactBtnWidth,
+                                            buttonColor: AppColors.primaryColor,
+                                            titleColor: AppColors.white,
+                                            onPressed: onStepContinue,
+                                          ),
                                   ],
                                 ),
                               );
@@ -409,503 +415,538 @@ class _EditResourceState extends State<EditResource> {
     ];
     return Form(
       key: _formKey,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-          Widget>[
-        CustomFlexRowColumn(
-          childLeft: customTextFormField(context, _resourceTitle!,
-              StringConst.FORM_TITLE, StringConst.NAME_ERROR, nameSetState),
-          childRight: customTextFormMultiline(
-              context, _resourceDescription!, StringConst.DESCRIPTION,
-              StringConst.FORM_LASTNAME_ERROR,
-              descriptionSetState),
-        ),
-        CustomFlexRowColumn(
-          childLeft: streamBuilderDropdownResourceType(context,
-              selectedResourceType, buildResourceTypeStreamBuilderSetState, resource),
-          childRight: streamBuilderDropdownResourceCategory(
-              context,
-              selectedResourceCategory,
-              buildResourceCategoryStreamBuilderSetState, resource),
-        ),
-        CustomFlexRowColumn(
-          childLeft: resourceTypeId == "N9KdlBYmxUp82gOv8oJC"
-              ? DropdownButtonFormField<String>(
-                  hint: const Text(StringConst.FORM_DEGREE),
-                  value: _degree == "" ? null : _degree,
-                  items: strings.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: textTheme.bodyMedium?.copyWith(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CustomFlexRowColumn(
+              childLeft: customTextFormField(context, _resourceTitle!,
+                  StringConst.FORM_TITLE, StringConst.NAME_ERROR, nameSetState),
+              childRight: customTextFormMultiline(
+                  context,
+                  _resourceDescription!,
+                  StringConst.DESCRIPTION,
+                  StringConst.FORM_LASTNAME_ERROR,
+                  descriptionSetState),
+            ),
+            CustomFlexRowColumn(
+              childLeft: streamBuilderDropdownResourceType(
+                  context,
+                  selectedResourceType,
+                  buildResourceTypeStreamBuilderSetState,
+                  resource),
+              childRight: streamBuilderDropdownResourceCategory(
+                  context,
+                  selectedResourceCategory,
+                  buildResourceCategoryStreamBuilderSetState,
+                  resource),
+            ),
+            CustomFlexRowColumn(
+              childLeft: resourceTypeId == "N9KdlBYmxUp82gOv8oJC"
+                  ? DropdownButtonFormField<String>(
+                      hint: const Text(StringConst.FORM_DEGREE),
+                      value: _degree == "" ? null : _degree,
+                      items:
+                          strings.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: textTheme.bodyMedium?.copyWith(
+                              height: 1.5,
+                              color: AppColors.greyDark,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      validator: (value) => _degree != null
+                          ? null
+                          : StringConst.FORM_MOTIVATION_ERROR,
+                      onChanged: (value) =>
+                          buildDegreeStreamBuilderSetState(value),
+                      iconDisabledColor: AppColors.greyDark,
+                      iconEnabledColor: AppColors.primaryColor,
+                      decoration: InputDecoration(
+                        labelStyle: textTheme.bodyLarge?.copyWith(
                           height: 1.5,
                           color: AppColors.greyDark,
                           fontWeight: FontWeight.w400,
                         ),
-                      ),
-                    );
-                  }).toList(),
-                  validator: (value) => _degree != null
-                      ? null
-                      : StringConst.FORM_MOTIVATION_ERROR,
-                  onChanged: (value) => buildDegreeStreamBuilderSetState(value),
-                  iconDisabledColor: AppColors.greyDark,
-                  iconEnabledColor: AppColors.primaryColor,
-                  decoration: InputDecoration(
-                    labelStyle: textTheme.bodyLarge?.copyWith(
-                      height: 1.5,
-                      color: AppColors.greyDark,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: const BorderSide(
-                        color: AppColors.greyUltraLight,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: const BorderSide(
-                        color: AppColors.greyUltraLight,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  style: textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
-                    color: AppColors.greyDark,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )
-              : Container(),
-          childRight: Container(),
-        ),
-        CustomFlexRowColumn(
-          childLeft: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
-              resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
-              ? customTextFormField(
-                  context,
-                  _contractType!,
-                  StringConst.FORM_CONTRACT,
-                  StringConst.FORM_COMPANY_ERROR,
-                  buildContractStreamBuilderSetState)
-              : Container(),
-          childRight: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
-              resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
-              ? customTextFormField(
-                  context,
-                  _salary!,
-                  StringConst.FORM_SALARY,
-                  StringConst.FORM_COMPANY_ERROR,
-                  buildSalaryStreamBuilderSetState)
-              : Container(),
-        ),
-        CustomFlexRowColumn(
-            childLeft: TextFormField(
-              decoration: InputDecoration(
-                labelText: StringConst.FORM_INTERESTS_QUESTION,
-                focusColor: AppColors.lilac,
-                labelStyle: textTheme.bodyLarge?.copyWith(
-                  color: AppColors.greyDark,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: const BorderSide(
-                    color: AppColors.greyUltraLight,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: const BorderSide(
-                    color: AppColors.greyUltraLight,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-              initialValue: interestsNames,
-              onTap: () => {_showMultiSelectInterests(context)},
-              validator: (value) =>
-              value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
-              onSaved: (value) => value = _interestId,
-              readOnly: true,
-              style: textTheme.bodyMedium?.copyWith(
-                height: 1.5,
-                color: AppColors.greyDark,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            childRight: streamBuilderDropdownResourcePicture(context,
-                selectedResourcePicture, buildResourcePictureStreamBuilderSetState, resource),
-        ),
-        CustomFlexRowColumn(
-          childLeft: customTextFormField(
-              context,
-              _duration!,
-              StringConst.FORM_DURATION,
-              StringConst.FORM_COMPANY_ERROR,
-              durationSetState),
-          childRight: customTextFormMultilineNotValidator(
-              context, _temporality!, StringConst.FORM_SCHEDULE, scheduleSetState),
-        ),
-        CustomFlexRowColumn(
-            childLeft: CheckboxListTile(
-                title: Text(
-                  'El recurso no expira',
-                  style: textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
-                    color: AppColors.greyDark,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                value: selectedNotExpire,
-                onChanged: (bool? value) =>
-                    setState(() {
-                      selectedNotExpire = value!;
-                      _notExpire = selectedNotExpire;
-                    })),
-            childRight: Container()),
-        selectedNotExpire == false
-            ? Flex(
-                direction: Responsive.isMobile(context)
-                    ? Axis.vertical
-                    : Axis.horizontal,
-                children: [
-                  Expanded(
-                      flex: Responsive.isMobile(context) ? 0 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Sizes.kDefaultPaddingDouble / 2),
-                        child: DateTimePicker(
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            labelText: StringConst.FORM_START,
-                            labelStyle: textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                              color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                                width: 1.0,
-                              ),
-                            ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: const BorderSide(
+                            color: AppColors.greyUltraLight,
                           ),
-                          style: textTheme.bodyMedium?.copyWith(
-                            height: 1.5,
-                            color: AppColors.greyDark,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          locale: const Locale('es', 'ES'),
-                          dateMask: 'dd/MM/yyyy',
-                          initialValue: _start.toString(),
-                          firstDate: _start!,
-                          lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
-                          onChanged: (dateTime) {
-                            setState(() {
-                              _start = DateTime.parse(dateTime);
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return StringConst.FORM_START_ERROR;
-                            }
-                            return null;
-                          },
                         ),
-                      )),
-                  Expanded(
-                      flex: Responsive.isMobile(context) ? 0 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Sizes.kDefaultPaddingDouble / 2),
-                        child: DateTimePicker(
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            labelText: StringConst.FORM_END,
-                            labelStyle: textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                              color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                                width: 1.0,
-                              ),
-                            ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: const BorderSide(
+                            color: AppColors.greyUltraLight,
+                            width: 1.0,
                           ),
-                          style: textTheme.bodyMedium?.copyWith(
-                              height: 1.5,
-                              color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                          ),
-                          locale: const Locale('es', 'ES'),
-                          dateMask: 'dd/MM/yyyy',
-                          initialValue: _end.toString(),
-                          firstDate: _end!,
-                          lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
-                          onChanged: (dateTime) {
-                            setState(() {
-                              _end = DateTime.parse(dateTime);
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return StringConst.FORM_COMPANY_ERROR;
-                            }
-                            return null;
-                          },
                         ),
-                      )),
-                  Expanded(
-                      flex: Responsive.isMobile(context) ? 0 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Sizes.kDefaultPaddingDouble / 2),
-                        child: DateTimePicker(
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            labelText: StringConst.FORM_MAX,
-                            labelStyle: textTheme.bodyLarge?.copyWith(
-                              height: 1.5,
-                              color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          style: textTheme.bodyMedium?.copyWith(
-                            height: 1.5,
-                            color: AppColors.greyDark,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          locale: const Locale('es', 'ES'),
-                          dateMask: 'dd/MM/yyyy',
-                          initialValue: _max.toString(),
-                          firstDate: _max!,
-                          lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
-                          onChanged: (dateTime) {
-                            setState(() {
-                              _max = DateTime.parse(dateTime);
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return StringConst.FORM_COMPANY_ERROR;
-                            }
-                            return null;
-                          },
-                        ),
-                      )),
-                ],
-              )
-            : Container(),
-        CustomFlexRowColumn(
-          childLeft: DropdownButtonFormField<String>(
-            hint: const Text(StringConst.FORM_MODALITY),
-            value: _modality,
-            items: <String>[
-              'Presencial',
-              'Semipresencial',
-              'Online para residentes en país',
-              'Online para residentes en provincia',
-              'Online para residentes en ciudad',
-              'Online'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
+                      ),
+                      style: textTheme.bodyMedium?.copyWith(
+                        height: 1.5,
+                        color: AppColors.greyDark,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  : Container(),
+              childRight: Container(),
+            ),
+            CustomFlexRowColumn(
+              childLeft: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
+                      resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
+                  ? customTextFormField(
+                      context,
+                      _contractType!,
+                      StringConst.FORM_CONTRACT,
+                      StringConst.FORM_COMPANY_ERROR,
+                      buildContractStreamBuilderSetState)
+                  : Container(),
+              childRight: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
+                      resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
+                  ? customTextFormField(
+                      context,
+                      _salary!,
+                      StringConst.FORM_SALARY,
+                      StringConst.FORM_COMPANY_ERROR,
+                      buildSalaryStreamBuilderSetState)
+                  : Container(),
+            ),
+            CustomFlexRowColumn(
+              childLeft: TextFormField(
+                decoration: InputDecoration(
+                  labelText: StringConst.FORM_INTERESTS_QUESTION,
+                  focusColor: AppColors.lilac,
+                  labelStyle: textTheme.bodyLarge?.copyWith(
                     color: AppColors.greyDark,
-                    fontWeight: FontWeight.w400,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                      width: 1.0,
+                    ),
                   ),
                 ),
-              );
-            }).toList(),
-            validator: (value) => _modality != null
-                ? null
-                : StringConst.FORM_COMPANY_ERROR,
-            onChanged: (value) => buildModalityStreamBuilderSetState(value),
-            iconDisabledColor: AppColors.greyDark,
-            iconEnabledColor: AppColors.primaryColor,
-            decoration: InputDecoration(
-              labelStyle: textTheme.bodyLarge?.copyWith(
-                height: 1.5,
-                color: AppColors.greyDark,
-                fontWeight: FontWeight.w400,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            style: textTheme.bodyMedium?.copyWith(
-              height: 1.5,
-              color: AppColors.greyDark,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          childRight: Container(),
-        ),
-        CustomFlexRowColumn(
-          childLeft: customTextFormField(
-              context,
-              _place!,
-              StringConst.FORM_PLACE,
-              StringConst.FORM_COMPANY_ERROR,
-              placeSetState),
-          childRight: customTextFormFieldNum(
-              context,
-              _capacity!.toString(),
-              StringConst.FORM_CAPACITY,
-              StringConst.FORM_COMPANY_ERROR,
-              capacitySetState),
-        ),
-        _modality != "Online"
-            ? CustomFlexRowColumn(
-            childLeft: streamBuilderForCountry(context, selectedCountry,
-                buildCountryStreamBuilderSetState, resource),
-            childRight:
-            _modality != 'Online para residentes en país'
-                ? streamBuilderForProvince(
-                context,
-                selectedCountry == null ? resource.address?.country : selectedCountry?.countryId,
-                selectedProvince,
-                buildProvinceStreamBuilderSetState, resource)
-                : Container())
-            : Container(),
-        _modality != "Online"
-            ? CustomFlexRowColumn(
-          childLeft:
-          _modality != 'Online para residentes en país' &&
-              _modality !=
-                  'Online para residentes en provincia'
-              ? streamBuilderForCity(
-              context,
-              selectedCountry == null ? resource.address?.country : selectedCountry?.countryId,
-              selectedProvince == null ? resource.address?.province : selectedProvince?.provinceId,
-              selectedCity,
-              buildCityStreamBuilderSetState, resource)
-              : Container(),
-          childRight:
-          _modality != 'Online para residentes en país' &&
-              _modality !=
-                  'Online para residentes en provincia' &&
-              _modality !=
-                  'Online para residentes en ciudad'
-              ? customTextFormFieldNotValidator(
-              context,
-              _street!,
-              StringConst.FORM_ADDRESS,
-              addressSetState)
-              : Container(),
-        )
-            : Container(),
-        CustomFlexRowColumn(
-          childLeft: streamBuilderDropdownOrganizations(
-              context,
-              selectedOrganization,
-              widget.organizer.organizationId!,
-              buildOrganizationStreamBuilderSetState),
-          childRight: TextFormField(
-            decoration: InputDecoration(
-              labelText: StringConst.FORM_ORGANIZER_TEXT,
-              focusColor: AppColors.lilac,
-              labelStyle: textTheme.bodyLarge?.copyWith(
-                color: AppColors.greyDark,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            initialValue: _organizerText,
-            onChanged: (String? value) => setState(() {
-              _organizerText = value;
-            }),
-            textCapitalization: TextCapitalization.sentences,
-            keyboardType: TextInputType.name,
-            style: textTheme.bodyMedium?.copyWith(
-              color: AppColors.greyDark,
-            ),
-          ),
-        ),
-        _organizerText != "" && _organizerText != null ? CustomFlexRowColumn(
-            childLeft: customTextFormField(
-                context,
-                _phone!,
-                StringConst.FORM_PHONE,
-                StringConst.FORM_COMPANY_ERROR,
-                phoneSetState),
-            childRight: customTextFormField(
-                context,
-                _email!,
-                StringConst.FORM_EMAIL,
-                StringConst.FORM_COMPANY_ERROR,
-                emailSetState),
-          ): Container(),
-        CustomFlexRowColumn(
-          childLeft: _organizerText != "" && _organizerText != null ? customTextFormFieldNotValidator(
-              context, _link!, StringConst.FORM_LINK, linkSetState): Container(),
-          childRight: CheckboxListTile(
-              title: Text(
-                StringConst.FORM_TRUST,
+                initialValue: interestsNames,
+                onTap: () => {_showMultiSelectInterests(context)},
+                validator: (value) =>
+                    value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
+                onSaved: (value) => value = _interestId,
+                readOnly: true,
                 style: textTheme.bodyMedium?.copyWith(
                   height: 1.5,
                   color: AppColors.greyDark,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-              value: _trust,
-              onChanged: (bool? value) => setState(() => _trust = value!)),
-        ),
-      ]),
+              childRight: streamBuilderDropdownResourcePicture(
+                  context,
+                  selectedResourcePicture,
+                  buildResourcePictureStreamBuilderSetState,
+                  resource),
+            ),
+            CustomFlexRowColumn(
+              childLeft: customTextFormField(
+                  context,
+                  _duration!,
+                  StringConst.FORM_DURATION,
+                  StringConst.FORM_COMPANY_ERROR,
+                  durationSetState),
+              childRight: customTextFormMultilineNotValidator(context,
+                  _temporality!, StringConst.FORM_SCHEDULE, scheduleSetState),
+            ),
+            CustomFlexRowColumn(
+                childLeft: CheckboxListTile(
+                    title: Text(
+                      'El recurso no expira',
+                      style: textTheme.bodyMedium?.copyWith(
+                        height: 1.5,
+                        color: AppColors.greyDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    value: selectedNotExpire,
+                    onChanged: (bool? value) => setState(() {
+                          selectedNotExpire = value!;
+                          _notExpire = selectedNotExpire;
+                        })),
+                childRight: Container()),
+            selectedNotExpire == false
+                ? Flex(
+                    direction: Responsive.isMobile(context)
+                        ? Axis.vertical
+                        : Axis.horizontal,
+                    children: [
+                      Expanded(
+                          flex: Responsive.isMobile(context) ? 0 : 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Sizes.kDefaultPaddingDouble / 2),
+                            child: DateTimeField(
+                              initialValue: _start,
+                              format: DateFormat('dd/MM/yyyy'),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.calendar_today),
+                                labelText: StringConst.FORM_START,
+                                labelStyle: textTheme.bodyLarge?.copyWith(
+                                  height: 1.5,
+                                  color: AppColors.greyDark,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.greyUltraLight,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.greyUltraLight,
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              style: textTheme.bodyMedium?.copyWith(
+                                height: 1.5,
+                                color: AppColors.greyDark,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              onShowPicker: (context, currentValue) {
+                                return showDatePicker(
+                                  context: context,
+                                  locale: Locale('es', 'ES'),
+                                  firstDate: _start!,
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(DateTime.now().year + 10,
+                                      DateTime.now().month, DateTime.now().day),
+                                );
+                              },
+                              onChanged: (dateTime) {
+                                setState(() {
+                                  _start = dateTime;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return StringConst.FORM_START_ERROR;
+                                }
+                                return null;
+                              },
+                            ),
+                          )),
+                      Expanded(
+                          flex: Responsive.isMobile(context) ? 0 : 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Sizes.kDefaultPaddingDouble / 2),
+                            child: DateTimeField(
+                              initialValue: _end,
+                              format: DateFormat('dd/MM/yyyy'),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.calendar_today),
+                                labelText: StringConst.FORM_END,
+                                labelStyle: textTheme.bodyLarge?.copyWith(
+                                  height: 1.5,
+                                  color: AppColors.greyDark,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.greyUltraLight,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.greyUltraLight,
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              style: textTheme.bodyMedium?.copyWith(
+                                height: 1.5,
+                                color: AppColors.greyDark,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              onShowPicker: (context, currentValue) {
+                                return showDatePicker(
+                                  context: context,
+                                  locale: Locale('es', 'ES'),
+                                  firstDate: _end!,
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(DateTime.now().year + 10,
+                                      DateTime.now().month, DateTime.now().day),
+                                );
+                              },
+                              onChanged: (dateTime) {
+                                setState(() {
+                                  _end = dateTime;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return StringConst.FORM_COMPANY_ERROR;
+                                }
+                                return null;
+                              },
+                            ),
+                          )),
+                      Expanded(
+                          flex: Responsive.isMobile(context) ? 0 : 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Sizes.kDefaultPaddingDouble / 2),
+                            child: DateTimeField(
+                              initialValue: _max,
+                              format: DateFormat('dd/MM/yyyy'),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.calendar_today),
+                                labelText: StringConst.FORM_MAX,
+                                labelStyle: textTheme.bodyLarge?.copyWith(
+                                  height: 1.5,
+                                  color: AppColors.greyDark,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.greyUltraLight,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.greyUltraLight,
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              style: textTheme.bodyMedium?.copyWith(
+                                height: 1.5,
+                                color: AppColors.greyDark,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              onShowPicker: (context, currentValue) {
+                                return showDatePicker(
+                                  context: context,
+                                  locale: Locale('es', 'ES'),
+                                  firstDate: _max!,
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(DateTime.now().year + 10,
+                                      DateTime.now().month, DateTime.now().day),
+                                );
+                              },
+                              onChanged: (dateTime) {
+                                setState(() {
+                                  _max = dateTime;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return StringConst.FORM_COMPANY_ERROR;
+                                }
+                                return null;
+                              },
+                            ),
+                          )),
+                    ],
+                  )
+                : Container(),
+            CustomFlexRowColumn(
+              childLeft: DropdownButtonFormField<String>(
+                hint: const Text(StringConst.FORM_MODALITY),
+                value: _modality,
+                items: <String>[
+                  'Presencial',
+                  'Semipresencial',
+                  'Online para residentes en país',
+                  'Online para residentes en provincia',
+                  'Online para residentes en ciudad',
+                  'Online'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: textTheme.bodyMedium?.copyWith(
+                        height: 1.5,
+                        color: AppColors.greyDark,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                validator: (value) =>
+                    _modality != null ? null : StringConst.FORM_COMPANY_ERROR,
+                onChanged: (value) => buildModalityStreamBuilderSetState(value),
+                iconDisabledColor: AppColors.greyDark,
+                iconEnabledColor: AppColors.primaryColor,
+                decoration: InputDecoration(
+                  labelStyle: textTheme.bodyLarge?.copyWith(
+                    height: 1.5,
+                    color: AppColors.greyDark,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                style: textTheme.bodyMedium?.copyWith(
+                  height: 1.5,
+                  color: AppColors.greyDark,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              childRight: Container(),
+            ),
+            CustomFlexRowColumn(
+              childLeft: customTextFormField(
+                  context,
+                  _place!,
+                  StringConst.FORM_PLACE,
+                  StringConst.FORM_COMPANY_ERROR,
+                  placeSetState),
+              childRight: customTextFormFieldNum(
+                  context,
+                  _capacity!.toString(),
+                  StringConst.FORM_CAPACITY,
+                  StringConst.FORM_COMPANY_ERROR,
+                  capacitySetState),
+            ),
+            _modality != "Online"
+                ? CustomFlexRowColumn(
+                    childLeft: streamBuilderForCountry(context, selectedCountry,
+                        buildCountryStreamBuilderSetState, resource),
+                    childRight: _modality != 'Online para residentes en país'
+                        ? streamBuilderForProvince(
+                            context,
+                            selectedCountry == null
+                                ? resource.address?.country
+                                : selectedCountry?.countryId,
+                            selectedProvince,
+                            buildProvinceStreamBuilderSetState,
+                            resource)
+                        : Container())
+                : Container(),
+            _modality != "Online"
+                ? CustomFlexRowColumn(
+                    childLeft: _modality != 'Online para residentes en país' &&
+                            _modality != 'Online para residentes en provincia'
+                        ? streamBuilderForCity(
+                            context,
+                            selectedCountry == null
+                                ? resource.address?.country
+                                : selectedCountry?.countryId,
+                            selectedProvince == null
+                                ? resource.address?.province
+                                : selectedProvince?.provinceId,
+                            selectedCity,
+                            buildCityStreamBuilderSetState,
+                            resource)
+                        : Container(),
+                    childRight: _modality != 'Online para residentes en país' &&
+                            _modality !=
+                                'Online para residentes en provincia' &&
+                            _modality != 'Online para residentes en ciudad'
+                        ? customTextFormFieldNotValidator(context, _street!,
+                            StringConst.FORM_ADDRESS, addressSetState)
+                        : Container(),
+                  )
+                : Container(),
+            CustomFlexRowColumn(
+              childLeft: streamBuilderDropdownOrganizations(
+                  context,
+                  selectedOrganization,
+                  widget.organizer.organizationId!,
+                  buildOrganizationStreamBuilderSetState),
+              childRight: TextFormField(
+                decoration: InputDecoration(
+                  labelText: StringConst.FORM_ORGANIZER_TEXT,
+                  focusColor: AppColors.lilac,
+                  labelStyle: textTheme.bodyLarge?.copyWith(
+                    color: AppColors.greyDark,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                initialValue: _organizerText,
+                onChanged: (String? value) => setState(() {
+                  _organizerText = value;
+                }),
+                textCapitalization: TextCapitalization.sentences,
+                keyboardType: TextInputType.name,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.greyDark,
+                ),
+              ),
+            ),
+            _organizerText != "" && _organizerText != null
+                ? CustomFlexRowColumn(
+                    childLeft: customTextFormField(
+                        context,
+                        _phone!,
+                        StringConst.FORM_PHONE,
+                        StringConst.FORM_COMPANY_ERROR,
+                        phoneSetState),
+                    childRight: customTextFormField(
+                        context,
+                        _email!,
+                        StringConst.FORM_EMAIL,
+                        StringConst.FORM_COMPANY_ERROR,
+                        emailSetState),
+                  )
+                : Container(),
+            CustomFlexRowColumn(
+              childLeft: _organizerText != "" && _organizerText != null
+                  ? customTextFormFieldNotValidator(
+                      context, _link!, StringConst.FORM_LINK, linkSetState)
+                  : Container(),
+              childRight: CheckboxListTile(
+                  title: Text(
+                    StringConst.FORM_TRUST,
+                    style: textTheme.bodyMedium?.copyWith(
+                      height: 1.5,
+                      color: AppColors.greyDark,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  value: _trust,
+                  onChanged: (bool? value) => setState(() => _trust = value!)),
+            ),
+          ]),
     );
   }
 
@@ -1028,7 +1069,8 @@ class _EditResourceState extends State<EditResource> {
     setState(() => _email = val!);
   }
 
-  void buildResourcePictureStreamBuilderSetState(ResourcePicture? resourcePicture) {
+  void buildResourcePictureStreamBuilderSetState(
+      ResourcePicture? resourcePicture) {
     setState(() {
       selectedResourcePicture = resourcePicture!;
     });
@@ -1039,7 +1081,8 @@ class _EditResourceState extends State<EditResource> {
     final selectedValues = await showDialog<Set<Interest>>(
       context: context,
       builder: (BuildContext context) {
-        return streamBuilderDropdownInterests(context, interests, selectedInterests, resource);
+        return streamBuilderDropdownInterests(
+            context, interests, selectedInterests, resource);
       },
     );
     getValuesFromKeyInterests(selectedValues);
@@ -1080,5 +1123,4 @@ class _EditResourceState extends State<EditResource> {
     Navigator.of(context).pop();
     return true;
   }
-
 }
