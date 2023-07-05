@@ -374,6 +374,7 @@ class _EditResourceState extends State<EditResource> {
                                             StringConst.CANCEL.toUpperCase(),
                                         width: contactBtnWidth,
                                         onPressed: onStepCancel,
+                                        padding: EdgeInsets.all(0.0),
                                       ),
                                     const SizedBox(
                                         width: Sizes.kDefaultPaddingDouble),
@@ -389,6 +390,7 @@ class _EditResourceState extends State<EditResource> {
                                             buttonColor: AppColors.primaryColor,
                                             titleColor: AppColors.white,
                                             onPressed: onStepContinue,
+                                            padding: EdgeInsets.all(4.0),
                                           ),
                                   ],
                                 ),
@@ -768,6 +770,7 @@ class _EditResourceState extends State<EditResource> {
               childLeft: DropdownButtonFormField<String>(
                 hint: const Text(StringConst.FORM_MODALITY),
                 value: _modality,
+                isExpanded: true,
                 items: <String>[
                   'Presencial',
                   'Semipresencial',
@@ -784,6 +787,7 @@ class _EditResourceState extends State<EditResource> {
                         height: 1.5,
                         color: AppColors.greyDark,
                         fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis
                       ),
                     ),
                   );

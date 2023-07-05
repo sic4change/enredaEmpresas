@@ -122,7 +122,8 @@ class _ParticipantsListTileState extends State<ParticipantsListTile> {
                               maxLines: 1,
                               style: textTheme.bodyLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.greyDark2),
+                                  color: AppColors.greyDark2,
+                              ),
                             ),
                           ),
                           const SpaceH4(),

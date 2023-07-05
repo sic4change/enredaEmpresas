@@ -343,26 +343,28 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${user!.firstName} ${user.lastName}',
-                      maxLines: 2,
-                      style: textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold, color: AppColors.chatDarkGray),
-                    ),
-                    const SizedBox(height: 8,),
-                    Text(
-                      '${user.educationName}'.toUpperCase(),
-                      maxLines: 2,
-                      style: textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold, color: AppColors.penBlue),
-                    ),
-                  ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, top: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${user!.firstName} ${user.lastName}',
+                        maxLines: 2,
+                        style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold, color: AppColors.chatDarkGray, overflow: TextOverflow.ellipsis),
+                      ),
+                      const SizedBox(height: 8,),
+                      Text(
+                        '${user.educationName}'.toUpperCase(),
+                        maxLines: 2,
+                        style: textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold, color: AppColors.penBlue, overflow: TextOverflow.ellipsis),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
