@@ -1,0 +1,13 @@
+{
+  "projects": {},
+  "targets": {
+    "enreda-d3b41": {
+      "hosting": {
+        "enredaempresas": [
+          "enreda-empresas"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
