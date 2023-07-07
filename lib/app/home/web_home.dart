@@ -70,7 +70,7 @@ class _WebHomeState extends State<WebHome> {
                         if (snapshot.hasData){
                           var user = snapshot.data!;
                           var profilePic = user.photo ?? "";
-                          if (user.role == 'Desempleado') {
+                          if (user.role != 'Organización') {
                             _unemployedSignOut(context);
                             return Container();
                           }
@@ -335,6 +335,7 @@ class SideBarWidget extends StatelessWidget {
 
 
 Future<void> _unemployedSignOut(BuildContext context) async {
+  String targetWeb = "";
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     final auth = Provider.of<AuthBase>(context, listen: false);
     final textTheme = Theme.of(context).textTheme;
@@ -357,7 +358,7 @@ Future<void> _unemployedSignOut(BuildContext context) async {
                     height: 30,
                   ),
                   const SpaceH20(),
-                  Text(StringConst.ARE_YOU_YOUNG,
+                  Text(StringConst.ARENT_YOU_ORGANIZATION,
                       style: textTheme.bodyText1?.copyWith(
                         color: AppColors.greyDark,
                         height: 1.5,
@@ -374,8 +375,24 @@ Future<void> _unemployedSignOut(BuildContext context) async {
               padding: const EdgeInsets.all(20.0),
               child: Center(
                 child: EnredaButton(
+                  width: 250.0,
                   buttonTitle: StringConst.GO_YOUNG_WEB,
                   onPressed: () {
+                    targetWeb = StringConst.WEB_APP_URL_ACCESS;
+                    auth.signOut();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
+              child: Center(
+                child: EnredaButton(
+                  width: 250.0,
+                  buttonTitle: StringConst.GO_MAIN_WEB,
+                  onPressed: () {
+                    targetWeb = StringConst.NEW_WEB_APP_URL;
                     auth.signOut();
                     Navigator.of(context).pop();
                   },
@@ -388,7 +405,7 @@ Future<void> _unemployedSignOut(BuildContext context) async {
     ).then((exit) {
       if (exit == null) {
         auth.signOut();
-        launchURL(StringConst.WEB_APP_URL_ACCESS);
+        launchURL(targetWeb);
       }
     });
   });

@@ -245,8 +245,10 @@ class StringConst {
   static const String ACCESS_FROM_BROWSER = 'Acceder desde el navegador';
   static const String ARE_YOU_ADMIN = '¿Eres organización, mentor o administrador?';
   static const String ARE_YOU_YOUNG = '¿Eres usuario joven?';
+  static const String ARENT_YOU_ORGANIZATION = '¿No eres usuario organización?';
   static const String GO_ADMIN_WEB = 'Ir a la web de administración';
   static const String GO_YOUNG_WEB = 'Ir a la web de jóvenes';
+  static const String GO_MAIN_WEB = 'Ir a la web principal';
 
   //Packages Names
   static const String ANDROID_PACKAGE_NAME = 'org.sic4change.enreda_app';
