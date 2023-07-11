@@ -277,6 +277,7 @@ class SideBarWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         hoverColor: AppColors.lightLilac,
+        hoverTextStyle: const TextStyle(color: AppColors.greyDark, fontWeight: FontWeight.w600),
         textStyle: const TextStyle(color: AppColors.penBlue, fontWeight: FontWeight.w800),
         selectedTextStyle: const TextStyle(color: AppColors.penBlue, fontWeight: FontWeight.w800),
         itemTextPadding: const EdgeInsets.only(left: 30),

@@ -9,7 +9,7 @@ class Experience {
     this.activity,
     this.activityRole,
     this.activityLevel,
-    this.professionActivities: const [],
+    this.professionActivities = const [],
     this.peopleAffected,
     this.organization,
     this.position,
