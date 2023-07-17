@@ -55,7 +55,7 @@ class _EditResourceState extends State<EditResource> {
   bool isLoading = false;
   int currentStep = 0;
 
-  bool _trust = true;
+  //bool _trust = true;
 
   String? _resourceId;
   String? _resourceTitle;
@@ -933,7 +933,7 @@ class _EditResourceState extends State<EditResource> {
                         emailSetState),
                   )
                 : Container(),
-            CustomFlexRowColumn(
+            /*CustomFlexRowColumn(
               childLeft: _organizerText != "" && _organizerText != null
                   ? customTextFormFieldNotValidator(
                       context, _link!, StringConst.FORM_LINK, linkSetState)
@@ -949,7 +949,7 @@ class _EditResourceState extends State<EditResource> {
                   ),
                   value: _trust,
                   onChanged: (bool? value) => setState(() => _trust = value!)),
-            ),
+            ),*/
           ]),
     );
   }

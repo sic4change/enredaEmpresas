@@ -28,7 +28,7 @@ Widget resourceRevisionForm(
     String promotor,
     String organizerText,
     String link,
-    bool trust,
+    //bool trust,
     String phone,
     String email,
     String resourcePictureName
@@ -87,8 +87,8 @@ Widget resourceRevisionForm(
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
       CustomExpandedRow(title: StringConst.FORM_RESOURCE_PICTURE, text: resourcePictureName),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
-      CustomExpandedRow(title: StringConst.FORM_TRUST, text: trust == true ? "Si" : "No"),
-      const SizedBox(height: Sizes.kDefaultPaddingDouble),
+      /*CustomExpandedRow(title: StringConst.FORM_TRUST, text: trust == true ? "Si" : "No"),
+      const SizedBox(height: Sizes.kDefaultPaddingDouble),*/
       Text(StringConst.FORM_ACCEPTANCE,
         style: textTheme.bodySmall?.copyWith(
           height: 1.5,

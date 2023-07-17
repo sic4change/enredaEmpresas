@@ -71,7 +71,7 @@ class _CreateResourceState extends State<CreateResource> {
 
   int currentStep = 0;
   bool _notExpire = false;
-  bool _trust = true;
+  //bool _trust = true;
 
   DateTime? _start;
   DateTime? _end;
@@ -409,7 +409,7 @@ class _CreateResourceState extends State<CreateResource> {
                 value: _notExpire,
                 onChanged: (bool? value) => setState(() => _notExpire = value!)),
             childRight: Container()),
-        _notExpire == true
+        !_notExpire
             ? Flex(
                 direction: Responsive.isMobile(context)
                     ? Axis.vertical
@@ -753,7 +753,7 @@ class _CreateResourceState extends State<CreateResource> {
                   StringConst.FORM_COMPANY_ERROR,
                   emailSetState),
             ) : Container(),
-            CustomFlexRowColumn(
+            /*CustomFlexRowColumn(
               childLeft: _organizerText != "" ? customTextFormFieldNotValidator(
                   context,
                   _link!,
@@ -771,7 +771,7 @@ class _CreateResourceState extends State<CreateResource> {
                   ),
                   value: _trust,
                   onChanged: (bool? value) => setState(() => _trust = value!)),
-            ),
+            ),*/
           ]),
     );
   }
@@ -803,7 +803,7 @@ class _CreateResourceState extends State<CreateResource> {
           organizationName,
           _organizerText!,
           _link!,
-          _trust,
+          //_trust,
           _phone!,
           _email!,
           resourcePictureName
