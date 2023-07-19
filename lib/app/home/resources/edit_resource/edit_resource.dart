@@ -108,21 +108,12 @@ class _EditResourceState extends State<EditResource> {
   int? resourceCategoryValue;
   String? organizationId;
 
-  TextEditingController textEditingControllerDateInput =
-      TextEditingController();
-  TextEditingController textEditingControllerDateEndInput =
-      TextEditingController();
-  TextEditingController textEditingControllerDateMaxInput =
-      TextEditingController();
   TextEditingController textEditingControllerInterests =
       TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    textEditingControllerDateInput.text = "";
-    textEditingControllerDateEndInput.text = "";
-    textEditingControllerDateMaxInput.text = "";
     selectedOrganization = widget.organizer;
   }
 
@@ -634,7 +625,7 @@ class _EditResourceState extends State<EditResource> {
                                       DateTime.now().month, DateTime.now().day),
                                 );
                               },
-                              onChanged: (dateTime) {
+                              onSaved: (dateTime) {
                                 setState(() {
                                   _start = dateTime;
                                 });
@@ -692,7 +683,7 @@ class _EditResourceState extends State<EditResource> {
                                       DateTime.now().month, DateTime.now().day),
                                 );
                               },
-                              onChanged: (dateTime) {
+                              onSaved: (dateTime) {
                                 setState(() {
                                   _end = dateTime;
                                 });
@@ -750,7 +741,7 @@ class _EditResourceState extends State<EditResource> {
                                       DateTime.now().month, DateTime.now().day),
                                 );
                               },
-                              onChanged: (dateTime) {
+                              onSaved: (dateTime) {
                                 setState(() {
                                   _max = dateTime;
                                 });
