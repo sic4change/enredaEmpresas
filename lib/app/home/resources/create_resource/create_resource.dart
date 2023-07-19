@@ -553,8 +553,8 @@ class _CreateResourceState extends State<CreateResource> {
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime(DateTime.now().year - 5, DateTime.now().month, DateTime.now().day),
-                              firstDate: DateTime(DateTime.now().year - 5, DateTime.now().month, DateTime.now().day),
+                              initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                              firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
                               lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
                             );
                             if (pickedDate != null) {
