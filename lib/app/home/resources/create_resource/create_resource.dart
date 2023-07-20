@@ -753,25 +753,23 @@ class _CreateResourceState extends State<CreateResource> {
                   StringConst.FORM_COMPANY_ERROR,
                   emailSetState),
             ) : Container(),
-            /*CustomFlexRowColumn(
-              childLeft: _organizerText != "" ? customTextFormFieldNotValidator(
+            CustomFlexRowColumn(
+              childLeft: _organizerText != "" ? customTextFormField(
                   context,
                   _link!,
                   StringConst.FORM_LINK,
+                  StringConst.FORM_COMPANY_ERROR,
                   linkSetState) : Container(),
-              childRight: CheckboxListTile(
-                  title: Text(
-                    StringConst.FORM_TRUST,
-                    style: textTheme.bodySmall?.copyWith(
-                      height: 1.5,
-                      color: AppColors.greyDark,
-                      fontWeight: FontWeight.w700,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  value: _trust,
-                  onChanged: (bool? value) => setState(() => _trust = value!)),
-            ),*/
+              childRight: Container(),
+            ),
+            CustomFlexRowColumn(
+              childLeft: _organizerText != "" ? Container() : customTextFormFieldNotValidator(
+                  context,
+                  _link!,
+                  StringConst.FORM_LINK,
+                  linkSetState),
+              childRight: Container(),
+            ),
           ]),
     );
   }
