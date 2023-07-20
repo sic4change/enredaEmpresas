@@ -54,7 +54,7 @@ class _EditResourceState extends State<EditResource> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   int currentStep = 0;
-
+  bool _modifiedOrganizer = false;
   //bool _trust = true;
 
   String? _resourceId;
@@ -138,8 +138,8 @@ class _EditResourceState extends State<EditResource> {
       resourceId: _resourceId,
       title: _resourceTitle!,
       description: _resourceDescription!,
-      resourceType: resourceTypeId,
-      resourceCategory: resourceCategoryId,
+      resourceType: selectedResourceType?.resourceTypeId,
+      resourceCategory: selectedResourceCategory?.id,
       interests: interests,
       duration: _duration!,
       temporality: _temporality,
@@ -245,16 +245,6 @@ class _EditResourceState extends State<EditResource> {
                     }
                     interestsNames = concatenate.toString();
                     return _buildContent(context);
-                    // return StreamBuilder<ResourcePicture>(
-                    //   stream: database.resourcePictureStream(_resourcePictureId),
-                    //     builder: (context, snapshot) {
-                    //       if (snapshot.hasData) {
-                    //         selectedResourcePicture = snapshot.data!;
-                    //         return _buildContent(context);
-                    //       }
-                    //       return Container();
-                    //     }
-                    // );
                   }
                   return Container();
                 });
@@ -900,6 +890,7 @@ class _EditResourceState extends State<EditResource> {
                 initialValue: _organizerText,
                 onChanged: (String? value) => setState(() {
                   _organizerText = value;
+                  _modifiedOrganizer = true;
                 }),
                 textCapitalization: TextCapitalization.sentences,
                 keyboardType: TextInputType.name,
@@ -908,7 +899,7 @@ class _EditResourceState extends State<EditResource> {
                 ),
               ),
             ),
-            _organizerText != "" && _organizerText != null
+            _modifiedOrganizer == true
                 ? CustomFlexRowColumn(
                     childLeft: customTextFormField(
                         context,
@@ -924,37 +915,33 @@ class _EditResourceState extends State<EditResource> {
                         emailSetState),
                   )
                 : Container(),
-            /*CustomFlexRowColumn(
-              childLeft: _organizerText != "" && _organizerText != null
-                  ? customTextFormFieldNotValidator(
-                      context, _link!, StringConst.FORM_LINK, linkSetState)
+            CustomFlexRowColumn(
+              childLeft: _modifiedOrganizer == true
+                  ? customTextFormField(
+                      context, _link!,
+                      StringConst.FORM_LINK,
+                      StringConst.FORM_COMPANY_ERROR,
+                      linkSetState)
                   : Container(),
-              childRight: CheckboxListTile(
-                  title: Text(
-                    StringConst.FORM_TRUST,
-                    style: textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                      color: AppColors.greyDark,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  value: _trust,
-                  onChanged: (bool? value) => setState(() => _trust = value!)),
-            ),*/
+              childRight: Container(),
+            ),
+            CustomFlexRowColumn(
+              childLeft: _modifiedOrganizer == false
+                  ? customTextFormFieldNotValidator(
+                  context, _link!, StringConst.FORM_LINK, linkSetState)
+                  : Container(),
+              childRight: Container(),
+            ),
           ]),
     );
   }
 
   void nameSetState(String? val) {
-    setState(() {
-      _resourceTitle = val!;
-    });
+    setState(() => _resourceTitle = val!);
   }
 
   void descriptionSetState(String? val) {
-    setState(() {
-      _resourceDescription = val!;
-    });
+    setState(() => _resourceDescription = val!);
   }
 
   void buildResourceTypeStreamBuilderSetState(ResourceType? resourceType) {
@@ -970,25 +957,18 @@ class _EditResourceState extends State<EditResource> {
       selectedResourceCategory = resourceCategory;
       resourceCategoryId = resourceCategory?.id;
     });
-    resourceCategoryValue = resourceCategory?.order;
   }
 
   void buildDegreeStreamBuilderSetState(String? degree) {
-    setState(() {
-      _degree = degree;
-    });
+    setState(() => _degree = degree);
   }
 
   void buildContractStreamBuilderSetState(String? contract) {
-    setState(() {
-      _contractType = contract;
-    });
+    setState(() => _contractType = contract);
   }
 
   void buildSalaryStreamBuilderSetState(String? salary) {
-    setState(() {
-      _salary = salary;
-    });
+    setState(() => _salary = salary);
   }
 
   void buildCountryStreamBuilderSetState(Country? country) {
@@ -1022,22 +1002,16 @@ class _EditResourceState extends State<EditResource> {
     });
   }
 
-  void buildModalityStreamBuilderSetState(String? modality) {
-    setState(() {
-      _modality = modality;
-    });
+  buildModalityStreamBuilderSetState(String? modality) {
+    setState(() => _modality = modality!);
   }
 
   void durationSetState(String? val) {
-    setState(() {
-      _duration = val!;
-    });
+    setState(() => _duration = val!);
   }
 
   void scheduleSetState(String? val) {
-    setState(() {
-      _temporality = val!;
-    });
+    setState(() => _temporality = val!);
   }
 
   void placeSetState(String? val) {
