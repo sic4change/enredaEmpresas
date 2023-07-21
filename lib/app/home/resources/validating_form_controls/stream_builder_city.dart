@@ -39,6 +39,7 @@ Widget streamBuilderForCity (BuildContext context, String? selectedCountryId, St
           validator: (value) =>
               selectedCity != null ? null : StringConst.CITY_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
+          onSaved: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
           decoration: InputDecoration(

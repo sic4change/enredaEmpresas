@@ -37,6 +37,7 @@ Widget streamBuilderDropdownResourceCategory (BuildContext context, ResourceCate
           items: resourceCategoryItems,
           validator: (value) => selectedResourceCategory != null ? null : StringConst.FORM_MOTIVATION_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
+          onSaved: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
           decoration: InputDecoration(
