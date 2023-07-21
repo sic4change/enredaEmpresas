@@ -38,6 +38,7 @@ Widget streamBuilderDropdownResourceType (BuildContext context, ResourceType? se
           items: resourceTypeItems,
           validator: (value) => selectedResourceType != null ? null : StringConst.FORM_RESOURCE_TYPE_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
+          onSaved: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
           decoration: InputDecoration(

@@ -39,6 +39,7 @@ Widget streamBuilderForProvince (BuildContext context, String? selectedCountryId
           validator: (value) => selectedProvince != null ?
           null : StringConst.PROVINCE_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
+          onSaved: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
           decoration: InputDecoration(

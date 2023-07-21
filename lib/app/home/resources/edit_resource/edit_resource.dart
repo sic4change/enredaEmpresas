@@ -126,70 +126,6 @@ class _EditResourceState extends State<EditResource> {
     return false;
   }
 
-  Future<void> _submit() async {
-    final address = Address(
-      country: _countryId,
-      province: _provinceId,
-      city: _cityId,
-      place: _place,
-    );
-
-    final newResource = Resource(
-      resourceId: _resourceId,
-      title: _resourceTitle!,
-      description: _resourceDescription!,
-      resourceType: selectedResourceType?.resourceTypeId,
-      resourceCategory: selectedResourceCategory?.id,
-      interests: interests,
-      duration: _duration!,
-      temporality: _temporality,
-      notExpire: _notExpire,
-      start: _start!,
-      end: _end!,
-      maximumDate: _max!,
-      modality: _modality!,
-      address: address,
-      capacity: _capacity,
-      organizer: _organizer!,
-      promotor: _organizerText,
-      link: _link,
-      contactEmail: _email,
-      contactPhone: _phone,
-      contractType: _contractType,
-      salary: _salary,
-      degree: _degree,
-      resourcePictureId:
-          selectedResourcePicture?.id ?? resource.resourcePictureId,
-      createdate: _createdate!,
-      resourceLink: _resourceLink,
-      organizerType: _organizerType,
-      participants: _participants,
-      assistants: _assistants,
-      status: _status,
-      street: _street,
-    );
-    try {
-      final database = Provider.of<Database>(context, listen: false);
-      setState(() => isLoading = true);
-      await database.setResource(newResource);
-      setState(() => isLoading = false);
-      showAlertDialog(
-        context,
-        title: StringConst.FORM_SUCCESS,
-        content: StringConst.FORM_SUCCESS_UPDATED,
-        defaultActionText: StringConst.FORM_ACCEPT,
-      ).then(
-        (value) {
-          Navigator.of(context).pop();
-          return true;
-        },
-      );
-    } on FirebaseException catch (e) {
-      showExceptionAlertDialog(context,
-              title: StringConst.FORM_ERROR, exception: e)
-          .then((value) => Navigator.pop(context));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -252,6 +188,8 @@ class _EditResourceState extends State<EditResource> {
             return Container();
           }
         });
+
+
   }
 
   Widget _buildContent(BuildContext context) {
@@ -776,6 +714,7 @@ class _EditResourceState extends State<EditResource> {
                 validator: (value) =>
                     _modality != null ? null : StringConst.FORM_COMPANY_ERROR,
                 onChanged: (value) => buildModalityStreamBuilderSetState(value),
+                onSaved: (value) => buildModalityStreamBuilderSetState(value),
                 iconDisabledColor: AppColors.greyDark,
                 iconEnabledColor: AppColors.primaryColor,
                 decoration: InputDecoration(
@@ -947,16 +886,16 @@ class _EditResourceState extends State<EditResource> {
   void buildResourceTypeStreamBuilderSetState(ResourceType? resourceType) {
     setState(() {
       selectedResourceType = resourceType;
-      resourceTypeId = resourceType?.resourceTypeId;
     });
+    resourceTypeId = resourceType?.resourceTypeId;
   }
 
   void buildResourceCategoryStreamBuilderSetState(
       ResourceCategory? resourceCategory) {
     setState(() {
       selectedResourceCategory = resourceCategory;
-      resourceCategoryId = resourceCategory?.id;
     });
+    resourceCategoryId = resourceCategory?.id;
   }
 
   void buildDegreeStreamBuilderSetState(String? degree) {
@@ -1091,5 +1030,69 @@ class _EditResourceState extends State<EditResource> {
   onStepCancel() {
     Navigator.of(context).pop();
     return true;
+  }
+
+  Future<void> _submit() async {
+    final address = Address(
+      country: _countryId,
+      province: _provinceId,
+      city: _cityId,
+      place: _place,
+    );
+    final newResource = Resource(
+      resourceId: _resourceId,
+      title: _resourceTitle!,
+      description: _resourceDescription!,
+      resourceType: resourceTypeId,
+      resourceCategory: resourceCategoryId,
+      interests: interests,
+      duration: _duration!,
+      temporality: _temporality,
+      notExpire: _notExpire,
+      start: _start!,
+      end: _end!,
+      maximumDate: _max!,
+      modality: _modality!,
+      address: address,
+      capacity: _capacity,
+      organizer: _organizer!,
+      promotor: _organizerText,
+      link: _link,
+      contactEmail: _email,
+      contactPhone: _phone,
+      contractType: _contractType,
+      salary: _salary,
+      degree: _degree,
+      resourcePictureId:
+      selectedResourcePicture?.id ?? resource.resourcePictureId,
+      createdate: _createdate!,
+      resourceLink: _resourceLink,
+      organizerType: _organizerType,
+      participants: _participants,
+      assistants: _assistants,
+      status: _status,
+      street: _street,
+    );
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      setState(() => isLoading = true);
+      await database.setResource(newResource);
+      setState(() => isLoading = false);
+      showAlertDialog(
+        context,
+        title: StringConst.FORM_SUCCESS,
+        content: StringConst.FORM_SUCCESS_UPDATED,
+        defaultActionText: StringConst.FORM_ACCEPT,
+      ).then(
+            (value) {
+          Navigator.of(context).pop();
+          return true;
+        },
+      );
+    } on FirebaseException catch (e) {
+      showExceptionAlertDialog(context,
+          title: StringConst.FORM_ERROR, exception: e)
+          .then((value) => Navigator.pop(context));
+    }
   }
 }

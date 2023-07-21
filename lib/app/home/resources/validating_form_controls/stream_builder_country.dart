@@ -35,6 +35,7 @@ Widget streamBuilderForCountry (BuildContext context, Country? selectedCountry, 
           items: countryItems,
           validator: (value) => selectedCountry != null ? null : StringConst.COUNTRY_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
+          onSaved: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,
           decoration: InputDecoration(
