@@ -38,11 +38,22 @@ const double contactBtnWidthSm = 100.0;
 const double contactBtnWidthMd = 140.0;
 
 class EditResource extends StatefulWidget {
-  const EditResource(
-      {Key? key, required this.resourceId, required this.organizer})
+  EditResource(
+      {Key? key,
+        required this.resource,
+        required this.organizer,
+        required this.resourceId,
+        required this.interestsNames,
+        required this.selectedInterests,
+        required this.initialInterests,
+      })
       : super(key: key);
+  final Resource resource;
   final String resourceId;
+  final String interestsNames;
+  final Set<Interest> selectedInterests;
   final Organization organizer;
+  final List<String> initialInterests;
 
   @override
   State<EditResource> createState() => _EditResourceState();
@@ -50,13 +61,9 @@ class EditResource extends StatefulWidget {
 
 class _EditResourceState extends State<EditResource> {
   late Resource resource;
-
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   int currentStep = 0;
-  bool _modifiedOrganizer = false;
-  //bool _trust = true;
-
   String? _resourceId;
   String? _resourceTitle;
   String? _resourceDescription;
@@ -80,8 +87,8 @@ class _EditResourceState extends State<EditResource> {
   String? _countryId;
   String? _provinceId;
   String? _cityId;
-  String? resourceTypeId;
-  String? resourceCategoryId;
+  String? _resourceTypeId;
+  String? _resourceCategoryId;
   DateTime? _start;
   DateTime? _end;
   DateTime? _max;
@@ -90,11 +97,12 @@ class _EditResourceState extends State<EditResource> {
   String? _resourcePictureId;
   String? _assistants;
   String? _status;
-  String? interestsNames;
+  String? interestsNamesString;
 
   List<String> interests = [];
+  List<String> _interests = [];
   List<String> _participants = [];
-  Set<Interest> selectedInterests = {};
+  Set<Interest> selectedInterestsSet = {};
   ResourceCategory? selectedResourceCategory;
   ResourcePicture? selectedResourcePicture;
   Organization? selectedOrganization;
@@ -104,17 +112,54 @@ class _EditResourceState extends State<EditResource> {
   Province? selectedProvince;
   City? selectedCity;
 
-  String? _interestId;
   int? resourceCategoryValue;
   String? organizationId;
 
-  TextEditingController textEditingControllerInterests =
-      TextEditingController();
+  TextEditingController? textEditingControllerInterests;
 
   @override
   void initState() {
     super.initState();
+    resource = widget.resource;
+    _resourceId = widget.resource.resourceId;
+    _interests = widget.resource.interests ?? [];
+    _resourceTitle = widget.resource.title;
+    _duration = widget.resource.duration ?? '';
+    _temporality = widget.resource.temporality ?? '';
+    _resourceDescription = widget.resource.description;
+    _modality = widget.resource.modality;
+    _start = widget.resource.start ?? DateTime.now();
+    _end = widget.resource.end ?? DateTime.now();
+    _max = widget.resource.maximumDate ?? DateTime.now();
+    _resourceTypeId = widget.resource.resourceType ?? '';
+    _resourceCategoryId = widget.resource.resourceCategory ?? '';
+    _contractType = widget.resource.contractType ?? '';
+    _salary = widget.resource.salary ?? '';
+    _degree = widget.resource.degree ?? '';
+    _place = widget.resource.address?.place ?? '';
+    _street = widget.resource.street ?? '';
+    _capacity = widget.resource.capacity ?? 0;
+    _countryId = widget.resource.address?.country ?? '';
+    _provinceId = widget.resource.address?.province ?? '';
+    _provinceId = widget.resource.address?.province ?? '';
+    _cityId = widget.resource.address?.city ?? '';
+    _organizerText = widget.resource.promotor ?? '';
+    _link = widget.resource.link ?? '';
+    _phone = widget.resource.contactPhone ?? '';
+    _email = widget.resource.contactEmail ?? '';
+    _resourcePictureId = widget.resource.resourcePictureId ?? '';
+    _notExpire = widget.resource.notExpire ?? false;
+    _createdate = widget.resource.createdate;
+    _organizer = widget.resource.organizer;
+    _organizerType = widget.resource.organizerType ?? '';
+    _resourceLink = widget.resource.resourceLink ?? '';
+    _participants = widget.resource.participants ?? [];
+    _assistants = widget.resource.assistants ?? '';
+    _status = widget.resource.status ?? '';
+    interestsNamesString = widget.interestsNames;
+    selectedInterestsSet = widget.selectedInterests;
     selectedOrganization = widget.organizer;
+    textEditingControllerInterests = TextEditingController(text: widget.interestsNames);
   }
 
   bool _validateAndSaveForm() {
@@ -126,70 +171,9 @@ class _EditResourceState extends State<EditResource> {
     return false;
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder<Resource>(
-        stream: database.resourceStream(widget.resourceId),
-        builder: (context, snapshotResource) {
-          if (snapshotResource.hasData) {
-            resource = snapshotResource.data!;
-            _resourceId = resource.resourceId;
-            _resourceTitle = resource.title;
-            _duration = resource.duration ?? '';
-            _temporality = resource.temporality ?? '';
-            _resourceDescription = resource.description;
-            _modality = resource.modality;
-            _start = resource.start ?? DateTime.now();
-            _end = resource.end ?? DateTime.now();
-            _max = resource.maximumDate ?? DateTime.now();
-            resourceTypeId = resource.resourceType ?? '';
-            resourceCategoryId = resource.resourceCategory ?? '';
-            interests = resource.interests ?? [];
-            _contractType = resource.contractType ?? '';
-            _salary = resource.salary ?? '';
-            _degree = resource.degree ?? '';
-            _place = resource.address?.place ?? '';
-            _street = resource.street ?? '';
-            _capacity = resource.capacity ?? 0;
-            _countryId = resource.address?.country ?? '';
-            _provinceId = resource.address?.province ?? '';
-            _cityId = resource.address?.city ?? '';
-            _organizerText = resource.promotor ?? '';
-            _link = resource.link ?? '';
-            _phone = resource.contactPhone ?? '';
-            _email = resource.contactEmail ?? '';
-            _resourcePictureId = resource.resourcePictureId ?? '';
-            _notExpire = resource.notExpire ?? false;
-            _createdate = resource.createdate;
-            _organizer = resource.organizer;
-            _organizerType = resource.organizerType ?? '';
-            _resourceLink = resource.resourceLink ?? '';
-            _participants = resource.participants ?? [];
-            _assistants = resource.assistants ?? '';
-            _status = resource.status ?? '';
-
-            return StreamBuilder<List<Interest>>(
-                stream: database.resourcesInterestsStream(interests),
-                builder: (context, snapshotInterest) {
-                  if (snapshotInterest.hasData) {
-                    selectedInterests = snapshotInterest.data!.toSet();
-                    var concatenate = StringBuffer();
-                    for (var item in selectedInterests) {
-                      concatenate.write('${item.name} / ');
-                    }
-                    interestsNames = concatenate.toString();
-                    return _buildContent(context);
-                  }
-                  return Container();
-                });
-          } else {
-            return Container();
-          }
-        });
-
-
+    return _buildContent(context);
   }
 
   Widget _buildContent(BuildContext context) {
@@ -362,7 +346,7 @@ class _EditResourceState extends State<EditResource> {
                   resource),
             ),
             CustomFlexRowColumn(
-              childLeft: resourceTypeId == "N9KdlBYmxUp82gOv8oJC"
+              childLeft: _resourceTypeId == "N9KdlBYmxUp82gOv8oJC"
                   ? DropdownButtonFormField<String>(
                       hint: const Text(StringConst.FORM_DEGREE),
                       value: _degree == "" ? null : _degree,
@@ -417,8 +401,8 @@ class _EditResourceState extends State<EditResource> {
               childRight: Container(),
             ),
             CustomFlexRowColumn(
-              childLeft: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
-                      resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
+              childLeft: _resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
+                      _resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
                   ? customTextFormField(
                       context,
                       _contractType!,
@@ -426,8 +410,8 @@ class _EditResourceState extends State<EditResource> {
                       StringConst.FORM_COMPANY_ERROR,
                       buildContractStreamBuilderSetState)
                   : Container(),
-              childRight: resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
-                      resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
+              childRight: _resourceTypeId == "kUM5r4lSikIPLMZlQ7FD" ||
+                      _resourceTypeId == "QBTbYYx9EUwNtKB68Xfz"
                   ? customTextFormField(
                       context,
                       _salary!,
@@ -458,11 +442,11 @@ class _EditResourceState extends State<EditResource> {
                     ),
                   ),
                 ),
-                initialValue: interestsNames,
+                //initialValue: interestsNamesString,
+                controller: textEditingControllerInterests,
                 onTap: () => {_showMultiSelectInterests(context)},
                 validator: (value) =>
                     value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
-                onSaved: (value) => value = _interestId,
                 readOnly: true,
                 style: textTheme.bodyMedium?.copyWith(
                   height: 1.5,
@@ -829,7 +813,6 @@ class _EditResourceState extends State<EditResource> {
                 initialValue: _organizerText,
                 onChanged: (String? value) => setState(() {
                   _organizerText = value;
-                  _modifiedOrganizer = true;
                 }),
                 textCapitalization: TextCapitalization.sentences,
                 keyboardType: TextInputType.name,
@@ -838,7 +821,7 @@ class _EditResourceState extends State<EditResource> {
                 ),
               ),
             ),
-            _modifiedOrganizer == true
+            _organizerText != ""
                 ? CustomFlexRowColumn(
                     childLeft: customTextFormField(
                         context,
@@ -855,7 +838,7 @@ class _EditResourceState extends State<EditResource> {
                   )
                 : Container(),
             CustomFlexRowColumn(
-              childLeft: _modifiedOrganizer == true
+              childLeft:  _organizerText != ""
                   ? customTextFormField(
                       context, _link!,
                       StringConst.FORM_LINK,
@@ -865,10 +848,10 @@ class _EditResourceState extends State<EditResource> {
               childRight: Container(),
             ),
             CustomFlexRowColumn(
-              childLeft: _modifiedOrganizer == false
-                  ? customTextFormFieldNotValidator(
-                  context, _link!, StringConst.FORM_LINK, linkSetState)
-                  : Container(),
+              childLeft:  _organizerText != ""
+                  ? Container()
+                  : customTextFormFieldNotValidator(
+                      context, _link!, StringConst.FORM_LINK, linkSetState),
               childRight: Container(),
             ),
           ]),
@@ -887,7 +870,7 @@ class _EditResourceState extends State<EditResource> {
     setState(() {
       selectedResourceType = resourceType;
     });
-    resourceTypeId = resourceType?.resourceTypeId;
+    _resourceTypeId = resourceType?.resourceTypeId;
   }
 
   void buildResourceCategoryStreamBuilderSetState(
@@ -895,7 +878,7 @@ class _EditResourceState extends State<EditResource> {
     setState(() {
       selectedResourceCategory = resourceCategory;
     });
-    resourceCategoryId = resourceCategory?.id;
+    _resourceCategoryId = resourceCategory?.id;
   }
 
   void buildDegreeStreamBuilderSetState(String? degree) {
@@ -990,7 +973,7 @@ class _EditResourceState extends State<EditResource> {
       context: context,
       builder: (BuildContext context) {
         return streamBuilderDropdownInterests(
-            context, interests, selectedInterests, resource);
+            context, widget.initialInterests, selectedInterestsSet, resource);
       },
     );
     getValuesFromKeyInterests(selectedValues);
@@ -1004,10 +987,10 @@ class _EditResourceState extends State<EditResource> {
       interestsIds.add(item.interestId);
     });
     setState(() {
-      interestsNames = concatenate.toString();
-      textEditingControllerInterests.text = concatenate.toString();
-      interests = interestsIds;
-      selectedInterests = selectedValues;
+      interestsNamesString = concatenate.toString();
+      textEditingControllerInterests?.text = concatenate.toString();
+      _interests = interestsIds;
+      selectedInterestsSet = selectedValues;
     });
   }
 
@@ -1043,9 +1026,9 @@ class _EditResourceState extends State<EditResource> {
       resourceId: _resourceId,
       title: _resourceTitle!,
       description: _resourceDescription!,
-      resourceType: resourceTypeId,
-      resourceCategory: resourceCategoryId,
-      interests: interests,
+      resourceType: _resourceTypeId,
+      resourceCategory: _resourceCategoryId,
+      interests: _interests,
       duration: _duration!,
       temporality: _temporality,
       notExpire: _notExpire,
@@ -1063,8 +1046,7 @@ class _EditResourceState extends State<EditResource> {
       contractType: _contractType,
       salary: _salary,
       degree: _degree,
-      resourcePictureId:
-      selectedResourcePicture?.id ?? resource.resourcePictureId,
+      resourcePictureId: selectedResourcePicture?.id ?? resource.resourcePictureId,
       createdate: _createdate!,
       resourceLink: _resourceLink,
       organizerType: _organizerType,

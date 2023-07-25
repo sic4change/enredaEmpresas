@@ -12,6 +12,7 @@ import 'package:enreda_empresas/app/home/resources/resource_interests_stream.dar
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
+import 'package:enreda_empresas/app/models/interest.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
@@ -161,82 +162,89 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                       snapshot: snapshot,
                       fitSmallerLayout: false,
                       itemBuilder: (context, resource) {
-                        return StreamBuilder<Organization>(
-                          stream: database.organizationStream(resource.organizer),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
-                            final organization = snapshot.data;
-                            organizer = organization;
-                            organizationId = organization?.organizationId;
-                            resource.organizerName =
-                            organization == null ? '' : organization.name;
-                            resource.organizerImage =
-                            organization == null ? '' : organization.photo;
-                            organization?.address?.country ?? "";
-                            organization?.address?.province ?? "";
-                            organization?.address?.city ?? "";
-                            resource.province ?? "";
-                            resource.city ?? "";
-                            resource.country ?? "";
-                            resource.province ?? "";
-                            resource.city ?? "";
-                            resource.setResourceTypeName();
-                            resource.setResourceCategoryName();
-                            return StreamBuilder<Country>(
-                                stream: database.countryStream(resource.country),
-                                builder: (context, snapshot) {
-                                  final country = snapshot.data;
-                                  resource.countryName =
-                                  country == null ? '' : country.name;
-                                  return StreamBuilder<Province>(
-                                    stream: database.provinceStream(resource.province),
-                                    builder: (context, snapshot) {
-                                      final province = snapshot.data;
-                                      resource.provinceName =
-                                      province == null ? '' : province.name;
-                                      return StreamBuilder<City>(
-                                          stream: database
-                                              .cityStream(resource.city),
-                                          builder: (context, snapshot) {
-                                            final city = snapshot.data;
-                                            resource.cityName =
-                                            city == null ? '' : city.name;
-                                            return StreamBuilder<
-                                                ResourcePicture>(
-                                                stream: database
-                                                    .resourcePictureStream(
-                                                    resource
-                                                        .resourcePictureId),
-                                                builder: (context,
-                                                    snapshot) {
-                                                  final resourcePicture =
-                                                      snapshot.data;
-                                                  resource.resourcePhoto =
-                                                      resourcePicture
-                                                          ?.resourcePhoto;
-                                                  return Container(
-                                                    key: Key(
-                                                        'resource-${resource
-                                                            .resourceId}'),
-                                                    child: ResourceListTile(
-                                                      resource: resource,
-                                                      onTap: () =>
-                                                          setState(() {
-                                                            _currentPage =
-                                                                _buildResourcePage(context, resource);
-                                                          }),
-                                                    ),
-                                                  );
-                                                });
-                                          });
-                                    },
-                                  );
-                                });
-                          },
-                        );
+                        if (!snapshot.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasData) {
+                          return StreamBuilder<Organization>(
+                            stream: database.organizationStream(resource.organizer),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              final organization = snapshot.data;
+                              organizer = organization;
+                              organizationId = organization?.organizationId;
+                              resource.organizerName =
+                              organization == null ? '' : organization.name;
+                              resource.organizerImage =
+                              organization == null ? '' : organization.photo;
+                              organization?.address?.country ?? "";
+                              organization?.address?.province ?? "";
+                              organization?.address?.city ?? "";
+                              resource.province ?? "";
+                              resource.city ?? "";
+                              resource.country ?? "";
+                              resource.province ?? "";
+                              resource.city ?? "";
+                              resource.setResourceTypeName();
+                              resource.setResourceCategoryName();
+                              return StreamBuilder<Country>(
+                                  stream: database.countryStream(resource.country),
+                                  builder: (context, snapshot) {
+                                    final country = snapshot.data;
+                                    resource.countryName =
+                                    country == null ? '' : country.name;
+                                    return StreamBuilder<Province>(
+                                      stream: database.provinceStream(resource.province),
+                                      builder: (context, snapshot) {
+                                        final province = snapshot.data;
+                                        resource.provinceName =
+                                        province == null ? '' : province.name;
+                                        return StreamBuilder<City>(
+                                            stream: database
+                                                .cityStream(resource.city),
+                                            builder: (context, snapshot) {
+                                              final city = snapshot.data;
+                                              resource.cityName =
+                                              city == null ? '' : city.name;
+                                              return StreamBuilder<
+                                                  ResourcePicture>(
+                                                  stream: database
+                                                      .resourcePictureStream(
+                                                      resource
+                                                          .resourcePictureId),
+                                                  builder: (context,
+                                                      snapshot) {
+                                                    final resourcePicture =
+                                                        snapshot.data;
+                                                    resource.resourcePhoto =
+                                                        resourcePicture
+                                                            ?.resourcePhoto;
+                                                    return Container(
+                                                      key: Key(
+                                                          'resource-${resource
+                                                              .resourceId}'),
+                                                      child: ResourceListTile(
+                                                        resource: resource,
+                                                        onTap: () =>
+                                                            setState(() {
+                                                              _currentPage =
+                                                                  _buildResourcePage(context, resource);
+                                                            }),
+                                                      ),
+                                                    );
+                                                  });
+                                            });
+                                      },
+                                    );
+                                  });
+                            },
+                          );
+                        }
+                        return const Center(child: CircularProgressIndicator());
                       },
                       emptyTitle: 'Sin recursos',
                       emptyMessage: 'Aún no has creado ningún recurso',
@@ -253,6 +261,9 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
+    List<String> interestsLocal = [];
+    Set<Interest> selectedInterests = {};
+    String? interestsNames;
     final database = Provider.of<Database>(context, listen: false);
     return StreamBuilder<Resource>(
         stream: database.resourceStream(resource.resourceId),
@@ -283,6 +294,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                 organization == null ? '' : organization.name;
                 resource.organizerImage =
                 organization == null ? '' : organization.photo;
+                interestsLocal = resource.interests ?? [];
                 resource.setResourceTypeName();
                 resource.setResourceCategoryName();
                 return StreamBuilder<Country>(
@@ -303,216 +315,236 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                               builder: (context, snapshot) {
                                 final city = snapshot.data;
                                 resource.cityName = city == null ? '' : city.name;
-                                return SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.arrow_back,
-                                          color: Colors.grey,
-                                        ),
-                                        onPressed: () => setState(() {
-                                          _currentPage = _buildResourcesList(context);
-                                        }),
-                                      ),
-                                      Flex(
-                                        direction: Responsive.isMobile(context) ||
-                                            Responsive.isTablet(context) ||
-                                            Responsive.isDesktopS(context)
-                                            ? Axis.vertical
-                                            : Axis.horizontal,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                              flex: Responsive.isMobile(context) ||
-                                                  Responsive.isTablet(context) ||
-                                                  Responsive.isDesktopS(context)
-                                                  ? 0
-                                                  : 6,
-                                              child: Stack(
+                                return StreamBuilder<List<Interest>>(
+                                    stream: database.resourcesInterestsStream(interestsLocal),
+                                    builder: (context, snapshotInterest) {
+                                      if (snapshotInterest.hasData) {
+                                        selectedInterests = snapshotInterest.data!.toSet();
+                                        var concatenate = StringBuffer();
+                                        for (var item in selectedInterests) {
+                                          concatenate.write('${item.name} / ');
+                                        }
+                                        interestsNames = concatenate.toString();
+                                        return SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.arrow_back,
+                                                  color: Colors.grey,
+                                                ),
+                                                onPressed: () => setState(() {
+                                                  _currentPage = _buildResourcesList(context);
+                                                }),
+                                              ),
+                                              Flex(
+                                                direction: Responsive.isMobile(context) ||
+                                                    Responsive.isTablet(context) ||
+                                                    Responsive.isDesktopS(context)
+                                                    ? Axis.vertical
+                                                    : Axis.horizontal,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 40.0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        shape: BoxShape.rectangle,
-                                                        border: Border.all(
-                                                            color: AppColors.greyLight2.withOpacity(0.2),
-                                                            width: 1),
-                                                        borderRadius: BorderRadius.circular(Consts.padding),
-                                                      ),
-                                                      child: Column(
+                                                  Expanded(
+                                                      flex: Responsive.isMobile(context) ||
+                                                          Responsive.isTablet(context) ||
+                                                          Responsive.isDesktopS(context)
+                                                          ? 0
+                                                          : 6,
+                                                      child: Stack(
                                                         children: [
-                                                          Responsive.isMobile(context)
-                                                              ? const SpaceH20()
-                                                              : const SpaceH60(),
                                                           Padding(
-                                                            padding: const EdgeInsets.only(
-                                                                right: 30.0, left: 30.0),
-                                                            child: Text(
-                                                              resource.title,
-                                                              textAlign: TextAlign.center,
-                                                              maxLines:
-                                                              Responsive.isMobile(context) ? 2 : 1,
-                                                              style: textTheme.bodySmall?.copyWith(
-                                                                letterSpacing: 1.2,
-                                                                color: AppColors.greyTxtAlt,
-                                                                height: 1.5,
-                                                                fontWeight: FontWeight.w300,
-                                                                fontSize: fontSizeTitle,
+                                                            padding: const EdgeInsets.symmetric(vertical: 40.0),
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.white,
+                                                                shape: BoxShape.rectangle,
+                                                                border: Border.all(
+                                                                    color: AppColors.greyLight2.withOpacity(0.2),
+                                                                    width: 1),
+                                                                borderRadius: BorderRadius.circular(Consts.padding),
+                                                              ),
+                                                              child: Column(
+                                                                children: [
+                                                                  Responsive.isMobile(context)
+                                                                      ? const SpaceH20()
+                                                                      : const SpaceH60(),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.only(
+                                                                        right: 30.0, left: 30.0),
+                                                                    child: Text(
+                                                                      resource.title,
+                                                                      textAlign: TextAlign.center,
+                                                                      maxLines:
+                                                                      Responsive.isMobile(context) ? 2 : 1,
+                                                                      style: textTheme.bodySmall?.copyWith(
+                                                                        letterSpacing: 1.2,
+                                                                        color: AppColors.greyTxtAlt,
+                                                                        height: 1.5,
+                                                                        fontWeight: FontWeight.w300,
+                                                                        fontSize: fontSizeTitle,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  const SpaceH4(),
+                                                                  Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    children: [
+                                                                      Text(
+                                                                        resource.promotor != null
+                                                                            ? resource.promotor != ""
+                                                                            ? resource.promotor!
+                                                                            : resource.organizerName!
+                                                                            : resource.organizerName!,
+                                                                        maxLines: 1,
+                                                                        overflow: TextOverflow.ellipsis,
+                                                                        style: TextStyle(
+                                                                          letterSpacing: 1.2,
+                                                                          fontSize: fontSizePromotor,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: AppColors.penBlue,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const Padding(
+                                                                    padding: EdgeInsets.all(10.0),
+                                                                    child: Divider(
+                                                                      color: AppColors.grey150,
+                                                                      thickness: 1,
+                                                                    ),
+                                                                  ),
+                                                                  Flex(
+                                                                    direction: Responsive.isMobile(context) ||
+                                                                        Responsive.isTablet(context) ||
+                                                                        Responsive.isDesktopS(context)
+                                                                        ? Axis.vertical
+                                                                        : Axis.horizontal,
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Expanded(
+                                                                          flex: Responsive.isMobile(context) ||
+                                                                              Responsive.isTablet(context) ||
+                                                                              Responsive.isDesktopS(context)
+                                                                              ? 0
+                                                                              : 4,
+                                                                          child: _buildDetailResource(
+                                                                              context, resource)),
+                                                                      SizedBox(
+                                                                        height: 600,
+                                                                        child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Expanded(
+                                                                                flex:
+                                                                                Responsive.isMobile(context) || Responsive.isTablet(context) ||
+                                                                                    Responsive.isDesktopS(context) ? 0 : 2,
+                                                                                child: _buildDetailCard(context, resource)),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
                                                           ),
-                                                          const SpaceH4(),
-                                                          Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              Text(
-                                                                resource.promotor != null
-                                                                    ? resource.promotor != ""
-                                                                    ? resource.promotor!
-                                                                    : resource.organizerName!
-                                                                    : resource.organizerName!,
-                                                                maxLines: 1,
-                                                                overflow: TextOverflow.ellipsis,
-                                                                style: TextStyle(
-                                                                  letterSpacing: 1.2,
-                                                                  fontSize: fontSizePromotor,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  color: AppColors.penBlue,
-                                                                ),
+                                                          resource.organizerImage == null ||
+                                                              resource.organizerImage!.isEmpty
+                                                              ? Container()
+                                                              : Align(
+                                                            alignment: Alignment.topCenter,
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                  border: Border.all(
+                                                                      width: 1.0, color: AppColors.greyLight),
+                                                                  borderRadius: BorderRadius.circular(
+                                                                    100,
+                                                                  ),
+                                                                  color: AppColors.greyLight),
+                                                              child: CircleAvatar(
+                                                                radius:
+                                                                Responsive.isMobile(context) ? 28 : 40,
+                                                                backgroundColor: AppColors.white,
+                                                                backgroundImage:
+                                                                NetworkImage(resource.organizerImage!),
                                                               ),
-                                                            ],
-                                                          ),
-                                                          const Padding(
-                                                            padding: EdgeInsets.all(10.0),
-                                                            child: Divider(
-                                                              color: AppColors.grey150,
-                                                              thickness: 1,
                                                             ),
                                                           ),
-                                                          Flex(
-                                                            direction: Responsive.isMobile(context) ||
-                                                                Responsive.isTablet(context) ||
-                                                                Responsive.isDesktopS(context)
-                                                                ? Axis.vertical
-                                                                : Axis.horizontal,
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Expanded(
-                                                                  flex: Responsive.isMobile(context) ||
-                                                                      Responsive.isTablet(context) ||
-                                                                      Responsive.isDesktopS(context)
-                                                                      ? 0
-                                                                      : 4,
-                                                                  child: _buildDetailResource(
-                                                                      context, resource)),
-                                                              SizedBox(
-                                                                height: 600,
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Expanded(
-                                                                        flex:
-                                                                        Responsive.isMobile(context) || Responsive.isTablet(context) ||
-                                                                            Responsive.isDesktopS(context) ? 0 : 2,
-                                                                        child: _buildDetailCard(context, resource)),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
+                                                          Positioned(
+                                                            right: 0,
+                                                            child: IconButton(
+                                                              iconSize: 40,
+                                                              icon: Image.asset(ImagePath.DELETE_RESOURCE),
+                                                              onPressed: () => _confirmDeleteResource(context, resource),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            right: 50,
+                                                            child: IconButton(
+                                                              iconSize: 40,
+                                                              icon: Image.asset(ImagePath.EDIT_RESOURCE),
+                                                              onPressed: () => {
+                                                                Navigator.of(context).push(
+                                                                  MaterialPageRoute<void>(
+                                                                    fullscreenDialog: true,
+                                                                    builder: ((context) => EditResource(
+                                                                      resource: resource,
+                                                                      organizer: organizer!,
+                                                                      resourceId: resource.resourceId!,
+                                                                      interestsNames: interestsNames!,
+                                                                      selectedInterests: selectedInterests,
+                                                                      initialInterests: interestsLocal,
+                                                                    )),
+                                                                  ),
+                                                                )
+                                                              },
+                                                            ),
                                                           ),
                                                         ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  resource.organizerImage == null ||
-                                                      resource.organizerImage!.isEmpty
-                                                      ? Container()
-                                                      : Align(
-                                                    alignment: Alignment.topCenter,
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
+                                                      )),
+                                                  Expanded(
+                                                      flex: Responsive.isMobile(context) ||
+                                                          Responsive.isTablet(context) ||
+                                                          Responsive.isDesktopS(context)
+                                                          ? 0
+                                                          : 3,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white,
                                                           border: Border.all(
-                                                              width: 1.0, color: AppColors.greyLight),
-                                                          borderRadius: BorderRadius.circular(
-                                                            100,
-                                                          ),
-                                                          color: AppColors.greyLight),
-                                                      child: CircleAvatar(
-                                                        radius:
-                                                        Responsive.isMobile(context) ? 28 : 40,
-                                                        backgroundColor: AppColors.white,
-                                                        backgroundImage:
-                                                        NetworkImage(resource.organizerImage!),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    right: 0,
-                                                    child: IconButton(
-                                                      iconSize: 40,
-                                                      icon: Image.asset(ImagePath.DELETE_RESOURCE),
-                                                      onPressed: () => _confirmDeleteResource(context, resource),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    right: 50,
-                                                    child: IconButton(
-                                                      iconSize: 40,
-                                                      icon: Image.asset(ImagePath.EDIT_RESOURCE),
-                                                      onPressed: () => {
-                                                        Navigator.of(context).push(
-                                                          MaterialPageRoute<void>(
-                                                            fullscreenDialog: true,
-                                                            builder: ((context) => EditResource(organizer: organizer!, resourceId: resource.resourceId!,)),
-                                                          ),
-                                                        )
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                          Expanded(
-                                              flex: Responsive.isMobile(context) ||
-                                                  Responsive.isTablet(context) ||
-                                                  Responsive.isDesktopS(context)
-                                                  ? 0
-                                                  : 3,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: AppColors.greyLight2.withOpacity(0.2),
-                                                      width: 1),
-                                                  borderRadius: BorderRadius.circular(Consts.padding),
-                                                ),
-                                                alignment: Alignment.center,
-                                                margin: const EdgeInsets.only(top: 40.0, left: 10),
-                                                padding: const EdgeInsets.all(20.0),
-                                                child: SingleChildScrollView(
-                                                    child: Stack(
-                                                      children: [
-                                                        CustomTextTitle(title: StringConst.PARTICIPANTS.toUpperCase()),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(top: 30.0),
-                                                          child: _buildParticipantsList(context, resource.resourceId!),
+                                                              color: AppColors.greyLight2.withOpacity(0.2),
+                                                              width: 1),
+                                                          borderRadius: BorderRadius.circular(Consts.padding),
                                                         ),
-                                                      ],
-                                                    )),
-                                              ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                                        alignment: Alignment.center,
+                                                        margin: const EdgeInsets.only(top: 40.0, left: 10),
+                                                        padding: const EdgeInsets.all(20.0),
+                                                        child: SingleChildScrollView(
+                                                            child: Stack(
+                                                              children: [
+                                                                CustomTextTitle(title: StringConst.PARTICIPANTS.toUpperCase()),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(top: 30.0),
+                                                                  child: _buildParticipantsList(context, resource.resourceId!),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ))
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                      return Container();
+                                    });
                               });
                         },
                       );
