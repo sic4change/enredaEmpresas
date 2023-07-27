@@ -42,14 +42,12 @@ class EditResource extends StatefulWidget {
       {Key? key,
         required this.resource,
         required this.organizer,
-        required this.resourceId,
         required this.interestsNames,
         required this.selectedInterests,
         required this.initialInterests,
       })
       : super(key: key);
   final Resource resource;
-  final String resourceId;
   final String interestsNames;
   final Set<Interest> selectedInterests;
   final Organization organizer;

@@ -497,7 +497,6 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                                                     builder: ((context) => EditResource(
                                                                       resource: resource,
                                                                       organizer: organizer!,
-                                                                      resourceId: resource.resourceId!,
                                                                       interestsNames: interestsNames!,
                                                                       selectedInterests: selectedInterests,
                                                                       initialInterests: interestsLocal,
@@ -664,9 +663,9 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
           Row(
             children: [
               CustomTextBody(text: '${resource.cityName}'),
-              const CustomTextBody(text: ', '),
+              resource.address?.province == "undefined" ? Container() : CustomTextBody(text: ', '),
               CustomTextBody(text: '${resource.provinceName}'),
-              const CustomTextBody(text: ', '),
+              resource.address?.country == "undefined" ? Container() : CustomTextBody(text: ', '),
               CustomTextBody(text: '${resource.countryName}'),
             ],
           ),

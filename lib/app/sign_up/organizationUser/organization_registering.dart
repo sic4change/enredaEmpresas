@@ -575,7 +575,7 @@ class _OrganizationRegisteringState extends State<OrganizationRegistering> {
                                 EnredaButton(
                                   buttonTitle: isLastStep ? StringConst.FORM_CONFIRM : StringConst.FORM_NEXT,
                                   width: contactBtnWidth,
-                                  buttonColor: AppColors.lilac,
+                                  buttonColor: AppColors.turquoise,
                                   titleColor: AppColors.white,
                                   onPressed: onStepContinue,
                                 ),
@@ -584,29 +584,7 @@ class _OrganizationRegisteringState extends State<OrganizationRegistering> {
                           );
                         },
                       ),
-                      Responsive.isTablet(context) || Responsive.isMobile(context) ?
-                      Positioned(
-                        top: screenHeight * 0.55,
-                        left: -10,
-                        child: Container(
-                          height: 300 * 0.50,
-                          child: ClipRRect(
-                            child: Image.asset(ImagePath.CHICA_LATERAL),
-                          ),
-                        ),
-                      ) : Container(),
                     ],
-                  ),
-                ),
-              ),
-              Responsive.isTablet(context) || Responsive.isMobile(context) ? Container() :
-              Positioned(
-                top: screenHeight * 0.51,
-                left: Responsive.isDesktopS(context) ? screenWidth * 0.06 : screenWidth * 0.09,
-                child: SizedBox(
-                  height: Responsive.isTablet(context) || Responsive.isMobile(context) ? 300 * 0.8 : 300,
-                  child: ClipRRect(
-                    child: Image.asset(ImagePath.CHICA_LATERAL),
                   ),
                 ),
               ),

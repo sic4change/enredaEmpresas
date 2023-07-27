@@ -45,16 +45,9 @@ import 'package:async/async.dart' show StreamGroup;
 
 abstract class Database {
      Stream<Resource> resourceStream(String? resourceId);
-//   Stream<List<Resource>> resourcesStream();
-//   //Stream<List<Resource>> filteredResourcesStream(FilterResource filter);
-//   Stream<List<Resource>> filteredResourcesCategoryStream(FilterResource filter);
      Stream<List<Resource>> myResourcesStream(String organizationId);
      Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId);
      Stream<List<UserEnreda>> getParticipantsByOrganizationStream(List<String?> ids);
-//   Stream<List<Resource>> likeResourcesStream(String userId);
-//   Stream<List<Resource>> recommendedResourcesStream(UserEnreda? user);
-//   Stream<UserEnreda> enredaUserStream(String userId);
-//   Stream<List<Certificate>> myCertificatesStream(String userId);
      Stream<List<Organization>> organizationsStream();
      Stream<List<Organization>> filterOrganizationStream(String organizationId);
      Stream<Organization> organizationStream(String? organizationId);
@@ -75,7 +68,6 @@ abstract class Database {
      Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList);
      Stream<List<Interest>> resourcesInterestsStream(List<String?> interestsIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
-//   //Stream<Organization> organizationStreamByEmail(String? email);
      Stream<Organization> organizationStreamById(String? organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
      Stream<ResourceType> resourceTypeStreamById(String? resourceTypeId);
@@ -85,47 +77,24 @@ abstract class Database {
      Stream<List<SizeOrg>> sizeStream();
      Stream<List<Ability>> abilityStream();
      Stream<List<ResourceCategory>> resourceCategoryStream();
-//   Stream<List<TimeSearching>> timeSearchingStream();
-//   Stream<List<TimeSpentWeekly>> timeSpentWeeklyStream();
      Stream<List<Education>> educationStream();
      Stream<List<ResourceType>> resourceTypeStream();
      Stream<List<Interest>> interestStream();
      Stream<List<Interest>> interestsStream(String? interestId);
-//   Stream<List<Activity>> professionsActivitiesStream();
-//   Stream<Activity> activityStreamProfessionId(String? activityId);
      Stream<List<SpecificInterest>> specificInterestStream(String? interestId);
      Stream<List<UserEnreda>> checkIfUserEmailRegistered(String email);
-//   Stream<List<Question>> questionsStream();
-//   Stream<Question> questionStream(String id);
-//   //Stream<List<Choice>> choicesStream(String path, String? typeId, String? subtypeId);
      Stream<List<Experience>> myExperiencesStream(String userId);
      Stream<List<Competency>> competenciesStream();
-//   Stream<Competency> competencyStream(String id);
-//   Stream<Activity> activityStream(String id);
-//   Stream<List<ChatQuestion>> chatQuestionsStream(String userId);
-//   Stream<CertificationRequest> certificationRequestStream(String certificationRequestId);
      Stream<List<CertificationRequest>> myCertificationRequestStream(String userId);
-//   Stream<List<ResourceCategory>> getCategoriesResources();
-//
      Future<void> setUserEnreda(UserEnreda userEnreda);
-//   Future<void> addUserEnreda(UserEnreda userEnreda);
      Future<void> deleteUser(UserEnreda userEnreda);
      Future<void> uploadUserAvatar(String userId, Uint8List data);
      Future<void> addContact(Contact contact);
-//   Future<void> addResource(Resource resource);
      Future<void> setResource(Resource resource);
      Future<void> deleteResource(Resource resource);
-//   Future<void> addUnemployedUser(UnemployedUser create_resource);
-//   Future<void> addMentorUser(MentorUser mentorUser);
      Future<void> addOrganizationUser(OrganizationUser organizationUser);
      Future<void> addOrganization(Organization organization);
      Future<void> addResource(Resource resource);
-//   Future<void> addChatQuestion(ChatQuestion chatQuestion);
-//   Future<void> updateChatQuestion(ChatQuestion chatQuestion);
-//   Future<void> addExperience(Experience experience);
-//   Future<void> updateExperience(Experience experience);
-//   Future<void> deleteExperience(Experience experience);
-//   Future<void> setCertificationRequest(CertificationRequest certificationRequest);
      Future<void> addResourceInvitation(ResourceInvitation resourceInvitation);
      Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced );
 }
@@ -135,10 +104,6 @@ class FirestoreDatabase implements Database {
 
   final _service = FirestoreService.instance;
 
-//   @override
-//   Future<void> addResource(Resource resource) =>
-//       _service.addData(path: APIPath.resources(), data: resource.toMap());
-//
   @override
   Future<void> setResource(Resource resource) => _service.updateData(
       path: APIPath.resource(resource.resourceId!), data: resource.toMap());
@@ -147,85 +112,6 @@ class FirestoreDatabase implements Database {
   Future<void> deleteResource(Resource resource) =>
       _service.deleteData(path: APIPath.resource(resource.resourceId!));
 
-//   @override
-//   Stream<List<Resource>> resourcesStream() {
-//     return _service.collectionStream(
-//       path: APIPath.resources(),
-//       queryBuilder: (query) => query
-//           .where('status', isEqualTo: 'Disponible')
-//           .where('trust', isEqualTo: true),
-//       builder: (data, documentId) => Resource.fromMap(data, documentId),
-//       sort: (lhs, rhs) => lhs.maximumDate.compareTo(rhs.maximumDate),
-//     );
-//   }
-//
-//   @override
-//   Stream<List<ResourceCategory>> getCategoriesResources() {
-//     return _service.collectionStream(
-//       path: APIPath.resourcesCategories(),
-//       queryBuilder: (query) => query.where('name', isNotEqualTo: null),
-//       builder: (data, documentId) => ResourceCategory.fromMap(data, documentId),
-//       sort: (lhs, rhs) => lhs.order.compareTo(rhs.order),
-//     );
-//   }
-//
-//   @override
-//   Stream<List<Resource>> filteredResourcesCategoryStream(FilterResource filter) {
-//     return _service.filteredCollectionStream(
-//       path: APIPath.resources(),
-//       queryBuilder: (query) {
-//         query = query
-//             .where('status', isEqualTo: 'Disponible')
-//             .where('trust', isEqualTo: true);
-//         return query;
-//       },
-//       builder: (data, documentId) {
-//         final searchTextResource =
-//         removeDiacritics((data['searchText'] ?? '').toLowerCase());
-//         final searchListResource = searchTextResource.split(';');
-//         final searchTextFilter =
-//         removeDiacritics(filter.searchText.toLowerCase());
-//         final searchListFilter = searchTextFilter.split(' ');
-//         // The following code checks if a resource is selected by applying filters
-//         bool resourceSelected = true; // Initialize resourceSelected to true
-//
-//         // If search text exists in filter, filter through the search list
-//         if (filter.searchText != '') {
-//           searchListFilter.forEach((filterElement) {
-//             // For each element in searchListFilter, check against each element in searchListResource
-//             if (!searchListResource.any(
-//                     (resourceElement) => resourceElement.contains(filterElement))) {
-//               resourceSelected = false; // Set resourceSelected false if a match isn't found
-//             }
-//           });
-//         }
-//
-//         // If resourceCategory filter (array of Categories Ids) exists and it doesn't contain the category Id of the 'resourceCategory' from data,
-//         // set resourceSelected to false
-//         if (filter.resourceCategories.isNotEmpty &&
-//             !filter.resourceCategories.contains((data['resourceCategory'])))
-//           resourceSelected = false;
-//
-//         return resourceSelected ? Resource.fromMap(data, documentId) : null;
-//       },
-//       sort: (lhs, rhs) {
-//         int cmp = 0;
-//         if ((rhs.modality == StringConst.FACE_TO_FACE ||
-//             rhs.modality == StringConst.BLENDED) &&
-//             (lhs.modality != StringConst.FACE_TO_FACE &&
-//                 lhs.modality != StringConst.BLENDED)) cmp = 1;
-//         if ((lhs.modality == StringConst.FACE_TO_FACE ||
-//             lhs.modality == StringConst.BLENDED) &&
-//             (rhs.modality != StringConst.FACE_TO_FACE &&
-//                 rhs.modality != StringConst.BLENDED)) cmp = -1;
-//
-//         if (cmp != 0) return cmp;
-//
-//         return lhs.maximumDate.compareTo(rhs.maximumDate);
-//       },
-//     );
-//   }
-//
     @override
     Stream<List<Resource>> myResourcesStream(String organizationId) =>
         _service.collectionStream(
@@ -248,42 +134,6 @@ class FirestoreDatabase implements Database {
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
 
-
-//   @override
-//   Stream<List<Resource>> likeResourcesStream(String userId) =>
-//       _service.collectionStream(
-//         path: APIPath.resources(),
-//         queryBuilder: (query) => query.where('likes', arrayContains: userId),
-//         builder: (data, documentId) => Resource.fromMap(data, documentId),
-//         sort: (lhs, rhs) => lhs.maximumDate.compareTo(rhs.maximumDate),
-//       );
-//
-//   @override
-//   Stream<List<Resource>> recommendedResourcesStream(UserEnreda? user) {
-//     return _service.filteredCollectionStream(
-//       path: APIPath.resources(),
-//       queryBuilder: (query) {
-//         query = query
-//             .where('status', isEqualTo: 'Disponible')
-//             .where('trust', isEqualTo: true);
-//         return query;
-//       },
-//       builder: (data, documentId) {
-//         var interests = data['interests'];
-//
-//         if (interests != null && user != null) {
-//           for (var interest in interests) {
-//             if (user.interests.contains(interest))
-//               return Resource.fromMap(data, documentId);
-//           }
-//         }
-//
-//         return null;
-//       },
-//       sort: (lhs, rhs) => lhs.maximumDate.compareTo(rhs.maximumDate),
-//     );
-//   }
-
     @override
     Stream<Resource> resourceStream(String? resourceId) =>
         _service.documentStream<Resource>(
@@ -291,13 +141,6 @@ class FirestoreDatabase implements Database {
           builder: (data, documentId) => Resource.fromMap(data, documentId),
         );
 
-  //@override
-//   Stream<UserEnreda> enredaUserStream(String userId) =>
-//       _service.documentStream<UserEnreda>(
-//         path: APIPath.user(userId),
-//         builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
-//       );
-//
     @override
     Stream<List<Organization>> organizationsStream() => _service.collectionStream(
       path: APIPath.organizations(),
@@ -531,13 +374,6 @@ class FirestoreDatabase implements Database {
     );
   }
 
-//   @override
-//   Stream<CertificationRequest> certificationRequestStream(String certificationRequestId) =>
-//       _service.documentStream<CertificationRequest>(
-//         path: APIPath.certificationRequest(certificationRequestId),
-//         builder: (data, documentId) => CertificationRequest.fromMap(data, documentId),
-//       );
-
     @override
     Stream<List<CertificationRequest>> myCertificationRequestStream(String userId) =>
         _service.collectionStream(
@@ -547,10 +383,6 @@ class FirestoreDatabase implements Database {
           sort: (lhs, rhs) => lhs.certifierName.compareTo(rhs.certifierName),
         );
 
-//   @override
-//   Future<void> addUserEnreda(UserEnreda userEnreda) =>
-//       _service.addData(path: APIPath.tests(), data: userEnreda.toMap());
-//
     @override
     Future<void> setUserEnreda(UserEnreda userEnreda) {
       return _service.updateData(
@@ -562,19 +394,12 @@ class FirestoreDatabase implements Database {
       return _service.deleteData(path: APIPath.user(userEnreda.userId!));
     }
 
-//   @override
-//   Future<void> setCertificationRequest(CertificationRequest certificationRequest) {
-//     return _service.updateData(
-//         path: APIPath.certificationRequest(certificationRequest.certificationRequestId!), data: certificationRequest.toMap());
-//   }
-//
   @override
   Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced) {
     return _service.updateData(
         path: APIPath.certificationRequest(certificationRequest.certificationRequestId!), data: {
       "certified": certified, 'referenced': referenced});
   }
-
 
     @override
     Stream<List<Interest>> interestStream() => _service.collectionStream(
@@ -646,25 +471,6 @@ class FirestoreDatabase implements Database {
       sort: (lhs, rhs) => lhs.order.compareTo(rhs.order),
     );
 
-//   @override
-//   Stream<List<TimeSearching>> timeSearchingStream() =>
-//       _service.collectionStream(
-//         path: APIPath.timeSearching(),
-//         queryBuilder: (query) => query.where('label', isNotEqualTo: null),
-//         builder: (data, documentId) => TimeSearching.fromMap(data, documentId),
-//         sort: (lhs, rhs) => lhs.value.compareTo(rhs.value),
-//       );
-//
-//   @override
-//   Stream<List<TimeSpentWeekly>> timeSpentWeeklyStream() =>
-//       _service.collectionStream(
-//         path: APIPath.timeSpentWeekly(),
-//         queryBuilder: (query) => query.where('label', isNotEqualTo: null),
-//         builder: (data, documentId) =>
-//             TimeSpentWeekly.fromMap(data, documentId),
-//         sort: (lhs, rhs) => lhs.value.compareTo(rhs.value),
-//       );
-//
       @override
       Stream<List<Education>> educationStream() => _service.collectionStream(
         path: APIPath.education(),
@@ -700,78 +506,10 @@ class FirestoreDatabase implements Database {
         );
       }
 
-//   @override
-//   Stream<List<Certificate>> myCertificatesStream(String userId) =>
-//       _service.collectionStream(
-//         path: APIPath.certificates(),
-//         queryBuilder: (query) => query.where('user', isEqualTo: userId),
-//         builder: (data, documentId) => Certificate.fromMap(data, documentId),
-//         sort: (lhs, rhs) => lhs.date.compareTo(rhs.date),
-//       );
-//
-//   @override
-//   Stream<List<ChatQuestion>> chatQuestionsStream(String userId) =>
-//       _service.collectionStream(
-//         path: APIPath.chatQuestions(),
-//         queryBuilder: (query) => query.where('userId', isEqualTo: userId),
-//         builder: (data, documentId) => ChatQuestion.fromMap(data, documentId),
-//         sort: (lhs, rhs) => rhs.date.compareTo(lhs.date),
-//       );
-//
-//   @override
-//   Future<void> addChatQuestion(ChatQuestion chatQuestion) => _service.addData(
-//       path: APIPath.chatQuestions(), data: chatQuestion.toMap());
-//
-//   @override
-//   Future<void> updateChatQuestion(ChatQuestion chatQuestion) =>
-//       _service.updateData(
-//           path: APIPath.chatQuestion(chatQuestion.id!),
-//           data: chatQuestion.toMap());
-//
-//   @override
-//   Stream<List<Question>> questionsStream() => _service.collectionStream(
-//     path: APIPath.questions(),
-//     builder: (data, documentId) => Question.fromMap(data, documentId),
-//     queryBuilder: (query) => query,
-//     sort: (lhs, rhs) => lhs.order.compareTo(rhs.order),
-//   );
-//
-//   @override
-//   Stream<Question> questionStream(String id) =>
-//       _service.documentStream<Question>(
-//         path: APIPath.question(id),
-//         builder: (data, documentId) => Question.fromMap(data, documentId),
-//       );
-//
-// /*  @override
-//   Stream<List<Choice>> choicesStream(
-//       String path, String? typeId, String? subtypeId) =>
-//       _service.collectionStream(
-//         path: path,
-//         // TODO: Think if this is the better way of loading the choices which depends on the experience type and subtype
-//         queryBuilder: (query) {
-//           if (typeId != null) query = query.where('typeId', isEqualTo: typeId);
-//           if (subtypeId != null)
-//             query = query.where('subtypeId', isEqualTo: subtypeId);
-//
-//           return query;
-//         },
-//         builder: (data, documentId) => Choice.fromMap(data, documentId),
-//         sort: (lhs, rhs) => rhs.name.compareTo(lhs.name),
-//       );*/
-//
     @override
     Future<void> addContact(Contact contact) =>
         _service.addData(path: APIPath.contacts(), data: contact.toMap());
 
-//   @override
-//   Future<void> addUnemployedUser(UnemployedUser create_resource) =>
-//       _service.addData(path: APIPath.users(), data: create_resource.toMap());
-//
-//   @override
-//   Future<void> addMentorUser(MentorUser mentorUser) =>
-//       _service.addData(path: APIPath.users(), data: mentorUser.toMap());
-//
   @override
   Future<void> addOrganization(Organization organization) => _service.addData(
       path: APIPath.organizations(), data: organization.toMap());
@@ -809,19 +547,6 @@ class FirestoreDatabase implements Database {
         sort: (lhs, rhs) => rhs.startDate.compareTo(lhs.startDate),
       );
 
-//   @override
-//   Future<void> addExperience(Experience experience) =>
-//       _service.addData(path: APIPath.experiences(), data: experience.toMap());
-//
-//   @override
-//   Future<void> updateExperience(Experience experience) =>
-//       _service.updateData(path: '${APIPath.experiences()}/${experience.id}', data: experience.toMap());
-//
-//   @override
-//   Future<void> deleteExperience(Experience experience) =>
-//       _service.deleteData(path: APIPath.experience(experience.id!));
-//
-//
   @override
   Stream<List<Competency>> competenciesStream() => _service.collectionStream(
     path: APIPath.competencies(),
@@ -829,37 +554,6 @@ class FirestoreDatabase implements Database {
     queryBuilder: (query) => query,
     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
   );
-
-//   @override
-//   Stream<Competency> competencyStream(String id) =>
-//       _service.documentStream<Competency>(
-//         path: APIPath.competency(id),
-//         builder: (data, documentId) => Competency.fromMap(data, documentId),
-//       );
-//
-//   @override
-//   Stream<Activity> activityStream(String id) =>
-//       _service.documentStream<Activity>(
-//         path: APIPath.activity(id),
-//         builder: (data, documentId) => Activity.fromMap(data, documentId),
-//       );
-//
-//   @override
-//   Stream<List<Activity>> professionsActivitiesStream() => _service.collectionStream(
-//     path: APIPath.activities(),
-//     queryBuilder: (query) => query.where('name', isNotEqualTo: null),
-//     builder: (data, documentId) => Activity.fromMap(data, documentId),
-//     sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
-//   );
-//
-//   @override
-//   Stream<Activity> activityStreamProfessionId(String? activityId) {
-//     return _service.documentStreamByField(
-//       path: APIPath.activities(),
-//       builder: (data, documentId) => Activity.fromMap(data, documentId),
-//       queryBuilder: (query) => query.where('id', isEqualTo: activityId),
-//     );
-//}
 
 }
 
