@@ -39,7 +39,7 @@ import 'package:enreda_empresas/app/models/interest.dart';
 import 'package:enreda_empresas/app/models/interests.dart';
 import 'package:enreda_empresas/app/models/keepLearningOption.dart';
 import 'package:enreda_empresas/app/models/province.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/specificinterest.dart';
 import 'package:enreda_empresas/app/models/timeSearching.dart';
 import 'package:enreda_empresas/app/models/timeSpentWeekly.dart';
@@ -115,7 +115,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
   TimeSpentWeekly? selectedTimeSpentWeekly;
   Education? selectedEducation;
   Gender? selectedGender;
-  SocialEntity? selectedSocialEntity;
+  Company? selectedSocialEntity;
   late String countryName, provinceName, cityName, nationalityName;
   String phoneCode = '+34';
   late String _formattedBirthdayDate;
@@ -182,7 +182,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
     _nationality = '';
     nationalityName = '';
     keepLearningOptionsNames = '';
-    selectedSocialEntity = globals.currentUserSocialEntity;
+    selectedSocialEntity = globals.currentUserCompany;
   }
 
   @override
@@ -207,7 +207,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
           Padding(
             padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble),
             child: Text(
-              StringConst.CREATE_PARTICIPANT,
+              StringConst.CREATE_JOB_OFFER,
               style: textTheme.titleMedium!.copyWith(
                 color: AppColors.turquoiseBlue,
                 fontWeight: FontWeight.w300,
@@ -762,7 +762,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
           role: 'Desempleado',
           unemployedType: unemployedType,
           nationality: selectedNationality,
-          assignedEntityId: selectedSocialEntity!.socialEntityId ?? null,
+          assignedEntityId: selectedSocialEntity!.companyId ?? null,
           assignedById: user.userId,
           checkAgreeCV: _isCheckedDataProtectionPolicy,
           belongOrganization: _belongOrganization,
@@ -913,7 +913,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
     setState(() => this._postalCode = val!);
   }
 
-  void _buildSocialEntityStreamBuilder_setState(SocialEntity? socialEntity) {
+  void _buildSocialEntityStreamBuilder_setState(Company? socialEntity) {
     setState(() {
       this.selectedSocialEntity = socialEntity;
     });

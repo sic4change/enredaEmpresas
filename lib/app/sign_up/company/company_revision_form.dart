@@ -4,7 +4,7 @@ import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 
-Widget socialEntityRevisionForm(
+Widget companyRevisionForm(
     BuildContext context,
     String name,
     String cif,
@@ -28,19 +28,19 @@ Widget socialEntityRevisionForm(
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      CustomExpandedRow(title: StringConst.FORM_ENTITY_NAME, text: name,),
+      CustomExpandedRow(title: StringConst.FORM_COMPANY_NAME, text: name,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
-      CustomExpandedRow(title: StringConst.FORM_ENTITY_CIF, text: cif,),
+      CustomExpandedRow(title: StringConst.FORM_COMPANY_CIF, text: cif,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
-      CustomExpandedRow(title: StringConst.FORM_ENTITY_CATEGORY, text: category,),
+      CustomExpandedRow(title: StringConst.FORM_COMPANY_CATEGORY, text: category,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
-      CustomExpandedRow(title: StringConst.FORM_ENTITY_MISSION, text: mission,),
+      CustomExpandedRow(title: StringConst.FORM_COMPANY_MISSION, text: mission,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
       CustomExpandedRow(title: StringConst.ZONE, text: geographicZone,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
       CustomExpandedRow(title: StringConst.SUB_ZONE, text: subGeographicZone,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
-      CustomExpandedRow(title: StringConst.FORM_PHONE_ENTITY, text: phoneWithCodeSocialEntity,),
+      CustomExpandedRow(title: StringConst.FORM_PHONE_COMPANY, text: phoneWithCodeSocialEntity,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),
       CustomExpandedRow(title: StringConst.FORM_LINKEDIN, text: linkedin,),
       const SizedBox(height: Sizes.kDefaultPaddingDouble),

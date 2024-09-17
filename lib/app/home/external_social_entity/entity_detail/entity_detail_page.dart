@@ -354,7 +354,7 @@ class _ExternalEntityDetailPageState extends State<ExternalEntityDetailPage> {
         CustomTextSmallColor(text: externalSocialEntity.contactKOL!),
 
         externalSocialEntity.signedAgreements == null || externalSocialEntity.signedAgreements == '' ? Container() :
-        CustomTextBold(title: StringConst.FORM_ENTITY_SIGNED_AGREEMENTS.toUpperCase(), color: AppColors.turquoiseBlue,),
+        CustomTextBold(title: StringConst.FORM_COMPANY_SIGNED_AGREEMENTS.toUpperCase(), color: AppColors.turquoiseBlue,),
         externalSocialEntity.signedAgreements == null || externalSocialEntity.signedAgreements == '' ? Container() :
         CustomTextSmallColor(text: externalSocialEntity.signedAgreements!),
 

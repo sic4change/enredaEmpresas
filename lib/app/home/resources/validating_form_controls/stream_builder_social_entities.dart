@@ -1,4 +1,4 @@
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -6,30 +6,30 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../values/values.dart';
 
-Widget streamBuilderDropdownSocialEntities (BuildContext context, SocialEntity? selectedSocialEntity, String socialEntityId, functionToWriteBackThings ) {
+Widget streamBuilderDropdownSocialEntities (BuildContext context, Company? selectedCompany, String companyId, functionToWriteBackThings ) {
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
-  return StreamBuilder<List<SocialEntity>>(
-      stream: database.socialEntityByIdStream(socialEntityId),
+  return StreamBuilder<List<Company>>(
+      stream: database.companyByIdStream(companyId),
       builder: (context, snapshotSocialEntities){
 
-        List<DropdownMenuItem<SocialEntity>> socialEntityItems = [];
+        List<DropdownMenuItem<Company>> socialEntityItems = [];
         if(snapshotSocialEntities.hasData) {
-          socialEntityItems = snapshotSocialEntities.data!.map((SocialEntity socialEntity) =>
-              DropdownMenuItem<SocialEntity>(
+          socialEntityItems = snapshotSocialEntities.data!.map((Company socialEntity) =>
+              DropdownMenuItem<Company>(
                 value: socialEntity,
                 child: Text(socialEntity.name),
               ))
               .toList();
         }
 
-        return DropdownButtonFormField<SocialEntity>(
+        return DropdownButtonFormField<Company>(
           hint: const Text(StringConst.FORM_PROMOTOR),
           isExpanded: true,
-          value: selectedSocialEntity,
+          value: selectedCompany,
           items: socialEntityItems,
-          validator: (value) => selectedSocialEntity != null ? null : StringConst.FORM_COMPANY_ERROR,
+          validator: (value) => selectedCompany != null ? null : StringConst.FORM_COMPANY_ERROR,
           onChanged: (value) => functionToWriteBackThings(value),
           iconDisabledColor: AppColors.greyDark,
           iconEnabledColor: AppColors.primaryColor,

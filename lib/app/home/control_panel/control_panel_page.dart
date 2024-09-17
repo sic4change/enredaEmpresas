@@ -6,7 +6,7 @@ import 'package:enreda_empresas/app/home/resources/build_collapsed_resources.dar
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/home/tool_box/tool_box_page.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -14,9 +14,9 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 
 class ControlPanelPage extends StatefulWidget {
-  const ControlPanelPage({super.key, required this.socialEntity, required this.user});
+  const ControlPanelPage({super.key, required this.company, required this.user});
 
-  final SocialEntity? socialEntity;
+  final Company? company;
   final UserEnreda? user;
 
   @override
@@ -95,12 +95,12 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                     ]
                   )),
                 Positioned(
-                    top: -35,
-                    right: 0,
+                    top: 50,
+                    right: 50,
                     child: Container(
-                        width: 380,
-                        height: 380,
-                        child: Image.asset(ImagePath.CONTROL_TECHNICAL,))),
+                        width: 250,
+                        height: 250,
+                        child: Image.asset(ImagePath.CONTROL_ILLUSTRATION,))),
                 Container(
                     margin: const EdgeInsets.only(top: 320.0, right: 50.0, left: 0, bottom: 10.0,),
                     child: Image.asset(ImagePath.LOGO_LINES)),

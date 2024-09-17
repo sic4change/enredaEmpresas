@@ -36,15 +36,6 @@ class MyApp extends StatelessWidget {
           child: const HomePage(),
         ),
       ),
-      // GoRoute(
-      //   path: '${StringConst.PATH_RESOURCES}/:rid',
-      //   builder: (context, state) => MaterialPage<void>(
-      //     fullscreenDialog: false,
-      //     child: Responsive.isMobile(context) || Responsive.isTablet(context)
-      //         ? ResourceDetailPageWeb(resourceId: state.params['rid']!)
-      //         : ResourceDetailPageWeb(resourceId: state.params['rid']!),
-      //   ),
-      // ),
     ],
     error: (context, state) => MaterialPage<void>(
       key: state.pageKey,
@@ -67,7 +58,7 @@ class MyApp extends StatelessWidget {
           routeInformationParser: _router.routeInformationParser,
           routerDelegate: _router.routerDelegate,
           debugShowCheckedModeBanner: false,
-          title: 'enREDa-entidad-social',
+          title: 'Enreda-empresas',
           theme: AppTheme.lightThemeData,
           localizationsDelegates: const [
             //CountryLocalizations.delegate,

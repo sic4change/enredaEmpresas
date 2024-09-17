@@ -1,7 +1,7 @@
 import 'package:enreda_empresas/app/common_widgets/add_yellow_button.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'entity_detail/entity_detail_page.dart';
 
 class EntityDirectoryPage extends StatefulWidget {
   EntityDirectoryPage({Key? key, required this.socialEntity}) : super(key: key);
-  final SocialEntity socialEntity;
+  final Company socialEntity;
   static ValueNotifier<int> selectedIndex = ValueNotifier(0);
 
   @override
@@ -27,10 +27,10 @@ class _EntityDirectoryPageState extends State<EntityDirectoryPage> {
   @override
   void initState() {
     bodyWidget = [
-      EntitiesListPage(socialEntityId: widget.socialEntity.socialEntityId),
-      CreateExternalSocialEntityPage(socialEntityId: widget.socialEntity.socialEntityId),
-      ExternalEntityDetailPage(socialEntityId: widget.socialEntity.socialEntityId),
-      EditSocialEntity(socialEntityId: widget.socialEntity.socialEntityId)
+      EntitiesListPage(socialEntityId: widget.socialEntity.companyId),
+      CreateExternalSocialEntityPage(socialEntityId: widget.socialEntity.companyId),
+      ExternalEntityDetailPage(socialEntityId: widget.socialEntity.companyId),
+      EditSocialEntity(socialEntityId: widget.socialEntity.companyId)
     ];
     super.initState();
   }

@@ -3,9 +3,9 @@ import 'package:enreda_empresas/app/models/size.dart';
 import 'package:enreda_empresas/app/models/socialEntitiesType.dart';
 import 'addressUser.dart';
 
-class SocialEntity {
-  SocialEntity({
-    this.socialEntityId,
+class Company {
+  Company({
+    this.companyId,
     required this.name,
     this.cif,
     this.mision,
@@ -47,7 +47,7 @@ class SocialEntity {
   });
 
   //Old fields
-  final String? socialEntityId;
+  final String? companyId;
   final String name;
   final String? cif;
   final String? mision;
@@ -89,7 +89,7 @@ class SocialEntity {
   final bool? trust;
 
 
-  factory SocialEntity.fromMap(Map<String, dynamic> data, String documentId) {
+  factory Company.fromMap(Map<String, dynamic> data, String documentId) {
 
     Address? address;
     try{
@@ -107,7 +107,7 @@ class SocialEntity {
     final String name = data['name'];
     final String? cif = data['cif'] ?? '';
     final String? mision = data['mision'] ?? '';
-    final String? socialEntityId = data['socialEntityId'];
+    final String? companyId = data['companyId'];
     final String email = data['email']??"";
 
     String photo;
@@ -148,8 +148,8 @@ class SocialEntity {
     final String? city = data['address']['city'];
     final String signedAgreements = data['signedAgreements'] ?? '';
 
-    return SocialEntity(
-        socialEntityId: socialEntityId,
+    return Company(
+        companyId: companyId,
         name: name,
         cif: cif,
         mision: mision,
@@ -187,7 +187,7 @@ class SocialEntity {
 
   Map<String, dynamic> toMap() {
     return {
-      'socialEntityId': socialEntityId,
+      'companyId': companyId,
       'name': name,
       'cif': cif,
       'mision': mision,
@@ -221,8 +221,8 @@ class SocialEntity {
     };
   }
 
-  SocialEntity copyWith({
-    String? socialEntityId,
+  Company copyWith({
+    String? companyId,
     String? name,
     String? cif,
     String? mision,
@@ -256,8 +256,8 @@ class SocialEntity {
     String? cityName,
     String? signedAgreements,
   }) {
-    return SocialEntity(
-        socialEntityId: socialEntityId ?? this.socialEntityId,
+    return Company(
+        companyId: companyId ?? this.companyId,
         name: name ?? this.name,
         cif: cif ?? this.cif,
         mision: mision ?? this.mision,
@@ -297,13 +297,13 @@ class SocialEntity {
   bool operator ==(Object other){
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is SocialEntity &&
-            other.socialEntityId == socialEntityId);
+            other is Company &&
+            other.companyId == companyId);
   }
 
 
   @override
   // TODO: implement hashCode
-  int get hashCode => socialEntityId.hashCode;
+  int get hashCode => companyId.hashCode;
 
 }

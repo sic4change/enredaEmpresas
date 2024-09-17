@@ -20,7 +20,7 @@ import 'package:enreda_empresas/app/models/competencyCategory.dart';
 import 'package:enreda_empresas/app/models/competencySubCategory.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/models/province.dart';
@@ -105,7 +105,7 @@ class _EditResourceState extends State<EditResource> {
   Set<CompetencySubCategory> selectedCompetenciesSubCategoriesSet = {};
   ResourceCategory? selectedResourceCategory;
   ResourcePicture? selectedResourcePicture;
-  SocialEntity? selectedSocialEntity;
+  Company? selectedSocialEntity;
 
   ResourceType? selectedResourceType;
   Country? selectedCountry;
@@ -885,7 +885,7 @@ class _EditResourceState extends State<EditResource> {
               childLeft: streamBuilderDropdownSocialEntities(
                   context,
                   selectedSocialEntity,
-                  globals.organizerCurrentResource!.socialEntityId!,
+                  globals.organizerCurrentResource!.companyId!,
                   buildSocialEntityStreamBuilderSetState),
               childRight: TextFormField(
                 decoration: InputDecoration(
@@ -1017,10 +1017,10 @@ class _EditResourceState extends State<EditResource> {
     _cityId = city?.cityId;
   }
 
-  void buildSocialEntityStreamBuilderSetState(SocialEntity? socialEntity) {
+  void buildSocialEntityStreamBuilderSetState(Company? socialEntity) {
     setState(() {
       selectedSocialEntity = socialEntity;
-      organizationId = socialEntity?.socialEntityId;
+      organizationId = socialEntity?.companyId;
     });
   }
 

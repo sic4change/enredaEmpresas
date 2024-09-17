@@ -8,7 +8,7 @@ import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
 import 'package:enreda_empresas/app/services/database.dart';
@@ -59,14 +59,14 @@ class _CollapsedResourcesListState extends State<CollapsedResourcesList> {
                                 child: CircularProgressIndicator());
                           }
                           if (snapshot.hasData) {
-                            return StreamBuilder<SocialEntity>(
-                              stream: database.socialEntityStreamById(user.socialEntityId!),
+                            return StreamBuilder<Company>(
+                              stream: database.companyStreamById(user.socialEntityId!),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return const Center(
                                       child: CircularProgressIndicator());
                                 }
-                                final SocialEntity? socialEntity = snapshot.data;
+                                final Company? socialEntity = snapshot.data;
                                 resource.organizerName = socialEntity == null ? '' : socialEntity.name;
                                 resource.organizerImage = socialEntity == null ? '' : socialEntity.photo;
                                 resource.setResourceTypeName();

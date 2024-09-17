@@ -492,8 +492,8 @@ class _CreateIpilFormState extends State<CreateIpilForm> {
   Future<void> _submit() async {
     if (_validateAndSaveForm() == false) {
       await showAlertDialog(context,
-          title: StringConst.FORM_ENTITY_ERROR,
-          content: StringConst.FORM_ENTITY_CHECK,
+          title: StringConst.FORM_COMPANY_ERROR_MESSAGE,
+          content: StringConst.FORM_COMPANY_CHECK,
           defaultActionText: StringConst.CLOSE);
     }
     if (_validateAndSaveForm()) {

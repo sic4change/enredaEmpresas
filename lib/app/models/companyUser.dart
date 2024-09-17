@@ -1,12 +1,12 @@
 import 'addressUser.dart';
 
-class SocialEntityUser {
-  SocialEntityUser({
+class CompanyUser {
+  CompanyUser({
     required this.email,
     this.firstName,
     this.lastName,
     this.userId,
-    this.organization,
+    this.companyId,
     this.country,
     this.province,
     this.city,
@@ -20,7 +20,7 @@ class SocialEntityUser {
   String? userId;
   final String? firstName;
   final String? lastName;
-  final String? organization;
+  final String? companyId;
   final String? country;
   final String? province;
   final String? city;
@@ -30,7 +30,7 @@ class SocialEntityUser {
   final String? postalCode;
 
 
-  factory SocialEntityUser.fromMap(Map<String, dynamic> data, String documentId) {
+  factory CompanyUser.fromMap(Map<String, dynamic> data, String documentId) {
 
     final Address? address = new Address(
         country: data['address']['country'],
@@ -39,11 +39,11 @@ class SocialEntityUser {
         postalCode: data['address']['postalCode']
     );
 
-    return SocialEntityUser(
+    return CompanyUser(
       email: data['email'],
       firstName: data['firstName'],
       lastName: data['lastName'],
-      organization: data['organization'],
+      companyId: data['companyId'],
       userId: data['userId'],
       address: address,
       role: data['role'],
@@ -56,7 +56,7 @@ class SocialEntityUser {
       'email': email,
       'firstName': firstName,
       'lastName': lastName,
-      'organization': organization,
+      'companyId': companyId,
       'userId': userId,
       'address': address?.toMap(),
       'role' : role,

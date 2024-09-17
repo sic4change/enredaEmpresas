@@ -47,14 +47,14 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-      apiKey: "AIzaSyDtKT5Dd-NOko6DCWgDFl6NqfJPCE8_4XQ",
-      authDomain: "enreda-d3b41.firebaseapp.com",
-      databaseURL: "https://enreda-d3b41.firebaseio.com",
-      projectId: "enreda-d3b41",
-      storageBucket: "enreda-d3b41.appspot.com",
-      messagingSenderId: "791604879416",
-      appId: "1:791604879416:web:e2c7ad6a51a4307ee086cd",
-      measurementId: "G-J992Z19JRL"
+      apiKey: 'AIzaSyDtKT5Dd-NOko6DCWgDFl6NqfJPCE8_4XQ',
+      authDomain: 'enreda-d3b41.firebaseapp.com',
+      databaseURL: 'https://enreda-d3b41.firebaseio.com',
+      projectId: 'enreda-d3b41',
+      storageBucket: 'enreda-d3b41.appspot.com',
+      messagingSenderId: '791604879416',
+      appId: '1:791604879416:web:41a86e814f3ee102e086cd',
+      measurementId: 'G-RT134DVQK1'
   );
 
   /* TODO: Estas son las opciones para enreda-empresas, enredaentidadsocial no está para móviles ahora mismo en el proyecto Firebase

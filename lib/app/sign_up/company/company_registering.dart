@@ -12,12 +12,11 @@ import 'package:enreda_empresas/app/home/home_page.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
-import 'package:enreda_empresas/app/models/socialEntityUser.dart';
+import 'package:enreda_empresas/app/models/company.dart';
+import 'package:enreda_empresas/app/models/companyUser.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/database.dart';
-import 'package:enreda_empresas/app/sign_up/socialEntity/social_entity_revision_form.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/checkbox_form.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_city.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_country.dart';
@@ -35,25 +34,26 @@ import '../../common_widgets/custom_stepper.dart';
 import '../../home/resources/validating_form_controls/stream_builder_category_create.dart';
 import '../../models/socialEntitiesCategories.dart';
 import '../validating_form_controls/stream_builder_social_entity_category.dart';
+import 'company_revision_form.dart';
 
 const double contactBtnWidthLg = 200.0;
 const double contactBtnWidthSm = 120.0;
 const double contactBtnWidthMd = 150.0;
 
-class SocialEntityRegistering extends StatefulWidget {
-  const SocialEntityRegistering({Key? key}) : super(key: key);
+class CompanyRegistering extends StatefulWidget {
+  const CompanyRegistering({Key? key}) : super(key: key);
 
   @override
-  State<SocialEntityRegistering> createState() => _SocialEntityRegisteringState();
+  State<CompanyRegistering> createState() => _CompanyRegisteringState();
 }
 
-class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
+class _CompanyRegisteringState extends State<CompanyRegistering> {
   final _formKey = GlobalKey<FormState>();
   final _formKeyContact = GlobalKey<FormState>();
   final _checkFieldKey = GlobalKey<FormState>();
   String? _emailContact;
-  String? _emailSocialEntity;
-  String? _socialEntityId;
+  String? _emailCompany;
+  String? _companyId;
   String? _name;
   String? _cif;
   String? _mission;
@@ -62,9 +62,9 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
   String? _firstName;
   String? _lastName;
   String _phone = '';
-  String _phoneSocialEntity = '';
+  String _phoneCompany = '';
   String _phoneWithCode = '';
-  String _phoneWithCodeSocialEntity = '';
+  String _phoneWithCodeCompany = '';
   String? _country;
   String? _province;
   String? _city;
@@ -87,8 +87,8 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
   late String provinceName;
   late String cityName;
   SocialEntityCategory? _selectedSocialEntityCategory;
-  String? _socialEntityCategoryName;
-  String? _socialEntityCategoryId;
+  String? _companyCategoryName;
+  String? _companyCategoryId;
   String phoneCode = '+34';
   String initialCountryCode = 'ES';
   TextTheme? textTheme;
@@ -109,7 +109,7 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
   @override
   void initState() {
     super.initState();
-    _socialEntityId = "";
+    _companyId = "";
     _name = "";
     _cif = "";
     _mission = "";
@@ -117,9 +117,9 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
     _otherSocialMedia = "";
     _geographicZone = "";
     _subGeographicZone = "";
-    _socialEntityCategoryName = "";
-    _socialEntityCategoryId = "";
-    _emailSocialEntity = "";
+    _companyCategoryName = "";
+    _companyCategoryId = "";
+    _emailCompany = "";
     _emailContact = "";
     _firstName = "";
     _lastName = "";
@@ -167,33 +167,33 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
         city: _city,
         postalCode: _postalCode,
       );
-      final socialEntity = SocialEntity(
-        socialEntityId: _socialEntityId,
+      final company = Company(
+        companyId: _companyId,
         name: _name!,
         cif: _cif!,
         mision: _mission,
-        category: _socialEntityCategoryId,
+        category: _companyCategoryId,
         geographicZone : _geographicZone,
         subGeographicZone : _subGeographicZone,
-        email: _emailSocialEntity,
+        email: _emailCompany,
         contactEmail: _emailContact,
-        phone: _phoneWithCodeSocialEntity,
+        phone: _phoneWithCodeCompany,
         linkedin: _linkedin,
         otherSocialMedia: _otherSocialMedia,
         address: address,
       );
-      final socialEntityUser = SocialEntityUser(
+      final companyUser = CompanyUser(
         firstName: _firstName,
         lastName: _lastName,
-        email: _emailContact,
+        email: _emailContact!,
         phone: _phoneWithCode,
         address: address,
-        role: 'Entidad Social',
+        role: 'Empresa',
       );
       try {
         final database = Provider.of<Database>(context, listen: false);
-        await database.addSocialEntityUser(socialEntityUser);
-        await database.addSocialEntity(socialEntity);
+        await database.addCompanyUser(companyUser);
+        await database.addCompany(company);
         showAlertDialog(
           context,
           title: StringConst.FORM_SUCCESS,
@@ -234,16 +234,16 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
             children: <Widget> [
               CustomFormField(
                 child: customTextFormField(context, _name!, '', StringConst.FORM_GENERIC_ERROR, _name_setState),
-                label: StringConst.FORM_ENTITY_NAME,),
+                label: StringConst.FORM_COMPANY_NAME,),
               CustomFormField(
                 child: customTextFormField(context, _cif!, '', StringConst.FORM_GENERIC_ERROR, _cif_setState),
-                label: StringConst.FORM_ENTITY_CIF,),
+                label: StringConst.FORM_COMPANY_CIF,),
               CustomFormField(
                 child: streamBuilderDropdownSocialEntityCategory(context, _selectedSocialEntityCategory, buildResourceCategoryStreamBuilderSetState),
-                label: StringConst.FORM_ENTITY_CATEGORY,),
+                label: StringConst.FORM_COMPANY_CATEGORY,),
               CustomFormField(
                 child: customTextFormField(context, _mission!, '', StringConst.FORM_GENERIC_ERROR, _mission_setState),
-                label: StringConst.FORM_ENTITY_MISSION,),
+                label: StringConst.FORM_COMPANY_MISSION,),
               CustomFlexRowColumn(
                   contentPadding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
                   childLeft: CustomDropDownButton(
@@ -274,8 +274,8 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
               CustomFlexRowColumn(
                   contentPadding: const EdgeInsets.all(0),
                   childLeft: CustomFormField(
-                    child: customTextFormField(context, _emailSocialEntity!, '', StringConst.FORM_GENERIC_ERROR, _email_SocialEntity_setState),
-                    label: StringConst.FORM_ENTITY_EMAIL,),
+                    child: customTextFormField(context, _emailCompany!, '', StringConst.FORM_GENERIC_ERROR, _email_Company_setState),
+                    label: StringConst.FORM_COMPANY_EMAIL,),
                   childRight: CustomFormField(
                     child: TextFormField(
                       decoration: InputDecoration(
@@ -309,12 +309,12 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
                           ),
                         ),
                       ),
-                      initialValue: _phoneSocialEntity,
+                      initialValue: _phoneCompany,
                       validator: (value) =>
                       value!.isNotEmpty ? null : StringConst.PHONE_ERROR,
                       onSaved: (value) {
-                        _phoneSocialEntity = value!;
-                        _phoneWithCodeSocialEntity = phoneCode + _phoneSocialEntity;
+                        _phoneCompany = value!;
+                        _phoneWithCodeCompany = phoneCode + _phoneCompany;
                       },
                       textCapitalization: TextCapitalization.sentences,
                       keyboardType: TextInputType.phone,
@@ -481,15 +481,15 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
             margin: Responsive.isMobile(context) ? EdgeInsets.all(0) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
             contentPadding: Responsive.isMobile(context) ? EdgeInsets.all(0) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
             borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
-            child: socialEntityRevisionForm(
+            child: companyRevisionForm(
               context,
               _name!,
               _cif!,
-              _socialEntityCategoryName!,
+              _companyCategoryName!,
               _mission!,
               _geographicZone!,
               _subGeographicZone!,
-              _phoneWithCodeSocialEntity,
+              _phoneWithCodeCompany,
               _linkedin!,
               _otherSocialMedia!,
               countryName,
@@ -560,16 +560,16 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
   }
 
   void buildResourceCategoryStreamBuilderSetState(
-    SocialEntityCategory? socialEntityCategory) {
+    SocialEntityCategory? companyCategory) {
     setState(() {
-      _selectedSocialEntityCategory = socialEntityCategory;
-      _socialEntityCategoryName = socialEntityCategory != null ? socialEntityCategory.name : "";
-      _socialEntityCategoryId = socialEntityCategory?.socialEntityCategoryId;
+      _selectedSocialEntityCategory = companyCategory;
+      _companyCategoryName = companyCategory != null ? companyCategory.name : "";
+      _companyCategoryId = companyCategory?.socialEntityCategoryId;
     });
   }
 
-  void _email_SocialEntity_setState(String? val) {
-    setState(() => _emailSocialEntity = val!);
+  void _email_Company_setState(String? val) {
+    setState(() => _emailCompany = val!);
   }
 
   void _linkedin_setState(String? val) {
@@ -609,7 +609,7 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
           border: Border.all(color: AppColors.greyLight, width: 2.0,),
         ),
         child: Text(
-          StringConst.FORM_SOCIAL_ENTITY_INFO,
+          StringConst.FORM_SOCIAL_COMPANY_INFO,
           style: textTheme?.titleSmall!.copyWith(
               color: AppColors.primary900
           ),
@@ -719,7 +719,7 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-                  child: CustomTextMediumBold(text: StringConst.FORM_ENTITY_REGISTER,))
+                  child: CustomTextMediumBold(text: StringConst.FORM_COMPANY_REGISTER,))
               ],
             ),
           ),
@@ -776,7 +776,7 @@ class _SocialEntityRegisteringState extends State<SocialEntityRegistering> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble),
-                      child: CustomTextMedium(text: StringConst.CREATE_NEW_ENTITY,),
+                      child: CustomTextMedium(text: StringConst.CREATE_NEW_COMPANY,),
                     ),
                   ],
                 ),

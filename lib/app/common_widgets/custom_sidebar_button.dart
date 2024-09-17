@@ -4,6 +4,8 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/link.dart';
 
+import '../home/resources/my_resources_list_page.dart';
+
 
 class CustomSideBarButton extends StatelessWidget {
   const CustomSideBarButton({
@@ -38,7 +40,7 @@ class CustomSideBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.0),
+      margin: EdgeInsets.symmetric(horizontal: 2.0),
       child: OutlinedButton(
         onPressed: onPressed,
         child: buildChild(context),
@@ -46,7 +48,7 @@ class CustomSideBarButton extends StatelessWidget {
           padding: MaterialStateProperty.all(EdgeInsets.only(left: 8, bottom: 10, top: 10)),
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-              if (WebHome.selectedIndex.value == 1) {
+              if (MyResourcesListPage.selectedIndex.value == 1) {
                 return AppColors.primary100;
               }
               return AppColors.white;
@@ -88,14 +90,14 @@ class CustomSideBarButton extends StatelessWidget {
         children: [
           Container(
               child: widget ?? Container()),
-          SizedBox(width: 10,),
+          SizedBox(width: 4,),
           Text(
             buttonTitle,
             style: titleStyle ??
                 textTheme.bodySmall?.copyWith(
                   color: titleColor,
                   fontSize: textSize,
-                  fontWeight: WebHome.selectedIndex.value == 1 ? FontWeight.w900 : FontWeight.w500,
+                  fontWeight: MyResourcesListPage.selectedIndex.value == 1 ? FontWeight.w900 : FontWeight.w500,
                 ),
           ),
 

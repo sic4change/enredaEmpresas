@@ -17,7 +17,7 @@ import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/externalSocialEntity.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/socialEntitiesType.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_city.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_country.dart';
@@ -201,8 +201,8 @@ class _CreateExternalSocialEntityPageState extends State<CreateExternalSocialEnt
     final auth = Provider.of<AuthBase>(context, listen: false);
     if (_validateAndSaveForm() == false) {
       await showAlertDialog(context,
-          title: StringConst.FORM_ENTITY_ERROR,
-          content: StringConst.FORM_ENTITY_CHECK,
+          title: StringConst.FORM_COMPANY_ERROR,
+          content: StringConst.FORM_COMPANY_CHECK,
           defaultActionText: StringConst.CLOSE);
     }
 
@@ -253,7 +253,7 @@ class _CreateExternalSocialEntityPageState extends State<CreateExternalSocialEnt
         await database.addExternalSocialEntity(externalSocialEntity);
         await showAlertDialog(
           context,
-          title: StringConst.CREATE_ENTITY,
+          title: StringConst.CREATE_COMPANY,
           content: StringConst.CREATE_PARTICIPANT_SUCCESS,
           defaultActionText: StringConst.FORM_ACCEPT,
         );

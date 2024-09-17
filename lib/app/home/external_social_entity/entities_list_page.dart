@@ -2,7 +2,7 @@ import 'package:chips_choice/chips_choice.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_chip.dart';
 import 'package:enreda_empresas/app/models/filterResource.dart';
 import 'package:enreda_empresas/app/models/socialEntitiesType.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/values.dart';
@@ -27,7 +27,7 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
   List<SocialEntitiesType> socialEntityTypes = [];
   final _searchTextController = TextEditingController();
   FilterResource filterResource = FilterResource("", []);
-  List<SocialEntity> finalSocialEntities = [];
+  List<Company> finalSocialEntities = [];
   bool create = false;  //Choose between show list of social entities or create form
 
 

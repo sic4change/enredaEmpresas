@@ -1,9 +1,7 @@
 import 'package:enreda_empresas/app/models/addressUser.dart';
-import 'package:enreda_empresas/app/models/education.dart';
 import 'package:enreda_empresas/app/models/interestsUserEnreda.dart';
 import 'package:enreda_empresas/app/models/language.dart';
 import 'package:enreda_empresas/app/models/motivation.dart';
-import 'package:enreda_empresas/app/models/documentationParticipant.dart';
 import 'package:enreda_empresas/app/models/profilepic.dart';
 
 class UserEnreda {
@@ -37,6 +35,7 @@ class UserEnreda {
     this.aboutMe,
     this.organization,
     this.socialEntityId,
+    this.companyId,
     required this.resources,
     this.gamificationFlags = const {},
     this.assignedById,
@@ -59,6 +58,7 @@ class UserEnreda {
     final String email = data['email'];
     final String? organization = data['organization'];
     final String? socialEntityId = data['socialEntityId']?? "";
+    final String? companyId = data['companyId'] ?? "";
     final String? role = data['role'];
 
     final String? firstName = data['firstName'];
@@ -191,21 +191,6 @@ class UserEnreda {
       });
     }
 
-    // List<PersonalDocument> personalDocuments = [];
-    // if (data['personalDocuments'] != null) {
-    //   data['personalDocuments'].forEach((personalDocument) {
-    //     final personalDocumentsFirestore = personalDocument as Map<String, dynamic>;
-    //     personalDocuments.add(
-    //         PersonalDocument(
-    //           name: personalDocumentsFirestore['name'] ?? '',
-    //           order: personalDocumentsFirestore['order'] ?? 0,
-    //           document: personalDocumentsFirestore['document'] ?? '',
-    //           createDate: personalDocumentsFirestore['createDate'] != null ? DateTime.parse(personalDocumentsFirestore['createDate']) : DateTime.now(),
-    //         )
-    //     );
-    //   });
-    // }
-
     late String? assignedById = data['assignedById']?? "";
     final String? assignedEntityId = data['assignedEntityId']?? "";
     final int resourcesAccessCount = data['resourcesAccessCount']?? 0;
@@ -262,14 +247,14 @@ class UserEnreda {
       resourcesAccessCount: resourcesAccessCount,
       motivation: motivation,
       checkAgreeCV: checkAgreeCV,
-      //personalDocuments: personalDocuments,
       initialReportId: initialReportId,
       closureReportId: closureReportId,
       followReportId: followReportId,
       derivationReportId: derivationReportId,
       nationality: nationality,
       ipilObjectivesId: ipilObjectivesId,
-      startDateItinerary: startDateItinerary
+      startDateItinerary: startDateItinerary,
+      companyId: companyId,
     );
   }
 
@@ -303,6 +288,7 @@ class UserEnreda {
   final String? aboutMe;
   final String? organization;
   final String? socialEntityId;
+  final String? companyId;
   final List<String> resources;
   final Map<String, bool> gamificationFlags;
   late String? assignedById;
@@ -354,6 +340,7 @@ class UserEnreda {
       'educationId': educationId,
       'organization': organization,
       'socialEntityId': socialEntityId,
+      'companyId': companyId,
       'resources': resources,
       'gamificationFlags': gamificationFlags,
       'assignedById': assignedById,
@@ -406,6 +393,7 @@ class UserEnreda {
     String? aboutMe,
     String? organization,
     String? socialEntityId,
+    String? companyId,
     Map<String, bool>? gamificationFlags,
     String? assignedById,
     String? assignedEntityId,
@@ -450,6 +438,7 @@ class UserEnreda {
       aboutMe: aboutMe ?? this.aboutMe,
       organization: organization ?? this.organization,
       socialEntityId: socialEntityId ?? this.socialEntityId,
+      companyId: companyId ?? this.companyId,
       resources: resources ?? this.resources,
       gamificationFlags: gamificationFlags ?? this.gamificationFlags,
       assignedById: assignedById,

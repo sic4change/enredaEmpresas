@@ -25,7 +25,7 @@ class ParticipantsListPage extends StatefulWidget {
 
 class _ParticipantsListPageState extends State<ParticipantsListPage> {
   var _bodyWidget = [];
-  late UserEnreda socialEntityUser;
+  late UserEnreda companyUser;
 
   @override
   void dispose() {
@@ -48,8 +48,6 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
             color: AppColors.grey80,
             borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
             margin: Responsive.isMobile(context) ? EdgeInsets.all(20) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
-            // contentPadding: Responsive.isMobile(context) ? EdgeInsets.all(0) :
-            // EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble * 2, vertical: Sizes.kDefaultPaddingDouble),
             child: Stack(
               alignment: Alignment.topLeft,
               children: [
@@ -94,23 +92,23 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
           return const Center(child: CircularProgressIndicator());
         }
         globals.currentSocialEntityUser = snapshot.data!;
-        socialEntityUser = snapshot.data!;
+        companyUser = snapshot.data!;
         return StreamBuilder<List<UserEnreda>>(
-          stream: database.getParticipantsBySocialEntityStream(socialEntityUser.socialEntityId!),
+          stream: database.getParticipantsBySocialEntityStream(companyUser.companyId!),
           builder: (context, userSnapshot) {
             if(userSnapshot.hasData) {
               return StreamBuilder(
-                stream: database.socialEntityStreamById(socialEntityUser.socialEntityId!),
+                stream: database.companyStreamById(companyUser.companyId!),
                 builder: (context, socialEntitySnapshot) {
                   if (socialEntitySnapshot.hasData) {
                     final textTheme = Theme.of(context).textTheme;
                     final users = userSnapshot.data!;
                     final myParticipants = users.where((u) =>
-                    u.assignedEntityId == socialEntityUser.socialEntityId!
-                        && u.assignedById == socialEntityUser.userId).toList();
+                    u.assignedEntityId == companyUser.companyId!
+                        && u.assignedById == companyUser.userId).toList();
                     final allOtherParticipants = users.where((u) =>
-                    u.assignedEntityId == socialEntityUser.socialEntityId!
-                        && u.assignedById != socialEntityUser.userId).toList();
+                    u.assignedEntityId == companyUser.companyId!
+                        && u.assignedById != companyUser.userId).toList();
 
                     return SingleChildScrollView(
                       child: Padding(
@@ -130,7 +128,7 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                                 itemBuilder: (context, user) {
                                   return ParticipantsListTile(
                                       user: user,
-                                      socialEntityUserId: socialEntityUser.socialEntityId!,
+                                      socialEntityUserId: companyUser.companyId!,
                                       onTap: () => setState(() {
                                         globals.currentParticipant = user;
                                         ParticipantsListPage.selectedIndex.value = 1;
@@ -146,11 +144,11 @@ class _ParticipantsListPageState extends State<ParticipantsListPage> {
                             SpaceH20(),
                             ParticipantsItemBuilder(
                                 usersList: allOtherParticipants,
-                                emptyMessage: 'No hay participantes gestionados por tu entidad',
+                                emptyMessage: 'No hay participantes gestionados por tu empresa',
                                 itemBuilder: (context, user) {
                                   return ParticipantsListTile(
                                       user: user,
-                                      socialEntityUserId: socialEntityUser.socialEntityId!,
+                                      socialEntityUserId: companyUser.companyId!,
                                       onTap: () => setState(() {
                                         globals.currentParticipant = user;
                                         ParticipantsListPage.selectedIndex.value = 1;

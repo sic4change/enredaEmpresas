@@ -5,15 +5,15 @@ import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
 import 'package:enreda_empresas/app/sign_in/email_sign_in_change_model.dart';
-import 'package:enreda_empresas/app/sign_up/socialEntity/social_entity_registering.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../sign_up/company/company_registering.dart';
 
 
 class EmailSignInFormChangeNotifier extends StatefulWidget {
@@ -115,6 +115,8 @@ class _EmailSignInFormChangeNotifierState
       focusNode: _emailFocusNode,
       cursorColor: AppColors.primary900,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.white,
         labelText: 'Correo electrónico',
         hintText: 'email@email.com',
         hintStyle: textTheme.bodySmall?.copyWith(
@@ -168,6 +170,8 @@ class _EmailSignInFormChangeNotifierState
       focusNode: _passwordFocusNode,
       cursorColor: AppColors.primary900,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.white,
         labelText: 'Contraseña',
         hintStyle: textTheme.bodySmall?.copyWith(
           height: 1.5,
@@ -243,7 +247,7 @@ class _EmailSignInFormChangeNotifierState
     Navigator.of(this.context).push(
       MaterialPageRoute<void>(
         fullscreenDialog: true,
-        builder: ((context) => const SocialEntityRegistering()),
+        builder: ((context) => const CompanyRegistering()),
       ),
     );
   }

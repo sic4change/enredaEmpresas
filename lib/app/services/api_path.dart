@@ -6,9 +6,9 @@ class APIPath {
   static String documentCategories() => 'documentCategories';
   static String resourceType(String resourceType) => 'resourcesTypes/$resourceType';
   static String resourceCategory(String resourceCategory) => 'resourcesCategories/$resourceCategory';
-  static String socialEntity(String socialEntityId) => 'socialEntities/$socialEntityId';
+  static String company(String companyId) => 'companies/$companyId';
   static String organization(String organizationId) => 'organizations/$organizationId';
-  static String socialEntities() => 'socialEntities';
+  static String companies() => 'companies';
   static String externalSocialEntities() => 'externalSocialEntities';
   static String externalSocialEntity(String externalSocialEntityId) => 'externalSocialEntities/$externalSocialEntityId';
   static String country(String? countryId) => 'countries/$countryId';
@@ -25,7 +25,7 @@ class APIPath {
   static String user(String userId) => 'users/$userId';
   static String interests() => 'interests';
   static String photoUser(String userId) => 'users/$userId';
-  static String logoSocialEntity(String socialEntityId) => 'socialEntities/$socialEntityId';
+  static String logoSocialEntity(String companyId) => 'socialEntities/$companyId';
   static String contacts() => 'contact';
   static String certificates() => 'certificates';
   static String certificate(String certificateId) => 'certificates/$certificateId';

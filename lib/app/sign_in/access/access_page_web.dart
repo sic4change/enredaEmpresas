@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../common_widgets/spaces.dart';
-import '../../common_widgets/stores_buttons.dart';
 import '../../utils/adaptative.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
@@ -16,15 +14,8 @@ class AccessPageWeb extends StatefulWidget {
 class _AccessPageWebState extends State<AccessPageWeb> {
   @override
   Widget build(BuildContext context) {
-    final double largeHeight = 900;
     return Scaffold(
-        body: LayoutBuilder(
-            builder: (context, constraints) {
-              return constraints.maxHeight > largeHeight
-                  ? _buildLargeBody(context)
-                  : _buildSmallBody(context);
-            }
-        )
+        body: _buildLargeBody(context),
     );
   }
 
@@ -36,32 +27,35 @@ class _AccessPageWebState extends State<AccessPageWeb> {
     return Stack(
       children: [
         Center(
-          child: Container(
-            height: heightSize * 0.80,
-            width: widthSize * 0.80,
-            child: Card(
-              color: AppColors.primary100,
-              elevation: 5,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Image.asset(
-                      height: heightSize * 0.85,
-                      ImagePath.ACCESS_PHOTO,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Expanded(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 1600),
+            child: Container(
+              height: heightSize * 0.80,
+              width: widthSize * 0.80,
+              child: Card(
+                color: AppColors.yellow,
+                elevation: 5,
+                child: Row(
+                  children: [
+                    Expanded(
                       flex: 5,
-                      child: Container()),
-                ],
+                      child: Image.asset(
+                        height: heightSize * 0.85,
+                        ImagePath.ACCESS_PHOTO,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Expanded(
+                        flex: 5,
+                        child: Container()),
+                  ],
+                ),
               ),
             ),
           ),
         ),
         Positioned(
-          top: Responsive.isDesktopS(context) ? 70 : 100,
+          top: Responsive.isDesktopS(context) ? 70 : 110,
           left: 0,
           right: 0,
           child: Center(
@@ -106,7 +100,7 @@ class _AccessPageWebState extends State<AccessPageWeb> {
                                 children: [
                                   Expanded(child: Container()),
                                   Image.asset(
-                                    ImagePath.LOGO,
+                                    ImagePath.LOGO_DARK,
                                     height: Sizes.HEIGHT_100,
                                   ),
                                 ],
@@ -124,7 +118,7 @@ class _AccessPageWebState extends State<AccessPageWeb> {
                                           StringConst.LOOKING_FOR_OPPORTUNITIES,
                                           textAlign: TextAlign.center,
                                           overflow: TextOverflow.ellipsis,
-                                          maxLines: 3,
+                                          maxLines: 4,
                                           style: textTheme.bodyLarge?.copyWith(
                                             height: 1.5,
                                             color: AppColors.primary900,
@@ -141,148 +135,6 @@ class _AccessPageWebState extends State<AccessPageWeb> {
                                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                                   child: EmailSignInFormChangeNotifier.create(context),
                                 ),
-                                SpaceH4(),
-                                kIsWeb ? buildStoresButtons(context) : Container(),
-                                SpaceH4(),
-                                kIsWeb ? Text(
-                                  StringConst.BETTER_FROM_APPS,
-                                  style: textTheme.bodySmall?.copyWith(
-                                    height: 1.5,
-                                    color: AppColors.primary900,
-                                  ),
-                                ) : Container(),
-                              ],
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                      )),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSmallBody(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final double widthSize = MediaQuery.of(context).size.width;
-    final double heightSize = MediaQuery.of(context).size.height;
-    double fontSize = responsiveSize(context, 20, 30, md: 22);
-    return Stack(
-      children: [
-        Center(
-          child: Container(
-            height: heightSize * 0.80,
-            width: widthSize * 0.85,
-            child: Card(
-              color: AppColors.primary100,
-              elevation: 5,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Image.asset(
-                      height: 750,
-                      ImagePath.ACCESS_PHOTO,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Expanded(
-                      flex: 5,
-                      child: Container()),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 70,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: Container(
-                padding: EdgeInsets.only(left: 4, right: 30, top: 50),
-                width: widthSize * 0.85,
-                child: Image.asset(ImagePath.ACCESS_VECTOR)),
-          ),
-        ),
-        Center(
-          child: Container(
-            height: heightSize * 0.80,
-            width: widthSize * 0.85,
-            child: Card(
-              color: Colors.transparent,
-              elevation: 0,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                  Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: EdgeInsets.all(Sizes.mainPadding),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0, top: 50),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Image.asset(
-                                    ImagePath.LOGO,
-                                    height: Sizes.HEIGHT_74,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 34,
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      StringConst.LOOKING_FOR_OPPORTUNITIES,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 3,
-                                      style: textTheme.bodyLarge?.copyWith(
-                                        height: 1.5,
-                                        color: AppColors.primary900,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: fontSize,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                  ],
-                                ),
-                                SpaceH12(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                                  child: EmailSignInFormChangeNotifier.create(context),
-                                ),
-                                SpaceH4(),
-                                kIsWeb ? buildStoresButtons(context) : Container(),
-                                SpaceH4(),
-                                kIsWeb ? Text(
-                                  StringConst.BETTER_FROM_APPS,
-                                  style: textTheme.bodySmall?.copyWith(
-                                    height: 1.5,
-                                    color: AppColors.primary900,
-                                  ),
-                                ) : Container(),
                               ],
                             ),
                             Spacer(),

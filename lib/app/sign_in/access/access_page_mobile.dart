@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../common_widgets/spaces.dart';
-import '../../common_widgets/stores_buttons.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
@@ -15,11 +13,10 @@ class AccessPageMobile extends StatefulWidget {
 class _AccessPageMobileState extends State<AccessPageMobile> {
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Container(
-        color: AppColors.primary100,
+        color: AppColors.yellow,
         height: MediaQuery.of(context).size.height,
         alignment: Alignment.center,
         child: SingleChildScrollView(
@@ -31,7 +28,7 @@ class _AccessPageMobileState extends State<AccessPageMobile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
-                    ImagePath.LOGO,
+                    ImagePath.LOGO_DARK,
                     height: Responsive.isMobile(context) ? Sizes.HEIGHT_50 : Sizes.HEIGHT_60,
                   ),
                   SpaceH30(),
@@ -52,16 +49,6 @@ class _AccessPageMobileState extends State<AccessPageMobile> {
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: EmailSignInFormChangeNotifier.create(context),
                   ),
-                  SpaceH20(),
-                  kIsWeb ? buildStoresButtons(context) : Container(),
-                  SpaceH4(),
-                  kIsWeb ? Text(
-                    StringConst.BETTER_FROM_APPS,
-                    style: textTheme.bodySmall?.copyWith(
-                      height: 1.5,
-                      color: AppColors.primary900,
-                    ),
-                  ) : Container(),
                 ],
               ),
             ],

@@ -5,7 +5,7 @@ import 'package:enreda_empresas/app/home/resources/create_resource/create_resour
 import 'package:enreda_empresas/app/home/resources/edit_resource/edit_resource.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/resources_page.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/values.dart';
@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 
 
 class MyResourcesListPage extends StatefulWidget {
-  const MyResourcesListPage({super.key, required this.socialEntity});
-  final SocialEntity? socialEntity;
+  const MyResourcesListPage({super.key, required this.company});
+  final Company? company;
 
   static ValueNotifier<int> selectedIndex = ValueNotifier(0);
 
@@ -26,7 +26,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   bool? isVisible = true;
   List<UserEnreda>? myParticipantsList = [];
   List<String>? interestsIdsList = [];
-  SocialEntity? organizer;
+  Company? organizer;
   List<String> interestSelectedName = [];
   var bodyWidget = [];
 
@@ -34,8 +34,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   void initState() {
     bodyWidget = [
       ResourcesListPage(),
-      CreateResource(socialEntityId: widget.socialEntity?.socialEntityId!),
-      ResourceDetailPage(socialEntityId: widget.socialEntity?.socialEntityId!),
+      CreateResource(companyId: widget.company?.companyId!),
+      ResourceDetailPage(companyId: widget.company?.companyId!),
       EditResource()
     ];
     super.initState();

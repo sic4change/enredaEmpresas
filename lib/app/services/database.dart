@@ -34,8 +34,7 @@ import 'package:enreda_empresas/app/models/region.dart';
 import 'package:enreda_empresas/app/models/documentationParticipant.dart';
 import 'package:enreda_empresas/app/models/personalDocumentType.dart';
 import 'package:enreda_empresas/app/models/socialEntitiesType.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
-import 'package:enreda_empresas/app/models/socialEntityUser.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
@@ -60,20 +59,21 @@ import '../models/ipilCoordination.dart';
 import '../models/ipilImprovementEmployment.dart';
 import '../models/ipilObtainingEmployment.dart';
 import '../models/socialEntitiesCategories.dart';
+import '../models/companyUser.dart';
 import '../utils/functions.dart';
 
 abstract class Database {
      Stream<List<Resource>> resourcesStream();
      Stream<List<Resource>> limitResourcesStream(int i);
      Stream<Resource> resourceStream(String? resourceId);
-     Stream<List<Resource>> myResourcesStream(String socialEntityId);
-     Stream<List<Resource>> myLimitResourcesStream(String socialEntityId, int i);
+     Stream<List<Resource>> myResourcesStream(String companyId);
+     Stream<List<Resource>> myLimitResourcesStream(String companyId, int i);
      Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId);
-     Stream<List<UserEnreda>> getParticipantsBySocialEntityStream(String socialEntityId);
-     Stream<List<SocialEntity>> socialEntitiesStream();
-     Stream<List<ExternalSocialEntity>> filteredExternalSocialEntitiesStream(FilterResource filter, String socialEntityId);
-     Stream<List<SocialEntity>> socialEntityByIdStream(String socialEntityId);
-     Stream<SocialEntity> socialEntityStream(String? socialEntityId);
+     Stream<List<UserEnreda>> getParticipantsBySocialEntityStream(String companyId);
+     Stream<List<Company>> socialEntitiesStream();
+     Stream<List<ExternalSocialEntity>> filteredExternalSocialEntitiesStream(FilterResource filter, String companyId);
+     Stream<List<Company>> companyByIdStream(String companyId);
+     Stream<Company> companyStream(String? companyId);
      Stream<ExternalSocialEntity> externalSocialEntityByIdStream(String externalSocialEntityId);
      Stream<UserEnreda> mentorStream(String mentorId);
      Stream<UserEnreda?> userStreamByEmail(String? email);
@@ -95,7 +95,7 @@ abstract class Database {
      Stream<List<Interest>> resourcesInterestsStream(List<String?> interestsIdList);
      Stream<List<Competency>> resourcesCompetenciesStream(List<String?> competenciesIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
-     Stream<SocialEntity> socialEntityStreamById(String? socialEntityId);
+     Stream<Company> companyStreamById(String? companyId);
      Stream<Organization> organizationStreamById(String organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
      Stream<ResourceType> resourceTypeStreamById(String? resourceTypeId);
@@ -129,14 +129,14 @@ abstract class Database {
      Future<void> setUserEnreda(UserEnreda userEnreda);
      Future<void> deleteUser(UserEnreda userEnreda);
      Future<void> uploadUserAvatar(String userId, Uint8List data);
-     Future<void> uploadLogoAvatar(String socialEntityId, Uint8List data);
+     Future<void> uploadLogoAvatar(String companyId, Uint8List data);
      Future<void> addContact(Contact contact);
      Future<void> setResource(Resource resource);
      Future<void> setExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> deleteResource(Resource resource);
      Future<void> deleteExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
-     Future<void> addSocialEntityUser(SocialEntityUser socialEntityUser);
-     Future<void> addSocialEntity(SocialEntity socialEntity);
+     Future<void> addCompanyUser(CompanyUser companyUser);
+     Future<void> addCompany(Company company);
      Future<void> addExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> addResource(Resource resource);
      Future<void> addResourceInvitation(ResourceInvitation resourceInvitation);
@@ -208,29 +208,29 @@ class FirestoreDatabase implements Database {
       _service.deleteData(path: APIPath.resource(resource.resourceId!));
 
   @override
-  Future<void> deleteExternalSocialEntity(ExternalSocialEntity socialEntity) =>
-      _service.deleteData(path: APIPath.externalSocialEntity(socialEntity.externalSocialEntityId!));
+  Future<void> deleteExternalSocialEntity(ExternalSocialEntity company) =>
+      _service.deleteData(path: APIPath.externalSocialEntity(company.externalSocialEntityId!));
 
   @override
   Future<void> setExternalSocialEntity(ExternalSocialEntity externalSocialEntity) => _service.updateData(
       path: APIPath.externalSocialEntity(externalSocialEntity.externalSocialEntityId!), data: externalSocialEntity.toMap());
 
   @override
-    Stream<List<Resource>> myResourcesStream(String socialEntityId) =>
+    Stream<List<Resource>> myResourcesStream(String companyId) =>
         _service.collectionStream(
           path: APIPath.resources(),
           queryBuilder: (query) =>
-              query.where('organizer', isEqualTo: socialEntityId),
+              query.where('organizer', isEqualTo: companyId),
           builder: (data, documentId) => Resource.fromMap(data, documentId),
           sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
         );
 
     @override
-    Stream<List<Resource>> myLimitResourcesStream(String socialEntityId, int limit) =>
+    Stream<List<Resource>> myLimitResourcesStream(String companyId, int limit) =>
       _service.collectionStream(
         path: APIPath.resources(),
         queryBuilder: (query) => query
-            .where('organizer', isEqualTo: socialEntityId)
+            .where('organizer', isEqualTo: companyId)
             .limit(limit),
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
@@ -258,7 +258,7 @@ class FirestoreDatabase implements Database {
     @override
     Stream<List<Resource>> resourcesStream() => _service.collectionStream(
       path: APIPath.resources(),
-      queryBuilder: (query) => query.where('organizerType', isEqualTo: "Entidad Social"),
+      queryBuilder: (query) => query.where('organizerType', isEqualTo: "Empresa"),
       builder: (data, documentId) => Resource.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.createdate.compareTo(rhs.createdate),
     );
@@ -268,26 +268,26 @@ class FirestoreDatabase implements Database {
       _service.collectionStream(
         path: APIPath.resources(),
         queryBuilder: (query) => query
-            .where('organizerType', isEqualTo: "Entidad Social")
+            .where('organizerType', isEqualTo: "Empresa")
             .limit(limit),
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
 
     @override
-    Stream<List<SocialEntity>> socialEntitiesStream() => _service.collectionStream(
-      path: APIPath.socialEntities(),
+    Stream<List<Company>> socialEntitiesStream() => _service.collectionStream(
+      path: APIPath.companies(),
       queryBuilder: (query) => query.where('trust', isEqualTo: true),
-      builder: (data, documentId) => SocialEntity.fromMap(data, documentId),
+      builder: (data, documentId) => Company.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
     );
 
   @override
-  Stream<List<ExternalSocialEntity>> filteredExternalSocialEntitiesStream(FilterResource filter, String socialEntityId) {
+  Stream<List<ExternalSocialEntity>> filteredExternalSocialEntitiesStream(FilterResource filter, String companyId) {
     return _service.filteredCollectionStream(
       path: APIPath.externalSocialEntities(),
       queryBuilder: (query) {
-        query = query.where('trust', isEqualTo: true).where('associatedSocialEntityId', isEqualTo: socialEntityId);
+        query = query.where('trust', isEqualTo: true).where('associatedSocialEntityId', isEqualTo: companyId);
         return query;
       },
       builder: (data, documentId) {
@@ -330,20 +330,20 @@ class FirestoreDatabase implements Database {
   }
 
     @override
-    Stream<List<SocialEntity>> socialEntityByIdStream(String socialEntityId) =>
+    Stream<List<Company>> companyByIdStream(String companyId) =>
         _service.collectionStream(
-          path: APIPath.socialEntities(),
-          builder: (data, documentId) => SocialEntity.fromMap(data, documentId),
+          path: APIPath.companies(),
+          builder: (data, documentId) => Company.fromMap(data, documentId),
           queryBuilder: (query) =>
-              query.where('socialEntityId', isEqualTo: socialEntityId),
+              query.where('companyId', isEqualTo: companyId),
           sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
         );
 
     @override
-    Stream<SocialEntity> socialEntityStream(String? socialEntityId) =>
-        _service.documentStream<SocialEntity>(
-          path: APIPath.socialEntity(socialEntityId!),
-          builder: (data, documentId) => SocialEntity.fromMap(data, documentId),
+    Stream<Company> companyStream(String? companyId) =>
+        _service.documentStream<Company>(
+          path: APIPath.company(companyId!),
+          builder: (data, documentId) => Company.fromMap(data, documentId),
         );
 
   @override
@@ -531,10 +531,10 @@ class FirestoreDatabase implements Database {
     }
 
   @override
-  Stream<List<UserEnreda>> getParticipantsBySocialEntityStream(String socialEntityId) {
+  Stream<List<UserEnreda>> getParticipantsBySocialEntityStream(String companyId) {
     return _service.collectionStream<UserEnreda>(
       path: APIPath.users(),
-      queryBuilder: (query) => query.where('assignedEntityId', isEqualTo: socialEntityId),
+      queryBuilder: (query) => query.where('assignedEntityId', isEqualTo: companyId),
       builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
       sort: (lhs, rhs) => (lhs.firstName??"").compareTo(rhs.firstName??""),
     );
@@ -597,11 +597,11 @@ class FirestoreDatabase implements Database {
   }
 
   @override
-  Stream<SocialEntity> socialEntityStreamById(String? socialEntityId) =>
-      _service.documentStream<SocialEntity>(
-        path: APIPath.socialEntity(socialEntityId!),
+  Stream<Company> companyStreamById(String? companyId) =>
+      _service.documentStream<Company>(
+        path: APIPath.company(companyId!),
         builder: (data, documentId) =>
-            SocialEntity.fromMap(data, documentId),
+            Company.fromMap(data, documentId),
       );
 
   @override
@@ -798,14 +798,14 @@ class FirestoreDatabase implements Database {
       }
 
   @override
-  Future<void> uploadLogoAvatar(String socialEntityId, Uint8List data) async {
+  Future<void> uploadLogoAvatar(String companyId, Uint8List data) async {
     var firebaseStorageRef =
-    FirebaseStorage.instance.ref().child('externalSocialEntities/$socialEntityId/logoPic');
+    FirebaseStorage.instance.ref().child('externalSocialEntities/$companyId/logoPic');
     UploadTask uploadTask = firebaseStorageRef.putData(data);
     TaskSnapshot taskSnapshot = await uploadTask;
     taskSnapshot.ref.getDownloadURL().then(
           (value) => {
-        _service.updateData(path: APIPath.externalSocialEntity(socialEntityId), data: {
+        _service.updateData(path: APIPath.externalSocialEntity(companyId), data: {
           "logoPic": {
             'src': '$value',
             'title': 'photo.jpg',
@@ -820,16 +820,16 @@ class FirestoreDatabase implements Database {
         _service.addData(path: APIPath.contacts(), data: contact.toMap());
 
   @override
-  Future<void> addSocialEntity(SocialEntity socialEntity) => _service.addData(
-      path: APIPath.socialEntities(), data: socialEntity.toMap());
+  Future<void> addCompany(Company company) => _service.addData(
+      path: APIPath.companies(), data: company.toMap());
 
   @override
   Future<void> addExternalSocialEntity(ExternalSocialEntity externalSocialEntity) => _service.addData(
       path: APIPath.externalSocialEntities(), data: externalSocialEntity.toMap());
 
   @override
-  Future<void> addSocialEntityUser(SocialEntityUser socialEntityUser) =>
-      _service.addData(path: APIPath.users(), data: socialEntityUser.toMap());
+  Future<void> addCompanyUser(CompanyUser companyUser) =>
+      _service.addData(path: APIPath.users(), data: companyUser.toMap());
 
   @override
   Future<void> addResourceInvitation(ResourceInvitation resourceInvitation) =>

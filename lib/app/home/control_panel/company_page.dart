@@ -1,7 +1,7 @@
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'control_panel_page.dart';
 
 class CompanyPage extends StatefulWidget {
-  const CompanyPage({Key? key, required this.socialEntity, required this.user}) : super(key: key);
-final SocialEntity socialEntity;
+  const CompanyPage({Key? key, required this.company, required this.user}) : super(key: key);
+final Company company;
 final UserEnreda user;
   @override
   State<CompanyPage> createState() => _CompanyPageState();
@@ -31,7 +31,7 @@ class _CompanyPageState extends State<CompanyPage> {
 
   @override
   void initState() {
-    _currentPage = ControlPanelPage(socialEntity: widget.socialEntity, user: widget.user,);
+    _currentPage = ControlPanelPage(company: widget.company, user: widget.user,);
     super.initState();
   }
 
@@ -40,11 +40,11 @@ class _CompanyPageState extends State<CompanyPage> {
     textTheme = Theme.of(context).textTheme;
     return Responsive.isDesktop(context) ||
         Responsive.isDesktopS(context)
-        ? _buildDesktopLayout(widget.socialEntity, widget.user)
+        ? _buildDesktopLayout(widget.company, widget.user)
         : Container();
   }
 
-  Widget _buildDesktopLayout(SocialEntity socialEntity, UserEnreda user) {
+  Widget _buildDesktopLayout(Company company, UserEnreda user) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Flex(
@@ -56,7 +56,7 @@ class _CompanyPageState extends State<CompanyPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildMyControlPanel(socialEntity, user),
+                  _buildMyControlPanel(company, user),
                 ],
               ),
             ),
@@ -135,7 +135,7 @@ class _CompanyPageState extends State<CompanyPage> {
     );
   }
 
-  Widget _buildMyControlPanel(SocialEntity? socialEntity, UserEnreda? user) {
+  Widget _buildMyControlPanel(Company? company, UserEnreda? user) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: Sizes.mainPadding),
       decoration: const BoxDecoration(
@@ -149,7 +149,7 @@ class _CompanyPageState extends State<CompanyPage> {
             text: StringConst.CONTROL_PANEL,
             imagePath: ImagePath.ICON_CV,
             onTap: () => setState(() {
-              _currentPage = ControlPanelPage(socialEntity: socialEntity, user: user,);
+              _currentPage = ControlPanelPage(company: company, user: user,);
               _currentPageTitle = StringConst.CONTROL_PANEL;
               _selectedPageName = StringConst.CONTROL_PANEL;
             }),
@@ -169,7 +169,7 @@ class _CompanyPageState extends State<CompanyPage> {
             text: StringConst.RESOURCES,
             imagePath: ImagePath.ICON_COMPETENCIES,
             onTap: () => setState(() {
-              _currentPage = MyResourcesListPage(socialEntity: socialEntity);
+              _currentPage = MyResourcesListPage(company: company);
               _currentPageTitle = StringConst.RESOURCES;
               _selectedPageName = StringConst.RESOURCES;
             }),

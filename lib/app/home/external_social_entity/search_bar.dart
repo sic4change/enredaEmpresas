@@ -1,7 +1,7 @@
 // import 'dart:async';
 //
 // import 'package:algolia/algolia.dart';
-// import 'package:enreda_empresas/app/models/socialEntity.dart';
+// import 'package:enreda_empresas/app/models/company.dart';
 // import 'package:enreda_empresas/app/services/algolia_search.dart';
 // import 'package:flutter/material.dart';
 //

@@ -18,7 +18,7 @@ import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
@@ -33,8 +33,8 @@ import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 import '../my_resources_list_page.dart';
 
 class ResourceDetailPage extends StatefulWidget {
-  const ResourceDetailPage({Key? key, required this.socialEntityId}) : super(key: key);
-  final String? socialEntityId;
+  const ResourceDetailPage({Key? key, required this.companyId}) : super(key: key);
+  final String? companyId;
 
   @override
   State<ResourceDetailPage> createState() => _ResourceDetailPageState();
@@ -68,8 +68,8 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               return const Center(
                   child: CircularProgressIndicator());
             }
-            return StreamBuilder<SocialEntity>(
-              stream: database.socialEntityStream(resource.organizer),
+            return StreamBuilder<Company>(
+              stream: database.companyStream(resource.organizer),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(
@@ -175,7 +175,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                     children: [
                       Container(
                         constraints: BoxConstraints(
-                          maxWidth: resource.organizer == widget.socialEntityId
+                          maxWidth: resource.organizer == widget.companyId
                               ? MediaQuery.of(context).size.width
                               : MediaQuery.of(context).size.width * 0.5,
                         ),
@@ -264,7 +264,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                         ),
                                       ],
                                     ),
-                                    resource.organizer == widget.socialEntityId ? Row(
+                                    resource.organizer == widget.companyId ? Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Padding(
@@ -341,7 +341,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                       ),
                     ],
                   )),
-              resource.organizer == widget.socialEntityId ? Expanded(
+              resource.organizer == widget.companyId ? Expanded(
                   flex: Responsive.isMobile(context) ||
                       Responsive.isTablet(context) ||
                       Responsive.isDesktopS(context)

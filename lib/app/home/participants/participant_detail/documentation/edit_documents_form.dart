@@ -230,8 +230,8 @@ class _EditDocumentsFormState extends State<EditDocumentsForm> {
     }
     if (_validateAndSaveForm() == false) {
       await showAlertDialog(context,
-          title: StringConst.FORM_ENTITY_ERROR,
-          content: StringConst.FORM_ENTITY_CHECK,
+          title: StringConst.FORM_COMPANY_ERROR,
+          content: StringConst.FORM_COMPANY_CHECK,
           defaultActionText: StringConst.CLOSE);
     }
     if (_validateAndSaveForm() && filesList.length > 0) {

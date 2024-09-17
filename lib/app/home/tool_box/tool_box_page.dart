@@ -3,7 +3,7 @@ import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
 import 'package:enreda_empresas/app/home/tool_box/enreda_methodology.dart';
 import 'package:enreda_empresas/app/home/tool_box/workflow_page.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -24,7 +24,7 @@ class _ToolBoxPageState extends State<ToolBoxPage> {
   bool? isVisible = true;
   List<UserEnreda>? myParticipantsList = [];
   List<String>? interestsIdsList = [];
-  SocialEntity? organizer;
+  Company? organizer;
   List<String> interestSelectedName = [];
   var bodyWidget = [];
 

@@ -9,6 +9,7 @@ class ImagePath {
   // Logo
   static const String LOGO_LIGHT = "$imageDir/logo_light.png";
   static const String LOGO = "$imageDir/enreda-logo.png";
+  static const String LOGO_DARK = "$imageDir/logo.png";
   static const String LOGO_WHITE = "$imageDir/logo-enreda-blanco.png";
   static const String LOGO_MDPI = "$imageDir/enreda-mdpi.png";
   static const String LOGO_IC = "$imageDir/ic_enreda.png";
@@ -145,6 +146,6 @@ class ImagePath {
   static const String CONTROL_PANEL = '$imageDir/panelcontrol-min.png';
   static const String CONTROL_PANEL_CALENDAR = '$imageDir/Illustration-calendar.png';
   static const String CONTROL_CHECKED_BOOK = '$imageDir/book_checked.png';
-  static const String CONTROL_TECHNICAL = '$imageDir/technical_image.png';
+  static const String CONTROL_ILLUSTRATION = '$imageDir/company_illustration.png';
   static const String CONTROL_METHODOLOGY = '$imageDir/methodology_image.png';
 }

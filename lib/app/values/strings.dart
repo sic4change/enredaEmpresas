@@ -44,7 +44,7 @@ class StringConst {
   static const String POSITION = "construir tu futuro.";
   static const String ABOUT_DEV =
       "Una iniciativa alternativa e innovadora de activación y mejora de la empleabilidad juvenil con un enfoque territorial, afincándose en el territorio como una iniciativa comunitaria para y desde los/as jóvenes. "
-      "\n\nenREDa combina tecnología y acción comunitaria para activar y mejorar la empleabilidad juvenil; conecta a los actores y recursos del territorio vinculados con el empleo juvenil (jóvenes, administración, empresas y entidades sociales), al tiempo que dinamiza el desarrollo local. ";
+      "\n\nenREDa combina tecnología y acción comunitaria para activar y mejorar la empleabilidad juvenil; conecta a los actores y recursos del territorio vinculados con el empleo juvenil (jóvenes, administración, empresas y empresaes sociales), al tiempo que dinamiza el desarrollo local. ";
   static const String APP_STORE = "App Store";
   static const String DEV_EMAIL_2 = "escuchamos@enredas.org";
   static const String GOOGLE_PLAY = "Google Play";
@@ -53,7 +53,7 @@ class StringConst {
   static const String COLABORATOR = "Quiero colaborar:";
   static const String COLABORATOR_SUB = "ofrezco mis conocimientos y habilidades.";
   static const String ORGANIZATION = "Soy organización:";
-  static const String FREELANCER_DESC = "empresa, entidad social, administración...";
+  static const String FREELANCER_DESC = "empresa, empresa social, administración...";
 
   static const String PYTHON = "Python";
   static const String JAVA = "Java";
@@ -102,7 +102,7 @@ class StringConst {
   static const String INSTITUTIONS = "Instituciones";
   static const String INSTITUTIONS_1_DESC = "¿Quieres que tus programas y recursos lleguen más lejos?";
   static const String INSTITUTIONS_2_DESC =
-      "EnREDa te acercará al colectivo joven haciendo que tus programas y recursos lleguen a más gente. Puedes darte de alta como entidad colaboradora de enREDa y subir tus vacantes de empleo, formación o voluntariado inmediatamente.";
+      "EnREDa te acercará al colectivo joven haciendo que tus programas y recursos lleguen a más gente. Puedes darte de alta como empresa colaboradora de enREDa y subir tus vacantes de empleo, formación o voluntariado inmediatamente.";
   static const String COMPANIES = "Empresas";
   static const String COMPANIES_1_DESC = "¿Qué buscas en tu plantilla?";
   static const String COMPANIES_2_DESC =
@@ -243,12 +243,12 @@ class StringConst {
   static const String URL_APPSTORE = "https://apps.apple.com/us/app/enreda/id1562810895";
 
   //Access Page
-  static const String LOOKING_FOR_OPPORTUNITIES = '¿Quieres difundir oportunidades entre la juventud?';
-  static const String BETTER_FROM_APPS = 'enREDa es mejor desde nuestras Apps';
+  static const String LOOKING_FOR_OPPORTUNITIES = '¿Quieres conectar con talentos comprometidos y preparados para transformar tu empresa?';
+  static const String BETTER_FROM_APPS = 'Enreda es mejor desde nuestras Apps';
   static const String ACCESS_FROM_BROWSER = 'Acceder desde el navegador';
   static const String ARE_YOU_ADMIN = '¿Eres organización, mentor o administrador?';
   static const String ARE_YOU_YOUNG = '¿Eres usuario joven?';
-  static const String ARENT_YOU_SOCIAL_ENTITY = '¿No eres usuario entidad social?';
+  static const String ARENT_YOU_SOCIAL_COMPANY = '¿No eres usuario empresa social?';
   static const String GO_ADMIN_WEB = 'Ir a la web de administración';
   static const String GO_YOUNG_WEB = 'Ir a la web de jóvenes';
   static const String GO_MAIN_WEB = 'Ir a la web principal';
@@ -308,7 +308,7 @@ class StringConst {
 
   //Create an resource forms
   static const String FORM_MENTOR_REGISTER = "Quiero colaborar";
-  static const String FORM_ENTITY_REGISTER = "Soy Entidad";
+  static const String FORM_COMPANY_REGISTER = "Soy Empresa";
   static const String FORM_CREATE = "Crear recurso";
   static const String FORM_EDIT = "Editar recurso";
   static const String FORM_TITLE = "Título";
@@ -323,11 +323,11 @@ class StringConst {
   static const String FORM_LINK = "Link";
   static const String FORM_ORGANIZATION_NAME = "Nombre de la Organización";
   static const String FORM_ORGANIZATION_INFO = "Información de la organización";
-  static const String FORM_ENTITY_NAME = "Nombre de la entidad";
-  static const String FORM_ENTITY_EMAIL = "Email de la entidad";
-  static const String FORM_ENTITY_CIF = "Cif de la entidad";
-  static const String FORM_ENTITY_MISSION = "Misión";
-  static const String FORM_ENTITY_CATEGORY = "Tipología de la entidad";
+  static const String FORM_COMPANY_NAME = "Nombre de la empresa";
+  static const String FORM_COMPANY_EMAIL = "Email de la empresa";
+  static const String FORM_COMPANY_CIF = "Cif de la empresa";
+  static const String FORM_COMPANY_MISSION = "Misión";
+  static const String FORM_COMPANY_CATEGORY = "Tipología de la empresa";
   static const String FORM_CONTACT_NAME = "Nombre de la persona de contacto";
   static const String FORM_CONTACT_LASTNAME = "Apellidos de la persona de contacto";
   static const String FORM_CONTACT_INFO = "Información de contacto";
@@ -341,7 +341,7 @@ class StringConst {
   static const String FORM_DESCRIPTION_ERROR = "La descripción no puede estar vacía";
   static const String FORM_COMPANY_ERROR = "El campo no puede estar vacío";
   static const String FORM_BIRTHDAY_DATE = "Fecha de nacimiento";
-  static const String FORM_PHONE_ENTITY = "Teléfono entidad";
+  static const String FORM_PHONE_COMPANY = "Teléfono empresa";
   static const String FORM_PHONE = "Teléfono";
   static const String PHONE_ERROR = "El teléfono no puede estar vacío";
   static const String FORM_EMAIL = "Email";
@@ -402,7 +402,7 @@ class StringConst {
 
   static const String FORM_GENERAL_INFO = "Información general";
   static const String FORM_CONTACT_DATA_INFO = "Datos de la persona de contacto";
-  static const String FORM_SOCIAL_ENTITY_INFO = "Datos entidad";
+  static const String FORM_SOCIAL_COMPANY_INFO = "Datos empresa";
   static const String FORM_ORGANIZER = "Lugar y organizador";
   static const String FORM_REVISION = "Revisión";
   static const String FORM_CONFIRM = "Aceptar";
@@ -422,7 +422,7 @@ class StringConst {
   static const String FORM_SELECT= "Seleccionar";
   static const String AVAILABLE = "Disponibilidad";
   static const String FORM_CURRENT_COUNTRY = "País actual";
-  static const String FORM_SOCIAL_ENTITY = 'Organización o entidad a la que pertenece';
+  static const String FORM_SOCIAL_COMPANY = 'Organización o empresa a la que pertenece';
   static const String FORM_NATIONALITY = "Nacionalidad";
   static const String FORM_GOALS = 'Objetivos';
   static const String FORM_WARNING = "Aviso";
@@ -538,7 +538,7 @@ class StringConst {
   static const String PARTICIPANTS = "Participantes inscritos";
   static const String MY_PARTICIPANTS = "Mis Participantes";
   static String allParticipants(String socialEntityName) => "Todos los participantes inscritos en $socialEntityName";
-  static const String WELCOME_COMPANY = "Te damos la bienvenida a Enreda Entidad";
+  static const String WELCOME_COMPANY = "Te damos la bienvenida a Enreda Empresa";
   static const String WELCOME_TEXT = "Esta es tu ventana de administración. \nSegún tu rol, puedes visualizar, editar y eliminar todos los recursos disponibles en esta web. Por favor, procede con precaución.";
   static const String RESOURCES_CREATED_BY = "Recursos creados";
 
@@ -549,13 +549,13 @@ class StringConst {
   // Participants
   static const String GAMIFICATION = "Gamificación";
   static const String GO_PROFILE = "Ver perfil";
-  static const String CREATE_PARTICIPANT = "Crear participante";
-  static const String CREATE_NEW_ENTITY = "Crear nueva entidad";
+  static const String CREATE_JOB_OFFER = "Crear oferta de empleo";
+  static const String CREATE_NEW_COMPANY = "Crear nueva empresa";
   static const String CALL = "Llamar";
   static const String CREATE_PARTICIPANT_TITLE = "¡Enorabuena!";
   static const String CREATE_PARTICIPANT_SUCCESS = "El perfil ha sido creado con éxito";
-  static const String CREATE_ENTITY = "Entidad creada";
-  static const String CREATE_ENTITY_SUCCESS = "¡La entidad ha sido creada con éxito!";
+  static const String CREATE_COMPANY = "Empresa creada";
+  static const String CREATE_COMPANY_SUCCESS = "¡La empresa ha sido creada con éxito!";
   static const String CREATE_IPIL = "IPIL creado";
   static const String CREATE_DOCUMENT = "Documento creado";
   static const String UPDATED_DOCUMENT = "Documento actualizado";
@@ -571,10 +571,10 @@ class StringConst {
   static const String FORM_GENDER = "Género";
   static const String FORM_GENDER_ERROR = "El género no puede estar vacío";
   static const String FORM_DEDICATION = "¿Tienes claro a lo que te gustaría dedicarte?";
-  static const String FORM_BELONG_ORGANIZATION = "Organización o entidad a la que pertenece";
+  static const String FORM_BELONG_ORGANIZATION = "Organización o empresa a la que pertenece";
   static const String FORM_BELONG_ORGANIZATION_ERROR = "La organización no puede estar vacía";
-  static const String FORM_ENTITY_ERROR = 'Hay algún campo faltante en el formulario';
-  static const String FORM_ENTITY_CHECK = 'Por favor, revisa los campos marcados en rojo.';
+  static const String FORM_COMPANY_ERROR_MESSAGE = 'Hay algún campo faltante en el formulario';
+  static const String FORM_COMPANY_CHECK = 'Por favor, revisa los campos marcados en rojo.';
   static const String FORM_MISSING_DOCUMENT_TITLE = 'Falta añadir un nuevo documento.';
   static const String FORM_MISSING_DOCUMENT = 'Añadir documento';
   static const String INITIAL_FORM = "Ficha de ingreso";
@@ -673,7 +673,7 @@ class StringConst {
   static const String CONTACT_CHOICE_GRADE = "Grado de decisión";
   static const String CONTACT_OPINION_LEADER = "¿Se considera un KOL (Key Opinion Leader)?";
   static const String CONTACT_PROJECT = "Proyecto";
-  static const String FORM_NAME_ENTITY = "Nombre de la entidad";
+  static const String FORM_NAME_COMPANY = "Nombre de la empresa";
   static const String FORM_WEBSITE = "Url de la página web";
   static const String FORM_LANDLINE = "Teléfono fijo";
   static const String FORM_MOBILE_PHONE = "Teléfono móvil";
@@ -683,10 +683,10 @@ class StringConst {
   static const String FORM_CONTACT_TEC_NAME = "Nombre completo de la técnica de referencia";
   static const String FORM_CONTACT_POSITION = "Cargo de la persona de contacto";
   static const String FORM_CONTACT_PROJECT = "Proyecto o programa";
-  static const String FORM_EDIT_ENTITY = "Editar entidad social";
-  static const String FORM_ENTITY_LABELS = "Sectores/Campos/Etiquetas/Ecosistemas";
-  static const String FORM_ENTITY_SIGNED_AGREEMENTS = "Acuerdos firmados";
-  static const String FORM_ENTITY_UPDATED = "La entidad social fue actualizada exitosamente.";
+  static const String FORM_EDIT_COMPANY = "Editar empresa social";
+  static const String FORM_COMPANY_LABELS = "Sectores/Campos/Etiquetas/Ecosistemas";
+  static const String FORM_COMPANY_SIGNED_AGREEMENTS = "Acuerdos firmados";
+  static const String FORM_COMPANY_UPDATED = "La empresa social fue actualizada exitosamente.";
   static const String FORM_CAMERA = "Cámara";
   static const String FORM_GALLERY = "Galería";
 

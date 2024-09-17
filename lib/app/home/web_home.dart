@@ -8,7 +8,7 @@ import 'package:enreda_empresas/app/home/control_panel/control_panel_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/home/tool_box/tool_box_page.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/auth.dart';
 import 'package:enreda_empresas/app/services/database.dart';
@@ -54,9 +54,14 @@ class WebHome extends StatefulWidget {
   }
 
   static goResources() {
-    WebHome.selectedIndex.value = 2; // Select empty Container
-    WebHome.controller.selectIndex(2);
+    WebHome.selectedIndex.value = 1; // Select empty Container
+    WebHome.controller.selectIndex(1);
     MyResourcesListPage.selectedIndex.value = 0;
+  }
+  static goCreateResource() {
+    WebHome.selectedIndex.value = 1; // Select empty Container
+    WebHome.controller.selectIndex(1);
+    MyResourcesListPage.selectedIndex.value = 1;
   }
 
   static goToolBox() {
@@ -76,7 +81,7 @@ class _WebHomeState extends State<WebHome> {
   void initState() {
     bodyWidget = [
       const PersonalData(),
-      const CreateParticipantPage(),
+      //const MyResourcesListPage(company: company),
       Container(),
     ];
     super.initState();
@@ -100,18 +105,18 @@ class _WebHomeState extends State<WebHome> {
                           var user = snapshot.data!;
                           var userName = '${user.firstName ?? ""} ${user.lastName ?? ""}';
                           var profilePic = user.photo ?? "";
-                          if (user.role != 'Entidad Social') {
+                          if (user.role != 'Empresa') {
                             _unemployedSignOut(context);
                             return Container();
                           }
-                          return StreamBuilder<SocialEntity>(
-                              stream: database.socialEntityStreamById(user.socialEntityId!),
+                          return StreamBuilder<Company>(
+                              stream: database.companyStreamById(user.companyId!),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
                                 if (snapshot.hasData) {
-                                  var socialEntity = snapshot.data!;
-                                  globals.currentUserSocialEntity = socialEntity;
-                                  return _buildContent(context, socialEntity, user, profilePic, userName);
+                                  var company = snapshot.data!;
+                                  globals.currentUserCompany = company;
+                                  return _buildContent(context, company, user, profilePic, userName);
                                 }
                                 return const Center(child: CircularProgressIndicator());
                               });
@@ -123,7 +128,7 @@ class _WebHomeState extends State<WebHome> {
         });
   }
 
-  Widget _buildContent(BuildContext context, SocialEntity socialEntity, UserEnreda user, String profilePic, String userName){
+  Widget _buildContent(BuildContext context, Company company, UserEnreda user, String profilePic, String userName){
     final auth = Provider.of<AuthBase>(context, listen: false);
     return ValueListenableBuilder<int>(
         valueListenable: WebHome.selectedIndex,
@@ -149,7 +154,7 @@ class _WebHomeState extends State<WebHome> {
                       ImagePath.LOGO,
                       height: Responsive.isMobile(context) ? 35 : 50,
                     ),
-                    !isSmallScreen ? _buildMyCompanyName(context, socialEntity) : Container(),
+                    !isSmallScreen ? _buildMyCompanyName(context, company) : Container(),
                   ],
                 ),
               ),
@@ -178,23 +183,23 @@ class _WebHomeState extends State<WebHome> {
                     children: [
                       if(!isSmallScreen) SideBarWidget(controller: WebHome.controller, profilePic: profilePic, userName: userName, keyWebHome: _key,),
                       if (WebHome.selectedIndex.value == 0) Expanded(child: Center(child: bodyWidget[0]))
-                      else if (WebHome.selectedIndex.value == 1) Expanded(child: Center(child: bodyWidget[1]))
+                      //else if (WebHome.selectedIndex.value == 1) Expanded(child: Center(child: bodyWidget[1]))
                       else Expanded(child: Center(child: AnimatedBuilder(
                         animation: WebHome.controller,
                         builder: (context, child){
                           switch(WebHome.controller.selectedIndex){
                             case 0: _key.currentState?.closeDrawer();
-                            return ControlPanelPage(socialEntity: socialEntity, user: user,);
+                            return ControlPanelPage(company: company, user: user,);
+                            // case 1: _key.currentState?.closeDrawer();
+                            // return const ParticipantsListPage();
                             case 1: _key.currentState?.closeDrawer();
-                            return const ParticipantsListPage();
+                            return MyResourcesListPage(company: company);
                             case 2: _key.currentState?.closeDrawer();
-                            return MyResourcesListPage(socialEntity: socialEntity);
-                            case 3: _key.currentState?.closeDrawer();
                             return ToolBoxPage();
-                            case 4: _key.currentState?.closeDrawer();
-                            return EntityDirectoryPage(socialEntity: socialEntity);
+                            case 3: _key.currentState?.closeDrawer();
+                            return EntityDirectoryPage(socialEntity: company);
                             default:
-                              return MyResourcesListPage(socialEntity: socialEntity);
+                              return MyResourcesListPage(company: company);
                           }
                         },
                       ),))
@@ -209,7 +214,7 @@ class _WebHomeState extends State<WebHome> {
 
   }
 
-  Widget _buildMyCompanyName(BuildContext context, SocialEntity socialEntity) {
+  Widget _buildMyCompanyName(BuildContext context, Company socialEntity) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +272,7 @@ Future<void> _unemployedSignOut(BuildContext context) async {
                     height: 30,
                   ),
                   const SpaceH20(),
-                  Text(StringConst.ARENT_YOU_SOCIAL_ENTITY,
+                  Text(StringConst.ARENT_YOU_SOCIAL_COMPANY,
                       style: textTheme.bodySmall?.copyWith(
                         color: AppColors.greyDark,
                         height: 1.5,

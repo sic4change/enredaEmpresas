@@ -15,7 +15,7 @@ import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/socialEntitiesType.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_city.dart';
@@ -330,7 +330,7 @@ class _EditSocialEntityState extends State<EditSocialEntity> {
           children: <Widget>[
             CustomFlexRowColumn(
               childLeft: customTextFormField(context, _socialEntityName!,
-                  StringConst.FORM_NAME_ENTITY, StringConst.FORM_COMPANY_ERROR, nameSetState),
+                  StringConst.FORM_NAME_COMPANY, StringConst.FORM_COMPANY_ERROR, nameSetState),
               childRight: customTextFormField(
                   context,
                   _socialEntityActionScope!,
@@ -340,7 +340,7 @@ class _EditSocialEntityState extends State<EditSocialEntity> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-              child: CustomTextBold(title: StringConst.FORM_ENTITY_LABELS,),
+              child: CustomTextBold(title: StringConst.FORM_COMPANY_LABELS,),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -498,7 +498,7 @@ class _EditSocialEntityState extends State<EditSocialEntity> {
             ),
             CustomFlexRowColumn(
               childLeft: customTextFormField(context, _signedAgreements!,
-                  StringConst.FORM_ENTITY_SIGNED_AGREEMENTS, StringConst.FORM_COMPANY_ERROR, signedAgreementsSetState),
+                  StringConst.FORM_COMPANY_SIGNED_AGREEMENTS, StringConst.FORM_COMPANY_ERROR, signedAgreementsSetState),
               childRight: customTextFormField(context, _contactProject!,
                   StringConst.FORM_CONTACT_PROJECT, StringConst.FORM_COMPANY_ERROR, contactProjectSetState),
             ),
@@ -828,7 +828,7 @@ class _EditSocialEntityState extends State<EditSocialEntity> {
       showAlertDialog(
         context,
         title: StringConst.FORM_SUCCESS,
-        content: StringConst.FORM_ENTITY_UPDATED,
+        content: StringConst.FORM_COMPANY_UPDATED,
         defaultActionText: StringConst.FORM_ACCEPT,
       ).then((value) {
         setState(() {

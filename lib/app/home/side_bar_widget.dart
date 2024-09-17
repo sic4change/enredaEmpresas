@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_sidebar_button.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
+import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/foundation.dart';
@@ -33,18 +34,21 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   void _setSelectedIndexToOne() {
     setState(() {
       WebHome.selectedIndex.value = 2; // Select empty Container
+      MyResourcesListPage.selectedIndex.value = 0;
     });
   }
 
   void _setSelectedIndexParticipants() {
     setState(() {
       WebHome.goToParticipants();
+      MyResourcesListPage.selectedIndex.value = 0;
     });
   }
 
   void _setSelectedIndexEntities() {
     setState(() {
       WebHome.goToEntities();
+      MyResourcesListPage.selectedIndex.value = 0;
     });
   }
 
@@ -76,8 +80,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         selectedTextStyle: textTheme.bodySmall?.copyWith(
           color: AppColors.turquoiseBlue,
           fontSize: 15,
-          fontWeight: WebHome.selectedIndex.value == 0 ||
-              WebHome.selectedIndex.value == 1 ? FontWeight.w500 : FontWeight.w900,
+          fontWeight: WebHome.selectedIndex.value == 1 ? FontWeight.w500 : FontWeight.w900,
         ),
         itemTextPadding: const EdgeInsets.only(left: 10),
         selectedItemTextPadding: const EdgeInsets.only(left: 10),
@@ -87,12 +90,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         selectedItemDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: WebHome.selectedIndex.value == 0 ||
-                WebHome.selectedIndex.value == 1 ?
+            color: MyResourcesListPage.selectedIndex.value == 1 ?
             Colors.transparent : AppColors.primary100,
           ),
-          color: WebHome.selectedIndex.value == 0 ||
-              WebHome.selectedIndex.value == 1 ?
+          color: MyResourcesListPage.selectedIndex.value == 1 ?
           Colors.transparent : AppColors.primary100,
         ),
         iconTheme: const IconThemeData(
@@ -147,10 +148,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       ),
                     ),
                     CustomSideBarButton(
-                      buttonTitle: StringConst.CREATE_PARTICIPANT,
+                      buttonTitle: StringConst.CREATE_JOB_OFFER,
                       onPressed: () {
                         widget.keyWebHome.currentState?.closeDrawer();
-                        WebHome.selectedIndex.value = 1;
+                        WebHome.goCreateResource();
                       },
                       widget: Icon(Icons.add_circle_outlined, size: 20, color: AppColors.turquoiseBlue,),),
                     SizedBox(height: 10),
@@ -163,7 +164,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       },
       items: [
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PANEL), width: 20,), label: StringConst.DRAWER_CONTROL_PANEL, onTap: _setSelectedIndexToOne),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PARTICIPANTS), width: 20,), label: StringConst.DRAWER_PARTICIPANTS, onTap: _setSelectedIndexParticipants),
+        //SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PARTICIPANTS), width: 20,), label: StringConst.DRAWER_PARTICIPANTS, onTap: _setSelectedIndexParticipants),
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_RESOURCES), width: 20,), label: StringConst.DRAWER_MY_RESOURCES , onTap: _setSelectedIndexResources),
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_TOOLS), width: 20,), label: StringConst.DRAWER_TOOLS , onTap: _setSelectedIndexToOne),
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_ENTITIES, onTap: _setSelectedIndexEntities)

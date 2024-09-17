@@ -1,5 +1,5 @@
 // import 'package:algolia/algolia.dart';
-// import 'package:enreda_empresas/app/models/socialEntity.dart';
+// import 'package:enreda_empresas/app/models/company.dart';
 //
 // class AlgoliaSearch {
 //   static final Algolia algolia = Algolia.init(

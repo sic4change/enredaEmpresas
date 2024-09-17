@@ -20,7 +20,7 @@ import 'package:enreda_empresas/app/models/competencyCategory.dart';
 import 'package:enreda_empresas/app/models/competencySubCategory.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
-import 'package:enreda_empresas/app/models/socialEntity.dart';
+import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/resourceCategory.dart';
 import 'package:enreda_empresas/app/models/province.dart';
@@ -47,8 +47,8 @@ const double contactBtnWidthSm = 100.0;
 const double contactBtnWidthMd = 140.0;
 
 class CreateResource extends StatefulWidget {
-  const CreateResource({Key? key, required this.socialEntityId}) : super(key: key);
-  final String? socialEntityId;
+  const CreateResource({Key? key, required this.companyId}) : super(key: key);
+  final String? companyId;
 
   @override
   State<CreateResource> createState() => _CreateResourceState();
@@ -101,7 +101,7 @@ class _CreateResourceState extends State<CreateResource> {
   ResourceCategory? selectedResourceCategory;
   ResourceType? selectedResourceType;
   ResourcePicture? selectedResourcePicture;
-  SocialEntity? selectedSocialEntity;
+  Company? selectedCompany;
   String? _degree;
   String? _modality;
   String? _contractType;
@@ -222,8 +222,8 @@ class _CreateResourceState extends State<CreateResource> {
         capacity: _capacity,
         contractType: _contractType,
         duration: _duration!,
-        //status: 'A actualizar',
-        status: 'Disponible', 
+        status: 'A actualizar',
+        //status: 'Disponible',
         resourceType: resourceTypeId,
         resourceCategory: resourceCategoryId,
         maximumDate: _max!,
@@ -231,7 +231,7 @@ class _CreateResourceState extends State<CreateResource> {
         end: _end!,
         modality: _modality!,
         salary: _salary,
-        organizer: widget.socialEntityId!,
+        organizer: widget.companyId!,
         link: _link,
         resourcePictureId: resourcePictureId,
         notExpire: _notExpire,
@@ -241,7 +241,7 @@ class _CreateResourceState extends State<CreateResource> {
         participants: [],
         interests: interests,
         competencies: competencies,
-        organizerType: "Entidad Social",
+        organizerType: "Empresa",
         likes: [],
         street: _street,
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
@@ -880,8 +880,8 @@ class _CreateResourceState extends State<CreateResource> {
             CustomFlexRowColumn(
               childLeft: streamBuilderDropdownSocialEntities(
                   context,
-                  selectedSocialEntity,
-                  widget.socialEntityId!,
+                  selectedCompany,
+                  widget.companyId!,
                   buildSocialEntityStreamBuilderSetState),
               childRight: TextFormField(
                 decoration: InputDecoration(
@@ -1039,11 +1039,11 @@ class _CreateResourceState extends State<CreateResource> {
   }
 
   void buildSocialEntityStreamBuilderSetState(
-      SocialEntity? socialEntity) {
+      Company? socialEntity) {
     setState(() {
-      selectedSocialEntity = socialEntity;
+      selectedCompany = socialEntity;
       socialEntityName = socialEntity != null ? socialEntity.name : "";
-      socialEntityId = socialEntity?.socialEntityId;
+      socialEntityId = socialEntity?.companyId;
     });
   }
 
