@@ -309,8 +309,8 @@ class StringConst {
   //Create an resource forms
   static const String FORM_MENTOR_REGISTER = "Quiero colaborar";
   static const String FORM_COMPANY_REGISTER = "Soy Empresa";
-  static const String FORM_CREATE = "Crear recurso";
-  static const String FORM_EDIT = "Editar recurso";
+  static const String FORM_CREATE = "Crear oferta de empleo";
+  static const String FORM_EDIT = "Editar oferta de empleo";
   static const String FORM_TITLE = "Título";
   static const String FORM_DURATION = "Duración";
   static const String FORM_SCHEDULE = "Horario";
