@@ -73,8 +73,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                             },
                             child: selectedIndex != 0 ? CustomTextMedium(text: 'Recursos ') :
                               CustomTextMediumBold(text: 'Recursos ') ),
-                              selectedIndex == 1 ? CustomTextMediumBold(text: '> Crear recurso',) :
-                              selectedIndex == 2 ? CustomTextMediumBold(text:'> Detalle del recurso') :
+                              selectedIndex == 1 ? CustomTextMediumBold(text: '> Crear oferta de empleo',) :
+                              selectedIndex == 2 ? CustomTextMediumBold(text:'> Detalle de la oferta de empleo') :
                               selectedIndex == 3 ? Row(
                             children: [
                               InkWell(
@@ -83,8 +83,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                       MyResourcesListPage.selectedIndex.value = 2;
                                     })
                                   },
-                                  child: CustomTextMedium(text:'> Detalle del recurso ')),
-                              CustomTextMediumBold(text:'> Editar recurso'),
+                                  child: CustomTextMedium(text:'> Detalle de la oferta de empleo ')),
+                              CustomTextMediumBold(text:'> Editar oferta de empleo'),
                             ],
                           ) : Container()
                         ],
@@ -97,7 +97,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                       child: Align(
                           alignment: Responsive.isMobile(context) ? Alignment.center : Alignment.topRight,
                           child: AddYellowButton(
-                            text: 'Crear nuevo recurso',
+                            text: 'Crear oferta de empleo',
                             onPressed: () => setState(() {
                               setState(() {
                                 MyResourcesListPage.selectedIndex.value = 1;
