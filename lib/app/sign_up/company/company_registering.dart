@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:email_validator/email_validator.dart';
@@ -25,16 +27,19 @@ import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_widgets/custom_drop_down.dart';
 import '../../common_widgets/custom_form_field.dart';
 import '../../common_widgets/custom_stepper.dart';
-import '../../home/resources/validating_form_controls/stream_builder_category_create.dart';
+import '../../models/file_data.dart';
 import '../../models/socialEntitiesCategories.dart';
 import '../validating_form_controls/stream_builder_social_entity_category.dart';
 import 'company_revision_form.dart';
+import 'file-picker.dart';
 
 const double contactBtnWidthLg = 200.0;
 const double contactBtnWidthSm = 120.0;
@@ -55,7 +60,8 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   String? _emailCompany;
   String? _companyId;
   String? _name;
-  String? _cif;
+  String? _cifGroup;
+  String? _groupCompany;
   String? _mission;
   String? _linkedin;
   String? _otherSocialMedia;
@@ -78,6 +84,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   List<String> countries = [];
   List<String> provinces = [];
   List<String> cities = [];
+  List<FileData> filesList = [];
 
   String writtenEmail = '';
   Country? selectedCountry;
@@ -111,7 +118,8 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
     super.initState();
     _companyId = "";
     _name = "";
-    _cif = "";
+    _cifGroup = "";
+    _groupCompany = "";
     _mission = "";
     _linkedin = "";
     _otherSocialMedia = "";
@@ -160,7 +168,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   }
 
   Future<void> _submit() async {
-    if (_validateCheckField()) {
+    if (_validateCheckField() && filesList.length > 0) {
       final address = Address(
         country: _country,
         province: _province,
@@ -170,8 +178,8 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
       final company = Company(
         companyId: _companyId,
         name: _name!,
-        cif: _cif!,
-        mision: _mission,
+        cifGroup: _cifGroup!,
+        mission: _mission,
         category: _companyCategoryId,
         geographicZone : _geographicZone,
         subGeographicZone : _subGeographicZone,
@@ -193,7 +201,10 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
       try {
         final database = Provider.of<Database>(context, listen: false);
         await database.addCompanyUser(companyUser);
-        await database.addCompany(company);
+        String newCompanyId = await database.addCompany(company);
+        filesList.forEach((file) async {
+          await database.addDocumentCompany(newCompanyId, file.name, file.data!);
+        });
         showAlertDialog(
           context,
           title: StringConst.FORM_SUCCESS,
@@ -219,10 +230,27 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
     phoneCode =  countryCode.toString();
   }
 
-  /*
-    Avoid call to database if email not properly written.
-    Return empty stream if email not properly written
-  */
+  void pickFiles() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      setState(() {
+        if (kIsWeb) {
+          filesList.add(FileData(
+              result.files.first.name, result.files.first.bytes, null));
+        } else {
+          filesList.add(FileData(
+              result.files.first.name, null, File(result.files.single.path!)));
+        }
+      });
+    }
+  }
+
+  void deleteFile(FileData file) {
+    setState(() {
+      filesList.removeWhere((f) => f == file);
+    });
+  }
 
   Widget _buildForm(BuildContext context) {
     textTheme = Theme.of(context).textTheme;
@@ -235,34 +263,77 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
               CustomFormField(
                 child: customTextFormField(context, _name!, '', StringConst.FORM_GENERIC_ERROR, _name_setState),
                 label: StringConst.FORM_COMPANY_NAME,),
-              CustomFormField(
-                child: customTextFormField(context, _cif!, '', StringConst.FORM_GENERIC_ERROR, _cif_setState),
-                label: StringConst.FORM_COMPANY_CIF,),
-              CustomFormField(
-                child: streamBuilderDropdownSocialEntityCategory(context, _selectedSocialEntityCategory, buildResourceCategoryStreamBuilderSetState),
-                label: StringConst.FORM_COMPANY_CATEGORY,),
+              filesList.length == 0 ? FilePickerForm(
+                context: context,
+                label: StringConst.FORM_COMPANY_CIF,
+                filesList: filesList,
+                onTap: () async => pickFiles(),
+                onDeleteDocument: deleteFile,
+              ) : Container(),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: filesList.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextBold(title: StringConst.FORM_COMPANY_CIF),
+                        SizedBox(height: 4,),
+                        Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(8),),
+                          color: AppColors.white,
+                          border: Border.all(color: AppColors.greyUltraLight),
+                          ),
+                          child: ListTile(
+                            title: CustomTextBold(title: filesList[index].name),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () => deleteFile(filesList[index]),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
               CustomFormField(
                 child: customTextFormField(context, _mission!, '', StringConst.FORM_GENERIC_ERROR, _mission_setState),
                 label: StringConst.FORM_COMPANY_MISSION,),
-              CustomFlexRowColumn(
-                  contentPadding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-                  childLeft: CustomDropDownButton(
-                    labelText: 'Zona geográfica de influencia',
-                    source: geographicZone,
-                    onChanged: (value){
-                      _geographicZone = value;
-                    },
-                    validator: (value) => value != null ? null : StringConst.FORM_GENERIC_ERROR,
-                  ),
-                  childRight: CustomDropDownButton(
-                    labelText: 'Sub Zona geográfica de influencia',
-                    source: subGeographicZone,
-                    onChanged: (value){
-                      _subGeographicZone = value;
-                    },
-                    validator: (value) => value != null ? null : StringConst.FORM_GENERIC_ERROR,
-                  )
-              ),
+              CustomFormField(
+                child: customTextFormFieldNotValidator(context, _groupCompany!, '', _groupCompany_setState),
+                label: StringConst.FORM_COMPANY_GROUP,),
+              CustomFormField(
+                child: customTextFormFieldNotValidator(context, _cifGroup!, '', _cifGroup_setState),
+                label: StringConst.FORM_COMPANY_CIF_GROUP,),
+              CustomFormField(
+                child: streamBuilderDropdownSocialEntityCategory(context, _selectedSocialEntityCategory, buildResourceCategoryStreamBuilderSetState),
+                label: StringConst.FORM_COMPANY_CATEGORY,),
+              // CustomFlexRowColumn(
+              //     contentPadding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+              //     childLeft: CustomDropDownButton(
+              //       labelText: 'Zona geográfica de influencia',
+              //       source: geographicZone,
+              //       onChanged: (value){
+              //         _geographicZone = value;
+              //       },
+              //       validator: (value) => value != null ? null : StringConst.FORM_GENERIC_ERROR,
+              //     ),
+              //     childRight: CustomDropDownButton(
+              //       labelText: 'Sub Zona geográfica de influencia',
+              //       source: subGeographicZone,
+              //       onChanged: (value){
+              //         _subGeographicZone = value;
+              //       },
+              //       validator: (value) => value != null ? null : StringConst.FORM_GENERIC_ERROR,
+              //     )
+              // ),
               CustomFlexRowColumn(
                   childLeft: streamBuilderForCountryCreate(context, selectedCountry, _buildCountryStreamBuilder_setState),
                   childRight: streamBuilderForProvinceCreate(context, selectedCountry, selectedProvince, _buildProvinceStreamBuilder_setState)
@@ -327,15 +398,15 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
                     label: StringConst.FORM_PHONE,
                   )
               ),
-              CustomFlexRowColumn(
-                  contentPadding: const EdgeInsets.all(0),
-                  childLeft: CustomFormField(
-                    child: customTextFormField(context, _linkedin!, '', StringConst.FORM_GENERIC_ERROR, _linkedin_setState),
-                    label: StringConst.FORM_LINKEDIN,),
-                  childRight: CustomFormField(
-                    child: customTextFormField(context, _otherSocialMedia!, '', StringConst.FORM_GENERIC_ERROR, _otherSocialMedia_setState),
-                    label: StringConst.FORM_OTHER_SOCIAL_MEDIA,),
-              ),
+              // CustomFlexRowColumn(
+              //     contentPadding: const EdgeInsets.all(0),
+              //     childLeft: CustomFormField(
+              //       child: customTextFormFieldNotValidator(context, _linkedin!, '', _linkedin_setState),
+              //       label: StringConst.FORM_LINKEDIN,),
+              //     childRight: CustomFormField(
+              //       child: customTextFormFieldNotValidator(context, _otherSocialMedia!, '', _otherSocialMedia_setState),
+              //       label: StringConst.FORM_OTHER_SOCIAL_MEDIA,),
+              // ),
             ]),
       );
   }
@@ -469,7 +540,6 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(ImagePath.LOGO_LINES),
-          //fit: BoxFit.cover,
         ),
       ),
       child: Column(
@@ -484,14 +554,10 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
             child: companyRevisionForm(
               context,
               _name!,
-              _cif!,
+              _cifGroup!,
               _companyCategoryName!,
               _mission!,
-              _geographicZone!,
-              _subGeographicZone!,
               _phoneWithCodeCompany,
-              _linkedin!,
-              _otherSocialMedia!,
               countryName,
               provinceName,
               cityName,
@@ -551,8 +617,12 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
     setState(() => _name = val!);
   }
 
-  void _cif_setState(String? val) {
-    setState(() => _cif = val!);
+  void _cifGroup_setState(String? val) {
+    setState(() => _cifGroup = val!);
+  }
+
+  void _groupCompany_setState(String? val) {
+    setState(() => _groupCompany = val!);
   }
 
   void _mission_setState(String? val) {
@@ -659,6 +729,13 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   ];
 
   onStepContinue() async {
+    if (filesList.length == 0) {
+      await showAlertDialog(context,
+          title: StringConst.FORM_MISSING_FILE_TITLE,
+          content: StringConst.FORM_MISSING_FILE,
+          defaultActionText: StringConst.CLOSE);
+      return;
+    }
     // If invalid form, just return
     if (currentStep == 0 && !_validateAndSaveForm())
       return;
@@ -726,8 +803,8 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
           body: Center(
             child: Container(
               constraints: BoxConstraints(
-                maxHeight: Responsive.isMobile(context) ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.height * 0.9,
-                maxWidth: Responsive.isMobile(context) ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width * 0.7,
+                maxHeight: Responsive.isMobile(context) || Responsive.isTablet(context) ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.height * 0.9,
+                maxWidth: Responsive.isMobile(context) || Responsive.isTablet(context) ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width * 0.7,
               ),
               child: RoundedContainer(
                 color: AppColors.grey80,

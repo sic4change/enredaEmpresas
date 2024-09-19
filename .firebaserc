@@ -5,8 +5,8 @@
   "targets": {
     "enreda-d3b41": {
       "hosting": {
-        "entidadsocial": [
-          "enredadentidadsocial"
+        "enredaempresas": [
+          "enreda-empresas"
         ]
       }
     }

@@ -274,6 +274,7 @@ class StringConst {
   static const String CANCEL = 'Cancelar';
   static const String ADD = 'Añadir';
   static const String ADD_DOC = 'Añadir documento';
+  static const String ADD_FILE = 'Sube un archivo';
   static const String EDIT_DOC = 'Editar documento';
   static const String CLOSE = 'Cerrar';
   static const String SAVE = 'Guardar';
@@ -308,7 +309,7 @@ class StringConst {
 
   //Create an resource forms
   static const String FORM_MENTOR_REGISTER = "Quiero colaborar";
-  static const String FORM_COMPANY_REGISTER = "Soy Empresa";
+  static const String FORM_COMPANY_REGISTER = "Busco talento";
   static const String FORM_CREATE = "Crear oferta de empleo";
   static const String FORM_EDIT = "Editar oferta de empleo";
   static const String FORM_TITLE = "Título";
@@ -326,7 +327,9 @@ class StringConst {
   static const String FORM_COMPANY_NAME = "Nombre de la empresa";
   static const String FORM_COMPANY_EMAIL = "Email de la empresa";
   static const String FORM_COMPANY_CIF = "Cif de la empresa";
-  static const String FORM_COMPANY_MISSION = "Misión";
+  static const String FORM_COMPANY_CIF_GROUP = "Cif del grupo";
+  static const String FORM_COMPANY_GROUP = "¿Tu empresa pertenece a un grupo?";
+  static const String FORM_COMPANY_MISSION = "Misión de la empresa";
   static const String FORM_COMPANY_CATEGORY = "Tipología de la empresa";
   static const String FORM_CONTACT_NAME = "Nombre de la persona de contacto";
   static const String FORM_CONTACT_LASTNAME = "Apellidos de la persona de contacto";
@@ -550,7 +553,7 @@ class StringConst {
   static const String GAMIFICATION = "Gamificación";
   static const String GO_PROFILE = "Ver perfil";
   static const String CREATE_JOB_OFFER = "Crear oferta de empleo";
-  static const String CREATE_NEW_COMPANY = "Crear nueva empresa";
+  static const String CREATE_NEW_COMPANY = "Crear cuenta de Empresa";
   static const String CALL = "Llamar";
   static const String CREATE_PARTICIPANT_TITLE = "¡Enorabuena!";
   static const String CREATE_PARTICIPANT_SUCCESS = "El perfil ha sido creado con éxito";
@@ -577,6 +580,8 @@ class StringConst {
   static const String FORM_COMPANY_CHECK = 'Por favor, revisa los campos marcados en rojo.';
   static const String FORM_MISSING_DOCUMENT_TITLE = 'Falta añadir un nuevo documento.';
   static const String FORM_MISSING_DOCUMENT = 'Añadir documento';
+  static const String FORM_MISSING_FILE_TITLE = 'Documento faltante';
+  static const String FORM_MISSING_FILE= 'Añadir archivo de Cif de la empresa';
   static const String INITIAL_FORM = "Ficha de ingreso";
   static const String INITIAL_FORM_DATA = "Datos del formulario de inscripción";
   static const String RESOURCES_JOINED = "Se ha inscrito en los siguientes recursos:";
@@ -646,8 +651,9 @@ class StringConst {
   //Side drawer
   static const String DRAWER_CONTROL_PANEL = 'Panel de control';
   static const String DRAWER_PARTICIPANTS = 'Participantes';
-  static const String DRAWER_MY_RESOURCES = 'Recursos';
+  static const String DRAWER_MY_RESOURCES = 'Ofertas & Candidatos';
   static const String DRAWER_TOOLS = 'Caja de herramientas';
+  static const String DRAWER_CALENDAR = 'Calendario';
   static const String DRAWER_ENTITIES = 'Agenda de contactos ';
   static const String SEE_MORE = 'Ver más';
 

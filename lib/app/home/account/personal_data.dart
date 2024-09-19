@@ -42,7 +42,7 @@ class PersonalData extends StatefulWidget {
 class _PersonalDataState extends State<PersonalData> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _textFieldController = TextEditingController();
-  final ImagePicker _imagePicker = ImagePicker();
+  final ImagePicker _imagePicker = new ImagePicker();
   bool isLoading = false;
   String _userId = '';
   String _email = '';
@@ -480,18 +480,17 @@ class _PersonalDataState extends State<PersonalData> {
         uiSettings: [
           WebUiSettings(
               context: context,
-              // presentStyle: CropperPresentStyle.dialog,
-              // boundary: const CroppieBoundary(
-              //   width: 400,
-              //   height: 400,
-              // ),
-              // viewPort:
-              // const CroppieViewPort(width: 300, height: 300, type: 'circle',),
-              // enableExif: true,
-              // enableZoom: true,
-              // showZoomer: true,
-              // enableResize: false,
-              // mouseWheelZoom: true,
+              presentStyle: WebPresentStyle.dialog,
+              viewwMode: WebViewMode.mode_1,
+              dragMode: WebDragMode.move,
+              size: const CropperSize(
+                width: 520,
+                height: 520,
+              ),
+              cropBoxMovable: true,
+              cropBoxResizable: true,
+              movable: true,
+              toggleDragModeOnDblclick: true,
               translations: WebTranslations(
                 title: 'Recortar imagen',
                 rotateLeftTooltip: 'Rotar 90 grados a la izquierda',
@@ -499,17 +498,6 @@ class _PersonalDataState extends State<PersonalData> {
                 cancelButton: 'Cancelar',
                 cropButton: 'Recortar',
               )
-          ),
-          AndroidUiSettings(
-              toolbarTitle: 'Recortar imagen',
-              toolbarColor: AppColors.primaryColor,
-              toolbarWidgetColor: Colors.white,
-              activeControlsWidgetColor: AppColors.primaryColor,
-              initAspectRatio: CropAspectRatioPreset.original,
-              hideBottomControls: false,
-              lockAspectRatio: false),
-          IOSUiSettings(
-            title: 'Cropper',
           ),
         ]
     );
