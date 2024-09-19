@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "target": "entidadsocial",
+    "target": "enredaempresas",
     "public": "build/web",
     "ignore": [
       "firebase.json",

@@ -7,8 +7,10 @@ class Company {
   Company({
     this.companyId,
     required this.name,
-    this.cif,
-    this.mision,
+    this.cifGroup,
+    this.cifDocument,
+    this.groupCompany,
+    this.mission,
     this.email,
     this.phone,
     this.address,
@@ -46,11 +48,12 @@ class Company {
     this.trust,
   });
 
-  //Old fields
-  final String? companyId;
+  late final String? companyId;
   final String name;
-  final String? cif;
-  final String? mision;
+  final String? cifGroup;
+  final String? cifDocument;
+  final String? groupCompany;
+  final String? mission;
   final String? email;
   final String? phone;
   final String? country;
@@ -66,7 +69,6 @@ class Company {
   final SizeOrg? size;
   final String? photo;
   final List<String>? types;
-  //New fields
   final String? actionScope;
   final String? category;
   final String? subCategory;
@@ -105,8 +107,9 @@ class Company {
 
 
     final String name = data['name'];
-    final String? cif = data['cif'] ?? '';
-    final String? mision = data['mision'] ?? '';
+    final String? cifGroup = data['cifGroup'] ?? '';
+    final String? groupCompany = data['groupCompany'] ?? '';
+    final String? mission = data['mission'] ?? '';
     final String? companyId = data['companyId'];
     final String email = data['email']??"";
 
@@ -115,6 +118,13 @@ class Company {
       photo = data['logoPic']['src'];
     } catch (e) {
       photo = '';
+    }
+
+    String cifDocument;
+    try {
+      cifDocument = data['file']['src'];
+    } catch (e) {
+      cifDocument = '';
     }
 
     final String website = data['website']??"";
@@ -151,8 +161,10 @@ class Company {
     return Company(
         companyId: companyId,
         name: name,
-        cif: cif,
-        mision: mision,
+        cifGroup: cifGroup,
+        cifDocument: cifDocument,
+        groupCompany: groupCompany,
+        mission: mission,
         email: email,
         address: address,
         website: website,
@@ -189,8 +201,10 @@ class Company {
     return {
       'companyId': companyId,
       'name': name,
-      'cif': cif,
-      'mision': mision,
+      'cifGroup': cifGroup,
+      'cifDocument': cifDocument,
+      'groupCompany': groupCompany,
+      'mission': mission,
       'email': email,
       'address': address?.toMap(),
       'website': website,
@@ -224,8 +238,10 @@ class Company {
   Company copyWith({
     String? companyId,
     String? name,
-    String? cif,
-    String? mision,
+    String? cifGroup,
+    String? cifDocument,
+    String? groupCompany,
+    String? mission,
     String? email,
     Address? address,
     String? website,
@@ -259,8 +275,10 @@ class Company {
     return Company(
         companyId: companyId ?? this.companyId,
         name: name ?? this.name,
-        cif: cif ?? this.cif,
-        mision: mision ?? this.mision,
+        cifGroup: cifGroup ?? this.cifGroup,
+        cifDocument: cifDocument ?? this.cifDocument,
+        groupCompany: groupCompany ?? this.groupCompany,
+        mission: mission ?? this.mission,
         email: email ?? this.email,
         address: address ?? this.address,
         website: website ?? this.website,

@@ -97,6 +97,7 @@ class ImagePath {
   static const String ICON_RESOURCES_GRAY = '$imageDir/icon-resources-gray.png';
   static const String ICON_CV = '$imageDir/icon-cv.png';
   static const String ICON_PROFILE_BLUE = '$imageDir/icon-profile-blue.png';
+  static const String ICON_PROFILE_PRIMARY = '$imageDir/profile-primary.png';
   static const String ICON_COMPETENCIES = '$imageDir/icon-competencias.png';
   static const String ICON_FAV_BLUE = '$imageDir/icon-fav-blue.png';
   static const String ARROW_DOWN = '$imageDir/arrow_down.png';
@@ -117,6 +118,7 @@ class ImagePath {
   static const String ICON_PLUS = '$imageDir/plus_outline.png';
   static const String ACCESS_VECTOR = '$imageDir/vector-access.png';
   static const String ACCESS_PHOTO = '$imageDir/photo_login.png';
+  static const String UPLOAD = '$imageDir/upload-file.png';
 
   // Participant details
   static const String GAMIFICATION_LOGO = '$imageDir/gamification_logo.png';

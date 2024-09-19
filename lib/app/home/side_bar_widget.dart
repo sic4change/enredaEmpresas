@@ -47,8 +47,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
 
   void _setSelectedIndexEntities() {
     setState(() {
-      WebHome.goToEntities();
-      MyResourcesListPage.selectedIndex.value = 0;
+      WebHome.selectedIndex.value = 0;
     });
   }
 
@@ -165,9 +164,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       items: [
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PANEL), width: 20,), label: StringConst.DRAWER_CONTROL_PANEL, onTap: _setSelectedIndexToOne),
         //SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PARTICIPANTS), width: 20,), label: StringConst.DRAWER_PARTICIPANTS, onTap: _setSelectedIndexParticipants),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_RESOURCES), width: 20,), label: StringConst.DRAWER_MY_RESOURCES , onTap: _setSelectedIndexResources),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_TOOLS), width: 20,), label: StringConst.DRAWER_TOOLS , onTap: _setSelectedIndexToOne),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_ENTITIES, onTap: _setSelectedIndexEntities)
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_RESOURCES), width: 20,), label: StringConst.DRAWER_MY_RESOURCES, onTap: _setSelectedIndexResources),
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_CALENDAR, onTap: _setSelectedIndexToOne),
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PROFILE_PRIMARY), width: 20,), label: StringConst.MY_PROFILE, onTap: _setSelectedIndexEntities)
       ],
     );
   }

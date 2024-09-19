@@ -136,7 +136,7 @@ abstract class Database {
      Future<void> deleteResource(Resource resource);
      Future<void> deleteExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> addCompanyUser(CompanyUser companyUser);
-     Future<void> addCompany(Company company);
+     Future<String> addCompany(Company company);
      Future<void> addExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> addResource(Resource resource);
      Future<void> addResourceInvitation(ResourceInvitation resourceInvitation);
@@ -154,6 +154,7 @@ abstract class Database {
      Future<void> deleteIpilEntry(IpilEntry ipilEntry);
      Future<void> setIpilEntry(IpilEntry ipilEntry);
      Future<void> addDocumentationParticipant(String userId, String fileName, Uint8List data, DocumentationParticipant document);
+     Future<void> addDocumentCompany(String companyId, String fileName, Uint8List data);
      Future<void> editFileDocumentationParticipant(String userId, String fileName, Uint8List data, DocumentationParticipant document);
      Future<void> updateDocumentationParticipant(DocumentationParticipant document);
      Stream<InitialReport> initialReportsStreamByUserId(String? userId);
@@ -786,7 +787,6 @@ class FirestoreDatabase implements Database {
         TaskSnapshot taskSnapshot = await uploadTask;
         taskSnapshot.ref.getDownloadURL().then(
               (value) => {
-            //print("Done: $value")
             _service.updateData(path: APIPath.photoUser(userId), data: {
               "profilePic": {
                 'src': '$value',
@@ -820,7 +820,7 @@ class FirestoreDatabase implements Database {
         _service.addData(path: APIPath.contacts(), data: contact.toMap());
 
   @override
-  Future<void> addCompany(Company company) => _service.addData(
+  Future<String> addCompany(Company company) => _service.addDataString(
       path: APIPath.companies(), data: company.toMap());
 
   @override
@@ -1023,6 +1023,28 @@ class FirestoreDatabase implements Database {
         path: APIPath.oneDocumentationParticipant(documentId),
         builder: (data, documentId) => DocumentationParticipant.fromMap(data, documentId),
       );
+
+  @override
+  Future<void> addDocumentCompany(String companyId, String fileName, Uint8List data) async {
+    var firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('companies/$companyId/files/$fileName');
+    UploadTask uploadTask = firebaseStorageRef.putData(data);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    try {
+      await taskSnapshot.ref.getDownloadURL().then(
+            (value) {
+          _service.updateData(path: APIPath.company(companyId), data: {
+            "file": {
+              'src': '$value',
+              'title': '$fileName',
+            },
+          },);
+        },
+      );
+    } catch (e) {
+      print('Error updating document: $e');
+    }
+  }
 
   @override
   Future<void> addDocumentationParticipant(String userId, String fileName, Uint8List data, DocumentationParticipant document) async {
