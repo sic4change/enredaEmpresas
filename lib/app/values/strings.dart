@@ -233,7 +233,9 @@ class StringConst {
   static const String EMAIL = "Email";
   static const String EMAIL_ERROR = "El email no es válido";
   static const String EMAIL_REGISTERED = "El email ya se encuentra registrado";
-  static const String DESCRIPTION = "Descripción";
+  static const String DESCRIPTION = "Descripción del puesto";
+  static const String RESPONSIBILITIES = "Responsabilidades del puesto";
+  static const String FUNCTIONS = "Funciones del puesto";
   static const String DESCRIPTION_ERROR = "La descripción no puede estar vacía";
   static const String SEND = "Enviar";
   static const String INTERESTED = "Para completar su inscripción debe contactar con:";
@@ -312,10 +314,11 @@ class StringConst {
   static const String FORM_COMPANY_REGISTER = "Busco talento";
   static const String FORM_CREATE = "Crear oferta de empleo";
   static const String FORM_EDIT = "Editar oferta de empleo";
-  static const String FORM_TITLE = "Título";
+  static const String FORM_TITLE = "Título de la oferta de empleo";
+  static const String FORM_OTHER_REQUIREMENTS = "Otros requisitos";
   static const String FORM_DURATION = "Duración";
   static const String FORM_SCHEDULE = "Horario";
-  static const String FORM_PLACE = "Lugar de realización";
+  static const String FORM_PLACE = "Calle y número";
   static const String FORM_CAPACITY = "Aforo";
   static const String FORM_ADDRESS = "Calle y número";
   static const String FORM_ORGANIZER_TEXT = "Organizador";
@@ -367,7 +370,7 @@ class StringConst {
   static const String FORM_NATURE_ERROR = "La naturaleza no puede estar vacío";
   static const String FORM_SCOPE_ERROR = "El ámbito territorial no puede estar vacío";
   static const String FORM_SIZE_ERROR = "El tamaño no puede estar vacío";
-  static const String FORM_INTERESTS_QUESTION = "¿Cuál es el ámbito de actuación?";
+  static const String FORM_INTERESTS_QUESTION = "Sectores";
   static const String FORM_COMPETENCIES = "Competencias";
   static const String FORM_COMPETENCIES_CATEGORIES = "Categoría de Competencias";
   static const String FORM_COMPETENCIES_SUB_CATEGORIES = "Sub categoría de Competencias";
@@ -383,7 +386,8 @@ class StringConst {
   static const String FORM_ACTIVITIES_EMPTY = "Selecciona primero la actividad";
   static const String FORM_ABILITIES_REV = "Aspectos a reforzar";
   static const String FORM_MOTIVATION_ERROR = "Este campo no puede estar vacío";
-  static const String FORM_RESOURCE_CATEGORY = "Categoría del recurso";
+  static const String FORM_RESOURCE_CATEGORY = "Tipo de recurso";
+  static const String FORM_YOUR_COMPANY_NAME = "Nombre de tu empresa";
   static const String FORM_DEGREE = "Titulación";
   static const String FORM_MODALITY = "Modalidad";
   static const String FORM_CONTRACT = "Tipo de contrato";
@@ -402,6 +406,8 @@ class StringConst {
   static const String FORM_PHONE_CERTIFIER = "Teléfono";
   static const String FORM_POSITION_CERTIFIER = "Cargo";
   static const String FORM_DESCRIPTION = "Descripción del puesto";
+  static const String FORM_JOB_PLACE = "Ubicación del puesto";
+  static const String FORM_ABOUT_JOB = "Acerca del puesto";
 
   static const String FORM_GENERAL_INFO = "Información general";
   static const String FORM_CONTACT_DATA_INFO = "Datos de la persona de contacto";
@@ -651,7 +657,7 @@ class StringConst {
   //Side drawer
   static const String DRAWER_CONTROL_PANEL = 'Panel de control';
   static const String DRAWER_PARTICIPANTS = 'Participantes';
-  static const String DRAWER_MY_RESOURCES = 'Ofertas & Candidatos';
+  static const String DRAWER_MY_JOB_OFFERS = 'Ofertas & Candidatos';
   static const String DRAWER_TOOLS = 'Caja de herramientas';
   static const String DRAWER_CALENDAR = 'Calendario';
   static const String DRAWER_ENTITIES = 'Agenda de contactos ';

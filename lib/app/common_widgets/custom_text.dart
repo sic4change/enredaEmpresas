@@ -214,6 +214,29 @@ class CustomTextMedium extends StatelessWidget {
   }
 }
 
+class CustomTextMediumForm extends StatelessWidget {
+
+  const CustomTextMediumForm({super.key,  required this.text });
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    double fontSize = responsiveSize(context, 14, 18, md: 16);
+    TextTheme textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble / 2, vertical: 0),
+      child: Text(
+        text,
+        style: textTheme.bodyMedium?.copyWith(
+          color: AppColors.primary900,
+          height: 1.5,
+          fontSize: fontSize,
+        ),
+      ),
+    );
+  }
+}
+
 class CustomTextMediumBold extends StatelessWidget {
 
   const CustomTextMediumBold({super.key,  required this.text });

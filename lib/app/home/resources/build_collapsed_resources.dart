@@ -93,7 +93,7 @@ class _CollapsedResourcesListState extends State<CollapsedResourcesList> {
                                                       onTap: () =>
                                                           setState(() {
                                                             globals.currentResource = resource;
-                                                            WebHome.goResources();
+                                                            WebHome.goJobOffers();
                                                             MyResourcesListPage.selectedIndex.value = 2;
                                                           }),
                                                     ),

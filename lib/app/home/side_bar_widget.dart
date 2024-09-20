@@ -31,29 +31,21 @@ class SideBarWidget extends StatefulWidget {
 }
 
 class _SideBarWidgetState extends State<SideBarWidget> {
-  void _setSelectedIndexToOne() {
+  void _setSelectedControlPanel() {
     setState(() {
-      WebHome.selectedIndex.value = 2; // Select empty Container
-      MyResourcesListPage.selectedIndex.value = 0;
+      WebHome.goToControlPanel();
     });
   }
 
-  void _setSelectedIndexParticipants() {
+  void _setSelectedMyProfile() {
     setState(() {
-      WebHome.goToParticipants();
-      MyResourcesListPage.selectedIndex.value = 0;
+      WebHome.goToMyProfile();
     });
   }
 
-  void _setSelectedIndexEntities() {
+  void _setSelectedMyJobOffers() {
     setState(() {
-      WebHome.selectedIndex.value = 0;
-    });
-  }
-
-  void _setSelectedIndexResources() {
-    setState(() {
-      WebHome.goResources();
+      WebHome.goJobOffers();
     });
   }
 
@@ -89,10 +81,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         selectedItemDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: MyResourcesListPage.selectedIndex.value == 1 ?
+            color: WebHome.selectedIndex.value == 1 ?
             Colors.transparent : AppColors.primary100,
           ),
-          color: MyResourcesListPage.selectedIndex.value == 1 ?
+          color: WebHome.selectedIndex.value == 1 ?
           Colors.transparent : AppColors.primary100,
         ),
         iconTheme: const IconThemeData(
@@ -114,7 +106,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       showToggleButton: false,
       headerBuilder: (context, extended) {
         return Container(
-          height: isSmallScreen ? 342 : 342,
+          height: isSmallScreen ? 342 : 320,
           child: Padding(
             padding: isSmallScreen ? EdgeInsets.only(top: 10.0, left: 0, right: 0) : EdgeInsets.only(top: 20),
             child: Column(
@@ -150,7 +142,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       buttonTitle: StringConst.CREATE_JOB_OFFER,
                       onPressed: () {
                         widget.keyWebHome.currentState?.closeDrawer();
-                        WebHome.goCreateResource();
+                        WebHome.selectedIndex.value = 1;
                       },
                       widget: Icon(Icons.add_circle_outlined, size: 20, color: AppColors.turquoiseBlue,),),
                     SizedBox(height: 10),
@@ -162,11 +154,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         );
       },
       items: [
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PANEL), width: 20,), label: StringConst.DRAWER_CONTROL_PANEL, onTap: _setSelectedIndexToOne),
-        //SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PARTICIPANTS), width: 20,), label: StringConst.DRAWER_PARTICIPANTS, onTap: _setSelectedIndexParticipants),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_RESOURCES), width: 20,), label: StringConst.DRAWER_MY_RESOURCES, onTap: _setSelectedIndexResources),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_CALENDAR, onTap: _setSelectedIndexToOne),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PROFILE_PRIMARY), width: 20,), label: StringConst.MY_PROFILE, onTap: _setSelectedIndexEntities)
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PANEL), width: 20,), label: StringConst.DRAWER_CONTROL_PANEL, onTap: _setSelectedControlPanel),
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_RESOURCES), width: 20,), label: StringConst.DRAWER_MY_JOB_OFFERS, onTap: _setSelectedMyJobOffers),
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_CALENDAR, onTap: _setSelectedControlPanel),
+        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PROFILE_PRIMARY), width: 20,), label: StringConst.MY_PROFILE, onTap: _setSelectedMyProfile)
       ],
     );
   }

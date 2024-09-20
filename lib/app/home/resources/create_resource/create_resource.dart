@@ -39,33 +39,39 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common_widgets/bubbled_container.dart';
+import '../../../common_widgets/custom_form_field.dart';
+import '../../../common_widgets/rounded_container.dart';
 import '../validating_form_controls/stream_builder_competencies_categories.dart';
 import 'create_revision_form.dart';
+import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 const double contactBtnWidthLg = 200.0;
 const double contactBtnWidthSm = 100.0;
 const double contactBtnWidthMd = 140.0;
 
-class CreateResource extends StatefulWidget {
-  const CreateResource({Key? key, required this.companyId}) : super(key: key);
-  final String? companyId;
+class CreateJobOffer extends StatefulWidget {
+  const CreateJobOffer({Key? key}) : super(key: key);
 
   @override
-  State<CreateResource> createState() => _CreateResourceState();
+  State<CreateJobOffer> createState() => _CreateJobOfferState();
 }
 
-class _CreateResourceState extends State<CreateResource> {
+class _CreateJobOfferState extends State<CreateJobOffer> {
   final _formKey = GlobalKey<FormState>();
   final _formKeyOrganizer = GlobalKey<FormState>();
   bool isLoading = false;
 
   String? _resourceTitle;
   String? _resourceDescription;
+  String? _resourceResponsibilities;
+  String? _resourceFunctions;
+  String? _resourceRequirements;
   String? _duration;
   String? _temporality;
   String? _place;
   int? _capacity;
-  String? _street;
+  String? _postalCode;
   String? _organizerText;
   String? _link;
   String? _phone;
@@ -102,6 +108,7 @@ class _CreateResourceState extends State<CreateResource> {
   ResourceType? selectedResourceType;
   ResourcePicture? selectedResourcePicture;
   Company? selectedCompany;
+  String? _companyId;
   String? _degree;
   String? _modality;
   String? _contractType;
@@ -144,10 +151,14 @@ class _CreateResourceState extends State<CreateResource> {
   @override
   void initState() {
     super.initState();
+    _companyId = globals.currentUserCompany!.companyId!;
     _resourceTitle = "";
     _duration = "";
     _temporality = "";
     _resourceDescription = "";
+    _resourceResponsibilities = "";
+    _resourceFunctions = "";
+    _resourceRequirements = "";
     _start = DateTime.now();
     _end = DateTime.now();
     _max = DateTime.now();
@@ -167,7 +178,7 @@ class _CreateResourceState extends State<CreateResource> {
     _salary = "";
     _degree = "";
     _place = "";
-    _street = "";
+    _postalCode = "";
     _capacity = 0;
     _countryId = null;
     _provinceId = null;
@@ -214,6 +225,9 @@ class _CreateResourceState extends State<CreateResource> {
       final newResource = Resource(
         title: _resourceTitle!,
         description: _resourceDescription!,
+        responsibilities: _resourceResponsibilities!,
+        functions: _resourceFunctions,
+        otherRequirements: _resourceRequirements,
         contactEmail: _email,
         contactPhone: _phone,
         resourceId: "",
@@ -231,19 +245,19 @@ class _CreateResourceState extends State<CreateResource> {
         end: _end!,
         modality: _modality!,
         salary: _salary,
-        organizer: widget.companyId!,
+        organizer: globals.currentUserCompany!.companyId!,
         link: _link,
         resourcePictureId: resourcePictureId,
         notExpire: _notExpire,
         degree: _degree,
-        promotor: _organizerText,
+        promotor: globals.currentUserCompany!.name,
         temporality: _temporality,
         participants: [],
         interests: interests,
         competencies: competencies,
         organizerType: "Empresa",
         likes: [],
-        street: _street,
+        postalCode: _postalCode,
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
       );
       try {
@@ -286,25 +300,262 @@ class _CreateResourceState extends State<CreateResource> {
       'Sin especificar'];
     return Form(
       key: _formKey,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-          Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-          child: streamBuilderDropdownResourceCategoryCreate(
-              context,
-              selectedResourceCategory,
-              buildResourceCategoryStreamBuilderSetState),
-        ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget> [
+        CustomTextMediumForm(text: StringConst.FORM_DESCRIPTION),
+        CustomFormField(
+          child: customTextFormField(context, _resourceTitle!, '', StringConst.FORM_COMPANY_ERROR, nameSetState),
+          label: StringConst.FORM_TITLE,),
+        CustomFormField(
+          child: streamBuilderDropdownResourceCategoryCreate(context, selectedResourceCategory, buildResourceCategoryStreamBuilderSetState),
+          label: StringConst.FORM_RESOURCE_CATEGORY,),
+        CustomFormField(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.greyUltraLight),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: CustomTextSmall(text: globals.currentUserCompany!.name),
+              ),
+            ],
+          ),
+          label: StringConst.FORM_YOUR_COMPANY_NAME,),
+        SizedBox(height: 20,),
+        CustomTextMediumForm(text: StringConst.FORM_JOB_PLACE),
         CustomFlexRowColumn(
-          childLeft: customTextFormField(context, _resourceTitle!,
-              StringConst.FORM_TITLE, StringConst.FORM_COMPANY_ERROR, nameSetState),
-          childRight: customTextFormMultiline(
-              context,
-              _resourceDescription!,
-              StringConst.DESCRIPTION,
-              StringConst.FORM_COMPANY_ERROR,
-              descriptionSetState),
+          childLeft: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: streamBuilderForCountryCreate(context, selectedCountry,
+                buildCountryStreamBuilderSetState),
+            label: StringConst.FORM_COUNTRY,),
+            childRight: CustomFormField(
+              padding: const EdgeInsets.all(0),
+              child: streamBuilderForProvinceCreate(
+                  context,
+                  selectedCountry,
+                  selectedProvince,
+                  buildProvinceStreamBuilderSetState),
+              label: StringConst.FORM_PROVINCE,)),
+        CustomFlexRowColumn(
+            childLeft: CustomFormField(
+              padding: const EdgeInsets.all(0),
+              child: streamBuilderForCityCreate(
+                  context,
+                  selectedCountry,
+                  selectedProvince,
+                  selectedCity,
+                  buildCityStreamBuilderSetState),
+              label: StringConst.FORM_CITY,),
+          childRight: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: customTextFormField(
+                context,
+                _postalCode!,
+                '',
+                StringConst.FORM_COMPANY_ERROR,
+                addressSetState),
+            label: StringConst.FORM_POSTAL_CODE,)),
+        CustomFlexRowColumn(
+            childLeft: CustomFormField(
+              padding: const EdgeInsets.all(0),
+              child: customTextFormField(
+                  context,
+                  _place!,
+                  '',
+                  StringConst.FORM_COMPANY_ERROR,
+                  placeSetState),
+              label: StringConst.FORM_PLACE,
+            ),
+            childRight: Container()),
+        SizedBox(height: 20,),
+        CustomTextMediumForm(text: StringConst.FORM_ABOUT_JOB),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FormField(
+              validator: (value) {
+                if (selectedInterests.isEmpty) {
+                  return 'Por favor seleccione al menos un sector';
+                }
+                return null;
+              },
+              builder: (FormFieldState<dynamic> field) {
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget> [
+                      CustomTextBold(title: StringConst.FORM_INTERESTS_QUESTION,),
+                      InkWell(
+                        onTap: () => {_showMultiSelectInterests(context) },
+                        child: Container(
+                          width: double.infinity,
+                          constraints: BoxConstraints(minHeight: 50),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(
+                                  color: AppColors.greyUltraLight
+                              )
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                            child: Wrap(
+                              spacing: 5,
+                              children: selectedInterests.map((s) =>
+                                  BubbledContainer(s.name),
+                              ).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (!field.isValid && field.errorText != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            field.errorText!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                    ]);
+              }
+          ),
         ),
+        CustomFormField(
+          child: FormField(
+            /*validator: (value) {
+              if (_resourceDescription!.length < 100) {
+                return 'El texto debe tener al menos 100 caracteres';
+              } else if (_resourceDescription!.length > 4000) {
+                return 'El texto no puede superar los 4000 caracteres';
+              }
+              return null;
+            },*/
+            builder: (FormFieldState<dynamic> field) {
+              return customTextFormMultiline(
+                  context,
+                  _resourceDescription!,
+                  '',
+                  StringConst.FORM_COMPANY_ERROR,
+                  descriptionSetState, 4000);
+            }
+          ),
+          label: StringConst.DESCRIPTION,
+        ),
+        CustomFormField(
+          child: FormField(
+              // validator: (value) {
+              //   if (_resourceResponsibilities!.length < 100) {
+              //     return 'El texto debe tener al menos 100 caracteres';
+              //   } else if (_resourceResponsibilities!.length > 2000) {
+              //     return 'El texto no puede superar los 2000 caracteres';
+              //   }
+              //   return null;
+              // },
+              builder: (FormFieldState<dynamic> field) {
+                return customTextFormMultiline(
+                    context,
+                    _resourceResponsibilities!,
+                    '',
+                    StringConst.FORM_COMPANY_ERROR,
+                    responsibilitiesSetState, 2000);
+              }
+          ),
+          label: StringConst.RESPONSIBILITIES,
+        ),
+        CustomFormField(
+          child: FormField(
+              // validator: (value) {
+              //   if (_resourceFunctions!.length < 100) {
+              //     return 'El texto debe tener al menos 100 caracteres';
+              //   } else if (_resourceFunctions!.length > 2000) {
+              //     return 'El texto no puede superar los 2000 caracteres';
+              //   }
+              //   return null;
+              // },
+              builder: (FormFieldState<dynamic> field) {
+                return customTextFormMultiline(
+                    context,
+                    _resourceFunctions!,
+                    '',
+                    StringConst.FORM_COMPANY_ERROR,
+                    functionsSetState, 2000);
+              }
+          ),
+          label: StringConst.FUNCTIONS,
+        ),
+        CustomFormField(
+          child: customTextFormField(context, _resourceRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
+          label: StringConst.FORM_OTHER_REQUIREMENTS,),
+        CustomFlexRowColumn(
+          childLeft: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: DropdownButtonFormField<String>(
+              value: _modality,
+              items: <String>[
+                'Presencial',
+                'Semipresencial',
+                'Online'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: textTheme.bodySmall?.copyWith(
+                      height: 1.5,
+                      color: AppColors.greyDark,
+                      fontWeight: FontWeight.w400,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                );
+              }).toList(),
+              validator: (value) => _modality != null
+                  ? null
+                  : StringConst.FORM_COMPANY_ERROR,
+              onChanged: (value) => buildModalityStreamBuilderSetState(value),
+              iconDisabledColor: AppColors.greyDark,
+              iconEnabledColor: AppColors.primaryColor,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                labelStyle: textTheme.bodySmall?.copyWith(
+                  height: 1.5,
+                  color: AppColors.greyDark,
+                  fontWeight: FontWeight.w400,
+                  fontSize: fontSize,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.greyUltraLight,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.greyUltraLight,
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              style: textTheme.bodySmall?.copyWith(
+                height: 1.5,
+                color: AppColors.greyDark,
+                fontWeight: FontWeight.w400,
+                fontSize: fontSize,
+              ),
+            ),
+            label: StringConst.FORM_MODALITY,),
+          childRight: customTextFormFieldNum(
+              context,
+              _capacity!.toString(),
+              StringConst.FORM_CAPACITY,
+              StringConst.FORM_COMPANY_ERROR,
+              capacitySetState),
+        ),
+
+
         resourceCategoryName == "Formación"
             ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
@@ -424,42 +675,7 @@ class _CreateResourceState extends State<CreateResource> {
                   buildSalaryStreamBuilderSetState)
               : Container(),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-          child: TextFormField(
-            controller: textEditingControllerInterests,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              labelText: StringConst.FORM_INTERESTS_QUESTION,
-              focusColor: AppColors.lilac,
-              labelStyle: textTheme.bodyLarge?.copyWith(
-                color: AppColors.greyDark,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            onTap: () => {_showMultiSelectInterests(context)},
-            validator: (value) =>
-            value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
-            onSaved: (value) => value = _interestId,
-            readOnly: true,
-            style: textTheme.bodyMedium?.copyWith(
-              color: AppColors.greyDark,
-            ),
-          ),
-        ),
+
         CustomFlexRowColumn(
             childLeft: TextFormField(
               controller: textEditingControllerCompetenciesCategories,
@@ -770,155 +986,11 @@ class _CreateResourceState extends State<CreateResource> {
   }
 
   Widget _buildFormOrganizer(BuildContext context) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-    double fontSize = responsiveSize(context, 14, 16, md: 15);
     return Form(
       key: _formKeyOrganizer,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: DropdownButtonFormField<String>(
-                hint: const Text(StringConst.FORM_MODALITY),
-                value: _modality,
-                items: <String>[
-                  'Presencial',
-                  'Semipresencial',
-                  'Online'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: textTheme.bodySmall?.copyWith(
-                        height: 1.5,
-                        color: AppColors.greyDark,
-                        fontWeight: FontWeight.w400,
-                        fontSize: fontSize,
-                      ),
-                    ),
-                  );
-                }).toList(),
-                validator: (value) => _modality != null
-                    ? null
-                    : StringConst.FORM_COMPANY_ERROR,
-                onChanged: (value) => buildModalityStreamBuilderSetState(value),
-                iconDisabledColor: AppColors.greyDark,
-                iconEnabledColor: AppColors.primaryColor,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelStyle: textTheme.bodySmall?.copyWith(
-                    height: 1.5,
-                    color: AppColors.greyDark,
-                    fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                style: textTheme.bodySmall?.copyWith(
-                  height: 1.5,
-                  color: AppColors.greyDark,
-                  fontWeight: FontWeight.w400,
-                  fontSize: fontSize,
-                ),
-              ),
-            ),
-            CustomFlexRowColumn(
-              childLeft: customTextFormField(
-                  context,
-                  _place!,
-                  StringConst.FORM_PLACE,
-                  StringConst.FORM_COMPANY_ERROR,
-                  placeSetState),
-              childRight: customTextFormFieldNum(
-                  context,
-                  _capacity!.toString(),
-                  StringConst.FORM_CAPACITY,
-                  StringConst.FORM_COMPANY_ERROR,
-                  capacitySetState),
-            ),
-            _modality != "Online"
-                ? CustomFlexRowColumn(
-                    childLeft: streamBuilderForCountryCreate(context, selectedCountry,
-                        buildCountryStreamBuilderSetState),
-                    childRight:streamBuilderForProvinceCreate(
-                                context,
-                                selectedCountry,
-                                selectedProvince,
-                                buildProvinceStreamBuilderSetState))
-                : Container(),
-            _modality != "Online"
-                ? CustomFlexRowColumn(
-                    childLeft: streamBuilderForCityCreate(
-                                context,
-                                selectedCountry,
-                                selectedProvince,
-                                selectedCity,
-                                buildCityStreamBuilderSetState),
-                    childRight: customTextFormField(
-                                context,
-                                _street!,
-                                StringConst.FORM_ADDRESS,
-                                StringConst.FORM_COMPANY_ERROR,
-                                addressSetState),
-                  )
-                : Container(),
-            CustomFlexRowColumn(
-              childLeft: streamBuilderDropdownSocialEntities(
-                  context,
-                  selectedCompany,
-                  widget.companyId!,
-                  buildSocialEntityStreamBuilderSetState),
-              childRight: TextFormField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: StringConst.FORM_ORGANIZER_TEXT,
-                  focusColor: AppColors.lilac,
-                  labelStyle: textTheme.bodySmall?.copyWith(
-                    color: AppColors.greyDark,
-                    fontSize: fontSize,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                initialValue: _organizerText,
-                onChanged: (String? value) => setState(() {
-                  _organizerText = value;
-                }),
-                textCapitalization: TextCapitalization.sentences,
-                keyboardType: TextInputType.name,
-                style: textTheme.bodySmall?.copyWith(
-                  color: AppColors.greyDark,
-                  fontSize: fontSize,
-                ),
-              ),
-            ),
             _organizerText != ""  ?
             CustomFlexRowColumn(
               childLeft: customTextFormField(
@@ -980,7 +1052,7 @@ class _CreateResourceState extends State<CreateResource> {
           countryName,
           provinceName,
           cityName,
-          _street!,
+          _postalCode!,
           socialEntityName,
           _organizerText!,
           _link!,
@@ -1091,6 +1163,18 @@ class _CreateResourceState extends State<CreateResource> {
     setState(() => _resourceDescription = val!);
   }
 
+  void responsibilitiesSetState(String? val) {
+    setState(() => _resourceResponsibilities = val!);
+  }
+
+  void functionsSetState(String? val) {
+    setState(() => _resourceFunctions = val!);
+  }
+
+  void resourceRequirementsSetState(String? val) {
+    setState(() => _resourceRequirements = val!);
+  }
+
   void scheduleSetState(String? val) {
     setState(() => _temporality = val!);
   }
@@ -1104,7 +1188,7 @@ class _CreateResourceState extends State<CreateResource> {
   }
 
   void addressSetState(String? val) {
-    setState(() => _street = val!);
+    setState(() => _postalCode = val!);
   }
 
   void linkSetState(String? val) {
@@ -1129,18 +1213,24 @@ class _CreateResourceState extends State<CreateResource> {
     getValuesFromKeyInterests(selectedValues);
   }
 
-  void getValuesFromKeyInterests(selectedValues) {
+  void getValuesFromKeyInterests (selectedValues) {
     var concatenate = StringBuffer();
     List<String> interestsIds = [];
+    int count = 0;
+    int totalItems = selectedValues.length;
     selectedValues.forEach((item) {
-      concatenate.write(item.name + ' / ');
+      concatenate.write(item.name);
       interestsIds.add(item.interestId);
+      if (count != totalItems - 1) {
+        concatenate.write(' / ');
+      }
+      count++;
     });
     setState(() {
-      interestsNames = concatenate.toString();
-      textEditingControllerInterests.text = concatenate.toString();
-      interests = interestsIds;
-      selectedInterests = selectedValues;
+      this.interestsNames = concatenate.toString();
+      this.textEditingControllerInterests.text = concatenate.toString();
+      this.interests = interestsIds;
+      this.selectedInterests = selectedValues;
     });
   }
 
@@ -1250,26 +1340,54 @@ class _CreateResourceState extends State<CreateResource> {
         ),
       ];
 
+  // onStepContinue() async {
+  //   // If invalid form, just return
+  //   if (currentStep == 0 && !_validateAndSaveForm()) {
+  //     return;
+  //   }
+  //
+  //   if (currentStep == 1 && !_validateAndSaveOrganizerForm()) {
+  //     return;
+  //   }
+  //
+  //   // If not last step, advance and return
+  //   final isLastStep = currentStep == getSteps().length - 1;
+  //   if (!isLastStep) {
+  //     setState(() {
+  //           if (currentStep == 0) {currentStep += 1;} else {currentStep += 1;}
+  //         });
+  //     return;
+  //   }
+  //   _submit();
+  // }
+
   onStepContinue() async {
-    // If invalid form, just return
-    if (currentStep == 0 && !_validateAndSaveForm()) {
-      return;
+    // Validate the form on the current step
+    if (currentStep == 0) {
+      if (!_validateAndSaveForm()) {
+        return;
+      }
+    } else if (currentStep == 1) {
+      if (!_validateAndSaveOrganizerForm()) {
+        return;
+      }
     }
 
-    if (currentStep == 1 && !_validateAndSaveOrganizerForm()) {
-      return;
-    }
-
-    // If not last step, advance and return
+    // Check if the current step is the last step
     final isLastStep = currentStep == getSteps().length - 1;
+
     if (!isLastStep) {
-      setState(() => {
-            if (currentStep == 0) {currentStep += 1} else {currentStep += 1}
-          });
+      // If not the last step, advance to the next step
+      setState(() {
+        currentStep += 1;
+      });
       return;
     }
-    _submit();
+
+    // If it is the last step, submit the form
+    await _submit();
   }
+
 
   goToStep(int step) {
     setState(() => currentStep = step);
@@ -1281,6 +1399,7 @@ class _CreateResourceState extends State<CreateResource> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     final isLastStep = currentStep == getSteps().length - 1;
     double contactBtnWidth = responsiveSize(
       context,
@@ -1288,62 +1407,66 @@ class _CreateResourceState extends State<CreateResource> {
       contactBtnWidthLg,
       md: contactBtnWidthMd,
     );
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.only(top: Sizes.kDefaultPaddingDouble),
-        height: Responsive.isMobile(context) ||
-            Responsive.isTablet(context)
-            ? MediaQuery.of(context).size.height
-            : MediaQuery.of(context).size.height * 0.80,
-        width: Responsive.isMobile(context) ||
-            Responsive.isTablet(context)
-            ? MediaQuery.of(context).size.width
-            : MediaQuery.of(context).size.width * 0.80,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(
-              Sizes.kDefaultPaddingDouble / 2),
-        ),
-        child: Stack(
-          children: [
-            CustomStepper(
-              elevation: 0.0,
-              type: Responsive.isMobile(context) ? CustomStepperType.vertical : CustomStepperType.horizontal,
-              steps: getSteps(),
-              currentStep: currentStep,
-              onStepContinue: onStepContinue,
-              onStepTapped: (step) => goToStep(step),
-              onStepCancel: onStepCancel,
-              controlsBuilder: (context, _) {
-                return Container(
-                  height: Sizes.kDefaultPaddingDouble * 2,
-                  margin: EdgeInsets.only(top: Sizes.kDefaultPaddingDouble * 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      if(currentStep != 0)
-                        EnredaButton(
-                          buttonTitle: StringConst.FORM_BACK,
-                          width: contactBtnWidth,
-                          onPressed: onStepCancel,
-                        ),
-                      SizedBox(width: Sizes.kDefaultPaddingDouble),
-                      isLoading ?
-                      const Center(child: CircularProgressIndicator(color: AppColors.primary300,))
-                          : EnredaButton(
-                                buttonTitle: isLastStep ? StringConst.FORM_CONFIRM : StringConst.FORM_NEXT,
-                                width: contactBtnWidth,
-                                buttonColor: AppColors.primaryColor,
-                                titleColor: AppColors.white,
-                                onPressed: onStepContinue,
-                              ),
-                    ],
-                  ),
-                );
-              },
+    return RoundedContainer(
+      borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
+      margin: Responsive.isMobile(context) ? EdgeInsets.all(0) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
+      contentPadding: Responsive.isMobile(context) ? EdgeInsets.all(0) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble),
+            child: Text(
+              StringConst.CREATE_JOB_OFFER,
+              style: textTheme.titleMedium!.copyWith(
+                color: AppColors.turquoiseBlue,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return  CustomStepper(
+                    elevation: 0.0,
+                    type: Responsive.isMobile(context) ? CustomStepperType.vertical : CustomStepperType.horizontal,
+                    steps: getSteps(),
+                    currentStep: currentStep,
+                    onStepContinue: onStepContinue,
+                    onStepTapped: (step) => goToStep(step),
+                    onStepCancel: onStepCancel,
+                    controlsBuilder: (context, _) {
+                      return Container(
+                        height: Sizes.kDefaultPaddingDouble * 2,
+                        margin: EdgeInsets.only(top: Sizes.kDefaultPaddingDouble * 2),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            if(currentStep != 0)
+                              EnredaButton(
+                                buttonTitle: StringConst.FORM_BACK,
+                                width: contactBtnWidth,
+                                onPressed: onStepCancel,
+                              ),
+                            SizedBox(width: Sizes.kDefaultPaddingDouble),
+                            isLoading ?
+                            const Center(child: CircularProgressIndicator(color: AppColors.primary300,))
+                                : EnredaButton(
+                              buttonTitle: isLastStep ? StringConst.FORM_CONFIRM : StringConst.FORM_NEXT,
+                              width: contactBtnWidth,
+                              buttonColor: AppColors.primaryColor,
+                              titleColor: AppColors.white,
+                              onPressed: onStepContinue,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }
+            ),
+          ),
+        ],
       ),
     );
   }

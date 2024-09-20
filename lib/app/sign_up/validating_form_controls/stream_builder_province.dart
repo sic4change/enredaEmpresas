@@ -27,7 +27,6 @@ Widget streamBuilderForProvinceCreate (BuildContext context, Country? selectedCo
         }
 
         return DropdownButtonFormField<Province>(
-          hint: const Text(StringConst.FORM_PROVINCE),
           isExpanded: true,
           value: selectedProvince,
           items: provinceItems,

@@ -252,7 +252,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                               flex: Responsive.isMobile(context) ? 0 : 1,
                               child: InkWell(
                                 onTap: () {
-                                  WebHome.goResources();
+                                  WebHome.goJobOffers();
                                   MyResourcesListPage.selectedIndex.value = 0;
                                 },
                                 hoverColor: Colors.transparent,
@@ -365,7 +365,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
             SizedBox(height: 20,),
             InkWell(
               onTap: () {
-                WebHome.goResources();
+                WebHome.goJobOffers();
                 MyResourcesListPage.selectedIndex.value = 0;
               },
               child: Container(

@@ -12,23 +12,31 @@ Widget streamBuilderDropdownResourceCategoryCreate (BuildContext context, Resour
   final database = Provider.of<Database>(context, listen: false);
   TextTheme textTheme = Theme.of(context).textTheme;
   double fontSize = responsiveSize(context, 14, 16, md: 15);
+  const String targetId = 'POUBGFk5gU6c5X1DKo1b';
   return StreamBuilder<List<ResourceCategory>>(
       stream: database.resourceCategoryStream(),
       builder: (context, snapshotResourceCategory){
 
         List<DropdownMenuItem<ResourceCategory>> resourceCategoryItems = [];
+        ResourceCategory? initResourceCategory;
         if (snapshotResourceCategory.hasData) {
           resourceCategoryItems = snapshotResourceCategory.data!.map((ResourceCategory resourceCategory) {
+            if (resourceCategory.id == targetId) {
+              initResourceCategory = resourceCategory;
+            }
             return DropdownMenuItem<ResourceCategory>(
               value: resourceCategory,
               child: Text(resourceCategory.name),
             );
-          })
-              .toList();
+          }).toList();
+
+          // Set the initial value if not already selected
+          if (selectedResourceCategory == null && initResourceCategory != null) {
+            selectedResourceCategory = initResourceCategory;
+          }
         }
 
         return DropdownButtonFormField<ResourceCategory>(
-          hint: const Text(StringConst.FORM_RESOURCE_CATEGORY),
           value: selectedResourceCategory,
           items: resourceCategoryItems,
           validator: (value) => selectedResourceCategory != null ? null : StringConst.FORM_MOTIVATION_ERROR,

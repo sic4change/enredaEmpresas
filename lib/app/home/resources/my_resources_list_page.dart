@@ -11,6 +11,8 @@ import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 
+import '../web_home.dart';
+
 
 class MyResourcesListPage extends StatefulWidget {
   const MyResourcesListPage({super.key, required this.company});
@@ -34,7 +36,6 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   void initState() {
     bodyWidget = [
       ResourcesListPage(),
-      CreateResource(companyId: widget.company?.companyId!),
       ResourceDetailPage(companyId: widget.company?.companyId!),
       EditResource()
     ];
@@ -73,14 +74,13 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                             },
                             child: selectedIndex != 0 ? CustomTextMedium(text: 'Recursos ') :
                               CustomTextMediumBold(text: 'Recursos ') ),
-                              selectedIndex == 1 ? CustomTextMediumBold(text: '> Crear oferta de empleo',) :
-                              selectedIndex == 2 ? CustomTextMediumBold(text:'> Detalle de la oferta de empleo') :
-                              selectedIndex == 3 ? Row(
+                              selectedIndex == 1 ? CustomTextMediumBold(text:'> Detalle de la oferta de empleo') :
+                              selectedIndex == 2 ? Row(
                             children: [
                               InkWell(
                                   onTap: () => {
                                     setState(() {
-                                      MyResourcesListPage.selectedIndex.value = 2;
+                                      MyResourcesListPage.selectedIndex.value = 1;
                                     })
                                   },
                                   child: CustomTextMedium(text:'> Detalle de la oferta de empleo ')),
@@ -100,7 +100,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                             text: 'Crear oferta de empleo',
                             onPressed: () => setState(() {
                               setState(() {
-                                MyResourcesListPage.selectedIndex.value = 1;
+                                WebHome.selectedIndex.value = 1;
                               });
                             }),
                           )

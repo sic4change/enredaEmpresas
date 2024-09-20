@@ -45,18 +45,18 @@ class CustomSideBarButton extends StatelessWidget {
         onPressed: onPressed,
         child: buildChild(context),
         style: ButtonStyle(
-          padding: MaterialStateProperty.all(EdgeInsets.only(left: 8, bottom: 10, top: 10)),
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-              if (MyResourcesListPage.selectedIndex.value == 1) {
+          padding: WidgetStateProperty.all(EdgeInsets.only(left: 8, bottom: 10, top: 10)),
+          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) {
+              if (WebHome.selectedIndex.value == 1) {
                 return AppColors.primary100;
               }
               return AppColors.white;
             },
           ),
-          side: MaterialStateProperty.resolveWith<BorderSide>(
-                (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed)) {
+          side: WidgetStateProperty.resolveWith<BorderSide>(
+                (Set<WidgetState> states) {
+              if (states.contains(WidgetState.pressed)) {
                 return BorderSide(
                   color: AppColors.primary100, // Color for pressed state
                   width: 1.0,
