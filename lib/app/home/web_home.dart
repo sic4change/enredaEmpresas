@@ -2,7 +2,7 @@ import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/account/personal_data.dart';
-import 'package:enreda_empresas/app/home/participants/create_participant/create_participant_page.dart';
+import 'package:enreda_empresas/app/home/resources/create_resource/create_resource.dart';
 import 'package:enreda_empresas/app/home/side_bar_widget.dart';
 import 'package:enreda_empresas/app/home/control_panel/control_panel_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_page.dart';
@@ -28,7 +28,6 @@ import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 import 'external_social_entity/entity_directory_page.dart';
 
-
 class WebHome extends StatefulWidget {
   const WebHome({Key? key})
       : super(key: key);
@@ -36,9 +35,22 @@ class WebHome extends StatefulWidget {
   static final SidebarXController controller = SidebarXController(selectedIndex: 0, extended: true);
   static ValueNotifier<int> selectedIndex = ValueNotifier(2);
 
+  static goCreateJobOffer() {
+    WebHome.selectedIndex.value = 1; // WebHome init state
+  }
+
+  static goToMyProfile() {
+    WebHome.selectedIndex.value = 0; // WebHome init state
+  }
+
   static goToControlPanel() {
     WebHome.selectedIndex.value = 2; // Select empty Container
     WebHome.controller.selectIndex(0);
+  }
+
+  static goJobOffers() {
+    WebHome.selectedIndex.value = 2; // Select empty Container
+    WebHome.controller.selectIndex(1);
   }
 
   static goToParticipants() {
@@ -51,17 +63,6 @@ class WebHome extends StatefulWidget {
     WebHome.selectedIndex.value = 2; // Select empty Container
     WebHome.controller.selectIndex(4);
     EntityDirectoryPage.selectedIndex.value = 0;
-  }
-
-  static goResources() {
-    WebHome.selectedIndex.value = 1; // Select empty Container
-    WebHome.controller.selectIndex(1);
-    MyResourcesListPage.selectedIndex.value = 0;
-  }
-  static goCreateResource() {
-    WebHome.selectedIndex.value = 1; // Select empty Container
-    WebHome.controller.selectIndex(1);
-    MyResourcesListPage.selectedIndex.value = 1;
   }
 
   static goToolBox() {
@@ -81,7 +82,7 @@ class _WebHomeState extends State<WebHome> {
   void initState() {
     bodyWidget = [
       const PersonalData(),
-      //const MyResourcesListPage(company: company),
+      const CreateJobOffer(),
       Container(),
     ];
     super.initState();
@@ -183,15 +184,13 @@ class _WebHomeState extends State<WebHome> {
                     children: [
                       if(!isSmallScreen) SideBarWidget(controller: WebHome.controller, profilePic: profilePic, userName: userName, keyWebHome: _key,),
                       if (WebHome.selectedIndex.value == 0) Expanded(child: Center(child: bodyWidget[0]))
-                      //else if (WebHome.selectedIndex.value == 1) Expanded(child: Center(child: bodyWidget[1]))
+                      else if (WebHome.selectedIndex.value == 1) Expanded(child: Center(child: bodyWidget[1]))
                       else Expanded(child: Center(child: AnimatedBuilder(
                         animation: WebHome.controller,
                         builder: (context, child){
                           switch(WebHome.controller.selectedIndex){
                             case 0: _key.currentState?.closeDrawer();
                             return ControlPanelPage(company: company, user: user,);
-                            // case 1: _key.currentState?.closeDrawer();
-                            // return const ParticipantsListPage();
                             case 1: _key.currentState?.closeDrawer();
                             return MyResourcesListPage(company: company);
                             case 2: _key.currentState?.closeDrawer();

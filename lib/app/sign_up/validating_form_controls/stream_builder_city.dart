@@ -27,7 +27,6 @@ Widget streamBuilderForCityCreate (BuildContext context, Country? selectedCountr
           ).toList();
         }
         return DropdownButtonFormField<City>(
-          hint: const Text(StringConst.FORM_CITY),
           isExpanded: true,
           value: selectedCity,
           items: cityItems,

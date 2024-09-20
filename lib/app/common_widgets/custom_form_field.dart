@@ -6,14 +6,15 @@ import 'custom_text.dart';
 
 class CustomFormField extends StatelessWidget {
 
-  CustomFormField({ required this.child, required this.label});
+  CustomFormField({ required this.child, required this.label, this.padding = const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2)});
   final Widget child;
   final String label;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+      padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

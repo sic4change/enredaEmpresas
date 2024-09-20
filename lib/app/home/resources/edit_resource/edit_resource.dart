@@ -67,7 +67,7 @@ class _EditResourceState extends State<EditResource> {
   String? _temporality;
   String? _place;
   int? _capacity;
-  String? _street;
+  String? _postalCode;
   String? _organizer;
   String? _organizerType;
   String? _resourceLink;
@@ -141,7 +141,7 @@ class _EditResourceState extends State<EditResource> {
     _salary = globals.currentResource?.salary ?? '';
     _degree = globals.currentResource?.degree ?? '';
     _place = globals.currentResource?.address?.place ?? '';
-    _street = globals.currentResource?.street ?? '';
+    _postalCode = globals.currentResource?.postalCode ?? '';
     _capacity = globals.currentResource?.capacity ?? 0;
     _countryId = globals.currentResource?.address?.country ?? '';
     _provinceId = globals.currentResource?.address?.province ?? '';
@@ -288,7 +288,7 @@ class _EditResourceState extends State<EditResource> {
                   _resourceDescription!,
                   StringConst.DESCRIPTION,
                   StringConst.FORM_COMPANY_ERROR,
-                  descriptionSetState),
+                  descriptionSetState, 4000),
             ),
             _resourceCategoryId == "6ag9Px7zkFpHgRe17PQk"
                 ? Padding(
@@ -877,7 +877,7 @@ class _EditResourceState extends State<EditResource> {
                             selectedCity,
                             buildCityStreamBuilderSetState,
                             resource),
-                    childRight: customTextFormFieldNotValidator(context, _street!,
+                    childRight: customTextFormFieldNotValidator(context, _postalCode!,
                             StringConst.FORM_ADDRESS, addressSetState),
                   )
                 : Container(),
@@ -1045,7 +1045,7 @@ class _EditResourceState extends State<EditResource> {
   }
 
   void addressSetState(String? val) {
-    setState(() => _street = val!);
+    setState(() => _postalCode = val!);
   }
 
   void linkSetState(String? val) {
@@ -1226,7 +1226,7 @@ class _EditResourceState extends State<EditResource> {
       participants: _participants,
       assistants: _assistants,
       status: _status,
-      street: _street,
+      postalCode: _postalCode,
     );
     try {
       final database = Provider.of<Database>(context, listen: false);

@@ -79,10 +79,10 @@ Widget customTextFormFieldNotValidator(BuildContext context, String formValue, S
   );
 }
 
-Widget customTextFormMultiline(BuildContext context, String formValue, String labelText, String errorText, functionSetState) {
+Widget customTextFormMultiline(BuildContext context, String formValue, String labelText, String errorText, functionSetState, int? maxLength) {
   TextTheme textTheme = Theme.of(context).textTheme;
   return TextFormField(
-    maxLines: null, // Set this
+    maxLength: maxLength,
     keyboardType: TextInputType.multiline,
     decoration: InputDecoration(
       filled: true,
@@ -107,8 +107,15 @@ Widget customTextFormMultiline(BuildContext context, String formValue, String la
       ),
     ),
     initialValue: formValue,
-    validator: (value) =>
-    value!.isNotEmpty ? null : errorText,
+    validator: (value) {
+      if (value!.isEmpty) {
+        return errorText;
+      } else if (value.length < 100) {
+        return 'El texto debe tener al menos 100 caracteres';
+      }
+      return null;
+    },
+
     onSaved: (String? val) => functionSetState(val),
     textCapitalization: TextCapitalization.sentences,
     style: textTheme.bodyMedium?.copyWith(

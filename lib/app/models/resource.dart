@@ -19,7 +19,7 @@ class Resource {
     this.duration,
     this.modality,
     this.place,
-    this.street,
+    this.postalCode,
     this.country,
     this.countryName,
     this.province,
@@ -50,12 +50,18 @@ class Resource {
     this.competencies,
     this.degree,
     this.invitationsList,
+    this.responsibilities,
+    this.functions,
+    this.otherRequirements,
   });
 
   factory Resource.fromMap(Map<String, dynamic> data, String documentId) {
 
     final String title = data['title'];
     final String description = data['description'];
+    final String responsibilities = data['responsibilities'];
+    final String functions = data['functions'];
+    final String? otherRequirements = data['otherRequirements'];
     final String organizer = data['organizer'];
     final String? organizerType = data['organizerType'];
     final String? organizerName = data['organizerName'];
@@ -73,6 +79,7 @@ class Resource {
     final String? country = data['address']['country'];
     final String? countryName = data['countryName'];
     final String? province = data['address']['province'];
+    final String? postalCode = data['address']['postalCode'];
     final String? provinceName = data['provinceName'];
     final String? city = data['address']['city'];
     final String? cityName = data['cityName'];
@@ -113,19 +120,22 @@ class Resource {
     final String? link = data['link'];
     final bool? notExpire = data['notExpire'];
     final DateTime createdate = data['createdate'].toDate();
-    final String? street = data['street'];
 
     final Address address = Address(
         country: country,
         province: province,
         city: city,
         place: place,
+        postalCode: postalCode
     );
 
     return Resource(
       resourceId: documentId,
       title: title,
       description: description,
+      responsibilities: responsibilities,
+      functions: functions,
+      otherRequirements: otherRequirements,
       organizer: organizer,
       organizerType : organizerType,
       organizerName: organizerName,
@@ -167,7 +177,7 @@ class Resource {
       createdate: createdate,
       address: address,
       degree: degree,
-      street: street,
+      postalCode: postalCode,
       invitationsList: invitationsList
     );
   }
@@ -180,6 +190,9 @@ class Resource {
   String? organizerImage;
   final String? promotor;
   final String description;
+  final String? responsibilities;
+  final String? functions;
+  final String? otherRequirements;
   String? resourceType;
   String? resourceCategory;
   String? resourceTypeName;
@@ -194,7 +207,7 @@ class Resource {
   final String? city;
   String? cityName;
   final String? place;
-  final String? street;
+  final String? postalCode;
   final DateTime? maximumDate;
   final DateTime? start;
   final DateTime? end;
@@ -233,6 +246,9 @@ class Resource {
     return {
       'title': title,
       'description': description,
+      'responsibilities': responsibilities,
+      'functions': functions,
+      'otherRequirements': otherRequirements,
       'organizer': organizer,
       'organizerType': organizerType,
       'promotor': promotor,
@@ -260,7 +276,7 @@ class Resource {
       'notExpire': notExpire,
       'address': address?.toMap(),
       'createdate': createdate,
-      'street': street,
+      'postalCode': postalCode,
       'invitationsList': invitationsList,
       'status': status
     };
@@ -270,6 +286,9 @@ class Resource {
     String? resourceId,
     String? title,
     String? description,
+    String? responsibilities,
+    String? functions,
+    String? otherRequirements,
     String? organizer,
     String? organizerType,
     String? promotor,
@@ -307,6 +326,9 @@ class Resource {
       resourceId: resourceId?? this.resourceId,
       title: title?? this.title,
       description: description?? this.description,
+      responsibilities: responsibilities?? this.responsibilities,
+      functions: functions?? this.functions,
+      otherRequirements: otherRequirements?? this.otherRequirements,
       organizer: organizer?? this.organizer,
       organizerType: organizerType?? this.organizerType,
       promotor: promotor?? this.promotor,

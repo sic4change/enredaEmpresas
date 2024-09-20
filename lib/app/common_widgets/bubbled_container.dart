@@ -1,6 +1,6 @@
-import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
-import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
+import '../values/values.dart';
+import 'custom_text.dart';
 
 class BubbledContainer extends StatelessWidget {
 
@@ -11,20 +11,14 @@ class BubbledContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.all(5),
+        margin: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          color: AppColors.greyUltraLight,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accentColor,
-              offset: Offset(4.0, 4.0),
-              blurRadius: 0.0,
-            ),
-          ],
+          color: AppColors.primary050,
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 8),
-          child: CustomText(title: text),
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+          child: CustomTextSmall(text: text, color: AppColors.primary900,),
         ));
   }
 }
