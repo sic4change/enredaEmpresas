@@ -19,13 +19,14 @@ class Resource {
     this.duration,
     this.modality,
     this.place,
-    this.postalCode,
+    this.street,
     this.country,
     this.countryName,
     this.province,
     this.provinceName,
     this.city,
     this.cityName,
+    this.postalCode,
     this.maximumDate,
     this.start,
     this.end,
@@ -50,18 +51,12 @@ class Resource {
     this.competencies,
     this.degree,
     this.invitationsList,
-    this.responsibilities,
-    this.functions,
-    this.otherRequirements,
   });
 
   factory Resource.fromMap(Map<String, dynamic> data, String documentId) {
 
     final String title = data['title'];
     final String description = data['description'];
-    final String responsibilities = data['responsibilities'];
-    final String functions = data['functions'];
-    final String? otherRequirements = data['otherRequirements'];
     final String organizer = data['organizer'];
     final String? organizerType = data['organizerType'];
     final String? organizerName = data['organizerName'];
@@ -79,11 +74,11 @@ class Resource {
     final String? country = data['address']['country'];
     final String? countryName = data['countryName'];
     final String? province = data['address']['province'];
-    final String? postalCode = data['address']['postalCode'];
     final String? provinceName = data['provinceName'];
     final String? city = data['address']['city'];
     final String? cityName = data['cityName'];
     final String? place = data['address']['place'];
+    final String? postalCode = data['address']['postalCode'];
     final DateTime? maximumDate = data['maximumDate'].toDate();
     final DateTime? start = DateTime.parse(data['start'].toDate().toString());
     final DateTime? end =  DateTime.parse(data['end'].toDate().toString());
@@ -120,65 +115,63 @@ class Resource {
     final String? link = data['link'];
     final bool? notExpire = data['notExpire'];
     final DateTime createdate = data['createdate'].toDate();
+    final String? street = data['street'];
 
     final Address address = Address(
-        country: country,
-        province: province,
-        city: city,
-        place: place,
-        postalCode: postalCode
+      country: country,
+      province: province,
+      city: city,
+      place: place,
+      postalCode: postalCode,
     );
 
     return Resource(
-      resourceId: documentId,
-      title: title,
-      description: description,
-      responsibilities: responsibilities,
-      functions: functions,
-      otherRequirements: otherRequirements,
-      organizer: organizer,
-      organizerType : organizerType,
-      organizerName: organizerName,
-      organizerImage: organizerImage,
-      promotor: promotor,
-      resourceType: resourceType,
-      resourceCategory: resourceCategory,
-      resourceTypeName:  resourceTypeName,
-      resourceCategoryName:  resourceCategoryName,
-      capacity: capacity,
-      duration: duration,
-      modality: modality,
-      country: country,
-      countryName: countryName,
-      province: province,
-      provinceName: provinceName,
-      city: city,
-      cityName: cityName,
-      maximumDate: maximumDate,
-      start: start,
-      end: end,
-      temporality: temporality,
-      resourceLink: resourceLink,
-      status: status,
-      participants: participants,
-      assistants: assistants,
-      interests: interests,
-      competencies: competencies,
-      likes: likes,
-      salary: salary,
-      contractType: contractType,
-      contactEmail: contactEmail,
-      contactPhone: contactPhone,
-      resourcePictureId: resourcePictureId,
-      resourcePhoto: resourcePhoto,
-      searchText: searchText,
-      link: link,
-      notExpire: notExpire,
-      createdate: createdate,
-      address: address,
-      degree: degree,
-      postalCode: postalCode,
-      invitationsList: invitationsList
+        resourceId: documentId,
+        title: title,
+        description: description,
+        organizer: organizer,
+        organizerType : organizerType,
+        organizerName: organizerName,
+        organizerImage: organizerImage,
+        promotor: promotor,
+        resourceType: resourceType,
+        resourceCategory: resourceCategory,
+        resourceTypeName:  resourceTypeName,
+        resourceCategoryName:  resourceCategoryName,
+        capacity: capacity,
+        duration: duration,
+        modality: modality,
+        country: country,
+        countryName: countryName,
+        province: province,
+        provinceName: provinceName,
+        city: city,
+        cityName: cityName,
+        maximumDate: maximumDate,
+        start: start,
+        end: end,
+        temporality: temporality,
+        resourceLink: resourceLink,
+        status: status,
+        participants: participants,
+        assistants: assistants,
+        interests: interests,
+        competencies: competencies,
+        likes: likes,
+        salary: salary,
+        contractType: contractType,
+        contactEmail: contactEmail,
+        contactPhone: contactPhone,
+        resourcePictureId: resourcePictureId,
+        resourcePhoto: resourcePhoto,
+        searchText: searchText,
+        link: link,
+        notExpire: notExpire,
+        createdate: createdate,
+        address: address,
+        degree: degree,
+        street: street,
+        invitationsList: invitationsList
     );
   }
 
@@ -190,9 +183,6 @@ class Resource {
   String? organizerImage;
   final String? promotor;
   final String description;
-  final String? responsibilities;
-  final String? functions;
-  final String? otherRequirements;
   String? resourceType;
   String? resourceCategory;
   String? resourceTypeName;
@@ -207,6 +197,7 @@ class Resource {
   final String? city;
   String? cityName;
   final String? place;
+  final String? street;
   final String? postalCode;
   final DateTime? maximumDate;
   final DateTime? start;
@@ -246,9 +237,6 @@ class Resource {
     return {
       'title': title,
       'description': description,
-      'responsibilities': responsibilities,
-      'functions': functions,
-      'otherRequirements': otherRequirements,
       'organizer': organizer,
       'organizerType': organizerType,
       'promotor': promotor,
@@ -276,7 +264,7 @@ class Resource {
       'notExpire': notExpire,
       'address': address?.toMap(),
       'createdate': createdate,
-      'postalCode': postalCode,
+      'street': street,
       'invitationsList': invitationsList,
       'status': status
     };
@@ -286,9 +274,6 @@ class Resource {
     String? resourceId,
     String? title,
     String? description,
-    String? responsibilities,
-    String? functions,
-    String? otherRequirements,
     String? organizer,
     String? organizerType,
     String? promotor,
@@ -323,44 +308,41 @@ class Resource {
     String? status
   }) {
     return Resource(
-      resourceId: resourceId?? this.resourceId,
-      title: title?? this.title,
-      description: description?? this.description,
-      responsibilities: responsibilities?? this.responsibilities,
-      functions: functions?? this.functions,
-      otherRequirements: otherRequirements?? this.otherRequirements,
-      organizer: organizer?? this.organizer,
-      organizerType: organizerType?? this.organizerType,
-      promotor: promotor?? this.promotor,
-      resourceType: resourceType?? this.resourceType,
-      resourceCategory: resourceCategory?? this.resourceCategory,
-      assistants: assistants?? this.assistants,
-      capacity: capacity?? this.capacity,
-      duration: duration?? this.duration,
-      modality: modality?? this.modality,
-      maximumDate: maximumDate?? this.maximumDate,
-      start: start?? this.start,
-      end: end?? this.end,
-      temporality: temporality?? this.temporality,
-      resourceLink: resourceLink?? this.resourceLink,
-      participants: participants?? this.participants,
-      interests: interests?? this.interests,
-      competencies: competencies?? this.competencies,
-      contractType: contractType?? this.contractType,
-      salary: salary?? this.salary,
-      contactEmail: contactEmail?? this.contactEmail,
-      contactPhone: contactPhone?? this.contactPhone,
-      resourcePictureId: resourcePictureId?? this.resourcePictureId,
-      link: link?? this.link,
-      degree: degree?? this.degree,
-      notExpire: notExpire?? this.notExpire,
-      address: address?? this.address,
-      createdate: createdate?? this.createdate,
-      invitationsList: invitationsList?? this.invitationsList,
-      searchText: searchText ?? this.searchText,
-      resourcePhoto: resourcePhoto ?? this.resourcePhoto,
-      place: place ?? this.place,
-      status: status ?? this.status
+        resourceId: resourceId?? this.resourceId,
+        title: title?? this.title,
+        description: description?? this.description,
+        organizer: organizer?? this.organizer,
+        organizerType: organizerType?? this.organizerType,
+        promotor: promotor?? this.promotor,
+        resourceType: resourceType?? this.resourceType,
+        resourceCategory: resourceCategory?? this.resourceCategory,
+        assistants: assistants?? this.assistants,
+        capacity: capacity?? this.capacity,
+        duration: duration?? this.duration,
+        modality: modality?? this.modality,
+        maximumDate: maximumDate?? this.maximumDate,
+        start: start?? this.start,
+        end: end?? this.end,
+        temporality: temporality?? this.temporality,
+        resourceLink: resourceLink?? this.resourceLink,
+        participants: participants?? this.participants,
+        interests: interests?? this.interests,
+        competencies: competencies?? this.competencies,
+        contractType: contractType?? this.contractType,
+        salary: salary?? this.salary,
+        contactEmail: contactEmail?? this.contactEmail,
+        contactPhone: contactPhone?? this.contactPhone,
+        resourcePictureId: resourcePictureId?? this.resourcePictureId,
+        link: link?? this.link,
+        degree: degree?? this.degree,
+        notExpire: notExpire?? this.notExpire,
+        address: address?? this.address,
+        createdate: createdate?? this.createdate,
+        invitationsList: invitationsList?? this.invitationsList,
+        searchText: searchText ?? this.searchText,
+        resourcePhoto: resourcePhoto ?? this.resourcePhoto,
+        place: place ?? this.place,
+        status: status ?? this.status
     );
   }
 

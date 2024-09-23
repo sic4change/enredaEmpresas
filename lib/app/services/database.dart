@@ -58,6 +58,7 @@ import '../models/filterResource.dart';
 import '../models/ipilCoordination.dart';
 import '../models/ipilImprovementEmployment.dart';
 import '../models/ipilObtainingEmployment.dart';
+import '../models/jobOffer.dart';
 import '../models/socialEntitiesCategories.dart';
 import '../models/companyUser.dart';
 import '../utils/functions.dart';
@@ -138,7 +139,10 @@ abstract class Database {
      Future<void> addCompanyUser(CompanyUser companyUser);
      Future<String> addCompany(Company company);
      Future<void> addExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
-     Future<void> addResource(Resource resource);
+     Future<String> addResource(Resource resource);
+     Future<void> updateResource(String resourceId, String jobOfferId);
+     Future<String> addJobOffer(JobOffer jobOffer);
+     Future<void> updateJobOffer(String jobOfferId, String resourceId);
      Future<void> addResourceInvitation(ResourceInvitation resourceInvitation);
      Future<void> updateCertificationRequest(CertificationRequest certificationRequest, bool certified, bool referenced );
      Stream<List<GamificationFlag>> gamificationFlagsStream();
@@ -836,9 +840,26 @@ class FirestoreDatabase implements Database {
       _service.addData(path: APIPath.resourcesInvitations(), data: resourceInvitation.toMap());
 
   @override
-  Future<void> addResource(Resource resource) =>
-      _service.addData(path: APIPath.resources(), data: resource.toMap());
+  Future<String> addResource(Resource resource) =>
+      _service.addDataString(path: APIPath.resources(), data: resource.toMap());
 
+  @override
+  Future<String> addJobOffer(JobOffer jobOffer) =>
+      _service.addDataString(path: APIPath.jobOffers(), data: jobOffer.toMap());
+
+
+  @override
+  Future<void> updateResource(String resourceId, String jobOfferId) {
+    return _service.updateData(
+        path: APIPath.resource(resourceId), data: {
+      "jobOfferId": jobOfferId});
+  }
+  @override
+  Future<void> updateJobOffer(String jobOfferId, String resourceId) {
+    return _service.updateData(
+        path: APIPath.jobOffer(jobOfferId), data: {
+      "resourceId": resourceId});
+  }
 
   @override
   Stream<List<UserEnreda>> checkIfUserEmailRegistered(String email) {

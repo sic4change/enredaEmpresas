@@ -42,6 +42,7 @@ import 'package:provider/provider.dart';
 import '../../../common_widgets/bubbled_container.dart';
 import '../../../common_widgets/custom_form_field.dart';
 import '../../../common_widgets/rounded_container.dart';
+import '../../../models/jobOffer.dart';
 import '../validating_form_controls/stream_builder_competencies_categories.dart';
 import 'create_revision_form.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
@@ -66,7 +67,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   String? _resourceDescription;
   String? _resourceResponsibilities;
   String? _resourceFunctions;
-  String? _resourceRequirements;
+  String? _otherRequirements;
   String? _duration;
   String? _temporality;
   String? _place;
@@ -89,7 +90,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
 
   DateTime? _start;
   DateTime? _end;
-  DateTime? _max;
 
   List<String> countries = [];
   List<String> provinces = [];
@@ -141,7 +141,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
 
   TextEditingController textEditingControllerDateInput = TextEditingController();
   TextEditingController textEditingControllerDateEndInput = TextEditingController();
-  TextEditingController textEditingControllerDateMaxInput = TextEditingController();
   TextEditingController textEditingControllerAbilities = TextEditingController();
   TextEditingController textEditingControllerInterests = TextEditingController();
   TextEditingController textEditingControllerCompetencies = TextEditingController();
@@ -158,13 +157,11 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     _resourceDescription = "";
     _resourceResponsibilities = "";
     _resourceFunctions = "";
-    _resourceRequirements = "";
+    _otherRequirements = "";
     _start = DateTime.now();
     _end = DateTime.now();
-    _max = DateTime.now();
     textEditingControllerDateInput.text = "";
     textEditingControllerDateEndInput.text = "";
-    textEditingControllerDateMaxInput.text = "";
     resourceCategoryName = "";
     resourceTypeName = "";
     resourcePictureName = "";
@@ -220,14 +217,12 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         country: _countryId,
         province: _provinceId,
         place: _place,
+        postalCode: _postalCode,
       );
 
       final newResource = Resource(
         title: _resourceTitle!,
         description: _resourceDescription!,
-        responsibilities: _resourceResponsibilities!,
-        functions: _resourceFunctions,
-        otherRequirements: _resourceRequirements,
         contactEmail: _email,
         contactPhone: _phone,
         resourceId: "",
@@ -236,18 +231,16 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         capacity: _capacity,
         contractType: _contractType,
         duration: _duration!,
-        status: 'A actualizar',
+        status: 'No disponible',
         //status: 'Disponible',
-        resourceType: resourceTypeId,
         resourceCategory: resourceCategoryId,
-        maximumDate: _max!,
+        maximumDate: _end!,
         start: _start!,
         end: _end!,
         modality: _modality!,
         salary: _salary,
         organizer: globals.currentUserCompany!.companyId!,
         link: _link,
-        resourcePictureId: resourcePictureId,
         notExpire: _notExpire,
         degree: _degree,
         promotor: globals.currentUserCompany!.name,
@@ -257,13 +250,26 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         competencies: competencies,
         organizerType: "Empresa",
         likes: [],
-        postalCode: _postalCode,
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+      );
+
+      final newJobOffer = JobOffer(
+        jobOfferId: '',
+        resourceId: '',
+        responsibilities: _resourceResponsibilities,
+        functions: _resourceFunctions,
+        otherRequirements: _otherRequirements,
+        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+
       );
       try {
         final database = Provider.of<Database>(context, listen: false);
         setState(() => isLoading = true);
-        await database.addResource(newResource);
+        String newResourceId = await database.addResource(newResource);
+        String newJobOfferId = await database.addJobOffer(newJobOffer);
+        await database.updateJobOffer(newJobOfferId,newResourceId);
+        await database.updateResource(newResourceId, newJobOfferId);
+
         setState(() => isLoading = false);
         showAlertDialog(
           context,
@@ -423,14 +429,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         ),
         CustomFormField(
           child: FormField(
-            /*validator: (value) {
-              if (_resourceDescription!.length < 100) {
-                return 'El texto debe tener al menos 100 caracteres';
-              } else if (_resourceDescription!.length > 4000) {
-                return 'El texto no puede superar los 4000 caracteres';
-              }
-              return null;
-            },*/
             builder: (FormFieldState<dynamic> field) {
               return customTextFormMultiline(
                   context,
@@ -444,14 +442,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         ),
         CustomFormField(
           child: FormField(
-              // validator: (value) {
-              //   if (_resourceResponsibilities!.length < 100) {
-              //     return 'El texto debe tener al menos 100 caracteres';
-              //   } else if (_resourceResponsibilities!.length > 2000) {
-              //     return 'El texto no puede superar los 2000 caracteres';
-              //   }
-              //   return null;
-              // },
               builder: (FormFieldState<dynamic> field) {
                 return customTextFormMultiline(
                     context,
@@ -465,14 +455,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         ),
         CustomFormField(
           child: FormField(
-              // validator: (value) {
-              //   if (_resourceFunctions!.length < 100) {
-              //     return 'El texto debe tener al menos 100 caracteres';
-              //   } else if (_resourceFunctions!.length > 2000) {
-              //     return 'El texto no puede superar los 2000 caracteres';
-              //   }
-              //   return null;
-              // },
               builder: (FormFieldState<dynamic> field) {
                 return customTextFormMultiline(
                     context,
@@ -485,8 +467,315 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           label: StringConst.FUNCTIONS,
         ),
         CustomFormField(
-          child: customTextFormField(context, _resourceRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
+          child: customTextFormField(context, _otherRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
           label: StringConst.FORM_OTHER_REQUIREMENTS,),
+        CustomFlexRowColumn(
+            childLeft: CustomFormField(
+              padding: const EdgeInsets.all(0),
+              child: TextFormField(
+                controller: textEditingControllerDateInput,
+                validator: (value) => value!.isNotEmpty
+                    ? null
+                    : StringConst.FORM_COMPANY_ERROR,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(Icons.calendar_today),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                readOnly: true,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.greyDark,
+                ),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                    firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                    lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
+                  );
+                  if (pickedDate != null) {
+                    _formattedStartDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                    setState(() {
+                      textEditingControllerDateInput.text = _formattedStartDate; //set output date to TextField value.
+                      _start = pickedDate;
+                    });
+                  }
+                },
+              ),
+              label: StringConst.FORM_START,
+            ),
+            childRight: CustomFormField(
+              padding: const EdgeInsets.all(0),
+              child: TextFormField(
+                controller: textEditingControllerDateEndInput,
+                validator: (value) => value!.isNotEmpty
+                    ? null
+                    : StringConst.FORM_COMPANY_ERROR,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(Icons.calendar_today),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(
+                      color: AppColors.greyUltraLight,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                readOnly: true,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.greyDark,
+                ),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                    firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                    lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
+                  );
+                  if (pickedDate != null) {
+                    _formattedEndDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                    setState(() {
+                      textEditingControllerDateEndInput.text = _formattedEndDate; //set output date to TextField value.
+                      _end = pickedDate;
+                    });
+                  }
+                },
+              ),
+              label: StringConst.FORM_END,
+            ),),
+        SizedBox(height: 20,),
+        CustomTextMediumForm(text: StringConst.FORM_REQUIREMENTS_JOB),
+        CustomFlexRowColumn(
+          childLeft: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: FormField(
+                validator: (value) {
+                  if (selectedCompetenciesCategories.isEmpty) {
+                    return 'Por favor seleccione al menos una categoría';
+                  }
+                  return null;
+                },
+                builder: (FormFieldState<dynamic> field) {
+                  return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget> [
+                        CustomTextBold(title: StringConst.FORM_COMPETENCIES_CATEGORIES,),
+                        InkWell(
+                          onTap: () => {_showMultiSelectCompetenciesCategories(context) },
+                          child: Container(
+                            width: double.infinity,
+                            constraints: BoxConstraints(minHeight: 50),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5.0),
+                                border: Border.all(
+                                    color: AppColors.greyUltraLight
+                                )
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                              child: Wrap(
+                                spacing: 5,
+                                children: selectedCompetenciesCategories.map((s) =>
+                                    BubbledContainer(s.name),
+                                ).toList(),
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (!field.isValid && field.errorText != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              field.errorText!,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                      ]);
+                }
+            ),
+          ),
+          childRight: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: FormField(
+                validator: (value) {
+                  if (selectedCompetenciesSubCategories.isEmpty) {
+                    return 'Por favor seleccione al menos una sub categoría';
+                  }
+                  return null;
+                },
+                builder: (FormFieldState<dynamic> field) {
+                  return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget> [
+                        CustomTextBold(title: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,),
+                        InkWell(
+                          onTap: () => {_showMultiSelectCompetenciesSubCategories(context) },
+                          child: Container(
+                            width: double.infinity,
+                            constraints: BoxConstraints(minHeight: 50),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5.0),
+                                border: Border.all(
+                                    color: AppColors.greyUltraLight
+                                )
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                              child: Wrap(
+                                spacing: 5,
+                                children: selectedCompetenciesSubCategories.map((s) =>
+                                    BubbledContainer(s.name),
+                                ).toList(),
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (!field.isValid && field.errorText != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              field.errorText!,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                      ]);
+                }
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FormField(
+              validator: (value) {
+                if (selectedCompetencies.isEmpty) {
+                  return 'Por favor seleccione al menos una competencia';
+                }
+                return null;
+              },
+              builder: (FormFieldState<dynamic> field) {
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget> [
+                      CustomTextBold(title: StringConst.FORM_COMPETENCIES,),
+                      InkWell(
+                        onTap: () => {_showMultiSelectCompetencies(context) },
+                        child: Container(
+                          width: double.infinity,
+                          constraints: BoxConstraints(minHeight: 50),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(
+                                  color: AppColors.greyUltraLight
+                              )
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                            child: Wrap(
+                              spacing: 5,
+                              children: selectedCompetencies.map((s) =>
+                                  BubbledContainer(s.name),
+                              ).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (!field.isValid && field.errorText != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            field.errorText!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                    ]);
+              }
+          ),
+        ),
+
+        SizedBox(height: 20,),
+        CustomTextMediumForm(text: StringConst.FORM_OFFER),
+        CustomFlexRowColumn(
+          childLeft: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: DropdownButtonFormField<String>(
+              value: _contractType == "" ? null : _contractType,
+              items: contractTypes.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: textTheme.bodySmall?.copyWith(
+                      height: 1.5,
+                      color: AppColors.greyDark,
+                      fontWeight: FontWeight.w400,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                );
+              }).toList(),
+              validator: (value) => _contractType != null
+                  ? null
+                  : StringConst.FORM_COMPANY_ERROR,
+              onChanged: (value) => buildContractStreamBuilderSetState(value),
+              iconDisabledColor: AppColors.greyDark,
+              iconEnabledColor: AppColors.primaryColor,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.greyUltraLight,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.greyUltraLight,
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              style: textTheme.bodySmall?.copyWith(
+                height: 1.5,
+                color: AppColors.greyDark,
+                fontWeight: FontWeight.w400,
+                fontSize: fontSize,
+              ),
+            ),
+            label: StringConst.FORM_CONTRACT,
+          ),
+          childRight: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: customTextFormMultilineNotValidator(
+                context, _temporality!, '', scheduleSetState),
+            label: StringConst.FORM_SCHEDULE,
+          ),
+        ),
         CustomFlexRowColumn(
           childLeft: CustomFormField(
             padding: const EdgeInsets.all(0),
@@ -547,440 +836,29 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
               ),
             ),
             label: StringConst.FORM_MODALITY,),
-          childRight: customTextFormFieldNum(
-              context,
-              _capacity!.toString(),
-              StringConst.FORM_CAPACITY,
-              StringConst.FORM_COMPANY_ERROR,
-              capacitySetState),
-        ),
-
-
-        resourceCategoryName == "Formación"
-            ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: DropdownButtonFormField<String>(
-                  hint: const Text(StringConst.FORM_DEGREE),
-                  value: _degree == "" ? null : _degree,
-                  items: degrees.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: textTheme.bodySmall?.copyWith(
-                          height: 1.5,
-                          color: AppColors.greyDark,
-                          fontWeight: FontWeight.w400,
-                          fontSize: fontSize,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  validator: (value) => _degree != null
-                      ? null
-                      : StringConst.FORM_COMPANY_ERROR,
-                  onChanged: (value) => buildDegreeStreamBuilderSetState(value),
-                  iconDisabledColor: AppColors.greyDark,
-                  iconEnabledColor: AppColors.primaryColor,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: textTheme.bodySmall?.copyWith(
-                      height: 1.5,
-                      color: AppColors.greyDark,
-                      fontWeight: FontWeight.w400,
-                      fontSize: fontSize,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: const BorderSide(
-                        color: AppColors.greyUltraLight,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: const BorderSide(
-                        color: AppColors.greyUltraLight,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  style: textTheme.bodySmall?.copyWith(
-                    height: 1.5,
-                    color: AppColors.greyDark,
-                    fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
-                  ),
-                ),
-            ) : Container(),
-        CustomFlexRowColumn(
-          childLeft: resourceCategoryName == "Empleo" ? DropdownButtonFormField<String>(
-            hint: const Text(StringConst.FORM_CONTRACT),
-            value: _contractType == "" ? null : _contractType,
-            items: contractTypes.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: textTheme.bodySmall?.copyWith(
-                    height: 1.5,
-                    color: AppColors.greyDark,
-                    fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
-                  ),
-                ),
-              );
-            }).toList(),
-            validator: (value) => _contractType != null
-                ? null
-                : StringConst.FORM_COMPANY_ERROR,
-            onChanged: (value) => buildContractStreamBuilderSetState(value),
-            iconDisabledColor: AppColors.greyDark,
-            iconEnabledColor: AppColors.primaryColor,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              labelStyle: textTheme.bodySmall?.copyWith(
-                height: 1.5,
-                color: AppColors.greyDark,
-                fontWeight: FontWeight.w400,
-                fontSize: fontSize,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(
-                  color: AppColors.greyUltraLight,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            style: textTheme.bodySmall?.copyWith(
-              height: 1.5,
-              color: AppColors.greyDark,
-              fontWeight: FontWeight.w400,
-              fontSize: fontSize,
-            ),
-          ) : Container(),
-          childRight: resourceCategoryName == "Empleo"
-              ? customTextFormFieldNotValidator(
-                  context,
-                  _salary!,
-                  StringConst.FORM_SALARY,
-                  buildSalaryStreamBuilderSetState)
-              : Container(),
-        ),
-
-        CustomFlexRowColumn(
-            childLeft: TextFormField(
-              controller: textEditingControllerCompetenciesCategories,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                labelText: StringConst.FORM_COMPETENCIES_CATEGORIES,
-                hintText: StringConst.FORM_COMPETENCIES_CATEGORIES,
-                hintMaxLines: 2,
-                labelStyle: textTheme.bodySmall?.copyWith(
-                  color: AppColors.greyDark,
-                  height: 1.5,
-                  fontWeight: FontWeight.w400,
-                  fontSize: fontSize,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(
-                    color: AppColors.greyUltraLight,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(
-                    color: AppColors.greyUltraLight,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-              onTap: () => {_showMultiSelectCompetenciesCategories(context) },
-              maxLines: 2,
-              readOnly: true,
-              style: textTheme.bodySmall?.copyWith(
-                height: 1.5,
-                color: AppColors.greyDark,
-                fontWeight: FontWeight.w400,
-                fontSize: fontSize,
-              ),
-            ),
-            childRight: TextFormField(
-              controller: textEditingControllerCompetenciesSubCategories,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                labelText: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,
-                hintText: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,
-                labelStyle: textTheme.bodySmall?.copyWith(
-                  color: AppColors.greyDark,
-                  height: 1.5,
-                  fontWeight: FontWeight.w400,
-                  fontSize: fontSize,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(
-                    color: AppColors.greyUltraLight,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(
-                    color: AppColors.greyUltraLight,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-              onTap: () => {_showMultiSelectCompetenciesSubCategories(context) },
-              maxLines: 2,
-              readOnly: true,
-              style: textTheme.bodySmall?.copyWith(
-                height: 1.5,
-                color: AppColors.greyDark,
-                fontWeight: FontWeight.w400,
-                fontSize: fontSize,
-              ),
-            )),
-        Padding(
-          padding: EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-          child: TextFormField(
-            controller: textEditingControllerCompetencies,
-            decoration: InputDecoration(
-              labelText: StringConst.FORM_COMPETENCIES,
-              labelStyle: textTheme.bodySmall?.copyWith(
-                color: AppColors.greyDark,
-                height: 1.5,
-                fontWeight: FontWeight.w400,
-                fontSize: fontSize,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: BorderSide(
-                  color: AppColors.greyUltraLight,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: BorderSide(
-                  color: AppColors.greyUltraLight,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            onTap: () => {_showMultiSelectCompetencies(context) },
-            maxLines: 2,
-            readOnly: true,
-            style: textTheme.bodySmall?.copyWith(
-              height: 1.5,
-              color: AppColors.greyDark,
-              fontWeight: FontWeight.w400,
-              fontSize: fontSize,
-            ),
+          childRight: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: customTextFormFieldNotValidator(
+                context,
+                _salary!,
+                '',
+                buildSalaryStreamBuilderSetState),
+            label: StringConst.FORM_SALARY,
           ),
         ),
         CustomFlexRowColumn(
-          childLeft: customTextFormField(
-              context,
-              _duration!,
-              StringConst.FORM_DURATION,
-              StringConst.FORM_COMPANY_ERROR,
-              durationSetState),
-          childRight: customTextFormMultilineNotValidator(
-              context, _temporality!, StringConst.FORM_SCHEDULE, scheduleSetState),
+          childLeft: CustomFormField(
+            padding: const EdgeInsets.all(0),
+            child: customTextFormFieldNum(
+                context,
+                _capacity! > 0 ? _capacity.toString() : '',
+                '',
+                StringConst.FORM_COMPANY_ERROR,
+                capacitySetState),
+            label: StringConst.FORM_CAPACITY,
+          ),
+          childRight:  Container(),
         ),
-        Container(
-          width: 250,
-          child: CheckboxListTile(
-              title: Text(
-                'El recurso no expira',
-                style: textTheme.bodySmall?.copyWith(
-                  height: 1.5,
-                  color: AppColors.greyDark,
-                  fontWeight: FontWeight.w700,
-                  fontSize: fontSize,
-                ),
-              ),
-              value: _notExpire,
-              onChanged: (bool? value) => setState(() => _notExpire = value!)),
-        ),
-        !_notExpire
-            ? Flex(
-                direction: Responsive.isMobile(context)
-                    ? Axis.vertical
-                    : Axis.horizontal,
-                children: [
-                  Expanded(
-                      flex: Responsive.isMobile(context) ? 0 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Sizes.kDefaultPaddingDouble / 2),
-                        child: TextFormField(
-                          controller: textEditingControllerDateInput,
-                          validator: (value) => value!.isNotEmpty
-                              ? null
-                              : StringConst.FORM_COMPANY_ERROR,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            labelText: StringConst.FORM_START,
-                            labelStyle: textTheme.bodyLarge?.copyWith(
-                              color: AppColors.greyDark,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          readOnly: true,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.greyDark,
-                          ),
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
-                            );
-                            if (pickedDate != null) {
-                              _formattedStartDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-                              setState(() {
-                                textEditingControllerDateInput.text = _formattedStartDate; //set output date to TextField value.
-                                _start = pickedDate;
-                              });
-                            }
-                          },
-                        ),
-                      )),
-                  Expanded(
-                      flex: Responsive.isMobile(context) ? 0 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-                        child: TextFormField(
-                          controller: textEditingControllerDateEndInput,
-                          validator: (value) => value!.isNotEmpty
-                              ? null
-                              : StringConst.FORM_COMPANY_ERROR,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            labelText: StringConst.FORM_END,
-                            labelStyle: textTheme.bodyLarge?.copyWith(
-                              color: AppColors.greyDark,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          readOnly: true,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.greyDark,
-                          ),
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
-                            );
-                            if (pickedDate != null) {
-                              _formattedEndDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-                              setState(() {
-                                textEditingControllerDateEndInput.text = _formattedEndDate; //set output date to TextField value.
-                                _end = pickedDate;
-                              });
-                            }
-                          },
-                        ),
-                      )),
-                  Expanded(
-                      flex: Responsive.isMobile(context) ? 0 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Sizes.kDefaultPaddingDouble / 2),
-                        child: TextFormField(
-                          controller: textEditingControllerDateMaxInput,
-                          validator: (value) => value!.isNotEmpty
-                              ? null
-                              : StringConst.FORM_COMPANY_ERROR,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            labelText: StringConst.FORM_MAX,
-                            labelStyle: textTheme.bodyLarge?.copyWith(
-                              color: AppColors.greyDark,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              borderSide: const BorderSide(
-                                color: AppColors.greyUltraLight,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          readOnly: true,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.greyDark,
-                          ),
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                              lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
-                            );
-                            if (pickedDate != null) {
-                              _formattedMaxDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-                              setState(() {
-                                textEditingControllerDateMaxInput.text = _formattedMaxDate; //set output date to TextField value.
-                                _max = pickedDate;
-                              });
-                            }
-                          },
-                        ),
-                      )),
-                ],
-              )
-            : Container(),
       ]),
     );
   }
@@ -1172,7 +1050,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   }
 
   void resourceRequirementsSetState(String? val) {
-    setState(() => _resourceRequirements = val!);
+    setState(() => _otherRequirements = val!);
   }
 
   void scheduleSetState(String? val) {
