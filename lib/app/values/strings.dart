@@ -319,7 +319,7 @@ class StringConst {
   static const String FORM_DURATION = "Duración";
   static const String FORM_SCHEDULE = "Horario";
   static const String FORM_PLACE = "Calle y número";
-  static const String FORM_CAPACITY = "Aforo";
+  static const String FORM_CAPACITY = "Plazas ofertadas";
   static const String FORM_ADDRESS = "Calle y número";
   static const String FORM_ORGANIZER_TEXT = "Organizador";
   static const String FORM_TRUST = "El organizador es de confianza";
@@ -352,8 +352,8 @@ class StringConst {
   static const String PHONE_ERROR = "El teléfono no puede estar vacío";
   static const String FORM_EMAIL = "Email";
   static const String FORM_EMAIL_ERROR = "El email no puede estar vacío";
-  static const String FORM_START = "Comienzo";
-  static const String FORM_END = "Finalización";
+  static const String FORM_START = "Fecha de publicación";
+  static const String FORM_END = "Fecha de cierre de publicación";
   static const String FORM_MAX = "Fecha máxima de inscripción";
   static const String FORM_START_ERROR = "La fecha no puede estar vacía";
   static const String FORM_COUNTRY = "País";
@@ -408,6 +408,8 @@ class StringConst {
   static const String FORM_DESCRIPTION = "Descripción del puesto";
   static const String FORM_JOB_PLACE = "Ubicación del puesto";
   static const String FORM_ABOUT_JOB = "Acerca del puesto";
+  static const String FORM_REQUIREMENTS_JOB = "Requisitos del puesto";
+  static const String FORM_OFFER = "Qué ofrecemos";
 
   static const String FORM_GENERAL_INFO = "Información general";
   static const String FORM_CONTACT_DATA_INFO = "Datos de la persona de contacto";
