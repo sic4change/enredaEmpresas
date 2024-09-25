@@ -1,5 +1,5 @@
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
-import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/home/resources/resources_page.dart';
@@ -50,6 +50,7 @@ class _CollapsedResourcesListState extends State<CollapsedResourcesList> {
                     }
                     if (snapshot.hasData) {
                       return ListItemBuilderGrid<Resource>(
+                        scrollController: ScrollController(),
                         snapshot: snapshot,
                         fitSmallerLayout: false,
                         mainAxisExtentValue : Responsive.isMobile(context)? 180.0 : 248,

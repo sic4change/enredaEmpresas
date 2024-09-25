@@ -7,7 +7,7 @@ class AddYellowButton extends StatelessWidget {
 
   AddYellowButton({
     required this.text,
-    this.width = 235,
+    this.width = 255,
     this.onPressed,
     this.padding = const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 10),
     this.height = 50,

@@ -211,13 +211,15 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                   height: 8,
                                   width: 8,
                                   decoration: BoxDecoration(
-                                    color: widget.resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
+                                    color: widget.resource.status == "No disponible" ? Colors.red :
+                                    widget.resource.status == 'edition'? Colors.orange : Colors.lightGreenAccent,
                                     borderRadius: BorderRadius.circular(Sizes.mainPadding),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                    widget.resource.status!,
+                                    widget.resource.status == 'edition' ? 'Borrador' :
+                                    widget.resource.status == 'Disponible' ? 'Activa' : widget.resource.status!,
                                     style: textTheme.bodySmall?.copyWith(
                                       color: AppColors.greyAlt,
                                       fontSize: fontSizeS,

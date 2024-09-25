@@ -189,6 +189,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
         linkedin: _linkedin,
         otherSocialMedia: _otherSocialMedia,
         address: address,
+        trust: false,
       );
       final companyUser = CompanyUser(
         firstName: _firstName,

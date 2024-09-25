@@ -19,7 +19,8 @@ class StringConst {
   static const String DEV_EMAIL = "escuchamos@enredas.org";
   static const String EMAIL_URL = "mailto:<$DEV_EMAIL>?subject=&body=";
 
-  static const String MY_RESOURCES = "Mis Recursos";
+  static const String MY_RESOURCES = "Mis ofertas ";
+  static const String MY_JOB_OFFERS = "Gestión de ofertas y candidatos ";
   static const String RESOURCES_PARTICIPANT = "Se ha inscrito a los siguientes recursos:";
   static const String FAVORITES = "Favoritos";
   static const String RECOMMENDED = "Recomendados";
@@ -299,6 +300,10 @@ class StringConst {
   static const String INVITE_SUCCESS_DESCRIPTION = 'Se han enviado las invitaciones a los correo electrónicos de los usuarios.';
   static const String INVITE_ERROR = 'Se ha producido un error';
   static const String INVITE_ERROR_DESCRIPTION = 'Revise los campos.';
+  static const String NO_RESOURCES_TITLE = '¡Todavía no tienes ninguna oferta creada!';
+  static const String NO_RESOURCES_DESCRIPTION = 'Crea tu primera oferta de empleo';
+  static const String ACTIVE_RESOURCES = 'Ofertas activos';
+  static const String DRAFT_RESOURCES = 'Ofertas en borrador';
 
 
   //Resource modalities
@@ -417,6 +422,8 @@ class StringConst {
   static const String FORM_ORGANIZER = "Lugar y organizador";
   static const String FORM_REVISION = "Revisión";
   static const String FORM_CONFIRM = "Aceptar";
+  static const String FORM_PUBLISH = "Publicar";
+  static const String FORM_SAVE_FOR_LATER = "Guardar en borrador";
   static const String FORM_UPDATE = "Actualizar";
   static const String FORM_NEXT = "Siguiente";
   static const String FORM_BACK = "Atrás";

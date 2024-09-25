@@ -15,8 +15,8 @@ class Address {
         city: city,
         country: country,
         province: province,
-        postalCode: postalCode,
         place: place,
+        postalCode: postalCode,
     );
   }
 
@@ -31,8 +31,8 @@ class Address {
       'city': city,
       'country': country,
       'province': province,
-      'postalCode' : postalCode,
       'place' : place,
+      'postalCode' : postalCode,
     };
   }
 }

@@ -11,12 +11,12 @@ import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 
+import '../../values/strings.dart';
 import '../web_home.dart';
 
 
 class MyResourcesListPage extends StatefulWidget {
-  const MyResourcesListPage({super.key, required this.company});
-  final Company? company;
+  const MyResourcesListPage({super.key});
 
   static ValueNotifier<int> selectedIndex = ValueNotifier(0);
 
@@ -36,7 +36,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   void initState() {
     bodyWidget = [
       ResourcesListPage(),
-      ResourceDetailPage(companyId: widget.company?.companyId!),
+      ResourceDetailPage(),
       EditResource()
     ];
     super.initState();
@@ -72,8 +72,8 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                                 MyResourcesListPage.selectedIndex.value = 0;
                               })
                             },
-                            child: selectedIndex != 0 ? CustomTextMedium(text: 'Recursos ') :
-                              CustomTextMediumBold(text: 'Recursos ') ),
+                            child: selectedIndex != 0 ? CustomTextMedium(text: StringConst.MY_JOB_OFFERS) :
+                              CustomTextMediumBold(text: StringConst.MY_JOB_OFFERS) ),
                               selectedIndex == 1 ? CustomTextMediumBold(text:'> Detalle de la oferta de empleo') :
                               selectedIndex == 2 ? Row(
                             children: [

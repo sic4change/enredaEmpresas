@@ -1,4 +1,3 @@
-import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'empty_content.dart';
 
@@ -12,8 +11,10 @@ class ListItemBuilderGrid<T> extends StatelessWidget {
         this.emptyTitle,
         this.emptyMessage,
         this.maxCrossAxisExtentValue = 520,
-        this.mainAxisExtentValue = 248,
-        this.fitSmallerLayout = false})
+        this.mainAxisExtentValue = 250,
+        this.fitSmallerLayout = false,
+        required this.scrollController,
+      })
       : super(key: key);
   final AsyncSnapshot<List<T>> snapshot;
   final ItemWidgetBuilder<T> itemBuilder;
@@ -22,6 +23,7 @@ class ListItemBuilderGrid<T> extends StatelessWidget {
   final bool? fitSmallerLayout;
   final double? maxCrossAxisExtentValue;
   final double? mainAxisExtentValue;
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +45,23 @@ class ListItemBuilderGrid<T> extends StatelessWidget {
   Widget _build(BuildContext context, List<T> items) {
     return LayoutBuilder(builder: (context, constraints) {
       return GridView.builder(
-        controller: ScrollController(),
-        shrinkWrap: constraints.maxWidth < 550 ? true : false,
-        padding: Responsive.isMobile(context) ? EdgeInsets.zero : EdgeInsets.all(4.0),
+        controller: scrollController,
+        shrinkWrap: constraints.maxWidth < 300 ? true : false,
+        padding: EdgeInsets.all(4.0),
         itemCount: items.length,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          //maxCrossAxisExtent: 520,
             maxCrossAxisExtent: maxCrossAxisExtentValue!,
+            //mainAxisExtent: 250,
             mainAxisExtent: mainAxisExtentValue!,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20
         ),
         itemBuilder: (context, index) {
           return Container(
               key: Key('resource-${items[index]}'),
+              height: 230,
+              width: 300,
               child: itemBuilder(context, items[index]));
         },
       );
