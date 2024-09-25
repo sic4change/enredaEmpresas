@@ -5,7 +5,7 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
-import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_sub_categories.dart';
@@ -141,7 +141,7 @@ class _EditResourceState extends State<EditResource> {
     _salary = globals.currentResource?.salary ?? '';
     _degree = globals.currentResource?.degree ?? '';
     _place = globals.currentResource?.address?.place ?? '';
-    _postalCode = globals.currentResource?.postalCode ?? '';
+    _postalCode = globals.currentResource?.address?.postalCode ?? '';
     _capacity = globals.currentResource?.capacity ?? 0;
     _countryId = globals.currentResource?.address?.country ?? '';
     _provinceId = globals.currentResource?.address?.province ?? '';
@@ -1226,7 +1226,7 @@ class _EditResourceState extends State<EditResource> {
       participants: _participants,
       assistants: _assistants,
       status: _status,
-      postalCode: _postalCode,
+      //postalCode: _postalCode,
     );
     try {
       final database = Provider.of<Database>(context, listen: false);

@@ -3,7 +3,7 @@ import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/participants/my_participants_list.dart';
 import 'package:enreda_empresas/app/home/resources/build_collapsed_resources.dart';
-import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
 import 'package:enreda_empresas/app/home/tool_box/tool_box_page.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/models/company.dart';
@@ -376,10 +376,10 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
                       child: CustomTextBoldTitle(title: StringConst.MY_RESOURCES),
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 40.0),
-                      width: double.infinity,
-                      child: CollapsedResourcesList(itemsNumber: Responsive.isDesktopS(context) ? 2 : 1,),),
+                    // Container(
+                    //   margin: const EdgeInsets.only(top: 40.0),
+                    //   width: double.infinity,
+                    //   child: CollapsedResourcesList(itemsNumber: Responsive.isDesktopS(context) ? 2 : 1,),),
                   ],
                 ),
               ),

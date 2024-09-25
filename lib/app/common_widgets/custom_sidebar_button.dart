@@ -4,7 +4,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/link.dart';
 
-import '../home/resources/my_resources_list_page.dart';
+import '../home/resources/resources_list_page.dart';
 
 
 class CustomSideBarButton extends StatelessWidget {

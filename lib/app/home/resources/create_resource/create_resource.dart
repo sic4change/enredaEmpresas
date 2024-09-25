@@ -7,12 +7,12 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
-import 'package:enreda_empresas/app/home/resources/my_resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_sub_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests_create.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_social_entities.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/competency.dart';
@@ -60,9 +60,10 @@ class CreateJobOffer extends StatefulWidget {
 
 class _CreateJobOfferState extends State<CreateJobOffer> {
   final _formKey = GlobalKey<FormState>();
-  final _formKeyOrganizer = GlobalKey<FormState>();
   bool isLoading = false;
+  bool isLoadingSave = false;
 
+  late Resource newResource;
   String? _resourceTitle;
   String? _resourceDescription;
   String? _resourceResponsibilities;
@@ -108,7 +109,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   ResourceType? selectedResourceType;
   ResourcePicture? selectedResourcePicture;
   Company? selectedCompany;
-  String? _companyId;
   String? _degree;
   String? _modality;
   String? _contractType;
@@ -135,7 +135,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   late String competenciesCategoriesNames;
   late String competenciesSubCategoriesNames;
   late String socialEntityName;
-  String? _interestId;
   int? resourceCategoryValue;
   String? socialEntityId;
 
@@ -150,7 +149,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   @override
   void initState() {
     super.initState();
-    _companyId = globals.currentUserCompany!.companyId!;
+    newResource = Resource(title: '', description: '', organizer: '', createdate: DateTime.now());
     _resourceTitle = "";
     _duration = "";
     _temporality = "";
@@ -162,7 +161,8 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     _end = DateTime.now();
     textEditingControllerDateInput.text = "";
     textEditingControllerDateEndInput.text = "";
-    resourceCategoryName = "";
+    resourceCategoryId = "POUBGFk5gU6c5X1DKo1b";
+    resourceCategoryName = "Empleo";
     resourceTypeName = "";
     resourcePictureName = "";
     resourceTypeId = "";
@@ -201,57 +201,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     return false;
   }
 
-  bool _validateAndSaveOrganizerForm() {
-    final form = _formKeyOrganizer.currentState;
-    if (form!.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-
   Future<void> _submit() async {
-      final address = Address(
-        city: _cityId,
-        country: _countryId,
-        province: _provinceId,
-        place: _place,
-        postalCode: _postalCode,
-      );
-
-      final newResource = Resource(
-        title: _resourceTitle!,
-        description: _resourceDescription!,
-        contactEmail: _email,
-        contactPhone: _phone,
-        resourceId: "",
-        address: address,
-        assistants: "",
-        capacity: _capacity,
-        contractType: _contractType,
-        duration: _duration!,
-        status: 'No disponible',
-        //status: 'Disponible',
-        resourceCategory: resourceCategoryId,
-        maximumDate: _end!,
-        start: _start!,
-        end: _end!,
-        modality: _modality!,
-        salary: _salary,
-        organizer: globals.currentUserCompany!.companyId!,
-        link: _link,
-        notExpire: _notExpire,
-        degree: _degree,
-        promotor: globals.currentUserCompany!.name,
-        temporality: _temporality,
-        participants: [],
-        interests: interests,
-        competencies: competencies,
-        organizerType: "Empresa",
-        likes: [],
-        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-      );
 
       final newJobOffer = JobOffer(
         jobOfferId: '',
@@ -262,44 +212,48 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
 
       );
-      try {
-        final database = Provider.of<Database>(context, listen: false);
-        setState(() => isLoading = true);
-        String newResourceId = await database.addResource(newResource);
-        String newJobOfferId = await database.addJobOffer(newJobOffer);
-        await database.updateJobOffer(newJobOfferId,newResourceId);
-        await database.updateResource(newResourceId, newJobOfferId);
 
-        setState(() => isLoading = false);
-        showAlertDialog(
-          context,
-          title: StringConst.FORM_SUCCESS,
-          content: StringConst.FORM_SUCCESS_CREATED,
-          defaultActionText: StringConst.FORM_ACCEPT,
-        ).then(
-          (value) {
-            setState(() {
-              MyResourcesListPage.selectedIndex.value = 0;
-            });
-          },
-        );
-      } on FirebaseException catch (e) {
-        showExceptionAlertDialog(context, title: StringConst.FORM_ERROR, exception: e)
-            .then((value) {
+      if (_validateAndSaveForm() == false) {
+        await showAlertDialog(context,
+            title: StringConst.FORM_COMPANY_ERROR_MESSAGE,
+            content: StringConst.FORM_COMPANY_CHECK,
+            defaultActionText: StringConst.FORM_ACCEPT);
+      }
+      if (_validateAndSaveForm()) {
+        try {
+          final database = Provider.of<Database>(context, listen: false);
+          String newResourceId = await database.addResource(globals.currentResource!);
+          String newJobOfferId = await database.addJobOffer(newJobOffer);
+          await database.updateJobOffer(newJobOfferId,newResourceId);
+          await database.updateResource(newResourceId, newJobOfferId);
+          setState(() => isLoading = false);
+          setState(() => isLoadingSave = false);
+          showAlertDialog(
+            context,
+            title: StringConst.FORM_SUCCESS,
+            content: StringConst.FORM_SUCCESS_CREATED,
+            defaultActionText: StringConst.FORM_ACCEPT,
+          ).then(
+                (value) {
               setState(() {
                 MyResourcesListPage.selectedIndex.value = 0;
               });
-        });
+            },
+          );
+        } on FirebaseException catch (e) {
+          showExceptionAlertDialog(context, title: StringConst.FORM_ERROR, exception: e)
+              .then((value) {
+            setState(() {
+              MyResourcesListPage.selectedIndex.value = 0;
+            });
+          });
+        }
       }
   }
 
   Widget _buildForm(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 14, 16, md: 15);
-    List<String> degrees = <String>[
-      'Sin titulación',
-      'Con titulación no oficial',
-      'Con titulación oficial'];
     List<String> contractTypes = <String>[
       'Contrato indefinido',
       'Contrato temporal',
@@ -863,83 +817,41 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     );
   }
 
-  Widget _buildFormOrganizer(BuildContext context) {
-    return Form(
-      key: _formKeyOrganizer,
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _organizerText != ""  ?
-            CustomFlexRowColumn(
-              childLeft: customTextFormField(
-                  context,
-                  _phone!,
-                  StringConst.FORM_PHONE,
-                  StringConst.FORM_COMPANY_ERROR,
-                  phoneSetState),
-              childRight: customTextFormField(
-                  context,
-                  _email!,
-                  StringConst.FORM_EMAIL,
-                  StringConst.FORM_COMPANY_ERROR,
-                  emailSetState),
-            ) : Container(),
-            _organizerText != "" ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: customTextFormField(
-                  context,
-                  _link!,
-                  StringConst.FORM_LINK,
-                  StringConst.FORM_COMPANY_ERROR,
-                  linkSetState),
-            ) : Container(),
-            _organizerText != "" ? Container() : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: customTextFormFieldNotValidator(
-                  context,
-                  _link!,
-                  StringConst.FORM_LINK,
-                  linkSetState),
-            )
-          ]),
-    );
-  }
-
   Widget _revisionForm(BuildContext context) {
-    return Column(
-      children: [
-        resourceRevisionForm(
-          context,
-          _resourceTitle!,
-          _resourceDescription!,
-          resourceCategoryName,
-          _degree!,
-          _contractType!,
-          _salary!,
-          interestsNames,
-          competenciesNames,
-          competenciesCategoriesNames,
-          competenciesSubCategoriesNames,
-          _formattedStartDate,
-          _formattedEndDate,
-          _formattedMaxDate,
-          _duration!,
-          _temporality!,
-          _place!,
-          _capacity!.toString(),
-          countryName,
-          provinceName,
-          cityName,
-          _postalCode!,
-          socialEntityName,
-          _organizerText!,
-          _link!,
-          //_trust,
-          _phone!,
-          _email!,
-        ),
-      ],
-    );
+    return globals.currentResource != null ? ResourceDetailPage() : Container();
+    // return Column(
+    //   children: [
+    //     resourceRevisionForm(
+    //       context,
+    //       _resourceTitle!,
+    //       _resourceDescription!,
+    //       resourceCategoryName,
+    //       _degree!,
+    //       _contractType!,
+    //       _salary!,
+    //       interestsNames,
+    //       competenciesNames,
+    //       competenciesCategoriesNames,
+    //       competenciesSubCategoriesNames,
+    //       _formattedStartDate,
+    //       _formattedEndDate,
+    //       _formattedMaxDate,
+    //       _duration!,
+    //       _temporality!,
+    //       _place!,
+    //       _capacity!.toString(),
+    //       countryName,
+    //       provinceName,
+    //       cityName,
+    //       _postalCode!,
+    //       socialEntityName,
+    //       _organizerText!,
+    //       _link!,
+    //       _phone!,
+    //       _email!,
+    //     ),
+    //   ],
+    // );
   }
 
   void buildCountryStreamBuilderSetState(Country? country) {
@@ -1204,65 +1116,109 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         ),
         CustomStep(
           isActive: currentStep >= 1,
-          state: currentStep > 1 ? CustomStepState.complete : CustomStepState.disabled,
           title: CustomStepperButton(color: currentStep >= 1 ? AppColors.yellow: AppColors.white,
-            child: CustomTextBold(title: StringConst.FORM_ORGANIZER, color: AppColors.turquoiseBlue,),),
-          content: _buildFormOrganizer(context),
-        ),
-        CustomStep(
-          isActive: currentStep >= 2,
-          title: CustomStepperButton(color: currentStep >= 2 ? AppColors.yellow: AppColors.white,
             child: CustomTextBold(title: StringConst.FORM_REVISION, color: AppColors.turquoiseBlue,),),
           content: _revisionForm(context),
-          //content: Container(),
         ),
       ];
 
-  // onStepContinue() async {
-  //   // If invalid form, just return
-  //   if (currentStep == 0 && !_validateAndSaveForm()) {
-  //     return;
-  //   }
-  //
-  //   if (currentStep == 1 && !_validateAndSaveOrganizerForm()) {
-  //     return;
-  //   }
-  //
-  //   // If not last step, advance and return
-  //   final isLastStep = currentStep == getSteps().length - 1;
-  //   if (!isLastStep) {
-  //     setState(() {
-  //           if (currentStep == 0) {currentStep += 1;} else {currentStep += 1;}
-  //         });
-  //     return;
-  //   }
-  //   _submit();
-  // }
-
   onStepContinue() async {
-    // Validate the form on the current step
     if (currentStep == 0) {
       if (!_validateAndSaveForm()) {
         return;
       }
-    } else if (currentStep == 1) {
-      if (!_validateAndSaveOrganizerForm()) {
-        return;
-      }
     }
-
-    // Check if the current step is the last step
     final isLastStep = currentStep == getSteps().length - 1;
-
     if (!isLastStep) {
-      // If not the last step, advance to the next step
       setState(() {
+        final address = Address(
+          city: _cityId,
+          country: _countryId,
+          province: _provinceId,
+          place: _place,
+          postalCode: _postalCode,
+        );
+        globals.currentResource = Resource(
+          title: _resourceTitle!,
+          description: _resourceDescription!,
+          contactEmail: _email,
+          contactPhone: _phone,
+          resourceId: "",
+          address: address,
+          assistants: "",
+          capacity: _capacity,
+          contractType: _contractType,
+          duration: _duration!,
+          resourceCategory: resourceCategoryId,
+          maximumDate: _end!,
+          start: _start!,
+          end: _end!,
+          modality: _modality!,
+          salary: _salary,
+          organizer: globals.currentUserCompany!.companyId!,
+          link: _link,
+          notExpire: _notExpire,
+          degree: _degree,
+          promotor: globals.currentUserCompany!.name,
+          temporality: _temporality,
+          participants: [],
+          interests: interests,
+          competencies: competencies,
+          organizerType: "Empresa",
+          likes: [],
+          createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+          status: "Disponible",
+        );
         currentStep += 1;
       });
       return;
     }
+    setState(() => isLoading = true);
+    await _submit();
+  }
 
-    // If it is the last step, submit the form
+  onStepSaveForLater() async {
+    setState(() {
+      final address = Address(
+        city: _cityId,
+        country: _countryId,
+        province: _provinceId,
+        place: _place,
+        postalCode: _postalCode,
+      );
+      globals.currentResource = Resource(
+        title: _resourceTitle!,
+        description: _resourceDescription!,
+        contactEmail: _email,
+        contactPhone: _phone,
+        resourceId: "",
+        address: address,
+        assistants: "",
+        capacity: _capacity,
+        contractType: _contractType,
+        duration: _duration!,
+        resourceCategory: resourceCategoryId,
+        maximumDate: _end,
+        start: _start!,
+        end: _end!,
+        modality: _modality!,
+        salary: _salary,
+        organizer: globals.currentUserCompany!.companyId!,
+        link: _link,
+        notExpire: _notExpire,
+        degree: _degree,
+        promotor: globals.currentUserCompany!.name,
+        temporality: _temporality,
+        participants: [],
+        interests: interests,
+        competencies: competencies,
+        organizerType: "Empresa",
+        likes: [],
+        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        status: "edition",
+      );
+    });
+    setState(() => isLoadingSave = true);
     await _submit();
   }
 
@@ -1317,8 +1273,9 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                       return Container(
                         height: Sizes.kDefaultPaddingDouble * 2,
                         margin: EdgeInsets.only(top: Sizes.kDefaultPaddingDouble * 2),
-                        child: Row(
+                        child: Flex(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          direction: Responsive.isMobile(context) || Responsive.isTablet(context) ? Axis.vertical : Axis.horizontal,
                           children: <Widget>[
                             if(currentStep != 0)
                               EnredaButton(
@@ -1327,10 +1284,20 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                                 onPressed: onStepCancel,
                               ),
                             SizedBox(width: Sizes.kDefaultPaddingDouble),
+                            if(currentStep != 0) isLoadingSave ?
+                            const Center(child: CircularProgressIndicator(color: AppColors.primary300,))
+                                : EnredaButton(
+                              buttonTitle: isLastStep ? StringConst.FORM_SAVE_FOR_LATER : StringConst.FORM_NEXT,
+                              width: contactBtnWidth,
+                              buttonColor: AppColors.primaryColor,
+                              titleColor: AppColors.white,
+                              onPressed: onStepSaveForLater,
+                            ),
+                            SizedBox(width: Sizes.kDefaultPaddingDouble),
                             isLoading ?
                             const Center(child: CircularProgressIndicator(color: AppColors.primary300,))
                                 : EnredaButton(
-                              buttonTitle: isLastStep ? StringConst.FORM_CONFIRM : StringConst.FORM_NEXT,
+                              buttonTitle: isLastStep ? StringConst.FORM_PUBLISH : StringConst.FORM_NEXT,
                               width: contactBtnWidth,
                               buttonColor: AppColors.primaryColor,
                               titleColor: AppColors.white,

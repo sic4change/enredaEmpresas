@@ -68,6 +68,8 @@ abstract class Database {
      Stream<List<Resource>> limitResourcesStream(int i);
      Stream<Resource> resourceStream(String? resourceId);
      Stream<List<Resource>> myResourcesStream(String companyId);
+     Stream<List<Resource>> myDraftResourcesStream(String companyId);
+     Stream<List<Resource>> myActiveResourcesStream(String companyId);
      Stream<List<Resource>> myLimitResourcesStream(String companyId, int i);
      Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId);
      Stream<List<UserEnreda>> getParticipantsBySocialEntityStream(String companyId);
@@ -229,6 +231,28 @@ class FirestoreDatabase implements Database {
           builder: (data, documentId) => Resource.fromMap(data, documentId),
           sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
         );
+
+  @override
+  Stream<List<Resource>> myDraftResourcesStream(String companyId) =>
+      _service.collectionStream(
+        path: APIPath.resources(),
+        queryBuilder: (query) => query
+            .where('organizer', isEqualTo: companyId)
+            .where('status', isEqualTo: 'edition'),
+        builder: (data, documentId) => Resource.fromMap(data, documentId),
+        sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
+      );
+
+  @override
+  Stream<List<Resource>> myActiveResourcesStream(String companyId) =>
+      _service.collectionStream(
+        path: APIPath.resources(),
+        queryBuilder: (query) => query
+            .where('organizer', isEqualTo: companyId)
+            .where('status', isEqualTo: 'Disponible'),
+        builder: (data, documentId) => Resource.fromMap(data, documentId),
+        sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
+      );
 
     @override
     Stream<List<Resource>> myLimitResourcesStream(String companyId, int limit) =>

@@ -30,11 +30,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
-import '../my_resources_list_page.dart';
+import '../resources_list_page.dart';
 
 class ResourceDetailPage extends StatefulWidget {
-  const ResourceDetailPage({Key? key, required this.companyId}) : super(key: key);
-  final String? companyId;
+  const ResourceDetailPage({Key? key}) : super(key: key);
 
   @override
   State<ResourceDetailPage> createState() => _ResourceDetailPageState();
@@ -54,7 +53,9 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     Set<Competency> selectedCompetencies = {};
     final database = Provider.of<Database>(context, listen: false);
     return StreamBuilder<Resource>(
-        stream: database.resourceStream(resource.resourceId),
+        stream: resource.resourceId != null && resource.resourceId!.isNotEmpty
+            ? database.resourceStream(resource.resourceId)
+            : Stream.value(globals.currentResource!),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -87,20 +88,20 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                 resource.setResourceTypeName();
                 resource.setResourceCategoryName();
                 return StreamBuilder<Country>(
-                    stream: database.countryStream(resource.country),
+                    stream: database.countryStream(resource.address?.country),
                     builder: (context, snapshot) {
                       final country = snapshot.data;
                       resource.countryName = country == null ? '' : country.name;
                       resource.province ?? "";
                       resource.city ?? "";
                       return StreamBuilder<Province>(
-                        stream: database.provinceStream(resource.province),
+                        stream: database.provinceStream(resource.address?.province),
                         builder: (context, snapshot) {
                           final province = snapshot.data;
                           resource.provinceName = province == null ? '' : province.name;
                           return StreamBuilder<City>(
                               stream: database
-                                  .cityStream(resource.city),
+                                  .cityStream(resource.address?.city),
                               builder: (context, snapshot) {
                                 final city = snapshot.data;
                                 resource.cityName = city == null ? '' : city.name;
@@ -175,7 +176,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                     children: [
                       Container(
                         constraints: BoxConstraints(
-                          maxWidth: resource.organizer == widget.companyId
+                          maxWidth: resource.organizer == globals.currentUserCompany?.companyId
                               ? MediaQuery.of(context).size.width
                               : MediaQuery.of(context).size.width * 0.5,
                         ),
@@ -264,7 +265,8 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                         ),
                                       ],
                                     ),
-                                    resource.organizer == widget.companyId ? Row(
+                                    resource.resourceId == null || resource.resourceId!.isEmpty ? SpaceH20() :
+                                    resource.organizer == globals.currentUserCompany?.companyId ? Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Padding(
@@ -272,7 +274,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                           child: EnredaButtonIcon(
                                             onPressed: () => {
                                               setState(() {
-                                                MyResourcesListPage.selectedIndex.value = 3;
+                                                MyResourcesListPage.selectedIndex.value = 2;
                                               })
                                             },
                                             buttonColor: Colors.white,
@@ -341,7 +343,8 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                       ),
                     ],
                   )),
-              resource.organizer == widget.companyId ? Expanded(
+              resource.resourceId == null || resource.resourceId!.isEmpty ? Container() :
+              resource.organizer == globals.currentUserCompany?.companyId ? Expanded(
                   flex: Responsive.isMobile(context) ||
                       Responsive.isTablet(context) ||
                       Responsive.isDesktopS(context)
@@ -410,6 +413,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               ),
               child: Column(
                   children: [
+                    resource.resourceId == null || resource.resourceId!.isEmpty ? Container() :
                     Row(
                       children: [
                         Spacer(),
@@ -423,7 +427,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                   child: InkWell(
                                     onTap: () => {
                                       setState(() {
-                                        MyResourcesListPage.selectedIndex.value = 3;
+                                        MyResourcesListPage.selectedIndex.value = 2;
                                       })
                                     },
                                     child: Icon(
@@ -618,7 +622,6 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
         Container(
             width: 130,
             decoration: BoxDecoration(
-              color: Colors.white,
               border: Border.all(
                   color: AppColors.greyLight2.withOpacity(0.2),
                   width: 1),
@@ -635,12 +638,13 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                   height: 8,
                   width: 8,
                   decoration: BoxDecoration(
-                    color: resource.status == "No disponible" ? Colors.red : Colors.lightGreenAccent,
+                    color: resource.status == "No disponible" ? Colors.red : resource.status == "edition" ? Colors.orange : Colors.lightGreenAccent,
                     borderRadius: BorderRadius.circular(Consts.padding),
                   ),
                 ),
-                const SizedBox(width: 8),
-                CustomTextBody(text: resource.status!),
+                const SizedBox(width: 15),
+                CustomTextBody(text: resource.status == 'edition' ? 'Borrador'
+                    : resource.status == 'Disponible' ? 'Activa' : resource.status!),
               ],
             )),
         const SizedBox(height: 30,),
@@ -707,7 +711,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     const double mainAxisSpacing = 10;
     int rowCount = (boxItemData.length / crossAxisCount).ceil();
     double gridHeight = rowCount * mainAxisExtent + (rowCount - 1) * mainAxisSpacing;
-    double gridHeightD = rowCount * mainAxisExtent + (rowCount - 9) * mainAxisSpacing;
+    double gridHeightD = rowCount * mainAxisExtent + (rowCount - 17) * mainAxisSpacing;
     return Responsive.isMobile(context) ?
     SizedBox(
       height: gridHeight * 0.85,
@@ -723,7 +727,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
             );
           }),
     ) :
-    SizedBox(
+    Container(
       height: Responsive.isDesktop(context) ? gridHeightD : gridHeight,
       child: GridView.builder(
           physics: NeverScrollableScrollPhysics(),

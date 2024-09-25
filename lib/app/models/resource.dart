@@ -26,7 +26,6 @@ class Resource {
     this.provinceName,
     this.city,
     this.cityName,
-    this.postalCode,
     this.maximumDate,
     this.start,
     this.end,
@@ -198,7 +197,6 @@ class Resource {
   String? cityName;
   final String? place;
   final String? street;
-  final String? postalCode;
   final DateTime? maximumDate;
   final DateTime? start;
   final DateTime? end;
