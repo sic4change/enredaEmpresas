@@ -1,6 +1,6 @@
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
-import 'package:enreda_empresas/app/home/resources/resources_page.dart';
+import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/country.dart';
@@ -14,17 +14,18 @@ import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 import '../../common_widgets/no_resources_illustration.dart';
+import '../../models/jobOffer.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
 
 
-class DraftResourcesPage extends StatefulWidget {
+class FinishedResourcesPage extends StatefulWidget {
   @override
-  State<DraftResourcesPage> createState() => _DraftResourcesPageState();
+  State<FinishedResourcesPage> createState() => _FinishedResourcesPageState();
 }
 
-class _DraftResourcesPageState extends State<DraftResourcesPage> {
+class _FinishedResourcesPageState extends State<FinishedResourcesPage> {
   @override
   Widget build(BuildContext context) {
     return _buildContents(context);
@@ -44,7 +45,7 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
             if (snapshot.hasData) {
               var user = snapshot.data!;
               return StreamBuilder<List<Resource>>(
-                  stream: database.myDraftResourcesStream(user.companyId!),
+                  stream: database.myFinishedResourcesStream(user.companyId!),
                   builder: (context, snapshot) {
                     return snapshot.hasData && snapshot.data!.isNotEmpty
                         ?  ListItemBuilderGrid<Resource>(
@@ -84,16 +85,27 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
                                               builder: (context, snapshot) {
                                                 final city = snapshot.data;
                                                 resource.cityName = city == null ? '' : city.name;
-                                                return Container(
-                                                  key: Key('resource-${resource.resourceId}'),
-                                                  child: ResourceListTile(
-                                                    resource: resource,
-                                                    onTap: () =>
-                                                        setState(() {
-                                                          globals.currentResource = resource;
-                                                          ResourcesListPage.selectedIndex.value = 3;
-                                                        }),
-                                                  ),
+                                                return StreamBuilder<JobOffer>(
+                                                  stream: database.jobOfferStreamById(resource.jobOfferId!),
+                                                  builder: (context, snapshot) {
+                                                    if (!snapshot.hasData) return Container();
+                                                    if (snapshot.hasData && snapshot.data != null) {
+                                                      final jobOffer = snapshot.data!;
+                                                      return Container(
+                                                        key: Key('resource-${resource.resourceId}'),
+                                                        child: ResourceListTile(
+                                                          resource: resource,
+                                                          onTap: () =>
+                                                              setState(() {
+                                                                globals.currentResource = resource;
+                                                                globals.currentJobOffer = jobOffer;
+                                                                ManageOffersPage.selectedIndex.value = 1;
+                                                              }),
+                                                        ),
+                                                      );
+                                                    }
+                                                    return Container();
+                                                  },
                                                 );
                                               });
                                         });
@@ -113,8 +125,8 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
                       child: Center(child: CircularProgressIndicator(),),
                     ) :
                     NoResourcesIllustration(
-                      title: StringConst.NO_RESOURCES_TITLE,
-                      subtitle: StringConst.NO_RESOURCES_DESCRIPTION,
+                      title: StringConst.NO_RESOURCES_TITLE_END,
+                      subtitle: StringConst.NO_RESOURCES_DESCRIPTION_DRAFT,
                       imagePath: ImagePath.FAVORITES_ILLUSTRATION,
                     );
                   });
@@ -124,3 +136,4 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
     );
   }
 }
+

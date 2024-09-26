@@ -3,7 +3,7 @@ import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/participants/my_participants_list.dart';
 import 'package:enreda_empresas/app/home/resources/build_collapsed_resources.dart';
-import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/tool_box/tool_box_page.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/models/company.dart';
@@ -253,7 +253,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                               child: InkWell(
                                 onTap: () {
                                   WebHome.goJobOffers();
-                                  MyResourcesListPage.selectedIndex.value = 0;
+                                  ManageOffersPage.selectedIndex.value = 0;
                                 },
                                 hoverColor: Colors.transparent,
                                 splashColor: Colors.transparent,
@@ -366,7 +366,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
             InkWell(
               onTap: () {
                 WebHome.goJobOffers();
-                MyResourcesListPage.selectedIndex.value = 0;
+                ManageOffersPage.selectedIndex.value = 0;
               },
               child: Container(
                 height: Responsive.isDesktopS(context) ? 350 : 250,

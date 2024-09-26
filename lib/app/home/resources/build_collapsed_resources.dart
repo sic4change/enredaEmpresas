@@ -1,5 +1,5 @@
 import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
-import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/home/resources/resources_page.dart';
@@ -95,7 +95,7 @@ class _CollapsedResourcesListState extends State<CollapsedResourcesList> {
                                                           setState(() {
                                                             globals.currentResource = resource;
                                                             WebHome.goJobOffers();
-                                                            MyResourcesListPage.selectedIndex.value = 2;
+                                                            ManageOffersPage.selectedIndex.value = 2;
                                                           }),
                                                     ),
                                                   );

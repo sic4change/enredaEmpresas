@@ -15,16 +15,16 @@ import '../../values/strings.dart';
 import '../web_home.dart';
 
 
-class MyResourcesListPage extends StatefulWidget {
-  const MyResourcesListPage({super.key});
+class ManageOffersPage extends StatefulWidget {
+  const ManageOffersPage({super.key});
 
   static ValueNotifier<int> selectedIndex = ValueNotifier(0);
 
   @override
-  State<MyResourcesListPage> createState() => _MyResourcesListPageState();
+  State<ManageOffersPage> createState() => _ManageOffersPageState();
 }
 
-class _MyResourcesListPageState extends State<MyResourcesListPage> {
+class _ManageOffersPageState extends State<ManageOffersPage> {
   bool? isVisible = true;
   List<UserEnreda>? myParticipantsList = [];
   List<String>? interestsIdsList = [];
@@ -45,7 +45,7 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-        valueListenable: MyResourcesListPage.selectedIndex,
+        valueListenable: ManageOffersPage.selectedIndex,
         builder: (context, selectedIndex, child) {
           return RoundedContainer(
             borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
@@ -69,21 +69,21 @@ class _MyResourcesListPageState extends State<MyResourcesListPage> {
                           InkWell(
                             onTap: () => {
                               setState(() {
-                                MyResourcesListPage.selectedIndex.value = 0;
+                                ManageOffersPage.selectedIndex.value = 0;
                               })
                             },
                             child: selectedIndex != 0 ? CustomTextMedium(text: StringConst.MY_JOB_OFFERS) :
                               CustomTextMediumBold(text: StringConst.MY_JOB_OFFERS) ),
-                              selectedIndex == 1 ? CustomTextMediumBold(text:'> Detalle de la oferta de empleo') :
+                              selectedIndex == 1 ? CustomTextMediumBold(text:'> Detalle de la oferta') :
                               selectedIndex == 2 ? Row(
                             children: [
                               InkWell(
                                   onTap: () => {
                                     setState(() {
-                                      MyResourcesListPage.selectedIndex.value = 1;
+                                      ManageOffersPage.selectedIndex.value = 1;
                                     })
                                   },
-                                  child: CustomTextMedium(text:'> Detalle de la oferta de empleo ')),
+                                  child: CustomTextMedium(text:'> Detalle de la oferta ')),
                               CustomTextMediumBold(text:'> Editar oferta de empleo'),
                             ],
                           ) : Container()

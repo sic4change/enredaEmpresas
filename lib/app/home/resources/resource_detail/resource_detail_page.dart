@@ -16,6 +16,7 @@ import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/competency.dart';
 import 'package:enreda_empresas/app/models/country.dart';
 import 'package:enreda_empresas/app/models/interest.dart';
+import 'package:enreda_empresas/app/models/jobOffer.dart';
 import 'package:enreda_empresas/app/models/province.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/company.dart';
@@ -30,7 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
-import '../resources_list_page.dart';
+import '../manage_offers_page.dart';
 
 class ResourceDetailPage extends StatefulWidget {
   const ResourceDetailPage({Key? key}) : super(key: key);
@@ -43,10 +44,10 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildResourcePage(context, globals.currentResource! );
+    return _buildResourcePage(context, globals.currentResource!, globals.currentJobOffer!);
   }
 
-  Widget _buildResourcePage(BuildContext context, Resource resource) {
+  Widget _buildResourcePage(BuildContext context, Resource resource, JobOffer jobOffer) {
     List<String> interestsLocal = [];
     List<String> competenciesLocal = [];
     Set<Interest> selectedInterests = {};
@@ -55,7 +56,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     return StreamBuilder<Resource>(
         stream: resource.resourceId != null && resource.resourceId!.isNotEmpty
             ? database.resourceStream(resource.resourceId)
-            : Stream.value(globals.currentResource!),
+            : Stream.value(globals.currentResource!),  // Stream to create a new resource
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -120,16 +121,16 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                                 selectedCompetencies = {};
                                                 globals.selectedCompetenciesCurrentResource = {};
                                                 globals.competenciesNamesCurrentResource = '';
-                                                return Responsive.isMobile(context) ? _buildResourceDetailMobile(context, resource) :
-                                                  _buildResourceDetailWeb(context, resource);
+                                                return Responsive.isMobile(context) ? _buildResourceDetailMobile(context, resource, jobOffer) :
+                                                  _buildResourceDetailWeb(context, resource, jobOffer);
                                               }
                                               if (snapshotCompetencies.hasData) {
                                                 selectedCompetencies = snapshotCompetencies.data!.toSet();
                                                 globals.selectedCompetenciesCurrentResource = snapshotCompetencies.data!.toSet();
                                                 globals.competenciesNamesCurrentResource = 
                                                     selectedCompetencies.map((item) => item.name).join(' / ');
-                                                return Responsive.isMobile(context) ? _buildResourceDetailMobile(context, resource) :
-                                                  _buildResourceDetailWeb(context, resource);
+                                                return Responsive.isMobile(context) ? _buildResourceDetailMobile(context, resource, jobOffer) :
+                                                  _buildResourceDetailWeb(context, resource, jobOffer);
                                               }
                                               return Container();
                                             }
@@ -148,7 +149,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
         });
   }
 
-  Widget _buildResourceDetailWeb(BuildContext context, Resource resource) {
+  Widget _buildResourceDetailWeb(BuildContext context, Resource resource, JobOffer jobOffer) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
@@ -274,7 +275,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                           child: EnredaButtonIcon(
                                             onPressed: () => {
                                               setState(() {
-                                                MyResourcesListPage.selectedIndex.value = 2;
+                                                ManageOffersPage.selectedIndex.value = 2;
                                               })
                                             },
                                             buttonColor: Colors.white,
@@ -335,7 +336,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                         ? 0
                                         : 4,
                                     child: _buildDetailResource(
-                                        context, resource)),
+                                        context, resource, jobOffer)),
                               ],
                             ),
                           ],
@@ -386,7 +387,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     );
   }
 
-  Widget _buildResourceDetailMobile(BuildContext context, Resource resource) {
+  Widget _buildResourceDetailMobile(BuildContext context, Resource resource, JobOffer jobOffer) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
@@ -427,7 +428,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                   child: InkWell(
                                     onTap: () => {
                                       setState(() {
-                                        MyResourcesListPage.selectedIndex.value = 2;
+                                        ManageOffersPage.selectedIndex.value = 2;
                                       })
                                     },
                                     child: Icon(
@@ -521,7 +522,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                   ]
               ),
             ),
-            _buildDetailResource(context, resource),
+            _buildDetailResource(context, resource, jobOffer),
             SpaceH20(),
             SingleChildScrollView(
                 child: Stack(
@@ -547,7 +548,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     );
   }
 
-  Widget _buildDetailResource(BuildContext context, Resource resource) {
+  Widget _buildDetailResource(BuildContext context, Resource resource, JobOffer jobOffer) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -555,18 +556,42 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            StringConst.FORM_DESCRIPTION.toUpperCase(),
-            style: textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.turquoiseBlue,
-            ),
+          CustomTextSmallBold(
+            title: StringConst.FORM_DESCRIPTION.toUpperCase(), color: AppColors.primary900,
           ),
           const SizedBox(height: 10,),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Text(
               resource.description,
+              textAlign: TextAlign.left,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.greyTxtAlt,
+                height: 1.5,
+              ),
+            ),
+          ),
+          jobOffer.responsibilities != null ? Text(
+            StringConst.RESPONSIBILITIES,
+          ) : Container(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              jobOffer.responsibilities ?? '',
+              textAlign: TextAlign.left,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.greyTxtAlt,
+                height: 1.5,
+              ),
+            ),
+          ),
+          jobOffer.functions != null ? Text(
+            StringConst.FUNCTIONS,
+          ) : Container(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              jobOffer.functions ?? '',
               textAlign: TextAlign.left,
               style: textTheme.bodyMedium?.copyWith(
                 color: AppColors.greyTxtAlt,
@@ -581,17 +606,12 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
   }
 
   Widget _buildInformationResource(BuildContext context, Resource resource) {
-    final textTheme = Theme.of(context).textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          StringConst.FORM_INTERESTS.toUpperCase(),
-          style: textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.turquoiseBlue,
-          ),
+        CustomTextSmallBold(
+          title: StringConst.FORM_SECTOR.toUpperCase(), color: AppColors.primary900,
         ),
         const SizedBox(height: 10,),
         Padding(
@@ -599,12 +619,8 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
           child: InterestsByResource(interestsIdList: resource.interests!,),
         ),
         const SizedBox(height: 10,),
-        Text(
-          StringConst.COMPETENCIES.toUpperCase(),
-          style: textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.turquoiseBlue,
-          ),
+        CustomTextSmallBold(
+          title: StringConst.COMPETENCIES.toUpperCase(), color: AppColors.primary900,
         ),
         const SizedBox(height: 10,),
         Padding(
@@ -612,12 +628,8 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
           child: CompetenciesByResource(competenciesIdList: resource.competencies!,),
         ),
         const SizedBox(height: 10,),
-        Text(
-          StringConst.AVAILABLE.toUpperCase(),
-          style: textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.turquoiseBlue,
-          ),
+        CustomTextSmallBold(
+          title: StringConst.AVAILABLE.toUpperCase(), color: AppColors.primary900,
         ),
         Container(
             width: 130,
@@ -643,8 +655,10 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                   ),
                 ),
                 const SizedBox(width: 15),
-                CustomTextBody(text: resource.status == 'edition' ? 'Borrador'
-                    : resource.status == 'Disponible' ? 'Activa' : resource.status!),
+                CustomTextBody(text:
+                resource.status == 'edition' ? 'Borrador' :
+                resource.status == 'Disponible' ? 'Activa' :
+                resource.status == 'No disponible' ? 'Finalizada' : resource.status!),
               ],
             )),
         const SizedBox(height: 30,),
@@ -832,7 +846,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     if (didRequestSignOut == true) {
       _deleteResource(context, resource);
       setState(() {
-        MyResourcesListPage.selectedIndex.value = 0;
+        ManageOffersPage.selectedIndex.value = 0;
       });
     }
   }
