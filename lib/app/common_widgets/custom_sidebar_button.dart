@@ -4,7 +4,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/link.dart';
 
-import '../home/resources/resources_list_page.dart';
+import '../home/resources/manage_offers_page.dart';
 
 
 class CustomSideBarButton extends StatelessWidget {
@@ -97,7 +97,7 @@ class CustomSideBarButton extends StatelessWidget {
                 textTheme.bodySmall?.copyWith(
                   color: titleColor,
                   fontSize: textSize,
-                  fontWeight: MyResourcesListPage.selectedIndex.value == 1 ? FontWeight.w900 : FontWeight.w500,
+                  fontWeight: ManageOffersPage.selectedIndex.value == 1 ? FontWeight.w900 : FontWeight.w500,
                 ),
           ),
 

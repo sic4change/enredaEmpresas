@@ -301,9 +301,13 @@ class StringConst {
   static const String INVITE_ERROR = 'Se ha producido un error';
   static const String INVITE_ERROR_DESCRIPTION = 'Revise los campos.';
   static const String NO_RESOURCES_TITLE = '¡Todavía no tienes ninguna oferta creada!';
+  static const String NO_RESOURCES_TITLE_DRAFT = '¡Todavía no tienes ninguna oferta en borrador!';
+  static const String NO_RESOURCES_TITLE_END = '¡Todavía no tienes ninguna oferta finalizada!';
   static const String NO_RESOURCES_DESCRIPTION = 'Crea tu primera oferta de empleo';
-  static const String ACTIVE_RESOURCES = 'Ofertas activos';
+  static const String NO_RESOURCES_DESCRIPTION_DRAFT = 'Crea una oferta de empleo';
+  static const String ACTIVE_RESOURCES = 'Ofertas activas';
   static const String DRAFT_RESOURCES = 'Ofertas en borrador';
+  static const String FINISHED_RESOURCES = 'Ofertas finalizadas';
 
 
   //Resource modalities
@@ -381,6 +385,7 @@ class StringConst {
   static const String FORM_COMPETENCIES_SUB_CATEGORIES = "Sub categoría de Competencias";
   static const String FORM_SPECIFIC_COMPETENCIES = "Competencias específicas";
   static const String FORM_INTERESTS = "Intereses";
+  static const String FORM_SECTOR = "Sector";
   static const String FORM_INTERESTS_DOTS = "Intereses: ";
   static const String FORM_KEEP_LEARNING = "Le gustaría seguir aprendiendo: ";
   static const String FORM_SPECIFIC_INTERESTS = "Intereses específicos";

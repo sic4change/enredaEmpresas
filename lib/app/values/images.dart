@@ -119,6 +119,13 @@ class ImagePath {
   static const String ACCESS_VECTOR = '$imageDir/vector-access.png';
   static const String ACCESS_PHOTO = '$imageDir/photo_login.png';
   static const String UPLOAD = '$imageDir/upload-file.png';
+  static const String ICON_SEARCH = '$imageDir/search.png';
+  static const String ICON_PARTICIPANT = '$imageDir/participant.png';
+  static const String ICON_OFFERS = '$imageDir/offers.png';
+  static const String ICON_LOCATION = '$imageDir/location.png';
+  static const String ICON_INSCRIPTION = '$imageDir/icon-inscription.png';
+  static const String ICON_INVITATION = '$imageDir/icon-invitation.png';
+
 
   // Participant details
   static const String GAMIFICATION_LOGO = '$imageDir/gamification_logo.png';

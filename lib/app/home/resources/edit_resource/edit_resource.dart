@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
+import 'package:enreda_empresas/app/common_widgets/custom_form_field.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
-import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_sub_categories.dart';
@@ -38,6 +39,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
+import '../../../common_widgets/bubbled_container.dart';
+import '../../../common_widgets/custom_text.dart';
+
 const double contactBtnWidthLg = 200.0;
 const double contactBtnWidthSm = 100.0;
 const double contactBtnWidthMd = 140.0;
@@ -58,6 +62,9 @@ class _EditResourceState extends State<EditResource> {
   String? _resourceId;
   String? _resourceTitle;
   String? _resourceDescription;
+  String? _resourceResponsibilities;
+  String? _resourceFunctions;
+  String? _otherRequirements;
   String? _degree;
   String? _contractType;
   String? _salary;
@@ -72,9 +79,6 @@ class _EditResourceState extends State<EditResource> {
   String? _organizerType;
   String? _resourceLink;
   String? _organizerText;
-  String? _link;
-  String? _phone;
-  String? _email;
   String? _countryId;
   String? _provinceId;
   String? _cityId;
@@ -85,7 +89,6 @@ class _EditResourceState extends State<EditResource> {
   DateTime? _max;
   DateTime? _createdate;
   String? _modality;
-  String? _resourcePictureId;
   String? _assistants;
   String? _status;
   String? interestsNamesString;
@@ -131,6 +134,9 @@ class _EditResourceState extends State<EditResource> {
     _duration = globals.currentResource?.duration ?? '';
     _temporality = globals.currentResource?.temporality ?? '';
     _resourceDescription = globals.currentResource?.description;
+    _resourceResponsibilities = globals.currentJobOffer?.responsibilities;
+    _resourceFunctions = globals.currentJobOffer?.functions;
+    _otherRequirements = globals.currentJobOffer?.otherRequirements;
     _modality = globals.currentResource?.modality;
     _start = globals.currentResource?.start ?? DateTime.now();
     _end = globals.currentResource?.end ?? DateTime.now();
@@ -148,10 +154,6 @@ class _EditResourceState extends State<EditResource> {
     _provinceId = globals.currentResource?.address?.province ?? '';
     _cityId = globals.currentResource?.address?.city ?? '';
     _organizerText = globals.currentResource?.promotor ?? '';
-    _link = globals.currentResource?.link ?? '';
-    _phone = globals.currentResource?.contactPhone ?? '';
-    _email = globals.currentResource?.contactEmail ?? '';
-    _resourcePictureId = globals.currentResource?.resourcePictureId ?? '';
     _notExpire = globals.currentResource?.notExpire ?? false;
     _createdate = globals.currentResource?.createdate;
     _organizer = globals.currentResource?.organizer;
@@ -272,688 +274,589 @@ class _EditResourceState extends State<EditResource> {
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            CustomTextMediumForm(text: StringConst.FORM_DESCRIPTION),
+            CustomFormField(
+              child: customTextFormField(context, _resourceTitle!, '', StringConst.FORM_COMPANY_ERROR, nameSetState),
+              label: StringConst.FORM_TITLE,),
+            CustomFormField(
               child: streamBuilderDropdownResourceCategory(
                   context,
                   selectedResourceCategory,
                   buildResourceCategoryStreamBuilderSetState,
                   resource),
-            ),
-            CustomFlexRowColumn(
-              childLeft: customTextFormField(context, _resourceTitle!,
-                  StringConst.FORM_TITLE, StringConst.FORM_COMPANY_ERROR, nameSetState),
-              childRight: customTextFormMultiline(
-                  context,
-                  _resourceDescription!,
-                  StringConst.DESCRIPTION,
-                  StringConst.FORM_COMPANY_ERROR,
-                  descriptionSetState, 4000),
-            ),
-            _resourceCategoryId == "6ag9Px7zkFpHgRe17PQk"
-                ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  child: DropdownButtonFormField<String>(
-                    hint: const Text(StringConst.FORM_DEGREE),
-                    value: _degree == "" ? null : _degree,
-                    items:
-                    strings.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: textTheme.bodyMedium?.copyWith(
-                              height: 1.5,
-                              color: AppColors.greyDark,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        );
-                    }).toList(),
-                    validator: (value) => _degree != null
-                          ? null
-                          : StringConst.FORM_COMPANY_ERROR,
-                    onChanged: (value) =>
-                          buildDegreeStreamBuilderSetState(value),
-                    iconDisabledColor: AppColors.greyDark,
-                    iconEnabledColor: AppColors.primaryColor,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: textTheme.bodyLarge?.copyWith(
-                          height: 1.5,
-                          color: AppColors.greyDark,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                            color: AppColors.greyUltraLight,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: const BorderSide(
-                            color: AppColors.greyUltraLight,
-                            width: 1.0,
-                          ),
-                        ),
+              label: StringConst.FORM_RESOURCE_CATEGORY,),
+            CustomFormField(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.greyUltraLight),
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-                    style: textTheme.bodyMedium?.copyWith(
-                        height: 1.5,
-                        color: AppColors.greyDark,
-                        fontWeight: FontWeight.w400,
-                    ),
+                    child: CustomTextSmall(text: globals.currentUserCompany!.name),
                   ),
-                      )
-                      : Container(),
+                ],
+              ),
+              label: StringConst.FORM_YOUR_COMPANY_NAME,),
+            SizedBox(height: 20,),
+            CustomTextMediumForm(text: StringConst.FORM_JOB_PLACE),
             CustomFlexRowColumn(
-              childLeft: _resourceCategoryId == "POUBGFk5gU6c5X1DKo1b"
-                  ? DropdownButtonFormField<String>(
-                    hint: const Text(StringConst.FORM_CONTRACT),
-                    value: _contractType == "" ? null : _contractType,
-                    items: contractTypes.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: textTheme.bodySmall?.copyWith(
-                            height: 1.5,
-                            color: AppColors.greyDark,
-                            fontWeight: FontWeight.w400,
-                            fontSize: fontSize,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    validator: (value) => _contractType != null
-                        ? null
-                        : StringConst.FORM_COMPANY_ERROR,
-                    onChanged: (value) => buildContractStreamBuilderSetState(value),
-                    iconDisabledColor: AppColors.greyDark,
-                    iconEnabledColor: AppColors.primaryColor,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: textTheme.bodySmall?.copyWith(
-                        height: 1.5,
-                        color: AppColors.greyDark,
-                        fontWeight: FontWeight.w400,
-                        fontSize: fontSize,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide: const BorderSide(
-                          color: AppColors.greyUltraLight,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        borderSide: const BorderSide(
-                          color: AppColors.greyUltraLight,
-                          width: 1.0,
-                        ),
-                      ),
-                    ),
-                    style: textTheme.bodySmall?.copyWith(
-                      height: 1.5,
-                      color: AppColors.greyDark,
-                      fontWeight: FontWeight.w400,
-                      fontSize: fontSize,
-                    ),
-                  )
-                  : Container(),
-              childRight: _resourceCategoryId == "POUBGFk5gU6c5X1DKo1b"
-                  ? customTextFormFieldNotValidator(
+                childLeft: CustomFormField(
+                  padding: const EdgeInsets.all(0),
+                  child: streamBuilderForCountry(context, selectedCountry,
+                      buildCountryStreamBuilderSetState, resource),
+                  label: StringConst.FORM_COUNTRY,),
+                childRight: CustomFormField(
+                  padding: const EdgeInsets.all(0),
+                  child: streamBuilderForProvince(
                       context,
-                      _salary!,
-                      StringConst.FORM_SALARY,
-                      buildSalaryStreamBuilderSetState)
-                  : Container(),
-            ),
+                      selectedCountry == null
+                          ? resource.address?.country
+                          : selectedCountry?.countryId,
+                      selectedProvince,
+                      buildProvinceStreamBuilderSetState,
+                      resource),
+                  label: StringConst.FORM_PROVINCE,)),
+            CustomFlexRowColumn(
+                childLeft: CustomFormField(
+                  padding: const EdgeInsets.all(0),
+                  child: streamBuilderForCity(
+                      context,
+                      selectedCountry == null
+                          ? resource.address?.country
+                          : selectedCountry?.countryId,
+                      selectedProvince == null
+                          ? resource.address?.province
+                          : selectedProvince?.provinceId,
+                      selectedCity,
+                      buildCityStreamBuilderSetState,
+                      resource),
+                  label: StringConst.FORM_CITY,),
+                childRight: CustomFormField(
+                  padding: const EdgeInsets.all(0),
+                  child: customTextFormField(
+                      context,
+                      _postalCode!,
+                      '',
+                      StringConst.FORM_COMPANY_ERROR,
+                      addressSetState),
+                  label: StringConst.FORM_POSTAL_CODE,)),
+            CustomFlexRowColumn(
+                childLeft: CustomFormField(
+                  padding: const EdgeInsets.all(0),
+                  child: customTextFormField(
+                      context,
+                      _place!,
+                      '',
+                      StringConst.FORM_COMPANY_ERROR,
+                      placeSetState),
+                  label: StringConst.FORM_PLACE,
+                ),
+                childRight: Container()),
+            SizedBox(height: 20,),
+            CustomTextMediumForm(text: StringConst.FORM_ABOUT_JOB),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: StringConst.FORM_INTERESTS_QUESTION,
-                  focusColor: AppColors.lilac,
-                  labelStyle: textTheme.bodyLarge?.copyWith(
-                    color: AppColors.greyDark,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                //initialValue: interestsNamesString,
-                controller: textEditingControllerInterests,
-                onTap: () => {_showMultiSelectInterests(context)},
-                validator: (value) =>
-                value!.isNotEmpty ? null : StringConst.FORM_COMPANY_ERROR,
-                readOnly: true,
-                style: textTheme.bodyMedium?.copyWith(
-                  height: 1.5,
-                  color: AppColors.greyDark,
-                  fontWeight: FontWeight.w400,
-                ),
+              padding: const EdgeInsets.all(8.0),
+              child: FormField(
+                  validator: (value) {
+                    if (selectedInterestsSet.isEmpty) {
+                      return 'Por favor seleccione al menos un sector';
+                    }
+                    return null;
+                  },
+                  builder: (FormFieldState<dynamic> field) {
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget> [
+                          CustomTextBold(title: StringConst.FORM_INTERESTS_QUESTION,),
+                          InkWell(
+                            onTap: () => {_showMultiSelectInterests(context) },
+                            child: Container(
+                              width: double.infinity,
+                              constraints: BoxConstraints(minHeight: 50),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(
+                                      color: AppColors.greyUltraLight
+                                  )
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                                child: Wrap(
+                                  spacing: 5,
+                                  children: selectedInterestsSet.map((s) =>
+                                      BubbledContainer(s.name),
+                                  ).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (!field.isValid && field.errorText != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                field.errorText!,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                        ]);
+                  }
               ),
             ),
+            CustomFormField(
+              child: FormField(
+                  builder: (FormFieldState<dynamic> field) {
+                    return customTextFormMultiline(
+                        context,
+                        _resourceDescription!,
+                        '',
+                        StringConst.FORM_COMPANY_ERROR,
+                        descriptionSetState, 4000);
+                  }
+              ),
+              label: StringConst.DESCRIPTION,
+            ),
+            CustomFormField(
+              child: FormField(
+                  builder: (FormFieldState<dynamic> field) {
+                    return customTextFormMultiline(
+                        context,
+                        _resourceResponsibilities!,
+                        '',
+                        StringConst.FORM_COMPANY_ERROR,
+                        responsibilitiesSetState, 2000);
+                  }
+              ),
+              label: StringConst.RESPONSIBILITIES,
+            ),
+            CustomFormField(
+              child: FormField(
+                  builder: (FormFieldState<dynamic> field) {
+                    return customTextFormMultiline(
+                        context,
+                        _resourceFunctions!,
+                        '',
+                        StringConst.FORM_COMPANY_ERROR,
+                        functionsSetState, 2000);
+                  }
+              ),
+              label: StringConst.FUNCTIONS,
+            ),
+            CustomFormField(
+              child: customTextFormField(context, _otherRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
+              label: StringConst.FORM_OTHER_REQUIREMENTS,),
             CustomFlexRowColumn(
-                childLeft: TextFormField(
-                  controller: textEditingControllerCompetenciesCategories,
+              childLeft: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: DateTimeField(
+                  initialValue: _start,
+                  format: DateFormat('dd/MM/yyyy'),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelText: StringConst.FORM_COMPETENCIES_CATEGORIES,
-                    hintText: StringConst.FORM_COMPETENCIES_CATEGORIES,
-                    hintMaxLines: 2,
-                    labelStyle: textTheme.bodySmall?.copyWith(
-                      color: AppColors.greyDark,
+                    prefixIcon: const Icon(Icons.calendar_today),
+                    labelStyle: textTheme.bodyLarge?.copyWith(
                       height: 1.5,
+                      color: AppColors.greyDark,
                       fontWeight: FontWeight.w400,
-                      fontSize: fontSize,
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: AppColors.greyUltraLight,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: AppColors.greyUltraLight,
                         width: 1.0,
                       ),
                     ),
                   ),
-                  onTap: () => {_showMultiSelectCompetenciesCategories(context) },
-                  maxLines: 2,
-                  readOnly: true,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
                     fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
                   ),
+                  onShowPicker: (context, currentValue) {
+                    return showDatePicker(
+                      context: context,
+                      locale: Locale('es', 'ES'),
+                      firstDate: _start!,
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(DateTime.now().year + 10,
+                          DateTime.now().month, DateTime.now().day),
+                    );
+                  },
+                  onSaved: (dateTime) {
+                    setState(() {
+                      _start = dateTime;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return StringConst.FORM_START_ERROR;
+                    }
+                    return null;
+                  },
                 ),
-                childRight: TextFormField(
-                  controller: textEditingControllerCompetenciesSubCategories,
+                label: StringConst.FORM_START,
+              ),
+              childRight: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: DateTimeField(
+                  initialValue: _end,
+                  format: DateFormat('dd/MM/yyyy'),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    labelText: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,
-                    hintText: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,
-                    labelStyle: textTheme.bodySmall?.copyWith(
-                      color: AppColors.greyDark,
+                    prefixIcon: const Icon(Icons.calendar_today),
+                    labelStyle: textTheme.bodyLarge?.copyWith(
                       height: 1.5,
+                      color: AppColors.greyDark,
                       fontWeight: FontWeight.w400,
-                      fontSize: fontSize,
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: AppColors.greyUltraLight,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: AppColors.greyUltraLight,
                         width: 1.0,
                       ),
                     ),
                   ),
-                  onTap: () => {_showMultiSelectCompetenciesSubCategories(context) },
-                  maxLines: 2,
-                  readOnly: true,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
                     fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
                   ),
-                )),
-            Padding(
-              padding: EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-              child: TextFormField(
-                controller: textEditingControllerCompetencies,
-                decoration: InputDecoration(
-                  labelText: StringConst.FORM_COMPETENCIES,
-                  labelStyle: textTheme.bodySmall?.copyWith(
-                    color: AppColors.greyDark,
-                    height: 1.5,
-                    fontWeight: FontWeight.w400,
-                    fontSize: fontSize,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: AppColors.greyUltraLight,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color: AppColors.greyUltraLight,
-                      width: 1.0,
-                    ),
-                  ),
+                  onShowPicker: (context, currentValue) {
+                    return showDatePicker(
+                      context: context,
+                      locale: Locale('es', 'ES'),
+                      firstDate: _end!,
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(DateTime.now().year + 10,
+                          DateTime.now().month, DateTime.now().day),
+                    );
+                  },
+                  onSaved: (dateTime) {
+                    setState(() {
+                      _end = dateTime;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return StringConst.FORM_COMPANY_ERROR;
+                    }
+                    return null;
+                  },
                 ),
-                onTap: () => {_showMultiSelectCompetencies(context) },
-                maxLines: 2,
-                readOnly: true,
-                style: textTheme.bodySmall?.copyWith(
-                  height: 1.5,
-                  color: AppColors.greyDark,
-                  fontWeight: FontWeight.w400,
-                  fontSize: fontSize,
+                label: StringConst.FORM_END,
+              ),),
+            SizedBox(height: 20,),
+            CustomTextMediumForm(text: StringConst.FORM_REQUIREMENTS_JOB),
+            CustomFlexRowColumn(
+              childLeft: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: FormField(
+                    validator: (value) {
+                      if (selectedCompetenciesCategoriesSet.isEmpty) {
+                        return 'Por favor seleccione al menos una categoría';
+                      }
+                      return null;
+                    },
+                    builder: (FormFieldState<dynamic> field) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget> [
+                            CustomTextBold(title: StringConst.FORM_COMPETENCIES_CATEGORIES,),
+                            InkWell(
+                              onTap: () => {_showMultiSelectCompetenciesCategories(context) },
+                              child: Container(
+                                width: double.infinity,
+                                constraints: BoxConstraints(minHeight: 50),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all(
+                                        color: AppColors.greyUltraLight
+                                    )
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                                  child: Wrap(
+                                    spacing: 5,
+                                    children: selectedCompetenciesCategoriesSet.map((s) =>
+                                        BubbledContainer(s.name),
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (!field.isValid && field.errorText != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  field.errorText!,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                          ]);
+                    }
+                ),
+              ),
+              childRight: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: FormField(
+                    validator: (value) {
+                      if (selectedCompetenciesSubCategoriesSet.isEmpty) {
+                        return 'Por favor seleccione al menos una sub categoría';
+                      }
+                      return null;
+                    },
+                    builder: (FormFieldState<dynamic> field) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget> [
+                            CustomTextBold(title: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,),
+                            InkWell(
+                              onTap: () => {_showMultiSelectCompetenciesSubCategories(context) },
+                              child: Container(
+                                width: double.infinity,
+                                constraints: BoxConstraints(minHeight: 50),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all(
+                                        color: AppColors.greyUltraLight
+                                    )
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                                  child: Wrap(
+                                    spacing: 5,
+                                    children: selectedCompetenciesSubCategoriesSet.map((s) =>
+                                        BubbledContainer(s.name),
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (!field.isValid && field.errorText != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  field.errorText!,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                          ]);
+                    }
                 ),
               ),
             ),
-            CustomFlexRowColumn(
-              childLeft: customTextFormField(
-                  context,
-                  _duration!,
-                  StringConst.FORM_DURATION,
-                  StringConst.FORM_COMPANY_ERROR,
-                  durationSetState),
-              childRight: customTextFormMultilineNotValidator(context,
-                  _temporality!, StringConst.FORM_SCHEDULE, scheduleSetState),
-            ),
-            Container(
-              width: 250.0,
-              child: CheckboxListTile(
-                  title: Text(
-                    'El recurso no expira',
-                    style: textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                      color: AppColors.greyDark,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  value: selectedNotExpire,
-                  onChanged: (bool? value) => setState(() {
-                    selectedNotExpire = value!;
-                    _notExpire = selectedNotExpire;
-                  })),
-            ),
-            selectedNotExpire == false
-                ? Flex(
-                    direction: Responsive.isMobile(context)
-                        ? Axis.vertical
-                        : Axis.horizontal,
-                    children: [
-                      Expanded(
-                          flex: Responsive.isMobile(context) ? 0 : 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                                Sizes.kDefaultPaddingDouble / 2),
-                            child: DateTimeField(
-                              initialValue: _start,
-                              format: DateFormat('dd/MM/yyyy'),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.calendar_today),
-                                labelText: StringConst.FORM_START,
-                                labelStyle: textTheme.bodyLarge?.copyWith(
-                                  height: 1.5,
-                                  color: AppColors.greyDark,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.greyUltraLight,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.greyUltraLight,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              style: textTheme.bodyMedium?.copyWith(
-                                height: 1.5,
-                                color: AppColors.greyDark,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                  context: context,
-                                  locale: Locale('es', 'ES'),
-                                  firstDate: _start!,
-                                  initialDate: currentValue ?? DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year + 10,
-                                      DateTime.now().month, DateTime.now().day),
-                                );
-                              },
-                              onSaved: (dateTime) {
-                                setState(() {
-                                  _start = dateTime;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return StringConst.FORM_START_ERROR;
-                                }
-                                return null;
-                              },
-                            ),
-                          )),
-                      Expanded(
-                          flex: Responsive.isMobile(context) ? 0 : 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                                Sizes.kDefaultPaddingDouble / 2),
-                            child: DateTimeField(
-                              initialValue: _end,
-                              format: DateFormat('dd/MM/yyyy'),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.calendar_today),
-                                labelText: StringConst.FORM_END,
-                                labelStyle: textTheme.bodyLarge?.copyWith(
-                                  height: 1.5,
-                                  color: AppColors.greyDark,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.greyUltraLight,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.greyUltraLight,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              style: textTheme.bodyMedium?.copyWith(
-                                height: 1.5,
-                                color: AppColors.greyDark,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                  context: context,
-                                  locale: Locale('es', 'ES'),
-                                  firstDate: _end!,
-                                  initialDate: currentValue ?? DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year + 10,
-                                      DateTime.now().month, DateTime.now().day),
-                                );
-                              },
-                              onSaved: (dateTime) {
-                                setState(() {
-                                  _end = dateTime;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return StringConst.FORM_COMPANY_ERROR;
-                                }
-                                return null;
-                              },
-                            ),
-                          )),
-                      Expanded(
-                          flex: Responsive.isMobile(context) ? 0 : 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                                Sizes.kDefaultPaddingDouble / 2),
-                            child: DateTimeField(
-                              initialValue: _max,
-                              format: DateFormat('dd/MM/yyyy'),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.calendar_today),
-                                labelText: StringConst.FORM_MAX,
-                                labelStyle: textTheme.bodyLarge?.copyWith(
-                                  height: 1.5,
-                                  color: AppColors.greyDark,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.greyUltraLight,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.greyUltraLight,
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              style: textTheme.bodyMedium?.copyWith(
-                                height: 1.5,
-                                color: AppColors.greyDark,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                  context: context,
-                                  locale: Locale('es', 'ES'),
-                                  firstDate: _max!,
-                                  initialDate: currentValue ?? DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year + 10,
-                                      DateTime.now().month, DateTime.now().day),
-                                );
-                              },
-                              onSaved: (dateTime) {
-                                setState(() {
-                                  _max = dateTime;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return StringConst.FORM_COMPANY_ERROR;
-                                }
-                                return null;
-                              },
-                            ),
-                          )),
-                    ],
-                  )
-                : Container(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: DropdownButtonFormField<String>(
-                hint: const Text(StringConst.FORM_MODALITY),
-                value: _modality,
-                isExpanded: true,
-                items: <String>[
-                  'Presencial',
-                  'Semipresencial',
-                  'Online'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: textTheme.bodyMedium?.copyWith(
+              padding: const EdgeInsets.all(8.0),
+              child: FormField(
+                  validator: (value) {
+                    if (selectedCompetenciesSet.isEmpty) {
+                      return 'Por favor seleccione al menos una competencia';
+                    }
+                    return null;
+                  },
+                  builder: (FormFieldState<dynamic> field) {
+                    return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget> [
+                          CustomTextBold(title: StringConst.FORM_COMPETENCIES,),
+                          InkWell(
+                            onTap: () => {_showMultiSelectCompetencies(context) },
+                            child: Container(
+                              width: double.infinity,
+                              constraints: BoxConstraints(minHeight: 50),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(
+                                      color: AppColors.greyUltraLight
+                                  )
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
+                                child: Wrap(
+                                  spacing: 5,
+                                  children: selectedCompetenciesSet.map((s) =>
+                                      BubbledContainer(s.name),
+                                  ).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (!field.isValid && field.errorText != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                field.errorText!,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                        ]);
+                  }
+              ),
+            ),
+            SizedBox(height: 20,),
+            CustomTextMediumForm(text: StringConst.FORM_OFFER),
+            CustomFlexRowColumn(
+              childLeft: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: DropdownButtonFormField<String>(
+                  value: _contractType == "" ? null : _contractType,
+                  items: contractTypes.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: textTheme.bodySmall?.copyWith(
                           height: 1.5,
                           color: AppColors.greyDark,
                           fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis
+                          fontSize: fontSize,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  validator: (value) => _contractType != null
+                      ? null
+                      : StringConst.FORM_COMPANY_ERROR,
+                  onChanged: (value) => buildContractStreamBuilderSetState(value),
+                  iconDisabledColor: AppColors.greyDark,
+                  iconEnabledColor: AppColors.primaryColor,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(
+                        color: AppColors.greyUltraLight,
                       ),
                     ),
-                  );
-                }).toList(),
-                validator: (value) =>
-                _modality != null ? null : StringConst.FORM_COMPANY_ERROR,
-                onChanged: (value) => buildModalityStreamBuilderSetState(value),
-                onSaved: (value) => buildModalityStreamBuilderSetState(value),
-                iconDisabledColor: AppColors.greyDark,
-                iconEnabledColor: AppColors.primaryColor,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelStyle: textTheme.bodyLarge?.copyWith(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(
+                        color: AppColors.greyUltraLight,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  style: textTheme.bodySmall?.copyWith(
                     height: 1.5,
                     color: AppColors.greyDark,
                     fontWeight: FontWeight.w400,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                      width: 1.0,
-                    ),
+                    fontSize: fontSize,
                   ),
                 ),
-                style: textTheme.bodyMedium?.copyWith(
-                  height: 1.5,
-                  color: AppColors.greyDark,
-                  fontWeight: FontWeight.w400,
-                ),
+                label: StringConst.FORM_CONTRACT,
+              ),
+              childRight: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: customTextFormMultilineNotValidator(
+                    context, _temporality!, '', scheduleSetState),
+                label: StringConst.FORM_SCHEDULE,
               ),
             ),
             CustomFlexRowColumn(
-              childLeft: customTextFormField(
-                  context,
-                  _place!,
-                  StringConst.FORM_PLACE,
-                  StringConst.FORM_COMPANY_ERROR,
-                  placeSetState),
-              childRight: customTextFormFieldNum(
-                  context,
-                  _capacity!.toString(),
-                  StringConst.FORM_CAPACITY,
-                  StringConst.FORM_COMPANY_ERROR,
-                  capacitySetState),
-            ),
-            _modality != "Online"
-                ? CustomFlexRowColumn(
-                    childLeft: streamBuilderForCountry(context, selectedCountry,
-                        buildCountryStreamBuilderSetState, resource),
-                    childRight: streamBuilderForProvince(
-                            context,
-                            selectedCountry == null
-                                ? resource.address?.country
-                                : selectedCountry?.countryId,
-                            selectedProvince,
-                            buildProvinceStreamBuilderSetState,
-                            resource))
-                : Container(),
-            _modality != "Online"
-                ? CustomFlexRowColumn(
-                    childLeft: streamBuilderForCity(
-                            context,
-                            selectedCountry == null
-                                ? resource.address?.country
-                                : selectedCountry?.countryId,
-                            selectedProvince == null
-                                ? resource.address?.province
-                                : selectedProvince?.provinceId,
-                            selectedCity,
-                            buildCityStreamBuilderSetState,
-                            resource),
-                    childRight: customTextFormFieldNotValidator(context, _postalCode!,
-                            StringConst.FORM_ADDRESS, addressSetState),
-                  )
-                : Container(),
-            CustomFlexRowColumn(
-              childLeft: streamBuilderDropdownSocialEntities(
-                  context,
-                  selectedSocialEntity,
-                  globals.organizerCurrentResource!.companyId!,
-                  buildSocialEntityStreamBuilderSetState),
-              childRight: TextFormField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: StringConst.FORM_ORGANIZER_TEXT,
-                  focusColor: AppColors.lilac,
-                  labelStyle: textTheme.bodyLarge?.copyWith(
+              childLeft: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: DropdownButtonFormField<String>(
+                  value: _modality,
+                  items: <String>[
+                    'Presencial',
+                    'Semipresencial',
+                    'Online'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: textTheme.bodySmall?.copyWith(
+                          height: 1.5,
+                          color: AppColors.greyDark,
+                          fontWeight: FontWeight.w400,
+                          fontSize: fontSize,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  validator: (value) => _modality != null
+                      ? null
+                      : StringConst.FORM_COMPANY_ERROR,
+                  onChanged: (value) => buildModalityStreamBuilderSetState(value),
+                  iconDisabledColor: AppColors.greyDark,
+                  iconEnabledColor: AppColors.primaryColor,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: textTheme.bodySmall?.copyWith(
+                      height: 1.5,
+                      color: AppColors.greyDark,
+                      fontWeight: FontWeight.w400,
+                      fontSize: fontSize,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(
+                        color: AppColors.greyUltraLight,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(
+                        color: AppColors.greyUltraLight,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  style: textTheme.bodySmall?.copyWith(
+                    height: 1.5,
                     color: AppColors.greyDark,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: const BorderSide(
-                      color: AppColors.greyUltraLight,
-                      width: 1.0,
-                    ),
+                    fontWeight: FontWeight.w400,
+                    fontSize: fontSize,
                   ),
                 ),
-                initialValue: _organizerText,
-                onChanged: (String? value) => setState(() {
-                  _organizerText = value;
-                }),
-                textCapitalization: TextCapitalization.sentences,
-                keyboardType: TextInputType.name,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: AppColors.greyDark,
-                ),
+                label: StringConst.FORM_MODALITY,),
+              childRight: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: customTextFormFieldNotValidator(
+                    context,
+                    _salary!,
+                    '',
+                    buildSalaryStreamBuilderSetState),
+                label: StringConst.FORM_SALARY,
               ),
             ),
-            _organizerText != ""
-                ? CustomFlexRowColumn(
-                    childLeft: customTextFormField(
-                        context,
-                        _phone!,
-                        StringConst.FORM_PHONE,
-                        StringConst.FORM_COMPANY_ERROR,
-                        phoneSetState),
-                    childRight: customTextFormField(
-                        context,
-                        _email!,
-                        StringConst.FORM_EMAIL,
-                        StringConst.FORM_COMPANY_ERROR,
-                        emailSetState),
-                  )
-                : Container(),
-            _organizerText != ""
-                ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  child: customTextFormField(
-                  context, _link!,
-                  StringConst.FORM_LINK,
-                  StringConst.FORM_COMPANY_ERROR,
-                  linkSetState),
-                )
-                : Container(),
-            _organizerText != ""
-                ? Container()
-                : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  child: customTextFormFieldNotValidator(
-                  context, _link!, StringConst.FORM_LINK, linkSetState),
-                ),
+            CustomFlexRowColumn(
+              childLeft: CustomFormField(
+                padding: const EdgeInsets.all(0),
+                child: customTextFormFieldNum(
+                    context,
+                    _capacity! > 0 ? _capacity.toString() : '',
+                    '',
+                    StringConst.FORM_COMPANY_ERROR,
+                    capacitySetState),
+                label: StringConst.FORM_CAPACITY,
+              ),
+              childRight:  Container(),
+            ),
           ]),
     );
   }
@@ -965,6 +868,19 @@ class _EditResourceState extends State<EditResource> {
   void descriptionSetState(String? val) {
     setState(() => _resourceDescription = val!);
   }
+
+  void responsibilitiesSetState(String? val) {
+    setState(() => _resourceResponsibilities = val!);
+  }
+
+  void functionsSetState(String? val) {
+    setState(() => _resourceFunctions = val!);
+  }
+
+  void resourceRequirementsSetState(String? val) {
+    setState(() => _otherRequirements = val!);
+  }
+
 
   void buildResourceTypeStreamBuilderSetState(ResourceType? resourceType) {
     setState(() {
@@ -1046,26 +962,6 @@ class _EditResourceState extends State<EditResource> {
 
   void addressSetState(String? val) {
     setState(() => _postalCode = val!);
-  }
-
-  void linkSetState(String? val) {
-    setState(() => _link = val!);
-  }
-
-  void phoneSetState(String? val) {
-    setState(() => _phone = val!);
-  }
-
-  void emailSetState(String? val) {
-    setState(() => _email = val!);
-  }
-
-  void buildResourcePictureStreamBuilderSetState(
-      ResourcePicture? resourcePicture) {
-    setState(() {
-      selectedResourcePicture = resourcePicture!;
-    });
-    _resourcePictureId = resourcePicture?.id;
   }
 
   void _showMultiSelectInterests(BuildContext context) async {
@@ -1183,7 +1079,7 @@ class _EditResourceState extends State<EditResource> {
 
   onStepCancel() {
     setState(() {
-      MyResourcesListPage.selectedIndex.value = 2;
+      ManageOffersPage.selectedIndex.value = 1;
     });
   }
 
@@ -1193,6 +1089,7 @@ class _EditResourceState extends State<EditResource> {
       province: _provinceId,
       city: _cityId,
       place: _place,
+      postalCode: _postalCode,
     );
     final newResource = Resource(
       resourceId: _resourceId,
@@ -1213,9 +1110,6 @@ class _EditResourceState extends State<EditResource> {
       capacity: _capacity,
       organizer: _organizer!,
       promotor: _organizerText,
-      link: _link,
-      contactEmail: _email,
-      contactPhone: _phone,
       contractType: _contractType,
       salary: _salary,
       degree: _degree,
@@ -1226,7 +1120,6 @@ class _EditResourceState extends State<EditResource> {
       participants: _participants,
       assistants: _assistants,
       status: _status,
-      //postalCode: _postalCode,
     );
     try {
       final database = Provider.of<Database>(context, listen: false);
@@ -1240,7 +1133,7 @@ class _EditResourceState extends State<EditResource> {
         defaultActionText: StringConst.FORM_ACCEPT,
       ).then((value) {
           setState(() {
-            MyResourcesListPage.selectedIndex.value = 2;
+            ManageOffersPage.selectedIndex.value = 1;
           });
         },
       );
@@ -1249,7 +1142,7 @@ class _EditResourceState extends State<EditResource> {
           title: StringConst.FORM_ERROR, exception: e)
           .then((value) {
             setState(() {
-              MyResourcesListPage.selectedIndex.value = 2;
+              ManageOffersPage.selectedIndex.value = 1;
             });
       });
     }

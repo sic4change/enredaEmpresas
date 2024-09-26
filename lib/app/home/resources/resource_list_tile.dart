@@ -219,11 +219,31 @@ class _ResourceListTileState extends State<ResourceListTile> {
                                 const SizedBox(width: 8),
                                 Text(
                                     widget.resource.status == 'edition' ? 'Borrador' :
-                                    widget.resource.status == 'Disponible' ? 'Activa' : widget.resource.status!,
+                                    widget.resource.status == 'Disponible' ? 'Activa' :
+                                    widget.resource.status == 'No disponible' ? 'Finalizada': widget.resource.status!,
                                     style: textTheme.bodySmall?.copyWith(
                                       color: AppColors.greyAlt,
                                       fontSize: fontSizeS,
                                     ),),
+                              ],
+                            )),
+                        Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: AppColors.greyLight2.withOpacity(0.2),
+                                  width: 1),
+                              borderRadius: BorderRadius.circular(Sizes.mainPadding),
+                            ),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15.0),
+                            margin: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(ImagePath.ICON_PARTICIPANT, width: 20, height: 18),
+                                SizedBox(width: 8),
+                                Text(widget.resource.participants?.length.toString() ?? '0'),
                               ],
                             )),
                         Spacer(),

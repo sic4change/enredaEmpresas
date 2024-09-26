@@ -3,10 +3,11 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/account/personal_data.dart';
 import 'package:enreda_empresas/app/home/resources/create_resource/create_resource.dart';
+import 'package:enreda_empresas/app/home/resources/resources_page.dart';
 import 'package:enreda_empresas/app/home/side_bar_widget.dart';
 import 'package:enreda_empresas/app/home/control_panel/control_panel_page.dart';
 import 'package:enreda_empresas/app/home/participants/participants_page.dart';
-import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/tool_box/tool_box_page.dart';
 import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
@@ -51,6 +52,8 @@ class WebHome extends StatefulWidget {
   static goJobOffers() {
     WebHome.selectedIndex.value = 2; // Select empty Container
     WebHome.controller.selectIndex(1);
+    ManageOffersPage.selectedIndex.value = 0;
+    ResourcesListPage.selectedIndex.value = 1;
   }
 
   static goToParticipants() {
@@ -192,13 +195,13 @@ class _WebHomeState extends State<WebHome> {
                             case 0: _key.currentState?.closeDrawer();
                             return ControlPanelPage(company: company, user: user,);
                             case 1: _key.currentState?.closeDrawer();
-                            return MyResourcesListPage();
+                            return ManageOffersPage();
                             case 2: _key.currentState?.closeDrawer();
                             return ToolBoxPage();
                             case 3: _key.currentState?.closeDrawer();
                             return EntityDirectoryPage(socialEntity: company);
                             default:
-                              return MyResourcesListPage();
+                              return ManageOffersPage();
                           }
                         },
                       ),))

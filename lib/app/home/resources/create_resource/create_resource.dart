@@ -7,7 +7,7 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
-import 'package:enreda_empresas/app/home/resources/resources_list_page.dart';
+import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies.dart';
@@ -210,7 +210,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         functions: _resourceFunctions,
         otherRequirements: _otherRequirements,
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-
       );
 
       if (_validateAndSaveForm() == false) {
@@ -236,7 +235,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           ).then(
                 (value) {
               setState(() {
-                MyResourcesListPage.selectedIndex.value = 0;
+                ManageOffersPage.selectedIndex.value = 0;
               });
             },
           );
@@ -244,7 +243,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           showExceptionAlertDialog(context, title: StringConst.FORM_ERROR, exception: e)
               .then((value) {
             setState(() {
-              MyResourcesListPage.selectedIndex.value = 0;
+              ManageOffersPage.selectedIndex.value = 0;
             });
           });
         }
@@ -669,7 +668,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
               }
           ),
         ),
-
         SizedBox(height: 20,),
         CustomTextMediumForm(text: StringConst.FORM_OFFER),
         CustomFlexRowColumn(

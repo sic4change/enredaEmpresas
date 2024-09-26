@@ -50,6 +50,7 @@ class Resource {
     this.competencies,
     this.degree,
     this.invitationsList,
+    this.jobOfferId,
   });
 
   factory Resource.fromMap(Map<String, dynamic> data, String documentId) {
@@ -57,6 +58,7 @@ class Resource {
     final String title = data['title'];
     final String description = data['description'];
     final String organizer = data['organizer'];
+    final String? jobOfferId = data['jobOfferId'];
     final String? organizerType = data['organizerType'];
     final String? organizerName = data['organizerName'];
     final String? organizerImage = data['organizerImage'];
@@ -126,6 +128,7 @@ class Resource {
 
     return Resource(
         resourceId: documentId,
+        jobOfferId: jobOfferId,
         title: title,
         description: description,
         organizer: organizer,
@@ -175,6 +178,7 @@ class Resource {
   }
 
   final String? resourceId;
+  final String? jobOfferId;
   final String title;
   final String organizer;
   String? organizerType;
@@ -235,6 +239,7 @@ class Resource {
     return {
       'title': title,
       'description': description,
+      'jobOfferId': jobOfferId,
       'organizer': organizer,
       'organizerType': organizerType,
       'promotor': promotor,
@@ -270,6 +275,7 @@ class Resource {
 
   Resource copyWith({
     String? resourceId,
+    String? jobOfferId,
     String? title,
     String? description,
     String? organizer,
@@ -307,6 +313,7 @@ class Resource {
   }) {
     return Resource(
         resourceId: resourceId?? this.resourceId,
+        jobOfferId: jobOfferId?? this.jobOfferId,
         title: title?? this.title,
         description: description?? this.description,
         organizer: organizer?? this.organizer,
