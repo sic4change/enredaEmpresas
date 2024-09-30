@@ -128,10 +128,11 @@ class CustomTextBold extends StatelessWidget {
 
 class CustomTextSmall extends StatelessWidget {
 
-  const CustomTextSmall({super.key,  required this.text, this.height = 1.5, this.color = AppColors.greyAlt});
+  const CustomTextSmall({super.key,  required this.text, this.height = 1.5, this.color = AppColors.greyAlt, this.maxLines = 2});
   final String text;
   final double height;
   final Color color;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +141,7 @@ class CustomTextSmall extends StatelessWidget {
     return Text(
       text,
       overflow: TextOverflow.ellipsis,
-      maxLines: 2,
+      maxLines: maxLines,
       style: textTheme.bodySmall?.copyWith(
         color: color,
         height: height,

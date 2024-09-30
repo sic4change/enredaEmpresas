@@ -1,3 +1,5 @@
+import 'criteria.dart';
+
 class JobOffer {
   JobOffer({
     this.jobOfferId,
@@ -6,6 +8,7 @@ class JobOffer {
     this.functions,
     this.otherRequirements,
     required this.createdate,
+    this.criteria,
   });
 
   factory JobOffer.fromMap(Map<String, dynamic> data, String documentId) {
@@ -15,7 +18,30 @@ class JobOffer {
     final String? functions = data['functions'];
     final String? otherRequirements = data['otherRequirements'];
     final DateTime createdate = data['createdate'].toDate();
+    // List<Criteria> criteria = [];
+    // if ( data['criteria'] != null) {
+    //   criteria = List<Criteria>.from(data['criteria'].map((x) => Criteria.fromMap(x)));
+    // }
 
+    // List<Criteria> criteria = [];
+    // if (data['criteria'] != null) {
+    //   try {
+    //     criteria = List<Criteria>.from(data['criteria'].map((x) => Criteria.fromMap(x)));
+    //   } catch (e) {
+    //     criteria = [];
+    //   }
+    // }
+
+    List<Criteria> criteria = [];
+    if (data['criteria'] != null) {
+      try {
+        criteria = (data['criteria'] as List)
+            .map((item) => Criteria.fromMap(item))
+            .toList();
+      } catch (e) {
+        criteria = [];
+      }
+    }
 
     return JobOffer(
         jobOfferId: documentId,
@@ -23,7 +49,8 @@ class JobOffer {
         responsibilities: responsibilities,
         functions: functions,
         otherRequirements: otherRequirements,
-        createdate: createdate
+        createdate: createdate,
+        criteria: criteria
 
     );
   }
@@ -34,6 +61,7 @@ class JobOffer {
   final String? functions;
   final String? otherRequirements;
   final DateTime createdate;
+  final List<Criteria>? criteria;
 
   @override
   bool operator ==(Object other){
@@ -46,20 +74,26 @@ class JobOffer {
   Map<String, dynamic> toMap() {
     return {
       'resourceId': resourceId,
+      'jobOfferId': jobOfferId,
       'responsibilities': responsibilities,
       'functions': functions,
       'otherRequirements': otherRequirements,
-      'createdate': createdate
+      'createdate': createdate,
+      'criteria': List<dynamic>.from(criteria!.map((x) => x.toMap())),
     };
   }
 
   JobOffer copyWith({
     String? resourceId,
     String? jobOfferId,
+    String? academicQualifications,
+    String? experienceLevel,
+    String? languageSkills,
     String? responsibilities,
     String? functions,
     String? otherRequirements,
-    DateTime? createdate
+    DateTime? createdate,
+    List<Criteria>? criteria,
 
 
   }) {
@@ -69,8 +103,8 @@ class JobOffer {
         responsibilities: responsibilities?? this.responsibilities,
         functions: functions?? this.functions,
         otherRequirements: otherRequirements?? this.otherRequirements,
-        createdate: createdate?? this.createdate
-
+        createdate: createdate?? this.createdate,
+        criteria: criteria?? this.criteria
     );
   }
 

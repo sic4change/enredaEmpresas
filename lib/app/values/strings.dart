@@ -308,7 +308,8 @@ class StringConst {
   static const String ACTIVE_RESOURCES = 'Ofertas activas';
   static const String DRAFT_RESOURCES = 'Ofertas en borrador';
   static const String FINISHED_RESOURCES = 'Ofertas finalizadas';
-
+  static const String CRITERIA_JOB_OFFER = 'Criterios de evaluación';
+  static const String CRITERIA_ERROR = 'La suma total debe ser igual a 100%';
 
   //Resource modalities
   static const String FACE_TO_FACE = 'Presencial';
@@ -419,6 +420,7 @@ class StringConst {
   static const String FORM_JOB_PLACE = "Ubicación del puesto";
   static const String FORM_ABOUT_JOB = "Acerca del puesto";
   static const String FORM_REQUIREMENTS_JOB = "Requisitos del puesto";
+  static const String FORM_REQUIREMENTS = "Requisitos:";
   static const String FORM_OFFER = "Qué ofrecemos";
 
   static const String FORM_GENERAL_INFO = "Información general";
