@@ -74,6 +74,7 @@ class _CriteriaCardState extends State<CriteriaCard> {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
     double maxValue = 100 - widget.criteriaValuesSum + widget.criteria.weight;
     int _getTypeIndex(String type) {
       switch (type) {
@@ -135,11 +136,38 @@ class _CriteriaCardState extends State<CriteriaCard> {
           widget.criteria.type != 'competencies' ? Padding(
             padding: EdgeInsets.all(Sizes.kDefaultPaddingDouble),
             child: SizedBox(
-              height: 80.0,
+              height: 150.0,
               child:  CustomFormField(
                 padding: const EdgeInsets.all(0),
-                child: TextField(
-                  controller: _descriptionController,
+                child: TextFormField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusColor: AppColors.primaryColor,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide: const BorderSide(
+                          color: AppColors.greyUltraLight,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        borderSide: const BorderSide(
+                          color: AppColors.greyUltraLight,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    validator: (value) => value!.isNotEmpty
+                        ? null
+                        : StringConst.ERROR_MESSAGE,
+                    minLines: 4,
+                    maxLines: 4,
+                    keyboardType: TextInputType.multiline,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.greyDark,
+                      height: 1.5,),
                 ),
                 label: StringConst.FORM_REQUIREMENTS,
               ),),
