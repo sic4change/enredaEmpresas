@@ -87,10 +87,10 @@ class _FinishedResourcesPageState extends State<FinishedResourcesPage> {
                                                 resource.cityName = city == null ? '' : city.name;
                                                 return StreamBuilder<JobOffer>(
                                                   stream: database.jobOfferStreamById(resource.jobOfferId!),
-                                                  builder: (context, snapshot) {
-                                                    if (!snapshot.hasData) return Container();
-                                                    if (snapshot.hasData && snapshot.data != null) {
-                                                      final jobOffer = snapshot.data!;
+                                                  builder: (context, snapshotJobOffer) {
+                                                    //if (!snapshotJobOffer.hasData) return Container();
+                                                    if (snapshotJobOffer.hasData && snapshotJobOffer.data != null) {
+                                                      final JobOffer jobOffer = snapshotJobOffer.data!;
                                                       return Container(
                                                         key: Key('resource-${resource.resourceId}'),
                                                         child: ResourceListTile(

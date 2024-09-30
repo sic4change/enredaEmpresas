@@ -550,6 +550,36 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
 
   Widget _buildDetailResource(BuildContext context, Resource resource, JobOffer jobOffer) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    int _getTypeIndex(String type) {
+      switch (type) {
+        case 'academic':
+          return 0;
+        case 'experience':
+          return 1;
+        case 'languages':
+          return 2;
+        case 'competencies':
+          return 3;
+        default:
+          return -1; // indicate an invalid type
+      }
+    }
+    String _getDisplayText(String type) {
+      List<String> textValues = [
+        'Formación académica',
+        'Nivel de experiencia',
+        'Idiomas',
+        'Competencias',
+      ];
+
+      int index = _getTypeIndex(type);
+
+      if (index >= 0 && index < textValues.length) {
+        return textValues[index];
+      } else {
+        return '';
+      }
+    }
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -599,6 +629,33 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               ),
             ),
           ),
+          CustomTextSmallBold(title: StringConst.CRITERIA_JOB_OFFER.toUpperCase(), color: AppColors.primary900),
+          SizedBox(height: 10),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: jobOffer.criteria?.length,
+            itemBuilder: (context, index) {
+              final item = jobOffer.criteria?[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextSmallBold(title: _getDisplayText(item?.type ?? ''), color: AppColors.primary900),
+                    item?.requirementText != null ? CustomTextSmall(text: item!.requirementText!, maxLines: 50,) : Container(),
+                    item?.competencies != null ?
+                    Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: CompetenciesByResource(competenciesIdList: item!.competencies!)) : Container(),
+                    CustomTextSmallBold(title: 'Peso: ${item?.weight} %', color: AppColors.primary900,),
+                    SizedBox(height: 10,)
+                  ],
+                ),
+              );
+            },
+          ),
+          SizedBox(height: 20),
           _buildInformationResource(context, resource),
         ],
       ),
@@ -617,15 +674,6 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
         Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
           child: InterestsByResource(interestsIdList: resource.interests!,),
-        ),
-        const SizedBox(height: 10,),
-        CustomTextSmallBold(
-          title: StringConst.COMPETENCIES.toUpperCase(), color: AppColors.primary900,
-        ),
-        const SizedBox(height: 10,),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0),
-          child: CompetenciesByResource(competenciesIdList: resource.competencies!,),
         ),
         const SizedBox(height: 10,),
         CustomTextSmallBold(
