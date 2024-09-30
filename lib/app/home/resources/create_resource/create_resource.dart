@@ -566,16 +566,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                 .toList(),
           ),
         ),
-        // if (_criteriaError)
-        //   Center(child: CustomTextSmall(text: StringConst.CRITERIA_ERROR, color: AppColors.red,)),
-        // if (_criteriaError) SizedBox(height:20,),
-        // Slider(
-        //   activeColor: AppColors.primary900,
-        //   value: criteriaValuesSum.toDouble(),
-        //   onChanged: null,
-        //   min: 0,
-        //   max: 100,
-        //   ),
         Padding(
           padding: const EdgeInsets.all(0.0),
           child: FormField(
