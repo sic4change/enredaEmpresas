@@ -598,6 +598,7 @@ class _EditResourceState extends State<EditResource> {
                     setState(() {
                       c.competencies = newList;
                       c.competenciesNames = competenciesNames;
+                      _competencies = newList;
                     });
                   },
                   selectedCompetencies: selectedCompetenciesSet,

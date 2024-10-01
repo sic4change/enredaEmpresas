@@ -559,6 +559,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                 setState(() {
                   c.competencies = newList;
                   c.competenciesNames = competenciesNames;
+                  competencies = newList;
                 });
               },
             ))
