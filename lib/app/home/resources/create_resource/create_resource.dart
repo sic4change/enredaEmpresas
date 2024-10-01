@@ -10,9 +10,8 @@ import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_sub_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests_create.dart';
+import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/competency.dart';
@@ -43,7 +42,7 @@ import '../../../common_widgets/bubbled_container.dart';
 import '../../../common_widgets/custom_form_field.dart';
 import '../../../common_widgets/rounded_container.dart';
 import '../../../models/jobOffer.dart';
-import '../validating_form_controls/stream_builder_competencies_categories.dart';
+import '../resources_page.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 import 'criteria_card.dart';
@@ -68,9 +67,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   late Resource newResource;
   String? _resourceTitle;
   String? _resourceDescription;
-  String? _academicQualifications;
-  String? _experienceLevel;
-  String? _languageSkills;
   String? _resourceResponsibilities;
   String? _resourceFunctions;
   String? _otherRequirements;
@@ -79,7 +75,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   String? _place;
   int? _capacity;
   String? _postalCode;
-  String? _organizerText;
   String? _link;
   String? _phone;
   String? _email;
@@ -92,8 +87,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   double criteriaValuesSum = 0.0;
   int currentStep = 0;
   bool _notExpire = false;
-  bool _criteriaError = false;
-  //bool _trust = true;
 
   DateTime? _start;
   DateTime? _end;
@@ -131,7 +124,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   String phoneCode = '+34';
   late String _formattedStartDate;
   late String _formattedEndDate;
-  late String _formattedMaxDate;
 
   late String resourceCategoryName;
   late String resourceTypeName;
@@ -162,9 +154,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     _duration = "";
     _temporality = "";
     _resourceDescription = "";
-    _academicQualifications = "";
-    _experienceLevel = "";
-    _languageSkills = "";
     _resourceResponsibilities = "";
     _resourceFunctions = "";
     _otherRequirements = "";
@@ -194,13 +183,11 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     countryName = "";
     provinceName = "";
     cityName = "";
-    _organizerText = "";
     _link = "";
     _phone = "";
     _email = "";
     _formattedStartDate = "";
     _formattedEndDate = "";
-    _formattedMaxDate = "";
     criteria = [
       Criteria(type: 'academic', requirementText: '', weight: 0),
       Criteria(type: 'experience', requirementText: '', weight: 0),
@@ -214,16 +201,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     if (form!.validate()) {
       form.save();
       return true;
-    }
-    if (criteriaValuesSum != 100) {
-      setState(() {
-        _criteriaError = true;
-      });
-      return false;
-    } else {
-      setState(() {
-        _criteriaError = false;
-      });
     }
     return false;
   }
@@ -247,12 +224,16 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           showAlertDialog(
             context,
             title: StringConst.FORM_SUCCESS,
-            content: StringConst.FORM_SUCCESS_CREATED,
+            content: globals.currentResource?.status == 'edition' ?
+              StringConst.FORM_SUCCESS_SAVED : StringConst.FORM_SUCCESS_CREATED,
             defaultActionText: StringConst.FORM_ACCEPT,
           ).then(
                 (value) {
               setState(() {
-                ManageOffersPage.selectedIndex.value = 0;
+                WebHome.goJobOffers();
+                globals.currentResource?.status == 'edition' ? ResourcesListPage.selectedIndex.value = 2 :
+                globals.currentResource?.status == 'Disponible' ? ResourcesListPage.selectedIndex.value = 1 :
+                ResourcesListPage.selectedIndex.value = 3;
               });
             },
           );
@@ -260,7 +241,10 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           showExceptionAlertDialog(context, title: StringConst.FORM_ERROR, exception: e)
               .then((value) {
             setState(() {
-              ManageOffersPage.selectedIndex.value = 0;
+              WebHome.goJobOffers();
+              globals.currentResource?.status == 'edition' ? ResourcesListPage.selectedIndex.value = 2 :
+              globals.currentResource?.status == 'Disponible' ? ResourcesListPage.selectedIndex.value = 1 :
+              ResourcesListPage.selectedIndex.value = 3;
             });
           });
         }
@@ -925,87 +909,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     });
   }
 
-  void _showMultiSelectCompetenciesCategories(BuildContext context) async {
-    final selectedValues = await showDialog<Set<CompetencyCategory>>(
-      context: context,
-      builder: (BuildContext context) {
-        return streamBuilderDropdownCompetenciesCategoriesCreate(context, selectedCompetenciesCategories);
-      },
-    );
-    getValuesFromKeyCompetenciesCategories(selectedValues);
-  }
-
-  void getValuesFromKeyCompetenciesCategories(selectedValues) {
-    var concatenate = StringBuffer();
-    List<String> competenciesCategoriesIds = [];
-    selectedValues.forEach((item) {
-      concatenate.write(item.name + ' / ');
-      competenciesCategoriesIds.add(item.competencyCategoryId);
-    });
-    setState(() {
-      competenciesCategoriesNames = concatenate.toString();
-      textEditingControllerCompetenciesCategories.text = concatenate.toString();
-      competenciesCategories = competenciesCategoriesIds;
-      selectedCompetenciesCategories = selectedValues;
-    });
-  }
-
-  void _showMultiSelectCompetenciesSubCategories(BuildContext context) async {
-    final selectedValues = await showDialog<Set<CompetencySubCategory>>(
-      context: context,
-      builder: (BuildContext context) {
-        return streamBuilderDropdownCompetenciesSubCategories(context, selectedCompetenciesCategories, selectedCompetenciesSubCategories);
-      },
-    );
-    print(selectedValues);
-    getValuesFromKeyCompetenciesSubCategories(selectedValues);
-  }
-
-  void getValuesFromKeyCompetenciesSubCategories (selectedValues) {
-    var concatenate = StringBuffer();
-    List<String> competenciesSubCategoriesIds = [];
-    selectedValues.forEach((item){
-      concatenate.write(item.name +' / ');
-      competenciesSubCategoriesIds.add(item.competencySubCategoryId);
-    });
-    setState(() {
-      competenciesSubCategoriesNames = concatenate.toString();
-      textEditingControllerCompetenciesSubCategories.text = concatenate.toString();
-      competenciesSubCategories = competenciesSubCategoriesIds;
-      selectedCompetenciesSubCategories = selectedValues;
-    });
-    print(interestsNames);
-    print(competenciesSubCategoriesIds);
-  }
-
-  void _showMultiSelectCompetencies(BuildContext context) async {
-    final selectedValues = await showDialog<Set<Competency>>(
-      context: context,
-      builder: (BuildContext context) {
-        return streamBuilderDropdownCompetencies(context, selectedCompetenciesSubCategories, selectedCompetencies);
-      },
-    );
-    print(selectedValues);
-    getValuesFromKeyCompetencies(selectedValues);
-  }
-
-  void getValuesFromKeyCompetencies (selectedValues) {
-    var concatenate = StringBuffer();
-    List<String> competenciesIds = [];
-    selectedValues.forEach((item){
-      concatenate.write(item.name +' / ');
-      competenciesIds.add(item.id);
-    });
-    setState(() {
-      competenciesNames = concatenate.toString();
-      textEditingControllerCompetencies.text = concatenate.toString();
-      competencies = competenciesIds;
-      selectedCompetencies = selectedValues;
-    });
-    print(competenciesNames);
-    print(competenciesIds);
-  }
-
 
   List<CustomStep> getSteps() => [
         CustomStep(
@@ -1088,6 +991,9 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   }
 
   onStepSaveForLater() async {
+    if (!_validateAndSaveForm()) {
+      return;
+    }
     setState(() {
       final address = Address(
         city: _cityId,

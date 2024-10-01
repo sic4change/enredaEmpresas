@@ -14,6 +14,7 @@ class JobOffer {
   factory JobOffer.fromMap(Map<String, dynamic> data, String documentId) {
 
     final String resourceId = data['resourceId'];
+    final String jobOfferId = data['jobOfferId'];
     final String? responsibilities = data['responsibilities'];
     final String? functions = data['functions'];
     final String? otherRequirements = data['otherRequirements'];
@@ -31,7 +32,7 @@ class JobOffer {
     }
 
     return JobOffer(
-        jobOfferId: documentId,
+        jobOfferId: jobOfferId,
         resourceId: resourceId,
         responsibilities: responsibilities,
         functions: functions,
