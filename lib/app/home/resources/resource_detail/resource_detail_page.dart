@@ -642,20 +642,24 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomTextSmallBold(title: _getDisplayText(item?.type ?? ''), color: AppColors.primary900),
+                    Row(
+                      children: [
+                        CustomTextSmallBold(title: _getDisplayText(item?.type ?? ''), color: AppColors.primary900),
+                        CustomTextSmallBold(title: ' - Peso: ${item?.weight} %', color: AppColors.primary900,),
+                      ],
+                    ),
                     item?.requirementText != null ? CustomTextSmall(text: item!.requirementText!, maxLines: 50,) : Container(),
                     item?.competencies != null ?
                     Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
                         child: CompetenciesByResource(competenciesIdList: item!.competencies!)) : Container(),
-                    CustomTextSmallBold(title: 'Peso: ${item?.weight} %', color: AppColors.primary900,),
-                    SizedBox(height: 10,)
+                    SizedBox(height: 10),
                   ],
                 ),
               );
             },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           _buildInformationResource(context, resource),
         ],
       ),
