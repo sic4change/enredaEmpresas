@@ -20,6 +20,7 @@ class CriteriaCard extends StatefulWidget {
   final void Function() onSliderChange;
   final Function(String) onTextFieldChange;
   final Function(List<String>, String) onListFieldChange;
+  final Set<Competency>? selectedCompetencies;
 
   CriteriaCard({
     Key? key,
@@ -27,7 +28,8 @@ class CriteriaCard extends StatefulWidget {
     required this.criteriaValuesSum,
     required this.onSliderChange,
     required this.onTextFieldChange,
-    required this.onListFieldChange
+    required this.onListFieldChange,
+    this.selectedCompetencies
   }) : super(key: key);
 
   @override
@@ -55,6 +57,7 @@ class _CriteriaCardState extends State<CriteriaCard> {
     _descriptionController = TextEditingController(text: widget.criteria.requirementText);
     _descriptionController.addListener(_onDescriptionChanged);
     competencies = widget.criteria.competencies ?? [];
+    selectedCompetencies = widget.selectedCompetencies ?? {};
   }
 
   void _onDescriptionChanged() {
@@ -161,7 +164,7 @@ class _CriteriaCardState extends State<CriteriaCard> {
                     ),
                     validator: (value) => value!.isNotEmpty
                         ? null
-                        : StringConst.ERROR_MESSAGE,
+                        : StringConst.FORM_COMPANY_ERROR,
                     minLines: 4,
                     maxLines: 4,
                     keyboardType: TextInputType.multiline,

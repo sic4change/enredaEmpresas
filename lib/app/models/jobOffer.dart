@@ -18,19 +18,6 @@ class JobOffer {
     final String? functions = data['functions'];
     final String? otherRequirements = data['otherRequirements'];
     final DateTime createdate = data['createdate'].toDate();
-    // List<Criteria> criteria = [];
-    // if ( data['criteria'] != null) {
-    //   criteria = List<Criteria>.from(data['criteria'].map((x) => Criteria.fromMap(x)));
-    // }
-
-    // List<Criteria> criteria = [];
-    // if (data['criteria'] != null) {
-    //   try {
-    //     criteria = List<Criteria>.from(data['criteria'].map((x) => Criteria.fromMap(x)));
-    //   } catch (e) {
-    //     criteria = [];
-    //   }
-    // }
 
     List<Criteria> criteria = [];
     if (data['criteria'] != null) {

@@ -115,9 +115,10 @@ Widget customTextFormMultiline(BuildContext context, String formValue, String la
       }
       return null;
     },
-
     onSaved: (String? val) => functionSetState(val),
     textCapitalization: TextCapitalization.sentences,
+    minLines: 3,
+    maxLines: 3,
     style: textTheme.bodyMedium?.copyWith(
       color: AppColors.greyDark,
     ),

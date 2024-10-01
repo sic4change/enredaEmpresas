@@ -44,7 +44,6 @@ import '../../../common_widgets/custom_form_field.dart';
 import '../../../common_widgets/rounded_container.dart';
 import '../../../models/jobOffer.dart';
 import '../validating_form_controls/stream_builder_competencies_categories.dart';
-import 'create_revision_form.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 import 'criteria_card.dart';
@@ -567,7 +566,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(0.0),
+          padding: const EdgeInsets.only(top: 20.0),
           child: FormField(
               validator: (value) {
                 if (criteriaValuesSum < 100) {
@@ -580,7 +579,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget> [
                       Slider(
-                        activeColor: AppColors.primary900,
                         value: criteriaValuesSum.toDouble(),
                         onChanged: null,
                         min: 0,
@@ -600,162 +598,11 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
               }
           ),
         ),
-
         Center(
               child: CustomTextBoldCenter(
                 title: criteriaValuesSum.round() == 0 ? "-" : criteriaValuesSum.round().toString(), color: AppColors.primary900,
               )),
         SizedBox(height: 20,),
-        // CustomFlexRowColumn(
-        //   childLeft: Padding(
-        //     padding: const EdgeInsets.all(0.0),
-        //     child: FormField(
-        //         validator: (value) {
-        //           if (selectedCompetenciesCategories.isEmpty) {
-        //             return 'Por favor seleccione al menos una categoría';
-        //           }
-        //           return null;
-        //         },
-        //         builder: (FormFieldState<dynamic> field) {
-        //           return Column(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: <Widget> [
-        //                 CustomTextBold(title: StringConst.FORM_COMPETENCIES_CATEGORIES,),
-        //                 InkWell(
-        //                   onTap: () => {_showMultiSelectCompetenciesCategories(context) },
-        //                   child: Container(
-        //                     width: double.infinity,
-        //                     constraints: BoxConstraints(minHeight: 50),
-        //                     decoration: BoxDecoration(
-        //                         color: Colors.white,
-        //                         borderRadius: BorderRadius.circular(5.0),
-        //                         border: Border.all(
-        //                             color: AppColors.greyUltraLight
-        //                         )
-        //                     ),
-        //                     child: Padding(
-        //                       padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-        //                       child: Wrap(
-        //                         spacing: 5,
-        //                         children: selectedCompetenciesCategories.map((s) =>
-        //                             BubbledContainer(s.name),
-        //                         ).toList(),
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 if (!field.isValid && field.errorText != null)
-        //                   Padding(
-        //                     padding: const EdgeInsets.only(top: 8.0),
-        //                     child: Text(
-        //                       field.errorText!,
-        //                       style: TextStyle(color: Colors.red),
-        //                     ),
-        //                   ),
-        //               ]);
-        //         }
-        //     ),
-        //   ),
-        //   childRight: Padding(
-        //     padding: const EdgeInsets.all(0.0),
-        //     child: FormField(
-        //         validator: (value) {
-        //           if (selectedCompetenciesSubCategories.isEmpty) {
-        //             return 'Por favor seleccione al menos una sub categoría';
-        //           }
-        //           return null;
-        //         },
-        //         builder: (FormFieldState<dynamic> field) {
-        //           return Column(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: <Widget> [
-        //                 CustomTextBold(title: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,),
-        //                 InkWell(
-        //                   onTap: () => {_showMultiSelectCompetenciesSubCategories(context) },
-        //                   child: Container(
-        //                     width: double.infinity,
-        //                     constraints: BoxConstraints(minHeight: 50),
-        //                     decoration: BoxDecoration(
-        //                         color: Colors.white,
-        //                         borderRadius: BorderRadius.circular(5.0),
-        //                         border: Border.all(
-        //                             color: AppColors.greyUltraLight
-        //                         )
-        //                     ),
-        //                     child: Padding(
-        //                       padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-        //                       child: Wrap(
-        //                         spacing: 5,
-        //                         children: selectedCompetenciesSubCategories.map((s) =>
-        //                             BubbledContainer(s.name),
-        //                         ).toList(),
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 if (!field.isValid && field.errorText != null)
-        //                   Padding(
-        //                     padding: const EdgeInsets.only(top: 8.0),
-        //                     child: Text(
-        //                       field.errorText!,
-        //                       style: TextStyle(color: Colors.red),
-        //                     ),
-        //                   ),
-        //               ]);
-        //         }
-        //     ),
-        //   ),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: FormField(
-        //       validator: (value) {
-        //         if (selectedCompetencies.isEmpty) {
-        //           return 'Por favor seleccione al menos una competencia';
-        //         }
-        //         return null;
-        //       },
-        //       builder: (FormFieldState<dynamic> field) {
-        //         return Column(
-        //             crossAxisAlignment: CrossAxisAlignment.start,
-        //             children: <Widget> [
-        //               CustomTextBold(title: StringConst.FORM_COMPETENCIES,),
-        //               InkWell(
-        //                 onTap: () => {_showMultiSelectCompetencies(context) },
-        //                 child: Container(
-        //                   width: double.infinity,
-        //                   constraints: BoxConstraints(minHeight: 50),
-        //                   decoration: BoxDecoration(
-        //                       color: Colors.white,
-        //                       borderRadius: BorderRadius.circular(5.0),
-        //                       border: Border.all(
-        //                           color: AppColors.greyUltraLight
-        //                       )
-        //                   ),
-        //                   child: Padding(
-        //                     padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-        //                     child: Wrap(
-        //                       spacing: 5,
-        //                       children: selectedCompetencies.map((s) =>
-        //                           BubbledContainer(s.name),
-        //                       ).toList(),
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ),
-        //               if (!field.isValid && field.errorText != null)
-        //                 Padding(
-        //                   padding: const EdgeInsets.only(top: 8.0),
-        //                   child: Text(
-        //                     field.errorText!,
-        //                     style: TextStyle(color: Colors.red),
-        //                   ),
-        //                 ),
-        //             ]);
-        //       }
-        //   ),
-        // ),
-        // SizedBox(height: 20,),
         CustomTextMediumForm(text: StringConst.FORM_OFFER),
         CustomFlexRowColumn(
           childLeft: CustomFormField(
@@ -906,13 +753,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     return globals.currentResource != null ? ResourceDetailPage() : Container();
   }
 
-  void _onSliderChange(Criteria c, double newValue) {
-    setState(() {
-      c.weight = newValue;
-      final sum = criteria.map((e) => e.weight).reduce((value, element) => value + element);
-      criteriaValuesSum = sum > 100 ? 100 : sum;
-    });
-  }
 
   void buildCountryStreamBuilderSetState(Country? country) {
     setState(() {
