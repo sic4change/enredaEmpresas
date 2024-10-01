@@ -43,6 +43,7 @@ import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 import '../../../common_widgets/bubbled_container.dart';
 import '../../../common_widgets/custom_text.dart';
 import '../../../models/criteria.dart';
+import '../../../models/jobOffer.dart';
 
 const double contactBtnWidthLg = 200.0;
 const double contactBtnWidthSm = 100.0;
@@ -62,6 +63,7 @@ class _EditResourceState extends State<EditResource> {
   bool isLoading = false;
   int currentStep = 0;
   String? _resourceId;
+  String? _jobOfferId;
   String? _resourceTitle;
   String? _resourceDescription;
   String? _resourceResponsibilities;
@@ -90,6 +92,7 @@ class _EditResourceState extends State<EditResource> {
   DateTime? _end;
   DateTime? _max;
   DateTime? _createdate;
+  DateTime? _createdateJobOffer;
   String? _modality;
   String? _assistants;
   String? _status;
@@ -132,6 +135,7 @@ class _EditResourceState extends State<EditResource> {
     super.initState();
     resource = globals.currentResource!;
     _resourceId = globals.currentResource?.resourceId;
+    _jobOfferId = globals.currentResource?.jobOfferId;
     _interests = globals.currentResource?.interests ?? [];
     _competencies = globals.currentResource?.competencies ?? [];
     _resourceTitle = globals.currentResource?.title;
@@ -141,6 +145,7 @@ class _EditResourceState extends State<EditResource> {
     _resourceResponsibilities = globals.currentJobOffer?.responsibilities;
     _resourceFunctions = globals.currentJobOffer?.functions;
     _otherRequirements = globals.currentJobOffer?.otherRequirements;
+    _createdateJobOffer = globals.currentJobOffer?.createdate;
     _modality = globals.currentResource?.modality;
     _start = globals.currentResource?.start ?? DateTime.now();
     _end = globals.currentResource?.end ?? DateTime.now();
@@ -181,6 +186,7 @@ class _EditResourceState extends State<EditResource> {
       Criteria(type: globals.currentJobOffer?.criteria?[2].type ?? '', requirementText: globals.currentJobOffer?.criteria?[2].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[2].weight ?? 0),
       Criteria(type: globals.currentJobOffer?.criteria?[3].type ?? '', competencies: globals.currentJobOffer?.criteria?[3].competencies ?? [], weight: globals.currentJobOffer?.criteria?[3].weight ?? 0),
     ];
+    criteriaValuesSum = criteria.map((e) => e.weight).reduce((value, element) => value + element);
   }
 
   bool _validateAndSaveForm() {
@@ -602,6 +608,7 @@ class _EditResourceState extends State<EditResource> {
                     });
                   },
                   selectedCompetencies: selectedCompetenciesSet,
+                  validator: false,
                 ))
                     .toList(),
               ),
@@ -1172,6 +1179,7 @@ class _EditResourceState extends State<EditResource> {
     );
     final newResource = Resource(
       resourceId: _resourceId,
+      jobOfferId: _jobOfferId,
       title: _resourceTitle!,
       description: _resourceDescription!,
       resourceType: _resourceTypeId,
@@ -1200,10 +1208,21 @@ class _EditResourceState extends State<EditResource> {
       assistants: _assistants,
       status: _status,
     );
+    final newJobOffer = JobOffer(
+      jobOfferId: _jobOfferId,
+      resourceId: _resourceId,
+      responsibilities: _resourceResponsibilities,
+      criteria: criteria,
+      functions: _resourceFunctions,
+      otherRequirements: _otherRequirements,
+      createdate: _createdateJobOffer!,);
     try {
       final database = Provider.of<Database>(context, listen: false);
       setState(() => isLoading = true);
       await database.setResource(newResource);
+      await database.setJobOffer(newJobOffer);
+      globals.currentResource = newResource;
+      globals.currentJobOffer = newJobOffer;
       setState(() => isLoading = false);
       showAlertDialog(
         context,

@@ -440,8 +440,9 @@ class StringConst {
   static const String FORM_ACCEPT_SENTENCE_Y = " y ";
   static const String FORM_SUCCESS = "¡Registro exitoso!";
   static const String FORM_SUCCESS_MAIL = "Por favor revisa tu correo electrónico.";
-  static const String FORM_SUCCESS_CREATED = "El recurso fue creado exitosamente.";
-  static const String FORM_SUCCESS_UPDATED = "El recurso fue actualizado exitosamente.";
+  static const String FORM_SUCCESS_CREATED = "La oferta de empleo fue creada exitosamente.";
+  static const String FORM_SUCCESS_SAVED = "La oferta de empleo fue guardada como borrador exitosamente.";
+  static const String FORM_SUCCESS_UPDATED = "La oferta de empleo fue actualizada exitosamente.";
   static const String FORM_ACCEPT = "Aceptar";
   static const String FORM_ERROR= "Error al crea la cuenta";
   static const String FORM_SELECT= "Seleccionar";

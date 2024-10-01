@@ -21,6 +21,7 @@ class CriteriaCard extends StatefulWidget {
   final Function(String) onTextFieldChange;
   final Function(List<String>, String) onListFieldChange;
   final Set<Competency>? selectedCompetencies;
+  final bool? validator;
 
   CriteriaCard({
     Key? key,
@@ -29,7 +30,8 @@ class CriteriaCard extends StatefulWidget {
     required this.onSliderChange,
     required this.onTextFieldChange,
     required this.onListFieldChange,
-    this.selectedCompetencies
+    this.selectedCompetencies,
+    this.validator
   }) : super(key: key);
 
   @override
@@ -183,7 +185,7 @@ class _CriteriaCardState extends State<CriteriaCard> {
                       padding: const EdgeInsets.all(0.0),
                       child: FormField(
                           validator: (value) {
-                            if (selectedCompetenciesCategories.isEmpty) {
+                            if (selectedCompetenciesCategories.isEmpty && widget.validator !=false) {
                               return 'Por favor seleccione al menos una categoría';
                             }
                             return null;
@@ -232,7 +234,7 @@ class _CriteriaCardState extends State<CriteriaCard> {
                       padding: const EdgeInsets.all(0.0),
                       child: FormField(
                           validator: (value) {
-                            if (selectedCompetenciesSubCategories.isEmpty) {
+                            if (selectedCompetenciesSubCategories.isEmpty && widget.validator !=false) {
                               return 'Por favor seleccione al menos una sub categoría';
                             }
                             return null;
