@@ -9,12 +9,16 @@ class JobOffer {
     this.otherRequirements,
     required this.createdate,
     this.criteria,
+    this.status,
+    this.organizerId
   });
 
   factory JobOffer.fromMap(Map<String, dynamic> data, String documentId) {
 
     final String resourceId = data['resourceId'];
     final String jobOfferId = data['jobOfferId'];
+    final String status = data['status'];
+    final String organizerId = data['organizerId'];
     final String? responsibilities = data['responsibilities'];
     final String? functions = data['functions'];
     final String? otherRequirements = data['otherRequirements'];
@@ -34,6 +38,8 @@ class JobOffer {
     return JobOffer(
         jobOfferId: jobOfferId,
         resourceId: resourceId,
+        status: status,
+        organizerId: organizerId,
         responsibilities: responsibilities,
         functions: functions,
         otherRequirements: otherRequirements,
@@ -45,6 +51,8 @@ class JobOffer {
 
   final String? resourceId;
   final String? jobOfferId;
+  final String? status;
+  final String? organizerId;
   final String? responsibilities;
   final String? functions;
   final String? otherRequirements;
@@ -63,6 +71,8 @@ class JobOffer {
     return {
       'resourceId': resourceId,
       'jobOfferId': jobOfferId,
+      'status': status,
+      'organizerId': organizerId,
       'responsibilities': responsibilities,
       'functions': functions,
       'otherRequirements': otherRequirements,
@@ -74,9 +84,8 @@ class JobOffer {
   JobOffer copyWith({
     String? resourceId,
     String? jobOfferId,
-    String? academicQualifications,
-    String? experienceLevel,
-    String? languageSkills,
+    String? status,
+    String? organizerId,
     String? responsibilities,
     String? functions,
     String? otherRequirements,
@@ -88,6 +97,8 @@ class JobOffer {
     return JobOffer(
         resourceId: resourceId?? this.resourceId,
         jobOfferId: jobOfferId?? this.jobOfferId,
+        status: status?? this.status,
+        organizerId: organizerId?? this.organizerId,
         responsibilities: responsibilities?? this.responsibilities,
         functions: functions?? this.functions,
         otherRequirements: otherRequirements?? this.otherRequirements,

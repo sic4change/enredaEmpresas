@@ -37,7 +37,10 @@ class _ManageOffersPageState extends State<ManageOffersPage> {
     bodyWidget = [
       ResourcesListPage(),
       ResourceDetailPage(),
-      EditResource()
+      EditResource(),
+      Container(
+        child: Text("Manage Offers"),
+      ),
     ];
     super.initState();
   }

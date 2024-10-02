@@ -12,7 +12,6 @@ import 'package:enreda_empresas/app/home/resources/validating_form_controls/stre
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_sub_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests.dart';
-import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_social_entities.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_province.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_category.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
@@ -60,7 +59,6 @@ class EditResource extends StatefulWidget {
 class _EditResourceState extends State<EditResource> {
   late Resource resource;
   final _formKey = GlobalKey<FormState>();
-  bool isLoading = false;
   int currentStep = 0;
   String? _resourceId;
   String? _jobOfferId;
@@ -69,41 +67,36 @@ class _EditResourceState extends State<EditResource> {
   String? _resourceResponsibilities;
   String? _resourceFunctions;
   String? _otherRequirements;
+  String? _organizerId;
   String? _degree;
   String? _contractType;
   String? _salary;
-  bool? _notExpire;
   bool selectedNotExpire = false;
   String? _duration;
   String? _temporality;
   String? _place;
   int? _capacity;
   String? _postalCode;
-  String? _organizer;
-  String? _organizerType;
-  String? _resourceLink;
-  String? _organizerText;
   String? _countryId;
   String? _provinceId;
   String? _cityId;
-  String? _resourceTypeId;
   String? _resourceCategoryId;
   DateTime? _start;
   DateTime? _end;
-  DateTime? _max;
   DateTime? _createdate;
   DateTime? _createdateJobOffer;
   String? _modality;
-  String? _assistants;
   String? _status;
+  String? _statusJobOffer;
   String? interestsNamesString;
   String? competenciesNames;
   String? competenciesCategoriesNames;
   String? competenciesSubCategoriesNames;
   double criteriaValuesSum = 0.0;
+  bool isLoading = false;
+  bool isLoadingSave = false;
 
   List<Criteria> criteria = [];
-  List<String> interests = [];
   List<String> _interests = [];
   List<String> _competencies = [];
   List<String> _competenciesCategories = [];
@@ -136,6 +129,8 @@ class _EditResourceState extends State<EditResource> {
     resource = globals.currentResource!;
     _resourceId = globals.currentResource?.resourceId;
     _jobOfferId = globals.currentResource?.jobOfferId;
+    _status = globals.currentResource?.status;
+    _organizerId = globals.currentResource?.organizer;
     _interests = globals.currentResource?.interests ?? [];
     _competencies = globals.currentResource?.competencies ?? [];
     _resourceTitle = globals.currentResource?.title;
@@ -146,11 +141,10 @@ class _EditResourceState extends State<EditResource> {
     _resourceFunctions = globals.currentJobOffer?.functions;
     _otherRequirements = globals.currentJobOffer?.otherRequirements;
     _createdateJobOffer = globals.currentJobOffer?.createdate;
+    _statusJobOffer = globals.currentJobOffer?.status;
     _modality = globals.currentResource?.modality;
     _start = globals.currentResource?.start ?? DateTime.now();
     _end = globals.currentResource?.end ?? DateTime.now();
-    _max = globals.currentResource?.maximumDate ?? DateTime.now();
-    _resourceTypeId = globals.currentResource?.resourceType ?? '';
     _resourceCategoryId = globals.currentResource?.resourceCategory ?? '';
     _contractType = globals.currentResource?.contractType ?? '';
     _salary = globals.currentResource?.salary ?? '';
@@ -162,15 +156,8 @@ class _EditResourceState extends State<EditResource> {
     _provinceId = globals.currentResource?.address?.province ?? '';
     _provinceId = globals.currentResource?.address?.province ?? '';
     _cityId = globals.currentResource?.address?.city ?? '';
-    _organizerText = globals.currentResource?.promotor ?? '';
-    _notExpire = globals.currentResource?.notExpire ?? false;
     _createdate = globals.currentResource?.createdate;
-    _organizer = globals.currentResource?.organizer;
-    _organizerType = globals.currentResource?.organizerType ?? '';
-    _resourceLink = globals.currentResource?.resourceLink ?? '';
     _participants = globals.currentResource?.participants ?? [];
-    _assistants = globals.currentResource?.assistants ?? '';
-    _status = globals.currentResource?.status ?? '';
     interestsNamesString = globals.interestsNamesCurrentResource!;
     selectedInterestsSet = globals.selectedInterestsCurrentResource;
     competenciesNames = globals.competenciesNamesCurrentResource!;
@@ -249,19 +236,24 @@ class _EditResourceState extends State<EditResource> {
                       ),
                     const SizedBox(
                         width: Sizes.kDefaultPaddingDouble),
-                    isLoading
-                        ? const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary300,
-                        ))
+                    isLoadingSave ?
+                    const Center(child: CircularProgressIndicator(color: AppColors.primary300,))
                         : EnredaButton(
-                      buttonTitle:
-                      StringConst.FORM_UPDATE,
+                      buttonTitle: StringConst.FORM_SAVE_FOR_LATER,
+                      width: contactBtnWidth,
+                      buttonColor: AppColors.primaryColor,
+                      titleColor: AppColors.white,
+                      onPressed: onStepSaveForLater,
+                    ),
+                    SizedBox(width: Sizes.kDefaultPaddingDouble),
+                    isLoading ?
+                    const Center(child: CircularProgressIndicator(color: AppColors.primary300,))
+                        : EnredaButton(
+                      buttonTitle: StringConst.FORM_PUBLISH,
                       width: contactBtnWidth,
                       buttonColor: AppColors.primaryColor,
                       titleColor: AppColors.white,
                       onPressed: onStepContinue,
-                      padding: EdgeInsets.all(4.0),
                     ),
                   ],
                 ),
@@ -276,11 +268,6 @@ class _EditResourceState extends State<EditResource> {
   Widget _buildForm(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 14, 16, md: 15);
-    List<String> strings = <String>[
-      'Sin titulación',
-      'Con titulación no oficial',
-      'Con titulación oficial'
-    ];
     List<String> contractTypes = <String>[
       'Contrato indefinido',
       'Contrato temporal',
@@ -651,156 +638,6 @@ class _EditResourceState extends State<EditResource> {
                   title: criteriaValuesSum.round() == 0 ? "-" : criteriaValuesSum.round().toString(), color: AppColors.primary900,
                 )),
             SizedBox(height: 20,),
-            // CustomFlexRowColumn(
-            //   childLeft: Padding(
-            //     padding: const EdgeInsets.all(0.0),
-            //     child: FormField(
-            //         validator: (value) {
-            //           if (selectedCompetenciesCategoriesSet.isEmpty) {
-            //             return 'Por favor seleccione al menos una categoría';
-            //           }
-            //           return null;
-            //         },
-            //         builder: (FormFieldState<dynamic> field) {
-            //           return Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //               children: <Widget> [
-            //                 CustomTextBold(title: StringConst.FORM_COMPETENCIES_CATEGORIES,),
-            //                 InkWell(
-            //                   onTap: () => {_showMultiSelectCompetenciesCategories(context) },
-            //                   child: Container(
-            //                     width: double.infinity,
-            //                     constraints: BoxConstraints(minHeight: 50),
-            //                     decoration: BoxDecoration(
-            //                         color: Colors.white,
-            //                         borderRadius: BorderRadius.circular(5.0),
-            //                         border: Border.all(
-            //                             color: AppColors.greyUltraLight
-            //                         )
-            //                     ),
-            //                     child: Padding(
-            //                       padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-            //                       child: Wrap(
-            //                         spacing: 5,
-            //                         children: selectedCompetenciesCategoriesSet.map((s) =>
-            //                             BubbledContainer(s.name),
-            //                         ).toList(),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ),
-            //                 if (!field.isValid && field.errorText != null)
-            //                   Padding(
-            //                     padding: const EdgeInsets.only(top: 8.0),
-            //                     child: Text(
-            //                       field.errorText!,
-            //                       style: TextStyle(color: Colors.red),
-            //                     ),
-            //                   ),
-            //               ]);
-            //         }
-            //     ),
-            //   ),
-            //   childRight: Padding(
-            //     padding: const EdgeInsets.all(0.0),
-            //     child: FormField(
-            //         validator: (value) {
-            //           if (selectedCompetenciesSubCategoriesSet.isEmpty) {
-            //             return 'Por favor seleccione al menos una sub categoría';
-            //           }
-            //           return null;
-            //         },
-            //         builder: (FormFieldState<dynamic> field) {
-            //           return Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //               children: <Widget> [
-            //                 CustomTextBold(title: StringConst.FORM_COMPETENCIES_SUB_CATEGORIES,),
-            //                 InkWell(
-            //                   onTap: () => {_showMultiSelectCompetenciesSubCategories(context) },
-            //                   child: Container(
-            //                     width: double.infinity,
-            //                     constraints: BoxConstraints(minHeight: 50),
-            //                     decoration: BoxDecoration(
-            //                         color: Colors.white,
-            //                         borderRadius: BorderRadius.circular(5.0),
-            //                         border: Border.all(
-            //                             color: AppColors.greyUltraLight
-            //                         )
-            //                     ),
-            //                     child: Padding(
-            //                       padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-            //                       child: Wrap(
-            //                         spacing: 5,
-            //                         children: selectedCompetenciesSubCategoriesSet.map((s) =>
-            //                             BubbledContainer(s.name),
-            //                         ).toList(),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ),
-            //                 if (!field.isValid && field.errorText != null)
-            //                   Padding(
-            //                     padding: const EdgeInsets.only(top: 8.0),
-            //                     child: Text(
-            //                       field.errorText!,
-            //                       style: TextStyle(color: Colors.red),
-            //                     ),
-            //                   ),
-            //               ]);
-            //         }
-            //     ),
-            //   ),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: FormField(
-            //       validator: (value) {
-            //         if (selectedCompetenciesSet.isEmpty) {
-            //           return 'Por favor seleccione al menos una competencia';
-            //         }
-            //         return null;
-            //       },
-            //       builder: (FormFieldState<dynamic> field) {
-            //         return Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: <Widget> [
-            //               CustomTextBold(title: StringConst.FORM_COMPETENCIES,),
-            //               InkWell(
-            //                 onTap: () => {_showMultiSelectCompetencies(context) },
-            //                 child: Container(
-            //                   width: double.infinity,
-            //                   constraints: BoxConstraints(minHeight: 50),
-            //                   decoration: BoxDecoration(
-            //                       color: Colors.white,
-            //                       borderRadius: BorderRadius.circular(5.0),
-            //                       border: Border.all(
-            //                           color: AppColors.greyUltraLight
-            //                       )
-            //                   ),
-            //                   child: Padding(
-            //                     padding: const EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2),
-            //                     child: Wrap(
-            //                       spacing: 5,
-            //                       children: selectedCompetenciesSet.map((s) =>
-            //                           BubbledContainer(s.name),
-            //                       ).toList(),
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //               if (!field.isValid && field.errorText != null)
-            //                 Padding(
-            //                   padding: const EdgeInsets.only(top: 8.0),
-            //                   child: Text(
-            //                     field.errorText!,
-            //                     style: TextStyle(color: Colors.red),
-            //                   ),
-            //                 ),
-            //             ]);
-            //       }
-            //   ),
-            // ),
-            // SizedBox(height: 20,),
             CustomTextMediumForm(text: StringConst.FORM_OFFER),
             CustomFlexRowColumn(
               childLeft: CustomFormField(
@@ -965,14 +802,6 @@ class _EditResourceState extends State<EditResource> {
 
   void resourceRequirementsSetState(String? val) {
     setState(() => _otherRequirements = val!);
-  }
-
-
-  void buildResourceTypeStreamBuilderSetState(ResourceType? resourceType) {
-    setState(() {
-      selectedResourceType = resourceType;
-    });
-    _resourceTypeId = resourceType?.resourceTypeId;
   }
 
   void buildResourceCategoryStreamBuilderSetState(
@@ -1157,10 +986,117 @@ class _EditResourceState extends State<EditResource> {
   }
 
   onStepContinue() async {
-    if (currentStep == 0 && !_validateAndSaveForm()) {
+    if (currentStep == 0) {
+      if (!_validateAndSaveForm()) {
+        return;
+      }
+    }
+    setState(() {
+      final address = Address(
+        city: _cityId,
+        country: _countryId,
+        province: _provinceId,
+        place: _place,
+        postalCode: _postalCode,
+      );
+      globals.currentResource = Resource(
+        resourceId: _resourceId,
+        jobOfferId: _jobOfferId,
+        title: _resourceTitle!,
+        description: _resourceDescription!,
+        address: address,
+        assistants: "",
+        capacity: _capacity,
+        contractType: _contractType,
+        duration: _duration!,
+        resourceCategory: _resourceCategoryId,
+        maximumDate: _end!,
+        start: _start!,
+        end: _end!,
+        modality: _modality!,
+        salary: _salary,
+        organizer: _organizerId!,
+        degree: _degree,
+        promotor: globals.currentUserCompany!.name,
+        temporality: _temporality,
+        participants: [],
+        interests: _interests,
+        competencies: _competencies,
+        organizerType: "Empresa",
+        likes: [],
+        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        status: 'Disponible',
+      );
+      globals.currentJobOffer = JobOffer(
+        resourceId: _resourceId,
+        jobOfferId: _jobOfferId,
+        responsibilities: _resourceResponsibilities,
+        criteria: criteria,
+        functions: _resourceFunctions,
+        otherRequirements: _otherRequirements,
+        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        status: _statusJobOffer,
+        organizerId: _organizerId,
+      );
+    });
+    setState(() => isLoading = true);
+    await _submit();
+  }
+
+  onStepSaveForLater() async {
+    if (!_validateAndSaveForm()) {
       return;
     }
-    _submit();
+    setState(() {
+      final address = Address(
+        city: _cityId,
+        country: _countryId,
+        province: _provinceId,
+        place: _place,
+        postalCode: _postalCode,
+      );
+      globals.currentResource = Resource(
+        resourceId: _resourceId,
+        jobOfferId: _jobOfferId,
+        title: _resourceTitle!,
+        description: _resourceDescription!,
+        address: address,
+        assistants: "",
+        capacity: _capacity,
+        contractType: _contractType,
+        duration: _duration!,
+        resourceCategory: _resourceCategoryId,
+        maximumDate: _end,
+        start: _start!,
+        end: _end!,
+        modality: _modality!,
+        salary: _salary,
+        organizer: _organizerId!,
+        degree: _degree,
+        promotor: globals.currentUserCompany!.name,
+        temporality: _temporality,
+        participants: [],
+        interests: _interests,
+        competencies: _competencies,
+        organizerType: "Empresa",
+        likes: [],
+        createdate: _createdate!,
+        status: "edition",
+      );
+      globals.currentJobOffer = JobOffer(
+        resourceId: _resourceId,
+        jobOfferId: _jobOfferId,
+        responsibilities: _resourceResponsibilities,
+        criteria: criteria,
+        functions: _resourceFunctions,
+        otherRequirements: _otherRequirements,
+        createdate: _createdate!,
+        status: _statusJobOffer,
+        organizerId: _organizerId,
+      );
+    });
+    setState(() => isLoadingSave = true);
+    await _submit();
   }
 
   onStepCancel() {
@@ -1170,79 +1106,40 @@ class _EditResourceState extends State<EditResource> {
   }
 
   Future<void> _submit() async {
-    final address = Address(
-      country: _countryId,
-      province: _provinceId,
-      city: _cityId,
-      place: _place,
-      postalCode: _postalCode,
-    );
-    final newResource = Resource(
-      resourceId: _resourceId,
-      jobOfferId: _jobOfferId,
-      title: _resourceTitle!,
-      description: _resourceDescription!,
-      resourceType: _resourceTypeId,
-      resourceCategory: _resourceCategoryId,
-      interests: _interests,
-      competencies: _competencies,
-      duration: _duration!,
-      temporality: _temporality,
-      notExpire: _notExpire,
-      start: _start!,
-      end: _end!,
-      maximumDate: _max!,
-      modality: _modality!,
-      address: address,
-      capacity: _capacity,
-      organizer: _organizer!,
-      promotor: _organizerText,
-      contractType: _contractType,
-      salary: _salary,
-      degree: _degree,
-      resourcePictureId: selectedResourcePicture?.id ?? resource.resourcePictureId,
-      createdate: _createdate!,
-      resourceLink: _resourceLink,
-      organizerType: _organizerType,
-      participants: _participants,
-      assistants: _assistants,
-      status: _status,
-    );
-    final newJobOffer = JobOffer(
-      jobOfferId: _jobOfferId,
-      resourceId: _resourceId,
-      responsibilities: _resourceResponsibilities,
-      criteria: criteria,
-      functions: _resourceFunctions,
-      otherRequirements: _otherRequirements,
-      createdate: _createdateJobOffer!,);
-    try {
-      final database = Provider.of<Database>(context, listen: false);
-      setState(() => isLoading = true);
-      await database.setResource(newResource);
-      await database.setJobOffer(newJobOffer);
-      globals.currentResource = newResource;
-      globals.currentJobOffer = newJobOffer;
-      setState(() => isLoading = false);
-      showAlertDialog(
-        context,
-        title: StringConst.FORM_SUCCESS,
-        content: StringConst.FORM_SUCCESS_UPDATED,
-        defaultActionText: StringConst.FORM_ACCEPT,
-      ).then((value) {
+    if (_validateAndSaveForm() == false) {
+      await showAlertDialog(context,
+          title: StringConst.FORM_COMPANY_ERROR_MESSAGE,
+          content: StringConst.FORM_COMPANY_CHECK,
+          defaultActionText: StringConst.FORM_ACCEPT);
+    }
+    if (_validateAndSaveForm()) {
+      try {
+        final database = Provider.of<Database>(context, listen: false);
+        await database.setResource(globals.currentResource!);
+        await database.setJobOffer(globals.currentJobOffer!);
+        setState(() => isLoading = false);
+        setState(() => isLoadingSave = false);
+        showAlertDialog(
+          context,
+          title: StringConst.FORM_SUCCESS,
+          content: globals.currentResource?.status == 'edition' ?
+          StringConst.FORM_SUCCESS_SAVED : StringConst.FORM_SUCCESS_PUBLISHED,
+          defaultActionText: StringConst.FORM_ACCEPT,
+        ).then((value) {
           setState(() {
             ManageOffersPage.selectedIndex.value = 1;
           });
         },
-      );
-    } on FirebaseException catch (e) {
-      showExceptionAlertDialog(context,
-          title: StringConst.FORM_ERROR, exception: e)
-          .then((value) {
-            setState(() {
-              ManageOffersPage.selectedIndex.value = 1;
-            });
-      });
+        );
+      } on FirebaseException catch (e) {
+        showExceptionAlertDialog(context,
+            title: StringConst.FORM_ERROR, exception: e)
+            .then((value) {
+          setState(() {
+            ManageOffersPage.selectedIndex.value = 1;
+          });
+        });
+      }
     }
   }
 }

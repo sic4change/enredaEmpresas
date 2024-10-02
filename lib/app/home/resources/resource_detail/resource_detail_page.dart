@@ -629,6 +629,20 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               ),
             ),
           ),
+          jobOffer.otherRequirements != null ? Text(
+            StringConst.OTHER_REQUIREMENTS,
+          ) : Container(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              jobOffer.otherRequirements ?? '',
+              textAlign: TextAlign.left,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.greyTxtAlt,
+                height: 1.5,
+              ),
+            ),
+          ),
           CustomTextSmallBold(title: StringConst.CRITERIA_JOB_OFFER.toUpperCase(), color: AppColors.primary900),
           SizedBox(height: 10),
           ListView.builder(
@@ -648,7 +662,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                         CustomTextSmallBold(title: ' - Peso: ${item?.weight} %', color: AppColors.primary900,),
                       ],
                     ),
-                    item?.requirementText != null ? CustomTextSmall(text: item!.requirementText!, maxLines: 50,) : Container(),
+                    item?.requirementText != null ? CustomTextSmall(text: item!.requirementText!, maxLines: 30,) : Container(),
                     item?.competencies != null ?
                     Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
@@ -702,15 +716,13 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                   height: 8,
                   width: 8,
                   decoration: BoxDecoration(
-                    color: resource.status == "No disponible" ? Colors.red : resource.status == "edition" ? Colors.orange : Colors.lightGreenAccent,
+                    color: resource.status == "No disponible" ? Colors.green : resource.status == "edition" ? Colors.orange : Colors.lightGreenAccent,
                     borderRadius: BorderRadius.circular(Consts.padding),
                   ),
                 ),
                 const SizedBox(width: 15),
                 CustomTextBody(text:
-                resource.status == 'edition' ? 'Borrador' :
-                resource.status == 'Disponible' ? 'Activa' :
-                resource.status == 'No disponible' ? 'Finalizada' : resource.status!),
+                resource.status == 'edition' ? 'Borrador' : '${resource.status}',),
               ],
             )),
         const SizedBox(height: 30,),
@@ -829,7 +841,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               return ListItemBuilder(
                   snapshot: snapshot,
                   emptyTitle: 'Sin participantes',
-                  emptyMessage: 'Aún no se ha registrado ningún participante',
+                  emptyMessage: 'Aún no se ha registrado ningún aplicante',
                   itemBuilder: (context, user) {
                     return  Container(
                       margin: const EdgeInsets.symmetric(vertical: 10.0),
@@ -862,7 +874,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: AddYellowButton(
-                  text: 'Invitar este recurso',
+                  text: 'Invitar esta oferta',
                   onPressed: () => showDialog(context: context, builder: (_) {
                     return CustomDialog(
                         width: Responsive.isMobile(context)? widthOfScreen(context) : widthOfScreen(context)/2,
@@ -882,6 +894,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     try {
       final database = Provider.of<Database>(context, listen: false);
       await database.deleteResource(resource);
+      await database.deleteJobOffer(resource.jobOfferId!);
     } catch (e) {
       print(e.toString());
     }
@@ -889,9 +902,9 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
 
   Future<void> _confirmDeleteResource(BuildContext context, Resource resource) async {
     final didRequestSignOut = await showAlertDialog(context,
-        title: 'Eliminar recurso: ${resource.title} ',
+        title: 'Eliminar oferta de empleo: ${resource.title} ',
         content: 'Si pulsa en Aceptar se procederá a la eliminación completa '
-            'del recurso, esta acción no se podrá deshacer, '
+            'de la oferta de empleo, esta acción no se podrá deshacer, '
             '¿Está seguro que quiere continuar?',
         cancelActionText: 'Cancelar',
         defaultActionText: 'Aceptar');

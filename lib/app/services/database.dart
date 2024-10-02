@@ -140,6 +140,7 @@ abstract class Database {
      Future<void> setJobOffer(JobOffer jobOffer);
      Future<void> setExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> deleteResource(Resource resource);
+     Future<void> deleteJobOffer(String jobOfferId);
      Future<void> deleteExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> addCompanyUser(CompanyUser companyUser);
      Future<String> addCompany(Company company);
@@ -222,6 +223,11 @@ class FirestoreDatabase implements Database {
       _service.deleteData(path: APIPath.resource(resource.resourceId!));
 
   @override
+  Future<void> deleteJobOffer(String jobOfferId) =>
+      _service.deleteData(path: APIPath.jobOffer(jobOfferId));
+
+
+  @override
   Future<void> deleteExternalSocialEntity(ExternalSocialEntity company) =>
       _service.deleteData(path: APIPath.externalSocialEntity(company.externalSocialEntityId!));
 
@@ -256,7 +262,7 @@ class FirestoreDatabase implements Database {
         path: APIPath.resources(),
         queryBuilder: (query) => query
             .where('organizer', isEqualTo: companyId)
-            .where('status', isEqualTo: 'Disponible'),
+            .where('status', isNotEqualTo: 'edition'), // TODO: when add 'finished' status add isNotEqualTo to 'finished' and 'edition'
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
@@ -267,7 +273,7 @@ class FirestoreDatabase implements Database {
         path: APIPath.resources(),
         queryBuilder: (query) => query
             .where('organizer', isEqualTo: companyId)
-            .where('status', isEqualTo: 'No disponible'),
+            .where('status', isEqualTo: 'finished'), // TODO: cloud function to exclude 'finished' status in automatic updates
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
