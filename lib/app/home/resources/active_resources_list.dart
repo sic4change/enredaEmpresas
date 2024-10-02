@@ -100,6 +100,9 @@ class _ActiveResourcesPageState extends State<ActiveResourcesPage> {
                                                               setState(() {
                                                                 globals.currentResource = resource;
                                                                 globals.currentJobOffer = jobOffer;
+                                                                if(jobOffer.status == 'progress') {
+                                                                  ManageOffersPage.selectedIndex.value = 3;
+                                                                } else
                                                                 ManageOffersPage.selectedIndex.value = 1;
                                                               }),
                                                         ),
@@ -116,8 +119,8 @@ class _ActiveResourcesPageState extends State<ActiveResourcesPage> {
                         }
                         return const Center(child: CircularProgressIndicator());
                       },
-                      emptyTitle: 'Sin recursos',
-                      emptyMessage: 'Aún no has creado ningún recurso',
+                      emptyTitle: 'Sin ofertas',
+                      emptyMessage: 'Aún no has creado ninguna oferta',
                       scrollController: ScrollController(),
                     ) :
                     snapshot.connectionState == ConnectionState.waiting ?

@@ -7,7 +7,6 @@ import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/flex_row_column.dart';
 import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
-import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests_create.dart';
@@ -61,9 +60,6 @@ class CreateJobOffer extends StatefulWidget {
 
 class _CreateJobOfferState extends State<CreateJobOffer> {
   final _formKey = GlobalKey<FormState>();
-  bool isLoading = false;
-  bool isLoadingSave = false;
-
   late Resource newResource;
   String? _resourceTitle;
   String? _resourceDescription;
@@ -75,9 +71,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   String? _place;
   int? _capacity;
   String? _postalCode;
-  String? _link;
-  String? _phone;
-  String? _email;
   String? _countryId;
   String? _provinceId;
   String? _cityId;
@@ -86,7 +79,8 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
   String? resourcePictureId;
   double criteriaValuesSum = 0.0;
   int currentStep = 0;
-  bool _notExpire = false;
+  bool isLoading = false;
+  bool isLoadingSave = false;
 
   DateTime? _start;
   DateTime? _end;
@@ -183,9 +177,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     countryName = "";
     provinceName = "";
     cityName = "";
-    _link = "";
-    _phone = "";
-    _email = "";
     _formattedStartDate = "";
     _formattedEndDate = "";
     criteria = [
@@ -738,7 +729,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     return globals.currentResource != null ? ResourceDetailPage() : Container();
   }
 
-
   void buildCountryStreamBuilderSetState(Country? country) {
     setState(() {
       selectedProvince = null;
@@ -866,18 +856,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     setState(() => _postalCode = val!);
   }
 
-  void linkSetState(String? val) {
-    setState(() => _link = val!);
-  }
-
-  void phoneSetState(String? val) {
-    setState(() => _phone = val!);
-  }
-
-  void emailSetState(String? val) {
-    setState(() => _email = val!);
-  }
-
   void _showMultiSelectInterests(BuildContext context) async {
     final selectedValues = await showDialog<Set<Interest>>(
       context: context,
@@ -945,8 +923,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         globals.currentResource = Resource(
           title: _resourceTitle!,
           description: _resourceDescription!,
-          contactEmail: _email,
-          contactPhone: _phone,
           resourceId: "",
           address: address,
           assistants: "",
@@ -960,8 +936,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           modality: _modality!,
           salary: _salary,
           organizer: globals.currentUserCompany!.companyId!,
-          link: _link,
-          notExpire: _notExpire,
           degree: _degree,
           promotor: globals.currentUserCompany!.name,
           temporality: _temporality,
@@ -981,6 +955,8 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           functions: _resourceFunctions,
           otherRequirements: _otherRequirements,
           createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+          status: 'progress', //TODO: define two status at the beginning: 'progress' and 'finished'
+          organizerId: globals.currentUserCompany!.companyId!,
         );
         currentStep += 1;
       });
@@ -1005,8 +981,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
       globals.currentResource = Resource(
         title: _resourceTitle!,
         description: _resourceDescription!,
-        contactEmail: _email,
-        contactPhone: _phone,
         resourceId: "",
         address: address,
         assistants: "",
@@ -1020,8 +994,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         modality: _modality!,
         salary: _salary,
         organizer: globals.currentUserCompany!.companyId!,
-        link: _link,
-        notExpire: _notExpire,
         degree: _degree,
         promotor: globals.currentUserCompany!.name,
         temporality: _temporality,

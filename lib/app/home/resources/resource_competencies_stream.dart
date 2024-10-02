@@ -67,7 +67,7 @@ class CompetenciesByResource extends StatelessWidget {
             );
           }
           return CustomTextTitle(
-              title: '¡El recurso aun no tiene competencias!');
+              title: '¡La oferta aún no tiene competencias!');
             });
       }
 }

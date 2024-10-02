@@ -237,6 +237,7 @@ class StringConst {
   static const String DESCRIPTION = "Descripción del puesto";
   static const String RESPONSIBILITIES = "Responsabilidades del puesto";
   static const String FUNCTIONS = "Funciones del puesto";
+  static const String OTHER_REQUIREMENTS = "Otros requisitos";
   static const String DESCRIPTION_ERROR = "La descripción no puede estar vacía";
   static const String SEND = "Enviar";
   static const String INTERESTED = "Para completar su inscripción debe contactar con:";
@@ -305,7 +306,7 @@ class StringConst {
   static const String NO_RESOURCES_TITLE_END = '¡Todavía no tienes ninguna oferta finalizada!';
   static const String NO_RESOURCES_DESCRIPTION = 'Crea tu primera oferta de empleo';
   static const String NO_RESOURCES_DESCRIPTION_DRAFT = 'Crea una oferta de empleo';
-  static const String ACTIVE_RESOURCES = 'Ofertas activas';
+  static const String ACTIVE_RESOURCES = 'Ofertas en proceso de selección';
   static const String DRAFT_RESOURCES = 'Ofertas en borrador';
   static const String FINISHED_RESOURCES = 'Ofertas finalizadas';
   static const String CRITERIA_JOB_OFFER = 'Criterios de evaluación';
@@ -441,6 +442,7 @@ class StringConst {
   static const String FORM_SUCCESS = "¡Registro exitoso!";
   static const String FORM_SUCCESS_MAIL = "Por favor revisa tu correo electrónico.";
   static const String FORM_SUCCESS_CREATED = "La oferta de empleo fue creada exitosamente.";
+  static const String FORM_SUCCESS_PUBLISHED = "La oferta de empleo fue publicada exitosamente.";
   static const String FORM_SUCCESS_SAVED = "La oferta de empleo fue guardada como borrador exitosamente.";
   static const String FORM_SUCCESS_UPDATED = "La oferta de empleo fue actualizada exitosamente.";
   static const String FORM_ACCEPT = "Aceptar";
