@@ -67,6 +67,10 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                         width: 100, child: CustomTextSmallBold(title: 'Estado', color: AppColors.primary900,)),
                     const SpaceW20(),
                     SizedBox(
+                        width: 250,
+                        child: CustomTextSmallBold(title: 'Provincia', color: AppColors.primary900,)),
+                    const SpaceW20(),
+                    SizedBox(
                         width: 100, child:  CustomTextSmallBold(title: 'Match', color: AppColors.primary900,)),
                     const SpaceW20(),
                   ],
