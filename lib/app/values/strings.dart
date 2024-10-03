@@ -665,6 +665,9 @@ class StringConst {
   static const String REPORT_WARNING_TECHNICAL = "Este participante no tiene técnica asignada, para crear el Informe Inicial asigne una técnica.";
   static const String IPIL_GOALS_MONITORING_PLACEHOLDER = 'Por favor, utiliza este espacio para documentar los detalles de la entrevista. Incluye las impresiones generales, avances del participante, y una descripción de los eventos y cambios ocurridos desde la última entrevista. Anota también cualquier objetivo o plan de acción acordado para las próximas semanas.';
   static const String DELETE_DOCUMENT = 'Si pulsa en "Aceptar" se procederá a la eliminación del documento.\nEsta acción no se podrá deshacer. ¿Está seguro que quiere continuar?';
+  static const String JOB_OFFER_REGISTERED = 'Inscritos';
+  static const String JOB_OFFER_PRE_SELECTED = 'Pre-seleccionados';
+  static const String JOB_OFFER_FINALIST = 'Finalistas';
 
 
   //Create entity errors

@@ -1,4 +1,5 @@
 import 'package:enreda_empresas/app/models/addressUser.dart';
+import 'package:enreda_empresas/app/models/jobOfferApplication.dart';
 import 'package:enreda_empresas/app/models/interestsUserEnreda.dart';
 import 'package:enreda_empresas/app/models/language.dart';
 import 'package:enreda_empresas/app/models/motivation.dart';
@@ -355,7 +356,7 @@ class UserEnreda {
       'derivationReportId': derivationReportId,
       'nationality' : nationality,
       'ipilObjectivesId': ipilObjectivesId,
-      'startDateItinerary': startDateItinerary
+      'startDateItinerary': startDateItinerary,
     };
   }
 
@@ -407,7 +408,7 @@ class UserEnreda {
     String? derivationReportId,
     String? nationality,
     String? ipilObjectivesId,
-    DateTime? startDateItinerary
+    DateTime? startDateItinerary,
   }) {
     return UserEnreda(
       email: email ?? this.email,
@@ -453,7 +454,7 @@ class UserEnreda {
       derivationReportId: derivationReportId ?? this.derivationReportId,
       nationality: nationality ?? this.nationality,
       ipilObjectivesId: ipilObjectivesId ?? this.ipilObjectivesId,
-      startDateItinerary: startDateItinerary ?? this.startDateItinerary
+      startDateItinerary: startDateItinerary ?? this.startDateItinerary,
     );
   }
 
