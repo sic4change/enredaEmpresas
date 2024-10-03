@@ -3,6 +3,7 @@ class APIPath {
   static String resources() => 'resources';
   static String jobOffer(String jobOfferId) => 'jobOffers/$jobOfferId';
   static String jobOffers() => 'jobOffers';
+  static String jobOfferApplications() => 'jobOfferApplications';
   static String resourcesCategories() => 'resourcesCategories';
   static String resourcesTypes() => 'resourcesTypes';
   static String documentCategories() => 'documentCategories';

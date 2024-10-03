@@ -59,6 +59,7 @@ import '../models/ipilCoordination.dart';
 import '../models/ipilImprovementEmployment.dart';
 import '../models/ipilObtainingEmployment.dart';
 import '../models/jobOffer.dart';
+import '../models/jobOfferApplication.dart';
 import '../models/socialEntitiesCategories.dart';
 import '../models/companyUser.dart';
 import '../utils/functions.dart';
@@ -100,6 +101,7 @@ abstract class Database {
      Stream<List<Interest>> resourcesInterestsStream(List<String?> interestsIdList);
      Stream<List<Competency>> resourcesCompetenciesStream(List<String?> competenciesIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
+     Stream<List<JobOfferApplication>> registeredApplicationsByJobOffer(String jobOfferId);
      Stream<Company> companyStreamById(String? companyId);
      Stream<Organization> organizationStreamById(String organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
@@ -600,6 +602,16 @@ class FirestoreDatabase implements Database {
       queryBuilder: (query) => query.where('resources', arrayContains: resourceId),
       builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
+    );
+  }
+
+  @override
+  Stream<List<JobOfferApplication>> registeredApplicationsByJobOffer(String? jobOfferId) {
+    return _service.collectionStream<JobOfferApplication>(
+      path: APIPath.jobOfferApplications(),
+      queryBuilder: (query) => query.where('jobOfferId', isEqualTo: jobOfferId),
+      builder: (data, documentId) => JobOfferApplication.fromMap(data, documentId),
+      sort: (lhs, rhs) => rhs.match!.compareTo(lhs.match!),
     );
   }
 

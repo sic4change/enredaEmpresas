@@ -1,6 +1,7 @@
 import 'package:enreda_empresas/app/common_widgets/add_yellow_button.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
+import 'package:enreda_empresas/app/home/participants/participants_page.dart';
 import 'package:enreda_empresas/app/home/resources/create_resource/create_resource.dart';
 import 'package:enreda_empresas/app/home/resources/edit_resource/edit_resource.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/resource_detail_page.dart';
@@ -12,6 +13,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 
 import '../../values/strings.dart';
+import '../applicants/applicants_list_page.dart';
 import '../web_home.dart';
 
 
@@ -38,9 +40,7 @@ class _ManageOffersPageState extends State<ManageOffersPage> {
       ResourcesListPage(),
       ResourceDetailPage(),
       EditResource(),
-      Container(
-        child: Text("Manage Offers"),
-      ),
+      ApplicantsListPage()
     ];
     super.initState();
   }

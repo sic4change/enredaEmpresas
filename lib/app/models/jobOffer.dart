@@ -1,3 +1,5 @@
+import 'package:enreda_empresas/app/models/jobOfferApplication.dart';
+
 import 'criteria.dart';
 
 class JobOffer {
@@ -10,7 +12,8 @@ class JobOffer {
     required this.createdate,
     this.criteria,
     this.status,
-    this.organizerId
+    this.organizerId,
+    this.applications,
   });
 
   factory JobOffer.fromMap(Map<String, dynamic> data, String documentId) {
@@ -35,6 +38,11 @@ class JobOffer {
       }
     }
 
+    List<String>? applications = [];
+    if (data['applications'] != null) {
+      data['applications'].forEach((application) {applications.add(application.toString());});
+    }
+
     return JobOffer(
         jobOfferId: jobOfferId,
         resourceId: resourceId,
@@ -44,7 +52,8 @@ class JobOffer {
         functions: functions,
         otherRequirements: otherRequirements,
         createdate: createdate,
-        criteria: criteria
+        criteria: criteria,
+        applications: applications
 
     );
   }
@@ -58,6 +67,7 @@ class JobOffer {
   final String? otherRequirements;
   final DateTime createdate;
   final List<Criteria>? criteria;
+  final List<String>? applications;
 
   @override
   bool operator ==(Object other){
@@ -78,6 +88,7 @@ class JobOffer {
       'otherRequirements': otherRequirements,
       'createdate': createdate,
       'criteria': List<dynamic>.from(criteria!.map((x) => x.toMap())),
+      'applications': applications
     };
   }
 
@@ -91,7 +102,7 @@ class JobOffer {
     String? otherRequirements,
     DateTime? createdate,
     List<Criteria>? criteria,
-
+    List<String>? applications
 
   }) {
     return JobOffer(
@@ -103,7 +114,8 @@ class JobOffer {
         functions: functions?? this.functions,
         otherRequirements: otherRequirements?? this.otherRequirements,
         createdate: createdate?? this.createdate,
-        criteria: criteria?? this.criteria
+        criteria: criteria?? this.criteria,
+        applications: applications?? this.applications
     );
   }
 
