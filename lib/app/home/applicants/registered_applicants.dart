@@ -25,6 +25,7 @@ import '../../common_widgets/user_avatar.dart';
 import '../../models/city.dart';
 import '../../models/country.dart';
 import '../../models/province.dart';
+import 'applicants_list_page.dart';
 
 class RegisteredApplicantsListPage extends StatefulWidget {
   const RegisteredApplicantsListPage({Key? key}) : super(key: key);
@@ -111,13 +112,6 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                         child: CustomTextSmall(text: 'Nombres')),
                     const SpaceW20(),
                     SizedBox(
-                        width: 100,
-                        child: CustomTextSmall(text: 'Inscrito')),
-                    const SpaceW20(),
-                    SizedBox(
-                        width: 100, child: CustomTextSmall(text: 'Estado')),
-                    const SpaceW20(),
-                    SizedBox(
                         width: 100, child: CustomTextSmall(text: 'Match')),
                     const SpaceW20(),
                   ],
@@ -192,62 +186,69 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Stack(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble),
-                              child: Row(
-                                children: [
-                                  StreamBuilder<UserEnreda>(
-                                    stream: database.userEnredaStreamByUserId(application.userId),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Container();
-                                      }
-                                      final user = snapshot.data!;
-                                      return SizedBox(
-                                        width: 300,
-                                        child: Row(
-                                          children: [
-                                            CustomTextSmall(text: ' ${user.firstName!} ${user.lastName!}'),
-                                          ],
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  ApplicantsListPage.selectedIndex.value = 3;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble),
+                                child: Row(
+                                  children: [
+                                    StreamBuilder<UserEnreda>(
+                                      stream: database.userEnredaStreamByUserId(application.userId),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        }
+                                        final user = snapshot.data!;
+                                        return SizedBox(
+                                          width: 300,
+                                          child: Row(
+                                            children: [
+                                              CustomTextSmall(text: ' ${user.firstName!} ${user.lastName!}'),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SpaceW20(),
+                                    SizedBox(
+                                        width: 100,
+                                        child: CustomTextSmall(text: '${DateFormat('dd/MM/yyyy').format(application.createdate!)}')),
+                                    const SpaceW20(),
+                                    SizedBox(
+                                        width: 150, child: CustomTextSmallBold(title: _getDisplayText(application.status!))),
+                                    const SpaceW20(),
+                                    StreamBuilder<UserEnreda>(
+                                      stream: database.userEnredaStreamByUserId(application.userId),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Container();
+                                        }
+                                        final user = snapshot.data!;
+                                        return SizedBox(
+                                          width: 200,
+                                          child: Row(
+                                            children: [
+                                              _buildMyLocation(context, user),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SpaceW20(),
+                                    Container(
+                                        width: 50,
+                                        child:  GradientCircleWidget(
+                                          text: '${application.match!}%',
+                                          size: 50,
                                         ),
-                                      );
-                                    },
-                                  ),
-                                  const SpaceW20(),
-                                  SizedBox(
-                                      width: 100,
-                                      child: CustomTextSmall(text: '${DateFormat('dd/MM/yyyy').format(application.createdate!)}')),
-                                  const SpaceW20(),
-                                  SizedBox(
-                                      width: 150, child: CustomTextSmallBold(title: _getDisplayText(application.status!))),
-                                  const SpaceW20(),
-                                  StreamBuilder<UserEnreda>(
-                                    stream: database.userEnredaStreamByUserId(application.userId),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Container();
-                                      }
-                                      final user = snapshot.data!;
-                                      return SizedBox(
-                                        width: 200,
-                                        child: Row(
-                                          children: [
-                                            _buildMyLocation(context, user),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SpaceW20(),
-                                  Container(
-                                      width: 50,
-                                      child:  GradientCircleWidget(
-                                        text: '${application.match!}%',
-                                        size: 50,
-                                      ),
-                                  ),
-                                  const SpaceW20(),
-                                ],
+                                    ),
+                                    const SpaceW20(),
+                                  ],
+                                ),
                               ),
                             ),
                             Padding(
