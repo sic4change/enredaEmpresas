@@ -53,8 +53,8 @@ class _ResourcesListPageState extends State<ResourcesListPage> {
             alignment: Responsive.isMobile(context) ? Alignment.topCenter : Alignment.topLeft,
             children: [
               Container(
-                height: 50,
-                padding: Responsive.isMobile(context) ? EdgeInsets.only(left: 10, top: 0) : EdgeInsets.all(0),
+                height: 80,
+                padding: Responsive.isMobile(context) ? EdgeInsets.only(left: 10, top: 0) : EdgeInsets.symmetric(horizontal: Sizes.mainPadding * 2),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -81,53 +81,55 @@ class _ResourcesListPageState extends State<ResourcesListPage> {
               ),
               selectedIndex == 1 || selectedIndex == 2 || selectedIndex == 3 ?
               Positioned(
-                top: 60,
-                child: Row(
-                  children: [
-                    SizedBox(width: 10,),
-                    InkWell(
-                      onTap: () => {
-                        setState(() {
-                          ResourcesListPage.selectedIndex.value = 1;
-                        })
-                      },
-                      child: CustomStepperIconButton(
-                        child: CustomTextBold(title: StringConst.ACTIVE_RESOURCES, color: ResourcesListPage.selectedIndex.value == 1 ? AppColors.primary500 : AppColors.greyTxtAlt,),
-                        icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 1 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
-                        color: ResourcesListPage.selectedIndex.value == 1 ? AppColors.primary050 : AppColors.offWhite,
+                top: 80,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding * 2),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () => {
+                          setState(() {
+                            ResourcesListPage.selectedIndex.value = 1;
+                          })
+                        },
+                        child: CustomStepperIconButton(
+                          child: CustomTextBold(title: StringConst.ACTIVE_RESOURCES, color: ResourcesListPage.selectedIndex.value == 1 ? AppColors.primary500 : AppColors.greyTxtAlt,),
+                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 1 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
+                          color: ResourcesListPage.selectedIndex.value == 1 ? AppColors.primary050 : AppColors.offWhite,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10,),
-                    InkWell(
-                      onTap: () => {
-                        setState(() {
-                          ResourcesListPage.selectedIndex.value = 2;
-                        })
-                      },
-                      child: CustomStepperIconButton(
-                        child: CustomTextBold(title: StringConst.DRAFT_RESOURCES, color: ResourcesListPage.selectedIndex.value == 2 ? AppColors.primary500 : AppColors.greyTxtAlt,),
-                        icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 2 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
-                        color: ResourcesListPage.selectedIndex.value == 2 ? AppColors.primary050 : AppColors.offWhite,
+                      SizedBox(width: 10,),
+                      InkWell(
+                        onTap: () => {
+                          setState(() {
+                            ResourcesListPage.selectedIndex.value = 2;
+                          })
+                        },
+                        child: CustomStepperIconButton(
+                          child: CustomTextBold(title: StringConst.DRAFT_RESOURCES, color: ResourcesListPage.selectedIndex.value == 2 ? AppColors.primary500 : AppColors.greyTxtAlt,),
+                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 2 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
+                          color: ResourcesListPage.selectedIndex.value == 2 ? AppColors.primary050 : AppColors.offWhite,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10,),
-                    InkWell(
-                      onTap: () => {
-                        setState(() {
-                          ResourcesListPage.selectedIndex.value = 3;
-                        })
-                      },
-                      child: CustomStepperIconButton(
-                        child: CustomTextBold(title: StringConst.FINISHED_RESOURCES, color: ResourcesListPage.selectedIndex.value == 3 ? AppColors.primary500 : AppColors.greyTxtAlt,),
-                        icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 3 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
-                        color: ResourcesListPage.selectedIndex.value == 3 ? AppColors.primary050 : AppColors.offWhite,
+                      SizedBox(width: 10,),
+                      InkWell(
+                        onTap: () => {
+                          setState(() {
+                            ResourcesListPage.selectedIndex.value = 3;
+                          })
+                        },
+                        child: CustomStepperIconButton(
+                          child: CustomTextBold(title: StringConst.FINISHED_RESOURCES, color: ResourcesListPage.selectedIndex.value == 3 ? AppColors.primary500 : AppColors.greyTxtAlt,),
+                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 3 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
+                          color: ResourcesListPage.selectedIndex.value == 3 ? AppColors.primary050 : AppColors.offWhite,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ) : Container(),
               Container(
-                margin: selectedIndex == 1 || selectedIndex == 2 || selectedIndex == 3  ? EdgeInsets.only(top: Sizes.mainPadding * 5) :
+                margin: selectedIndex == 1 || selectedIndex == 2 || selectedIndex == 3  ? EdgeInsets.only(top: Sizes.mainPadding * 6) :
                 EdgeInsets.only(top: Sizes.mainPadding * 2.5 , bottom: Sizes.mainPadding),
                 child: bodyWidget[ResourcesListPage.selectedIndex.value],
               ),

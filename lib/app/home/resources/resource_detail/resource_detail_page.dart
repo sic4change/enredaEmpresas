@@ -344,42 +344,6 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                       ),
                     ],
                   )),
-              resource.resourceId == null || resource.resourceId!.isEmpty ? Container() :
-              resource.organizer == globals.currentUserCompany?.companyId ? Expanded(
-                  flex: Responsive.isMobile(context) ||
-                      Responsive.isTablet(context) ||
-                      Responsive.isDesktopS(context)
-                      ? 0
-                      : 3,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: AppColors.greyLight2.withOpacity(0.2),
-                          width: 1),
-                      borderRadius: BorderRadius.circular(Consts.padding),
-                    ),
-                    alignment: Alignment.center,
-                    margin: Responsive.isMobile(context) || Responsive.isDesktopS(context)
-                        ?  EdgeInsets.only(top: 10) : EdgeInsets.only(left: 10),
-                    padding: const EdgeInsets.all(20.0),
-                    child: SingleChildScrollView(
-                        child: Stack(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomTextTitle(
-                                    title: '${resource.participants?.length.toString()} ${StringConst.PARTICIPANTS.toUpperCase()}',
-                                    color: AppColors.turquoiseBlue),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 30.0),
-                              child: _buildParticipantsList(context, resource),
-                            ),
-                          ],
-                        )),
-                  )) : Container(),
             ],
           ),
         ],
@@ -523,24 +487,6 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
               ),
             ),
             _buildDetailResource(context, resource, jobOffer),
-            SpaceH20(),
-            SingleChildScrollView(
-                child: Stack(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomTextTitle(
-                            title: '${resource.participants?.length.toString()} ${StringConst.PARTICIPANTS.toUpperCase()}',
-                            color: AppColors.turquoiseBlue),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: _buildParticipantsList(context, resource),
-                    ),
-                  ],
-                )),
             SpaceH20(),
           ],
         ),
