@@ -1,3 +1,4 @@
+import 'package:enreda_empresas/app/home/applicants/participant_detail_page.dart';
 import 'package:enreda_empresas/app/home/applicants/registered_applicants.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
@@ -14,139 +15,148 @@ import '../resources/manage_offers_page.dart';
 
 class ApplicantsListPage extends StatefulWidget {
   const ApplicantsListPage({super.key,});
+  static ValueNotifier<int> selectedIndex = ValueNotifier(0);
 
   @override
   State<ApplicantsListPage> createState() => _ApplicantsListPageState();
 }
 
 class _ApplicantsListPageState extends State<ApplicantsListPage> {
-  List<String> _menuOptions = [
-    StringConst.JOB_OFFER_REGISTERED,
-    StringConst.JOB_OFFER_PRE_SELECTED,
-    StringConst.JOB_OFFER_FINALIST];
-  Widget? _currentPage;
-  String? _value;
+  var bodyWidget = [];
 
   @override
   void initState() {
-    _value = _menuOptions[0];
+    bodyWidget = [
+      RegisteredApplicantsListPage(),
+      PreSelectedApplicantsListPage(),
+      SelectedApplicantsListPage(),
+      ParticipantDetailPage(),
+    ];
     super.initState();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    if (_currentPage == null) {
-      _currentPage =  RegisteredApplicantsListPage();
-    }
-    return Responsive.isDesktop(context)? _buildParticipantWeb(context):
-    _buildParticipantMobile(context);
-  }
+    return ValueListenableBuilder<int>(
+        valueListenable: ApplicantsListPage.selectedIndex,
+        builder: (context, selectedIndex, child) {
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
+                child: _buildHeader(context, globals.currentResource!),
+              ),
+              Divider(
+                indent: 0,
+                endIndent: 0,
+                color: AppColors.greyBorder,
+                thickness: 1,
+                height: 1,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ChoiceChip(
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                        side: BorderSide(color: selectedIndex == 0 ? Colors.transparent : AppColors.violet)),
+                        disabledColor: Colors.white,
+                        selectedColor: AppColors.yellow,
+                        labelStyle: TextStyle(
+                          fontSize: Responsive.isMobile(context)? 12.0: 16.0,
+                          fontWeight: selectedIndex == 0 ? FontWeight.w700 : FontWeight.w400,
+                          color: selectedIndex == 0 ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
 
-  Widget _buildParticipantWeb(BuildContext context) {
-    return SingleChildScrollView(
-      controller: ScrollController(),
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(context, globals.currentResource!),
-            Divider(
-              indent: 0,
-              endIndent: 0,
-              color: AppColors.greyBorder,
-              thickness: 1,
-              height: 1,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(40.0, 22.0,0.0,22.0),
-              child: _buildMenuSelectorChips(context),
-            ),
-            Divider(
-              indent: 0,
-              endIndent: 0,
-              color: AppColors.greyBorder,
-              thickness: 1,
-              height: 0,
-            ),
-            SpaceH12(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding, vertical: 0.0),
-              child: _currentPage!,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+                        ),
+                        label: Text(StringConst.JOB_OFFER_REGISTERED),
+                        selected: selectedIndex == 0 ? true : false,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            ApplicantsListPage.selectedIndex.value = 0;
+                          });
+                        },
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        showCheckmark: false,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ChoiceChip(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            side: BorderSide(color: selectedIndex == 1 ? Colors.transparent : AppColors.violet)),
+                        disabledColor: Colors.white,
+                        selectedColor: AppColors.yellow,
+                        labelStyle: TextStyle(
+                          fontSize: Responsive.isMobile(context)? 12.0: 16.0,
+                          fontWeight: selectedIndex == 1 ? FontWeight.w700 : FontWeight.w400,
+                          color: selectedIndex == 1 ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
 
-  Widget _buildParticipantMobile(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context, globals.currentResource!),
-          SpaceH20(),
-          _buildMenuSelectorChips(context),
-          SpaceH20(),
-          _currentPage!,
-        ],
-      ),
-    );
-  }
+                        ),
+                        label: Text(StringConst.JOB_OFFER_PRE_SELECTED),
+                        selected: selectedIndex == 1 ? true : false,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            ApplicantsListPage.selectedIndex.value = 1;
+                          });
+                        },
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        showCheckmark: false,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ChoiceChip(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            side: BorderSide(color: selectedIndex == 2 ? Colors.transparent : AppColors.violet)),
+                        disabledColor: Colors.white,
+                        selectedColor: AppColors.yellow,
+                        labelStyle: TextStyle(
+                          fontSize: Responsive.isMobile(context)? 12.0: 16.0,
+                          fontWeight: selectedIndex == 2 ? FontWeight.w700 : FontWeight.w400,
+                          color: selectedIndex == 2 ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
 
-  Widget _buildMenuSelectorChips(BuildContext context){
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 20.0,
-      children: List<Widget>.generate(3,
-            (int index) {
-          return ChoiceChip(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25)),
-                side: BorderSide(color: _value == _menuOptions[index] ? Colors.transparent : AppColors.violet)),
-            disabledColor: Colors.white,
-            selectedColor: AppColors.yellow,
-            labelStyle: TextStyle(
-              fontSize: Responsive.isMobile(context)? 12.0: 16.0,
-              fontWeight: _value == _menuOptions[index] ? FontWeight.w700 : FontWeight.w400,
-              color: _value == _menuOptions[index] ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
-
-            ),
-            label: Text(_menuOptions[index]),
-            selected: _value == _menuOptions[index],
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            showCheckmark: false,
-            onSelected: (bool selected) {
-              setState(() {
-                _value = _menuOptions[index];
-                switch (index) {
-                  case 0:
-                    _currentPage = RegisteredApplicantsListPage();
-                  case 1:
-                    _currentPage = PreSelectedApplicantsListPage();
-                    break;
-                  case 2:
-                    _currentPage = SelectedApplicantsListPage();
-                    break;
-                  default:
-                    _currentPage = Container();
-                    break;
-                }
-
-              });
-            },
+                        ),
+                        label: Text(StringConst.JOB_OFFER_FINALIST),
+                        selected: selectedIndex == 2 ? true : false,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            ApplicantsListPage.selectedIndex.value = 2;
+                          });
+                        },
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        showCheckmark: false,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                indent: 0,
+                endIndent: 0,
+                color: AppColors.greyBorder,
+                thickness: 1,
+                height: 1,
+              ),
+              Container(
+                  margin: Responsive.isMobile(context) ? EdgeInsets.only(top: Sizes.mainPadding * 6, left: Sizes.mainPadding / 2) :
+                  EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
+                  child: bodyWidget[selectedIndex]),
+            ],
           );
-        },
-      ).toList(),
-    );
+        });
+
   }
 
   Widget _buildHeader(BuildContext context, Resource resource) {
     return Padding(
-      padding: const EdgeInsets.only(left: Sizes.kDefaultPaddingDouble*2),
+      padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
