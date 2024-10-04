@@ -102,6 +102,8 @@ abstract class Database {
      Stream<List<Competency>> resourcesCompetenciesStream(List<String?> competenciesIdList);
      Stream<List<UserEnreda>> participantsByResourceStream(String resourceId);
      Stream<List<JobOfferApplication>> registeredApplicationsByJobOffer(String jobOfferId);
+     Stream<List<JobOfferApplication>> preSelectedApplicationsByJobOffer(String jobOfferId);
+     Stream<List<JobOfferApplication>> selectedApplicationsByJobOffer(String jobOfferId);
      Stream<Company> companyStreamById(String? companyId);
      Stream<Organization> organizationStreamById(String organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
@@ -610,6 +612,28 @@ class FirestoreDatabase implements Database {
     return _service.collectionStream<JobOfferApplication>(
       path: APIPath.jobOfferApplications(),
       queryBuilder: (query) => query.where('jobOfferId', isEqualTo: jobOfferId),
+      builder: (data, documentId) => JobOfferApplication.fromMap(data, documentId),
+      sort: (lhs, rhs) => rhs.match!.compareTo(lhs.match!),
+    );
+  }
+
+  @override
+  Stream<List<JobOfferApplication>> preSelectedApplicationsByJobOffer(String? jobOfferId) {
+    return _service.collectionStream<JobOfferApplication>(
+      path: APIPath.jobOfferApplications(),
+      queryBuilder: (query) => query.where('jobOfferId', isEqualTo: jobOfferId)
+          .where('status', isEqualTo: 'pre-selected'),
+      builder: (data, documentId) => JobOfferApplication.fromMap(data, documentId),
+      sort: (lhs, rhs) => rhs.match!.compareTo(lhs.match!),
+    );
+  }
+
+  @override
+  Stream<List<JobOfferApplication>> selectedApplicationsByJobOffer(String? jobOfferId) {
+    return _service.collectionStream<JobOfferApplication>(
+      path: APIPath.jobOfferApplications(),
+      queryBuilder: (query) => query.where('jobOfferId', isEqualTo: jobOfferId)
+          .where('status', isEqualTo: 'selected'),
       builder: (data, documentId) => JobOfferApplication.fromMap(data, documentId),
       sort: (lhs, rhs) => rhs.match!.compareTo(lhs.match!),
     );

@@ -26,14 +26,14 @@ import '../../models/city.dart';
 import '../../models/country.dart';
 import '../../models/province.dart';
 
-class RegisteredApplicantsListPage extends StatefulWidget {
-  const RegisteredApplicantsListPage({Key? key}) : super(key: key);
+class SelectedApplicantsListPage extends StatefulWidget {
+  const SelectedApplicantsListPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisteredApplicantsListPage> createState() => _RegisteredApplicantsListPageState();
+  State<SelectedApplicantsListPage> createState() => _SelectedApplicantsListPageState();
 }
 
-class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListPage> {
+class _SelectedApplicantsListPageState extends State<SelectedApplicantsListPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +177,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           StreamBuilder<List<JobOfferApplication>>(
-            stream: database.registeredApplicationsByJobOffer(resource.jobOfferId!),
+            stream: database.selectedApplicationsByJobOffer(resource.jobOfferId!),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
@@ -240,11 +240,11 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                                   ),
                                   const SpaceW20(),
                                   Container(
-                                      width: 50,
-                                      child:  GradientCircleWidget(
-                                        text: '${application.match!}%',
-                                        size: 50,
-                                      ),
+                                    width: 50,
+                                    child:  GradientCircleWidget(
+                                      text: '${application.match!}%',
+                                      size: 50,
+                                    ),
                                   ),
                                   const SpaceW20(),
                                 ],

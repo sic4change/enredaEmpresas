@@ -1,16 +1,12 @@
 import 'package:enreda_empresas/app/home/applicants/registered_applicants.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/models/city.dart';
-import 'package:enreda_empresas/app/models/country.dart';
-import 'package:enreda_empresas/app/models/province.dart';
-import 'package:enreda_empresas/app/models/userEnreda.dart';
-import 'package:enreda_empresas/app/services/database.dart';
+import 'package:enreda_empresas/app/home/applicants/pre_selected_applicants.dart';
+import 'package:enreda_empresas/app/home/applicants/selected_list_page.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 import '../../models/resource.dart';
@@ -55,9 +51,7 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Responsive.isDesktop(context)? _buildHeaderWeb(context, globals.currentResource!) :
-            _buildHeaderMobile(context),
-            SpaceH20(),
+            _buildHeader(context, globals.currentResource!),
             Divider(
               indent: 0,
               endIndent: 0,
@@ -76,9 +70,9 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
               thickness: 1,
               height: 0,
             ),
-            SpaceH24(),
+            SpaceH12(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+              padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding, vertical: 0.0),
               child: _currentPage!,
             ),
           ],
@@ -93,7 +87,7 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeaderMobile(context),
+          _buildHeader(context, globals.currentResource!),
           SpaceH20(),
           _buildMenuSelectorChips(context),
           SpaceH20(),
@@ -132,10 +126,10 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
                   case 0:
                     _currentPage = RegisteredApplicantsListPage();
                   case 1:
-                    _currentPage = Container();
+                    _currentPage = PreSelectedApplicantsListPage();
                     break;
                   case 2:
-                    _currentPage = Container();
+                    _currentPage = SelectedApplicantsListPage();
                     break;
                   default:
                     _currentPage = Container();
@@ -150,76 +144,31 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
     );
   }
 
-  Widget _buildHeaderWeb(BuildContext context, Resource resource) {
+  Widget _buildHeader(BuildContext context, Resource resource) {
     return Padding(
       padding: const EdgeInsets.only(left: Sizes.kDefaultPaddingDouble*2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //Personal data
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top:50),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SpaceH8(),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomTextSmallColor(text: 'Inscritos en esta oferta:', color: AppColors.primary900, height: 0.5,),
-                          SpaceW8(),
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                ManageOffersPage.selectedIndex.value = 1;
-                              });
-                            },
-                            child: CustomTextSmallBold(title: '${resource.title}', color: AppColors.primary900, height: 0.5,)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SpaceH20(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildHeaderMobile(BuildContext context) {
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SpaceH12(),
-        Column(
+      child: Expanded(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CustomTextSmallColor(text: 'Técnica de referencia:', color: AppColors.primary900, height: 0.2,),
-                SpaceW8(),
-              ],
+            CustomTextMediumBold(text: '${resource.title}'),
+            InkWell(
+              onTap: (){
+                setState(() {
+                  ManageOffersPage.selectedIndex.value = 1;
+                });
+              },
+              child: Row(
+                children: [
+                  CustomTextSmallColor(text: 'Inscritos en esta oferta: ', color: AppColors.primary900),
+                  CustomTextSmallColor(text: 'Ver oferta' , color: AppColors.primary900)
+                ],
+              ),
             ),
           ],
         ),
-        SpaceH20(),
-      ],
+      ),
     );
   }
 }

@@ -37,6 +37,7 @@ class _ActiveResourcesPageState extends State<ActiveResourcesPage> {
     final database = Provider.of<Database>(context, listen: false);
     return Container(
       height: MediaQuery.of(context).size.height,
+      padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding * 2),
       child: StreamBuilder<UserEnreda>(
           stream: database.userEnredaStreamByUserId(auth.currentUser!.uid),
           builder: (context, snapshot) {
