@@ -147,27 +147,25 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
   Widget _buildHeader(BuildContext context, Resource resource) {
     return Padding(
       padding: const EdgeInsets.only(left: Sizes.kDefaultPaddingDouble*2),
-      child: Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextMediumBold(text: '${resource.title}'),
-            InkWell(
-              onTap: (){
-                setState(() {
-                  ManageOffersPage.selectedIndex.value = 1;
-                });
-              },
-              child: Row(
-                children: [
-                  CustomTextSmallColor(text: 'Inscritos en esta oferta: ', color: AppColors.primary900),
-                  CustomTextSmallColor(text: 'Ver oferta' , color: AppColors.primary900)
-                ],
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextMediumBold(text: '${resource.title}'),
+          InkWell(
+            onTap: (){
+              setState(() {
+                ManageOffersPage.selectedIndex.value = 1;
+              });
+            },
+            child: Row(
+              children: [
+                CustomTextSmallColor(text: 'Inscritos en esta oferta: ', color: AppColors.primary900),
+                CustomTextSmallColor(text: 'Ver oferta' , color: AppColors.primary900)
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
