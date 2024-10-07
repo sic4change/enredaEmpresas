@@ -1,17 +1,12 @@
-import 'package:enreda_empresas/app/common_widgets/add_yellow_button.dart';
-import 'package:enreda_empresas/app/common_widgets/custom_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
-import 'package:enreda_empresas/app/home/resources/resource_detail/invite_users_page.dart';
-import 'package:enreda_empresas/app/home/resources/resource_detail_dialog.dart';
 import 'package:enreda_empresas/app/models/jobOffer.dart';
 import 'package:enreda_empresas/app/models/jobOfferApplication.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/database.dart';
-import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
@@ -21,15 +16,14 @@ import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
 import '../../common_widgets/circle_widget.dart';
-import '../../common_widgets/user_avatar.dart';
 import '../../models/city.dart';
 import '../../models/country.dart';
 import '../../models/province.dart';
 import 'applicants_list_page.dart';
 
 class RegisteredApplicantsListPage extends StatefulWidget {
-  const RegisteredApplicantsListPage({Key? key}) : super(key: key);
-
+  const RegisteredApplicantsListPage({Key? key, this.status}) : super(key: key);
+  final String? status;
   @override
   State<RegisteredApplicantsListPage> createState() => _RegisteredApplicantsListPageState();
 }
@@ -38,15 +32,15 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
 
   @override
   Widget build(BuildContext context) {
-    return _buildResourcePage(context, globals.currentResource!, globals.currentJobOffer!);
+    return _buildParticipantPage(context, globals.currentResource!, globals.currentJobOffer!);
   }
 
-  Widget _buildResourcePage(BuildContext context, Resource resource, JobOffer jobOffer) {
-    return Responsive.isMobile(context) ? _buildResourceDetailMobile(context, resource, jobOffer) :
-    _buildResourceDetailWeb(context, resource, jobOffer);
+  Widget _buildParticipantPage(BuildContext context, Resource resource, JobOffer jobOffer) {
+    return Responsive.isMobile(context) ? _buildParticipantDetailMobile(context, resource, jobOffer) :
+    _buildParticipantDetailWeb(context, resource, jobOffer);
   }
 
-  Widget _buildResourceDetailWeb(BuildContext context, Resource resource, JobOffer jobOffer) {
+  Widget _buildParticipantDetailWeb(BuildContext context, Resource resource, JobOffer jobOffer) {
     return resource.resourceId == null || resource.resourceId!.isEmpty ? Container() :
     resource.organizer == globals.currentUserCompany?.companyId ? SingleChildScrollView(
         child: RoundedContainer(
@@ -98,7 +92,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         )) : Container();
   }
 
-  Widget _buildResourceDetailMobile(BuildContext context, Resource resource, JobOffer jobOffer) {
+  Widget _buildParticipantDetailMobile(BuildContext context, Resource resource, JobOffer jobOffer) {
     return Column(
       children: [
         SingleChildScrollView(
@@ -171,7 +165,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           StreamBuilder<List<JobOfferApplication>>(
-            stream: database.registeredApplicationsByJobOffer(resource.jobOfferId!),
+            stream: database.applicantsStreamByJobOffer(resource.jobOfferId!, widget.status),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
@@ -182,87 +176,80 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                     emptyTitle: 'Sin aplicaciones',
                     emptyMessage: 'Aún no se ha registrado ningún aplicante',
                     itemBuilder: (context, application) {
-                      return  Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Stack(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  ApplicantsListPage.selectedIndex.value = 3;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble),
-                                child: Row(
-                                  children: [
-                                    StreamBuilder<UserEnreda>(
-                                      stream: database.userEnredaStreamByUserId(application.userId),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return Container();
-                                        }
-                                        final user = snapshot.data!;
-                                        return SizedBox(
+                      return StreamBuilder<UserEnreda>(
+                        stream: database.userEnredaStreamByUserId(application.userId),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Container();
+                          }
+                          final user = snapshot.data!;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Stack(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      globals.currentParticipant = user;
+                                      globals.currentApplication = application;
+                                      ApplicantsListPage.selectedIndex.value = 3;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
                                           width: 300,
                                           child: Row(
                                             children: [
                                               CustomTextSmall(text: ' ${user.firstName!} ${user.lastName!}'),
                                             ],
                                           ),
-                                        );
-                                      },
-                                    ),
-                                    const SpaceW20(),
-                                    SizedBox(
-                                        width: 100,
-                                        child: CustomTextSmall(text: '${DateFormat('dd/MM/yyyy').format(application.createdate!)}')),
-                                    const SpaceW20(),
-                                    SizedBox(
-                                        width: 150, child: CustomTextSmallBold(title: _getDisplayText(application.status!))),
-                                    const SpaceW20(),
-                                    StreamBuilder<UserEnreda>(
-                                      stream: database.userEnredaStreamByUserId(application.userId),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          return Container();
-                                        }
-                                        final user = snapshot.data!;
-                                        return SizedBox(
+                                        ),
+                                        const SpaceW20(),
+                                        SizedBox(
+                                            width: 100,
+                                            child: CustomTextSmall(text: '${DateFormat('dd/MM/yyyy').format(application.createdate!)}')),
+                                        const SpaceW20(),
+                                        SizedBox(
+                                            width: 150, child: CustomTextSmallBold(title: _getDisplayText(application.status!))),
+                                        const SpaceW20(),
+                                        SizedBox(
                                           width: 200,
                                           child: Row(
                                             children: [
                                               _buildMyLocation(context, user),
                                             ],
                                           ),
-                                        );
-                                      },
-                                    ),
-                                    const SpaceW20(),
-                                    Container(
-                                        width: 50,
-                                        child:  GradientCircleWidget(
-                                          text: '${application.match!}%',
-                                          size: 50,
                                         ),
+                                        const SpaceW20(),
+                                        Container(
+                                          width: 50,
+                                          child:  GradientCircleWidget(
+                                            text: '${application.match!}%',
+                                            size: 50,
+                                          ),
+                                        ),
+                                        const SpaceW20(),
+                                      ],
                                     ),
-                                    const SpaceW20(),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 60.0),
+                                  child: Divider(
+                                    indent: 0,
+                                    endIndent: 0,
+                                    color: AppColors.greyBorder,
+                                    thickness: 1,
+                                    height: 0,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 60.0),
-                              child: Divider(
-                                indent: 0,
-                                endIndent: 0,
-                                color: AppColors.greyBorder,
-                                thickness: 1,
-                                height: 0,
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       );
                     }
                 );
