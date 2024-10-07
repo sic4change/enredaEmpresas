@@ -104,6 +104,7 @@ abstract class Database {
      Stream<List<JobOfferApplication>> registeredApplicationsByJobOffer(String jobOfferId);
      Stream<List<JobOfferApplication>> preSelectedApplicationsByJobOffer(String jobOfferId);
      Stream<List<JobOfferApplication>> selectedApplicationsByJobOffer(String jobOfferId);
+     Stream<List<JobOfferApplication>> applicantsStreamByJobOffer(String jobOfferId, String? status);
      Stream<Company> companyStreamById(String? companyId);
      Stream<Organization> organizationStreamById(String organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
@@ -604,6 +605,22 @@ class FirestoreDatabase implements Database {
       queryBuilder: (query) => query.where('resources', arrayContains: resourceId),
       builder: (data, documentId) => UserEnreda.fromMap(data, documentId),
       sort: (lhs, rhs) => lhs.email.compareTo(rhs.email),
+    );
+  }
+
+  @override
+  Stream<List<JobOfferApplication>> applicantsStreamByJobOffer(String? jobOfferId, String? status) {
+    return _service.collectionStream<JobOfferApplication>(
+      path: APIPath.jobOfferApplications(),
+      queryBuilder: (query) {
+        query = query.where('jobOfferId', isEqualTo: jobOfferId);
+        if (status != null) {
+          query = query.where('status', isEqualTo: status);
+        }
+        return query;
+      },
+      builder: (data, documentId) => JobOfferApplication.fromMap(data, documentId),
+      sort: (lhs, rhs) => rhs.match!.compareTo(lhs.match!),
     );
   }
 

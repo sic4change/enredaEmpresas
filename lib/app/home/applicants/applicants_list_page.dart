@@ -1,9 +1,6 @@
 import 'package:enreda_empresas/app/home/applicants/participant_detail_page.dart';
 import 'package:enreda_empresas/app/home/applicants/registered_applicants.dart';
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
-import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/applicants/pre_selected_applicants.dart';
-import 'package:enreda_empresas/app/home/applicants/selected_list_page.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
@@ -28,11 +25,41 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
   void initState() {
     bodyWidget = [
       RegisteredApplicantsListPage(),
-      PreSelectedApplicantsListPage(),
-      SelectedApplicantsListPage(),
+      RegisteredApplicantsListPage(status: 'pre-selected'),
+      RegisteredApplicantsListPage(status: 'selected'),
       ParticipantDetailPage(),
     ];
     super.initState();
+  }
+
+  Widget _buildChoiceChip(int index, String label, String status) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: ChoiceChip(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+          side: BorderSide(color: ApplicantsListPage.selectedIndex.value == index ? Colors.transparent : AppColors.violet),
+        ),
+        disabledColor: Colors.white,
+        selectedColor: AppColors.yellow,
+        labelStyle: TextStyle(
+          fontSize: Responsive.isMobile(context) ? 12.0 : 16.0,
+          fontWeight: ApplicantsListPage.selectedIndex.value == index ? FontWeight.w700 : FontWeight.w400,
+          color: ApplicantsListPage.selectedIndex.value == index ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
+        ),
+        label: Text(label),
+        selected: ApplicantsListPage.selectedIndex.value == index,
+        onSelected: (bool selected) {
+          if (selected) {
+            setState(() {
+              ApplicantsListPage.selectedIndex.value = index;
+            });
+          }
+        },
+        padding: const EdgeInsets.all(10.0),
+        showCheckmark: false,
+      ),
+    );
   }
 
 
@@ -59,81 +86,9 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ChoiceChip(
-                        shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        side: BorderSide(color: selectedIndex == 0 ? Colors.transparent : AppColors.violet)),
-                        disabledColor: Colors.white,
-                        selectedColor: AppColors.yellow,
-                        labelStyle: TextStyle(
-                          fontSize: Responsive.isMobile(context)? 12.0: 16.0,
-                          fontWeight: selectedIndex == 0 ? FontWeight.w700 : FontWeight.w400,
-                          color: selectedIndex == 0 ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
-
-                        ),
-                        label: Text(StringConst.JOB_OFFER_REGISTERED),
-                        selected: selectedIndex == 0 ? true : false,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            ApplicantsListPage.selectedIndex.value = 0;
-                          });
-                        },
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                        showCheckmark: false,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ChoiceChip(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            side: BorderSide(color: selectedIndex == 1 ? Colors.transparent : AppColors.violet)),
-                        disabledColor: Colors.white,
-                        selectedColor: AppColors.yellow,
-                        labelStyle: TextStyle(
-                          fontSize: Responsive.isMobile(context)? 12.0: 16.0,
-                          fontWeight: selectedIndex == 1 ? FontWeight.w700 : FontWeight.w400,
-                          color: selectedIndex == 1 ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
-
-                        ),
-                        label: Text(StringConst.JOB_OFFER_PRE_SELECTED),
-                        selected: selectedIndex == 1 ? true : false,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            ApplicantsListPage.selectedIndex.value = 1;
-                          });
-                        },
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                        showCheckmark: false,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ChoiceChip(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            side: BorderSide(color: selectedIndex == 2 ? Colors.transparent : AppColors.violet)),
-                        disabledColor: Colors.white,
-                        selectedColor: AppColors.yellow,
-                        labelStyle: TextStyle(
-                          fontSize: Responsive.isMobile(context)? 12.0: 16.0,
-                          fontWeight: selectedIndex == 2 ? FontWeight.w700 : FontWeight.w400,
-                          color: selectedIndex == 2 ? AppColors.turquoiseBlue : AppColors.greyTxtAlt,
-
-                        ),
-                        label: Text(StringConst.JOB_OFFER_FINALIST),
-                        selected: selectedIndex == 2 ? true : false,
-                        onSelected: (bool selected) {
-                          setState(() {
-                            ApplicantsListPage.selectedIndex.value = 2;
-                          });
-                        },
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                        showCheckmark: false,
-                      ),
-                    ),
+                    _buildChoiceChip(0, StringConst.JOB_OFFER_REGISTERED, ''),
+                    _buildChoiceChip(1, StringConst.JOB_OFFER_PRE_SELECTED, 'pre-selected'),
+                    _buildChoiceChip(2, StringConst.JOB_OFFER_FINALIST, 'selected'),
                   ],
                 ),
               ),

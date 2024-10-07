@@ -21,7 +21,7 @@ class Criteria {
       competencies: data['competencies'] != null
           ? List<String>.from(data['competencies'])
           : null,
-      weight: (data['weight'] as num).toDouble(), // Handle number to double conversion
+      weight: data['weight'],
       competenciesNames: data['competenciesNames'] != null ? data['competenciesNames'] : '',
     );
   }

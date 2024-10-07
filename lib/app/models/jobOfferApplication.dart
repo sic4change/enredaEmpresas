@@ -1,11 +1,14 @@
+import 'criteria.dart';
+
 class JobOfferApplication {
   String jobOfferApplicationId;
   String jobOfferId;
   String resourceId;
   String userId;
   String? status;
-  num? match;
+  double? match;
   DateTime? createdate;
+  List<Criteria>? criteria;
 
   JobOfferApplication({
     required this.jobOfferApplicationId,
@@ -14,11 +17,23 @@ class JobOfferApplication {
     required this.userId,
     this.status,
     this.match,
-    this.createdate
+    this.createdate,
+    this.criteria,
 
   });
 
   factory JobOfferApplication.fromMap(Map<String, dynamic> data, String documentId) {
+    List<Criteria> criteria = [];
+    if (data['criteria'] != null) {
+      try {
+        criteria = (data['criteria'] as List)
+            .map((item) => Criteria.fromMap(item))
+            .toList();
+      } catch (e) {
+        criteria = [];
+      }
+    }
+
     return JobOfferApplication(
       jobOfferApplicationId: data['jobOfferApplicationId'] ?? '',
       createdate: data['createdate']?.toDate(),
@@ -26,7 +41,8 @@ class JobOfferApplication {
       resourceId: data['resourceId'] ?? '',
       userId: data['userId'] ?? '',
       status: data['status'] ?? '',
-      match: data['match'] ?? 0 as num,
+      match: data['match'] ?? 0,
+      criteria: criteria
     );
   }
 
@@ -38,6 +54,7 @@ class JobOfferApplication {
     'userId': userId,
     'status': status,
     'match': match,
+    'criteria': criteria
   };
 
   @override
