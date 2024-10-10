@@ -31,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
+import '../../../models/jobOfferCriteria.dart';
 import '../manage_offers_page.dart';
 
 class ResourceDetailPage extends StatefulWidget {
@@ -496,36 +497,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
 
   Widget _buildDetailResource(BuildContext context, Resource resource, JobOffer jobOffer) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    int _getTypeIndex(String type) {
-      switch (type) {
-        case 'academic':
-          return 0;
-        case 'experience':
-          return 1;
-        case 'languages':
-          return 2;
-        case 'competencies':
-          return 3;
-        default:
-          return -1; // indicate an invalid type
-      }
-    }
-    String _getDisplayText(String type) {
-      List<String> textValues = [
-        'Formación académica',
-        'Nivel de experiencia',
-        'Idiomas',
-        'Competencias',
-      ];
-
-      int index = _getTypeIndex(type);
-
-      if (index >= 0 && index < textValues.length) {
-        return textValues[index];
-      } else {
-        return '';
-      }
-    }
+    final database = Provider.of<Database>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -596,27 +568,36 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
             itemCount: jobOffer.criteria?.length,
             itemBuilder: (context, index) {
               final item = jobOffer.criteria?[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        CustomTextSmallBold(title: _getDisplayText(item?.type ?? ''), color: AppColors.primary900),
-                        CustomTextSmallBold(title: ' - Peso: ${item?.weight} %', color: AppColors.primary900,),
-                      ],
-                    ),
-                    item?.requirementText != null ? CustomTextSmall(text: item!.requirementText!, maxLines: 30,) : Container(),
-                    item?.competencies != null ?
-                    Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: CompetenciesByResource(competenciesIdList: item!.competencies!)) : Container(),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              );
+              return StreamBuilder<JobOfferCriteria>(
+                  stream: database.jobOfferCriteriaById(item!.criteriaId),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return Container();
+                    if (snapshot.hasData) {
+                      var jobOfferCriteria = snapshot.data!;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CustomTextSmallBold(title: jobOfferCriteria.name!, color: AppColors.primary900),
+                                CustomTextSmallBold(title: ' - Peso: ${item.weight} %', color: AppColors.primary900,),
+                              ],
+                            ),
+                            item.requirementText != null ? CustomTextSmall(text: item.requirementText!, maxLines: 30,) : Container(),
+                            item.competencies != null ?
+                            Padding(
+                                padding: const EdgeInsets.only(bottom: 10.0),
+                                child: CompetenciesByResource(competenciesIdList: item.competencies!)) : Container(),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  });
             },
           ),
           SizedBox(height: 10),

@@ -168,10 +168,10 @@ class _EditResourceState extends State<EditResource> {
     textEditingControllerCompetenciesCategories = TextEditingController();
     textEditingControllerCompetenciesSubCategories = TextEditingController();
     criteria = [
-      Criteria(type: globals.currentJobOffer?.criteria?[0].type ?? '', requirementText: globals.currentJobOffer?.criteria?[0].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[0].weight ?? 0),
-      Criteria(type: globals.currentJobOffer?.criteria?[1].type ?? '', requirementText: globals.currentJobOffer?.criteria?[1].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[1].weight ?? 0),
-      Criteria(type: globals.currentJobOffer?.criteria?[2].type ?? '', requirementText: globals.currentJobOffer?.criteria?[2].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[2].weight ?? 0),
-      Criteria(type: globals.currentJobOffer?.criteria?[3].type ?? '', competencies: globals.currentJobOffer?.criteria?[3].competencies ?? [], weight: globals.currentJobOffer?.criteria?[3].weight ?? 0),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[0].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[0].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[0].weight ?? 0),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[1].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[1].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[1].weight ?? 0),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[2].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[2].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[2].weight ?? 0),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[3].criteriaId ?? '', competencies: globals.currentJobOffer?.criteria?[3].competencies ?? [], weight: globals.currentJobOffer?.criteria?[3].weight ?? 0),
     ];
     criteriaValuesSum = criteria.map((e) => e.weight).reduce((value, element) => value + element);
   }

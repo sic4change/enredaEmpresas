@@ -1,5 +1,3 @@
-import 'criteria.dart';
-
 class JobOfferApplication {
   String jobOfferApplicationId;
   String jobOfferId;
@@ -8,7 +6,8 @@ class JobOfferApplication {
   String? status;
   double? match;
   DateTime? createdate;
-  List<Criteria>? criteria;
+  final Map<String, int> evaluations;
+  final Map<String, int> points;
 
   JobOfferApplication({
     required this.jobOfferApplicationId,
@@ -18,20 +17,25 @@ class JobOfferApplication {
     this.status,
     this.match,
     this.createdate,
-    this.criteria,
+    this.evaluations = const {},
+    this.points = const {},
 
   });
 
   factory JobOfferApplication.fromMap(Map<String, dynamic> data, String documentId) {
-    List<Criteria> criteria = [];
-    if (data['criteria'] != null) {
-      try {
-        criteria = (data['criteria'] as List)
-            .map((item) => Criteria.fromMap(item))
-            .toList();
-      } catch (e) {
-        criteria = [];
-      }
+
+    Map<String, int> evaluations = {};
+    if (data['evaluations'] != null) {
+      (data['evaluations'] as Map<String, dynamic>).forEach((key, value) {
+        evaluations[key] = value;
+      });
+    }
+
+    Map<String, int> points = {};
+    if (data['points'] != null) {
+      (data['points'] as Map<String, dynamic>).forEach((key, value) {
+        points[key] = value;
+      });
     }
 
     return JobOfferApplication(
@@ -42,7 +46,8 @@ class JobOfferApplication {
       userId: data['userId'] ?? '',
       status: data['status'] ?? '',
       match: data['match'] ?? 0,
-      criteria: criteria
+      evaluations: evaluations,
+      points: points,
     );
   }
 
@@ -54,7 +59,8 @@ class JobOfferApplication {
     'userId': userId,
     'status': status,
     'match': match,
-    'criteria': criteria
+    'evaluations': evaluations,
+    'points': points,
   };
 
   @override

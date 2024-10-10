@@ -68,42 +68,45 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
     return ValueListenableBuilder<int>(
         valueListenable: ApplicantsListPage.selectedIndex,
         builder: (context, selectedIndex, child) {
-          return Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
-                child: _buildHeader(context, globals.currentResource!),
-              ),
-              Divider(
-                indent: 0,
-                endIndent: 0,
-                color: AppColors.greyBorder,
-                thickness: 1,
-                height: 1,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildChoiceChip(0, StringConst.JOB_OFFER_REGISTERED, ''),
-                    _buildChoiceChip(1, StringConst.JOB_OFFER_PRE_SELECTED, 'pre-selected'),
-                    _buildChoiceChip(2, StringConst.JOB_OFFER_FINALIST, 'selected'),
-                  ],
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
+                  child: _buildHeader(context, globals.currentResource!),
                 ),
-              ),
-              Divider(
-                indent: 0,
-                endIndent: 0,
-                color: AppColors.greyBorder,
-                thickness: 1,
-                height: 1,
-              ),
-              Container(
-                  margin: Responsive.isMobile(context) ? EdgeInsets.only(top: Sizes.mainPadding * 6, left: Sizes.mainPadding / 2) :
-                  EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
-                  child: bodyWidget[selectedIndex]),
-            ],
+                Divider(
+                  indent: 0,
+                  endIndent: 0,
+                  color: AppColors.greyBorder,
+                  thickness: 1,
+                  height: 1,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildChoiceChip(0, StringConst.JOB_OFFER_REGISTERED, ''),
+                      _buildChoiceChip(1, StringConst.JOB_OFFER_PRE_SELECTED, 'pre-selected'),
+                      _buildChoiceChip(2, StringConst.JOB_OFFER_FINALIST, 'selected'),
+                    ],
+                  ),
+                ),
+                Divider(
+                  indent: 0,
+                  endIndent: 0,
+                  color: AppColors.greyBorder,
+                  thickness: 1,
+                  height: 1,
+                ),
+                Container(
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
+                    child: bodyWidget[selectedIndex]),
+              ],
+            ),
           );
         });
 

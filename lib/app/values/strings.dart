@@ -668,6 +668,11 @@ class StringConst {
   static const String JOB_OFFER_REGISTERED = 'Inscritos';
   static const String JOB_OFFER_PRE_SELECTED = 'Preseleccionados';
   static const String JOB_OFFER_FINALIST = 'Finalistas';
+  static const String JOB_OFFER_STATUS = 'Se ha modificado el estado del postulante';
+  static const String JOB_OFFER_NOT_SELECTED = 'El postulante ha sido no seleccionado';
+  static const String JOB_OFFER_PRE_SELECTED_CONFIRMATION = 'El postulante ha sido preseleccionado';
+  static const String JOB_OFFER_EVALUATION = 'Evaluación';
+  static const String JOB_OFFER_MATCH = 'Match';
 
 
   //Create entity errors

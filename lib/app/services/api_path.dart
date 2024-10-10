@@ -2,8 +2,10 @@ class APIPath {
   static String resource(String resourceId) => 'resources/$resourceId';
   static String resources() => 'resources';
   static String jobOffer(String jobOfferId) => 'jobOffers/$jobOfferId';
+  static String jobOfferCriteria(String criteriaId) => 'jobOfferCriteria/$criteriaId';
   static String jobOffers() => 'jobOffers';
   static String jobOfferApplications() => 'jobOfferApplications';
+  static String jobOfferApplication(String jobOfferApplicationId) => 'jobOfferApplications/$jobOfferApplicationId';
   static String resourcesCategories() => 'resourcesCategories';
   static String resourcesTypes() => 'resourcesTypes';
   static String documentCategories() => 'documentCategories';
