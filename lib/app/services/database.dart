@@ -28,6 +28,7 @@ import 'package:enreda_empresas/app/models/ipilObjectives.dart';
 import 'package:enreda_empresas/app/models/ipilPostWorkSupport.dart';
 import 'package:enreda_empresas/app/models/ipilReinforcement.dart';
 import 'package:enreda_empresas/app/models/ipilResults.dart';
+import 'package:enreda_empresas/app/models/jobOfferCriteria.dart';
 import 'package:enreda_empresas/app/models/keepLearningOption.dart';
 import 'package:enreda_empresas/app/models/organization.dart';
 import 'package:enreda_empresas/app/models/region.dart';
@@ -105,6 +106,7 @@ abstract class Database {
      Stream<List<JobOfferApplication>> preSelectedApplicationsByJobOffer(String jobOfferId);
      Stream<List<JobOfferApplication>> selectedApplicationsByJobOffer(String jobOfferId);
      Stream<List<JobOfferApplication>> applicantsStreamByJobOffer(String jobOfferId, String? status);
+     Stream<JobOfferCriteria> jobOfferCriteriaById(String jobOfferCriteriaId);
      Stream<Company> companyStreamById(String? companyId);
      Stream<Organization> organizationStreamById(String organizationId);
      Stream<UserEnreda> userEnredaStreamByUserId(String? userId);
@@ -143,6 +145,7 @@ abstract class Database {
      Future<void> addContact(Contact contact);
      Future<void> setResource(Resource resource);
      Future<void> setJobOffer(JobOffer jobOffer);
+     Future<void> setJobOfferApplication(JobOfferApplication jobOfferApplication);
      Future<void> setExternalSocialEntity(ExternalSocialEntity externalSocialEntity);
      Future<void> deleteResource(Resource resource);
      Future<void> deleteJobOffer(String jobOfferId);
@@ -222,6 +225,10 @@ class FirestoreDatabase implements Database {
   @override
   Future<void> setJobOffer(JobOffer jobOffer) => _service.updateData(
       path: APIPath.jobOffer(jobOffer.jobOfferId!), data: jobOffer.toMap());
+
+  @override
+  Future<void> setJobOfferApplication(JobOfferApplication jobOfferApplication) => _service.updateData(
+      path: APIPath.jobOfferApplication(jobOfferApplication.jobOfferApplicationId), data: jobOfferApplication.toMap());
 
   @override
   Future<void> deleteResource(Resource resource) =>
@@ -655,6 +662,13 @@ class FirestoreDatabase implements Database {
       sort: (lhs, rhs) => rhs.match!.compareTo(lhs.match!),
     );
   }
+
+  @override
+  Stream<JobOfferCriteria> jobOfferCriteriaById(String jobOfferCriteriaId) =>
+      _service.documentStream<JobOfferCriteria>(
+        path: APIPath.jobOfferCriteria(jobOfferCriteriaId),
+        builder: (data, documentId) => JobOfferCriteria.fromMap(data, documentId),
+      );
 
   @override
   Stream<List<Resource>> resourcesParticipantsStream(List<String?> participantsIdList) {

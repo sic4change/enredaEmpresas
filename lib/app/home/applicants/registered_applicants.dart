@@ -36,8 +36,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
   }
 
   Widget _buildParticipantPage(BuildContext context, Resource resource, JobOffer jobOffer) {
-    return Responsive.isMobile(context) ? _buildParticipantDetailMobile(context, resource, jobOffer) :
-    _buildParticipantDetailWeb(context, resource, jobOffer);
+    return _buildParticipantDetailWeb(context, resource, jobOffer);
   }
 
   Widget _buildParticipantDetailWeb(BuildContext context, Resource resource, JobOffer jobOffer) {
@@ -92,51 +91,20 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         )) : Container();
   }
 
-  Widget _buildParticipantDetailMobile(BuildContext context, Resource resource, JobOffer jobOffer) {
-    return Column(
-      children: [
-        SingleChildScrollView(
-            child: Stack(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                        width: 250,
-                        child: CustomTextSmall(text: 'Nombres')),
-                    const SpaceW20(),
-                    SizedBox(
-                        width: 100, child: CustomTextSmall(text: 'Match')),
-                    const SpaceW20(),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: _buildParticipantsList(context, resource),
-                ),
-              ],
-            )),
-        SpaceH20(),
-      ],
-    );
-  }
-
   Widget _buildParticipantsList(BuildContext context, Resource resource) {
     final database = Provider.of<Database>(context, listen: false);
     int _getStatusIndex(String status) {
       switch (status) {
         case 'seen':
           return 0;
-        case 'not-seen':
-          return 1;
         case 'pre-selected':
-          return 2;
+          return 1;
         case 'selected':
-          return 3;
+          return 2;
         case 'not-selected':
-          return 4;
+          return 3;
         case 'registered':
-          return 5;
+          return 4;
         default:
           return -1; // indicate an invalid type
       }
@@ -144,7 +112,6 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
     String _getDisplayText(String status) {
       List<String> textValues = [
         'Visto',
-        'No visto',
         'Preseleccionado',
         'Seleccionado',
         'Descartado',
@@ -174,7 +141,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                 return ListItemBuilder(
                     snapshot: snapshot,
                     emptyTitle: 'Sin aplicaciones',
-                    emptyMessage: 'Aún no se ha registrado ningún aplicante',
+                    emptyMessage: 'Aún no hay ningún candidato',
                     itemBuilder: (context, application) {
                       return StreamBuilder<UserEnreda>(
                         stream: database.userEnredaStreamByUserId(application.userId),
@@ -188,12 +155,16 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                             child: Stack(
                               children: [
                                 InkWell(
-                                  onTap: () {
+                                  onTap: () async {
                                     setState(() {
                                       globals.currentParticipant = user;
                                       globals.currentApplication = application;
                                       ApplicantsListPage.selectedIndex.value = 3;
                                     });
+                                    if(application.status == 'registered') {
+                                      application.status = 'seen';
+                                      await database.setJobOfferApplication(application);
+                                    }
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble),

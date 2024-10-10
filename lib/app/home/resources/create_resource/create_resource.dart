@@ -180,10 +180,10 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     _formattedStartDate = "";
     _formattedEndDate = "";
     criteria = [
-      Criteria(type: 'academic', requirementText: '', weight: 0),
-      Criteria(type: 'experience', requirementText: '', weight: 0),
-      Criteria(type: 'languages', requirementText: '', weight: 0),
-      Criteria(type: 'competencies', competencies: [], weight: 0),
+      Criteria(criteriaId: '8NUZxq3TCK4Q98S5ZDYB', requirementText: '', weight: 0),
+      Criteria(criteriaId: 'RR2kOQfkmuSgFdHg7BWp', requirementText: '', weight: 0),
+      Criteria(criteriaId: 'xxxP0JVB9xkwjdrXk1vE', requirementText: '', weight: 0),
+      Criteria(criteriaId: '89QFQO49uloGU3vXaA2Z', competencies: [], weight: 0),
     ];
   }
 
@@ -955,7 +955,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           functions: _resourceFunctions,
           otherRequirements: _otherRequirements,
           createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-          status: 'progress', //TODO: define two status at the beginning: 'progress' and 'finished'
+          status: 'progress', //TODO: two status at the beginning: 'progress' and 'finished', 'finished' is when the jobOffer is closed
           organizerId: globals.currentUserCompany!.companyId!,
         );
         currentStep += 1;

@@ -21,7 +21,7 @@ class CriteriaDisplay extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
-                '${item.type.toUpperCase()}: ' +
+                '${item.criteriaId.toUpperCase()}: ' +
                     (item.requirementText != null
                         ? item.requirementText!
                         : item.competenciesNames!) +

@@ -1,12 +1,12 @@
 class Criteria {
-  String type;
+  String criteriaId;
   String? requirementText;
   List<String>? competencies;
   double weight;
   String? competenciesNames;
 
   Criteria({
-    required this.type,
+    required this.criteriaId,
     this.requirementText,
     this.competencies,
     required this.weight,
@@ -16,19 +16,19 @@ class Criteria {
 
   factory Criteria.fromMap(Map<String, dynamic> data) {
     return Criteria(
-      type: data['type'] ?? '',
+      criteriaId: data['criteriaId'] ?? '',
       requirementText: data['requirementText'],
       competencies: data['competencies'] != null
           ? List<String>.from(data['competencies'])
           : null,
-      weight: data['weight'],
+      weight: data['weight'], // Handle number to double conversion
       competenciesNames: data['competenciesNames'] != null ? data['competenciesNames'] : '',
     );
   }
 
 
   Map<String, dynamic> toMap() => {
-    'type': type,
+    'criteriaId': criteriaId,
     'requirementText': requirementText,
     'competencies': competencies,
     'weight': weight,
