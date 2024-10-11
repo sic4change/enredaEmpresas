@@ -17,6 +17,7 @@ import '../../services/database.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
+import '../participants/participant_detail/my_curriculum_page.dart';
 import 'applicants_list_page.dart';
 
 class ParticipantDetailPage extends StatefulWidget {
@@ -48,17 +49,17 @@ late JobOfferApplication currentApplication;
     final database = Provider.of<Database>(context, listen: false);
     return SingleChildScrollView(
         child: RoundedContainer(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(Sizes.mainPadding),
+                    child: IconButton(
                       color: AppColors.primary900,
                       onPressed: () {
                         ApplicantsListPage.selectedIndex.value = 0;
@@ -73,8 +74,11 @@ late JobOfferApplication currentApplication;
                           ],
                         ),
                       ),),
-                    Spacer(),
-                    CustomButton(
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(top: Sizes.mainPadding),
+                    child: CustomButton(
                         text: 'Descartar',
                         onTap: () async {
                           currentApplication.status = 'not-selected';
@@ -87,8 +91,11 @@ late JobOfferApplication currentApplication;
                           });
                         },
                         color: Colors.red),
-                    SizedBox(width: 10,),
-                    CustomButton(
+                  ),
+                  SizedBox(width: 10,),
+                  Padding(
+                    padding: EdgeInsets.only(right: Sizes.mainPadding, top: Sizes.mainPadding),
+                    child: CustomButton(
                         text: 'Enviar a preseleccionados',
                         onTap: () async {
                           currentApplication.status = 'pre-selected';
@@ -101,13 +108,12 @@ late JobOfferApplication currentApplication;
                             });
                         },
                         color: AppColors.primaryColor),
-                    SizedBox(width: 10,),
-                  ],
-                ),
-                SizedBox(height: 10,),
-                _buildHeader(context),
-              ],
-            ),
+                  ),
+                  SizedBox(width: 10,),
+                ],
+              ),
+              _buildHeader(context),
+            ],
           ),
         ),);
   }
@@ -213,6 +219,13 @@ late JobOfferApplication currentApplication;
             ],
           ),
         ),
+        Divider(
+          indent: 0,
+          endIndent: 0,
+          color: AppColors.primaryColor,
+          thickness: 1,
+          height: 1,
+        ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: Sizes.mainPadding),
           child: Flex(
@@ -243,14 +256,8 @@ late JobOfferApplication currentApplication;
             }).toList(),
           ),
         ),
-
-        Divider(
-          indent: 0,
-          endIndent: 0,
-          color: AppColors.greyBorder,
-          thickness: 1,
-          height: 1,
-        ),
+        SizedBox(height: 20,),
+        MyCurriculumPage(),
       ],
     );
   }
@@ -266,7 +273,7 @@ Widget _buildEvaluationResults(Widget title, int label) {
         color: AppColors.primary100,
         border: Border.all(color: AppColors.primary100),
       ),
-      width: 280,
+      width: 270,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

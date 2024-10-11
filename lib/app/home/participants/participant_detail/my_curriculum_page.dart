@@ -275,90 +275,77 @@ class _MyCurriculumPageState extends State<MyCurriculumPage> {
     );
   }
 
+
   Widget _myCurriculumWeb(BuildContext context, UserEnreda? user, String profilePic, List<String> competenciesNames){
-    return Stack(
-      children: [
-        CustomTextMediumBold(text: StringConst.CV),
-        MainContainer(
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.all(0),
-          margin: EdgeInsets.only(top: Sizes.kDefaultPaddingDouble * 2),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  width: Responsive.isDesktopS(context) ? MediaQuery.of(context).size.width * 0.25 :
-                    MediaQuery.of(context).size.width * 0.2,
-                  height: double.infinity,
-                  padding: EdgeInsets.only(
-                    left: Sizes.mainPadding * 1.3,
-                    top: Sizes.mainPadding,
-                  ),
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          AppColors.primary400.withOpacity(0.15),
-                          AppColors.primary020.withOpacity(0.13)
-                        ],
-                      )
-                  ),
-                  child: SingleChildScrollView(
-                    controller: ScrollController(),
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 50.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildMyProfilePhoto(user),
-                          SpaceH20(),
-                          _buildPersonalData(context),
-                          SpaceH20(),
-                          _buildAboutMe(context),
-                          SpaceH20(),
-                          _buildMyDataOfInterest(context),
-                          SpaceH20(),
-                          _buildMyLanguages(context),
-                          SpaceH20(),
-                          _buildMyReferences(context, user),
-                        ],
-                      ),
-                    ),
-                  )),
-              SpaceW40(),
-              Expanded(
-                  child: SingleChildScrollView(
-                    controller: ScrollController(),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        right: Sizes.mainPadding * 2,
-                        top: Sizes.mainPadding * 2,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildCVHeader(context, user, profilePic, competenciesNames),
-                          SpaceH30(),
-                          _buildMyEducation(context, user),
-                          SpaceH30(),
-                          _buildMySecondaryEducation(context, user),
-                          SpaceH30(),
-                          _buildMyExperiences(context, user),
-                          SpaceH30(),
-                          _buildMyCompetencies(context, user),
-                          SpaceH30(),
-                          _buildFinalCheck(context, user),
-                          SpaceH30(),
-                        ],
-                      ),
-                    ),
-                  ))
-            ],
-          ),
-        ),
-      ],
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              width: Responsive.isDesktopS(context) ? MediaQuery.of(context).size.width * 0.25 :
+              MediaQuery.of(context).size.width * 0.2,
+              height: double.infinity,
+              padding: EdgeInsets.only(
+                left: Sizes.mainPadding * 1.3,
+                top: Sizes.mainPadding,
+              ),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      AppColors.primary400.withOpacity(0.15),
+                      AppColors.primary020.withOpacity(0.13)
+                    ],
+                  )
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(right: 50.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMyProfilePhoto(user),
+                    SpaceH20(),
+                    _buildPersonalData(context),
+                    SpaceH20(),
+                    _buildAboutMe(context),
+                    SpaceH20(),
+                    _buildMyDataOfInterest(context),
+                    SpaceH20(),
+                    _buildMyLanguages(context),
+                    SpaceH20(),
+                    _buildMyReferences(context, user),
+                  ],
+                ),
+              )),
+          SpaceW40(),
+          Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: Sizes.mainPadding * 2,
+                  top: Sizes.mainPadding * 2,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildCVHeader(context, user, profilePic, competenciesNames),
+                    SpaceH30(),
+                    _buildMyEducation(context, user),
+                    SpaceH30(),
+                    _buildMySecondaryEducation(context, user),
+                    SpaceH30(),
+                    _buildMyExperiences(context, user),
+                    SpaceH30(),
+                    _buildMyCompetencies(context, user),
+                    SpaceH30(),
+                    _buildFinalCheck(context, user),
+                    SpaceH30(),
+                  ],
+                ),
+              ))
+        ],
+      ),
     );
   }
 
