@@ -8,7 +8,6 @@ import '../../common_widgets/custom_button.dart';
 import '../../common_widgets/custom_my_location.dart';
 import '../../common_widgets/custom_text.dart';
 import '../../common_widgets/gamification_item.dart';
-import '../../common_widgets/gamification_slider.dart';
 import '../../common_widgets/spaces.dart';
 import '../../models/jobOfferApplication.dart';
 import '../../models/jobOfferCriteria.dart';
@@ -228,35 +227,34 @@ late JobOfferApplication currentApplication;
         ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: Sizes.mainPadding),
-          child: Flex(
-            direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: currentApplication.evaluations.entries.map((entry) {
-              Widget displayText = StreamBuilder<JobOfferCriteria>(
-                stream: database.jobOfferCriteriaById(entry.key),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data == null) {
-                    return Text('No encontrado');
-                  } else {
-                    var jobOfferCriteria = snapshot.data!;
-                    return CustomTextSmallBold(
-                      title: '${StringConst.JOB_OFFER_EVALUATION.toUpperCase() +'  '+ jobOfferCriteria.name!.toUpperCase()}',
+          child: FutureBuilder<List<MapEntry<JobOfferCriteria, int>>>(
+            future: _getSortedEvaluations(currentApplication.evaluations, database),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Text('No evaluations found');
+              } else {
+                return Flex(
+                  direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: snapshot.data!.map((entry) {
+                    var jobOfferCriteria = entry.key;
+                    int weight = entry.value;
+                    Widget displayText = CustomTextSmallBold(
+                      title: '${StringConst.JOB_OFFER_EVALUATION.toUpperCase()} ${jobOfferCriteria.name!.toUpperCase()}',
                       color: AppColors.primary900,
                     );
-                  }
-                },
-              );
-              int weight = entry.value;
-              return _buildEvaluationResults(displayText, weight);
-            }).toList(),
+                    return _buildEvaluationResults(displayText, weight);
+                  }).toList(),
+                );
+              }
+            },
           ),
         ),
-        SizedBox(height: 20,),
         MyCurriculumPage(),
       ],
     );
@@ -289,6 +287,16 @@ Widget _buildEvaluationResults(Widget title, int label) {
       ),
     ),
   );
+}
+
+Future<List<MapEntry<JobOfferCriteria, int>>> _getSortedEvaluations(Map<String, int> evaluations, Database database) async {
+  List<Future<MapEntry<JobOfferCriteria, int>?>> futures = evaluations.entries.map((entry) async {
+    var jobOfferCriteria = await database.jobOfferCriteriaById(entry.key).first;
+    return MapEntry(jobOfferCriteria, entry.value);
+  }).toList();
+  var results = await Future.wait(futures);
+  return results.whereType<MapEntry<JobOfferCriteria, int>>().toList()
+    ..sort((a, b) => a.key.name!.compareTo(b.key.name!));
 }
 
 }

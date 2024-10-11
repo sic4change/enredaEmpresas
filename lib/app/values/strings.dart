@@ -20,7 +20,7 @@ class StringConst {
   static const String EMAIL_URL = "mailto:<$DEV_EMAIL>?subject=&body=";
 
   static const String MY_RESOURCES = "Mis ofertas ";
-  static const String MY_JOB_OFFERS = "Gestión de ofertas y candidatos ";
+  static const String MY_JOB_OFFERS = "Gestión de Ofertas & Candidatos ";
   static const String RESOURCES_PARTICIPANT = "Se ha inscrito a los siguientes recursos:";
   static const String FAVORITES = "Favoritos";
   static const String RECOMMENDED = "Recomendados";
@@ -673,6 +673,8 @@ class StringConst {
   static const String JOB_OFFER_PRE_SELECTED_CONFIRMATION = 'El postulante ha sido preseleccionado';
   static const String JOB_OFFER_EVALUATION = 'Evaluación';
   static const String JOB_OFFER_MATCH = 'Match';
+  static const String JOB_OFFER_REGISTERED_TITLE = 'participantes inscritos en esta ';
+  static const String JOB_OFFER = 'oferta';
 
 
   //Create entity errors

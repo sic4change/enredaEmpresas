@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
 import 'package:enreda_empresas/app/models/certificationRequest.dart';
 import 'package:enreda_empresas/app/models/competency.dart';
 import 'package:enreda_empresas/app/models/country.dart';
@@ -278,73 +279,79 @@ class _MyCurriculumPageState extends State<MyCurriculumPage> {
 
   Widget _myCurriculumWeb(BuildContext context, UserEnreda? user, String profilePic, List<String> competenciesNames){
     return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-              width: Responsive.isDesktopS(context) ? MediaQuery.of(context).size.width * 0.25 :
-              MediaQuery.of(context).size.width * 0.2,
-              height: double.infinity,
-              padding: EdgeInsets.only(
-                left: Sizes.mainPadding * 1.3,
-                top: Sizes.mainPadding,
-              ),
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      AppColors.primary400.withOpacity(0.15),
-                      AppColors.primary020.withOpacity(0.13)
-                    ],
-                  )
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(right: 50.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildMyProfilePhoto(user),
-                    SpaceH20(),
-                    _buildPersonalData(context),
-                    SpaceH20(),
-                    _buildAboutMe(context),
-                    SpaceH20(),
-                    _buildMyDataOfInterest(context),
-                    SpaceH20(),
-                    _buildMyLanguages(context),
-                    SpaceH20(),
-                    _buildMyReferences(context, user),
-                  ],
-                ),
-              )),
-          SpaceW40(),
-          Expanded(
-              child: Padding(
+      child: RoundedContainer(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                width: Responsive.isDesktopS(context) ? MediaQuery.of(context).size.width * 0.25 :
+                MediaQuery.of(context).size.width * 0.2,
+                height: double.infinity,
                 padding: EdgeInsets.only(
-                  right: Sizes.mainPadding * 2,
-                  top: Sizes.mainPadding * 2,
+                  left: Sizes.mainPadding * 1.3,
+                  top: Sizes.mainPadding * 2.5,
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildCVHeader(context, user, profilePic, competenciesNames),
-                    SpaceH30(),
-                    _buildMyEducation(context, user),
-                    SpaceH30(),
-                    _buildMySecondaryEducation(context, user),
-                    SpaceH30(),
-                    _buildMyExperiences(context, user),
-                    SpaceH30(),
-                    _buildMyCompetencies(context, user),
-                    SpaceH30(),
-                    _buildFinalCheck(context, user),
-                    SpaceH30(),
-                  ],
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      bottomLeft: Radius.circular(20.0),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        AppColors.primary400.withOpacity(0.15),
+                        AppColors.primary020.withOpacity(0.13)
+                      ],
+                    )
                 ),
-              ))
-        ],
+                child: Padding(
+                  padding: EdgeInsets.only(right: 50.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMyProfilePhoto(user),
+                      SpaceH20(),
+                      _buildPersonalData(context),
+                      SpaceH20(),
+                      _buildAboutMe(context),
+                      SpaceH20(),
+                      _buildMyDataOfInterest(context),
+                      SpaceH20(),
+                      _buildMyLanguages(context),
+                      SpaceH20(),
+                      _buildMyReferences(context, user),
+                    ],
+                  ),
+                )),
+            SpaceW40(),
+            Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    right: Sizes.mainPadding * 2,
+                    top: Sizes.mainPadding * 2,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildCVHeader(context, user, profilePic, competenciesNames),
+                      SpaceH30(),
+                      _buildMyEducation(context, user),
+                      SpaceH30(),
+                      _buildMySecondaryEducation(context, user),
+                      SpaceH30(),
+                      _buildMyExperiences(context, user),
+                      SpaceH30(),
+                      _buildMyCompetencies(context, user),
+                      SpaceH30(),
+                      _buildFinalCheck(context, user),
+                      SpaceH30(),
+                    ],
+                  ),
+                ))
+          ],
+        ),
       ),
     );
   }
@@ -539,14 +546,14 @@ class _MyCurriculumPageState extends State<MyCurriculumPage> {
               iconTheme: IconThemeData(color: AppColors.white),
             ),
             child: Container(
-              width: Responsive.isMobile(context) ? 80 : 120,
-              height:  Responsive.isMobile(context) ? 80 : 120,
+              width: Responsive.isMobile(context) ? 80 : 90,
+              height:  Responsive.isMobile(context) ? 80 : 90,
               color: Colors.transparent,
               child: Stack(
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(120),
+                      borderRadius: BorderRadius.circular(90),
                     ),
                     child:
                     ClipRRect(
@@ -557,14 +564,14 @@ class _MyCurriculumPageState extends State<MyCurriculumPage> {
                         _photo == "" ?
                         Container(
                           color:  Colors.transparent,
-                          height: Responsive.isMobile(context) ? 80 :  120,
-                          width:  Responsive.isMobile(context) ? 80 : 120,
+                          height: Responsive.isMobile(context) ? 80 :  90,
+                          width:  Responsive.isMobile(context) ? 80 : 90,
                           child: Image.asset(ImagePath.USER_DEFAULT),
                         ):
                         FadeInImage.assetNetwork(
                           placeholder: ImagePath.USER_DEFAULT,
-                          width:  Responsive.isMobile(context) ? 80 : 120,
-                          height:  Responsive.isMobile(context) ? 80 : 120,
+                          width:  Responsive.isMobile(context) ? 80 : 90,
+                          height:  Responsive.isMobile(context) ? 80 : 90,
                           fit: BoxFit.cover,
                           image: _photo,
                         ),
