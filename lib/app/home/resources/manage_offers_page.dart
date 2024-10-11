@@ -50,8 +50,8 @@ class _ManageOffersPageState extends State<ManageOffersPage> {
         builder: (context, selectedIndex, child) {
           return RoundedContainer(
             borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
-            margin: EdgeInsets.all(0),
-            contentPadding: EdgeInsets.all(0),
+            contentPadding: const EdgeInsets.only(left: 0, right: Sizes.kDefaultPaddingDouble,
+                bottom: Sizes.kDefaultPaddingDouble, top: Sizes.kDefaultPaddingDouble),
             child: Stack(
               children: [
                 Flex(
