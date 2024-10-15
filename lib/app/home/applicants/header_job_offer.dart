@@ -38,6 +38,8 @@ class HeaderJobOffer extends StatelessWidget {
               text: TextSpan(
                 children: [
                   WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
                     child: StreamBuilder<Company>(
                         stream: database.companyStreamById(resource.organizer),
                         builder: (context, snapshot) {
@@ -48,7 +50,6 @@ class HeaderJobOffer extends StatelessWidget {
                               '$companyName  |  ',
                               style: textTheme.bodySmall?.copyWith(
                                 color: AppColors.greyTxtAlt,
-                                height: 1.2,
                                 fontSize: fontSize,
                               ),
                             );
@@ -57,6 +58,8 @@ class HeaderJobOffer extends StatelessWidget {
                         }),
                   ),
                   WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
                     child: StreamBuilder<List<JobOfferApplication>>(
                       stream: database.applicantsStreamByJobOffer(
                           resource.jobOfferId!, null),
@@ -69,7 +72,6 @@ class HeaderJobOffer extends StatelessWidget {
                           '$count ', // The number of applications or 0
                           style: textTheme.bodySmall?.copyWith(
                             color: AppColors.greyTxtAlt,
-                            height: 1.5,
                             fontSize: fontSize,
                           ),
                         );
@@ -80,7 +82,6 @@ class HeaderJobOffer extends StatelessWidget {
                     text: StringConst.JOB_OFFER_REGISTERED_TITLE,
                     style: textTheme.bodySmall?.copyWith(
                       color: AppColors.greyTxtAlt,
-                      height: 1.5,
                       fontSize: fontSize,
                     ),
                   ),
@@ -88,7 +89,6 @@ class HeaderJobOffer extends StatelessWidget {
                     text: StringConst.JOB_OFFER,
                     style: textTheme.titleMedium?.copyWith(
                       color: AppColors.greyTxtAlt,
-                      height: 1.5,
                       fontSize: fontSize,
                       decoration: TextDecoration.underline,  // Add underline decoration
                     ),
