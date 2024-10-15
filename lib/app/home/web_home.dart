@@ -108,7 +108,6 @@ class _WebHomeState extends State<WebHome> {
                         if (snapshot.hasData){
                           var user = snapshot.data!;
                           var userName = '${user.firstName ?? ""} ${user.lastName ?? ""}';
-                          var profilePic = user.photo ?? "";
                           if (user.role != 'Empresa') {
                             _unemployedSignOut(context);
                             return Container();
@@ -119,6 +118,7 @@ class _WebHomeState extends State<WebHome> {
                                 if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
                                 if (snapshot.hasData) {
                                   var company = snapshot.data!;
+                                  var profilePic = company.photo ?? "";
                                   globals.currentUserCompany = company;
                                   return _buildContent(context, company, user, profilePic, userName);
                                 }

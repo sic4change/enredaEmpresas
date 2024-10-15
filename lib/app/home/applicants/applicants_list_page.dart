@@ -1,19 +1,17 @@
 import 'package:enreda_empresas/app/home/applicants/participant_detail_page.dart';
 import 'package:enreda_empresas/app/home/applicants/registered_applicants.dart';
-import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 import 'package:provider/provider.dart';
 
 import '../../models/jobOfferApplication.dart';
-import '../../models/resource.dart';
 import '../../services/database.dart';
 import '../../utils/adaptative.dart';
-import '../resources/manage_offers_page.dart';
+import 'header_job_offer.dart';
+import 'job_offer_detail_view.dart';
 
 class ApplicantsListPage extends StatefulWidget {
   const ApplicantsListPage({super.key,});
@@ -33,6 +31,7 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
       RegisteredApplicantsListPage(status: 'pre-selected'),
       RegisteredApplicantsListPage(status: 'selected'),
       ParticipantDetailPage(),
+      JobOfferDetailView(),
     ];
     super.initState();
   }
@@ -114,7 +113,7 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
-                  child: _buildHeader(context, globals.currentResource!),
+                  child: HeaderJobOffer(),
                 ),
                 Divider(
                   indent: 0,
@@ -123,7 +122,7 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
                   thickness: 1,
                   height: 1,
                 ),
-                Padding(
+                ApplicantsListPage.selectedIndex.value == 4 ? Container() : Padding(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: Sizes.mainPadding),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +133,7 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
                     ],
                   ),
                 ),
-                Divider(
+                ApplicantsListPage.selectedIndex.value == 4 ? Container() : Divider(
                   indent: 0,
                   endIndent: 0,
                   color: AppColors.greyBorder,
@@ -150,73 +149,6 @@ class _ApplicantsListPageState extends State<ApplicantsListPage> {
         });
 
   }
-
-  Widget _buildHeader(BuildContext context, Resource resource) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-    double fontSize = responsiveSize(context, 12, 14, md: 13);
-    final database = Provider.of<Database>(context, listen: false);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomTextMediumBold(text: '${resource.title}'),
-          Container(
-            height: 30,
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  WidgetSpan(
-                    child: StreamBuilder<List<JobOfferApplication>>(
-                      stream: database.applicantsStreamByJobOffer(
-                          resource.jobOfferId!, null),
-                      builder: (context, snapshot) {
-                        int count = 0;
-                        if (snapshot.hasData) {
-                          count = snapshot.data!.length;
-                        }
-                        return Text(
-                          '$count ', // The number of applications or 0
-                          style: textTheme.bodySmall?.copyWith(
-                            color: AppColors.greyTxtAlt,
-                            height: 1.2,
-                            fontSize: fontSize,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  TextSpan(
-                    text: StringConst.JOB_OFFER_REGISTERED_TITLE,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: AppColors.greyTxtAlt,
-                      height: 1.5,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: StringConst.JOB_OFFER,
-                    style: textTheme.titleMedium?.copyWith(
-                      color: AppColors.greyTxtAlt,
-                      height: 1.5,
-                      fontSize: fontSize,
-                      decoration: TextDecoration.underline,  // Add underline decoration
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        ManageOffersPage.selectedIndex.value = 1;
-                      },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
 
 }
 

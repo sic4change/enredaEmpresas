@@ -6,6 +6,10 @@ import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/jobOfferApplication.dart';
+import '../../services/database.dart';
 
 class ResourceListTile extends StatefulWidget {
   const ResourceListTile({Key? key, required this.resource, this.onTap})
@@ -32,12 +36,13 @@ class _ResourceListTileState extends State<ResourceListTile> {
     double fontSize = responsiveSize(context, 12, 17, md: 15);
     double fontSizeS = responsiveSize(context, 12, 14, md: 13);
     double sidePadding = responsiveSize(context, 15, 20, md: 17);
+    final database = Provider.of<Database>(context, listen: false);
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
           margin: Responsive.isMobile(context) ? const EdgeInsets.all(0) : const EdgeInsets.all(5.0),
           child: InkWell(
-            mouseCursor: MaterialStateMouseCursor.clickable,
+            mouseCursor: WidgetStateMouseCursor.clickable,
             onTap: widget.onTap,
             hoverColor: Colors.transparent,
             splashColor: Colors.transparent,
@@ -241,7 +246,24 @@ class _ResourceListTileState extends State<ResourceListTile> {
                               children: [
                                 Image.asset(ImagePath.ICON_PARTICIPANT, width: 20, height: 18),
                                 SizedBox(width: 8),
-                                Text(widget.resource.participants?.length.toString() ?? '0'),
+                                StreamBuilder<List<JobOfferApplication>>(
+                                  stream: database.applicantsStreamByJobOffer(
+                                      widget.resource.jobOfferId!, null),
+                                  builder: (context, snapshot) {
+                                    int count = 0;
+                                    if (snapshot.hasData) {
+                                      count = snapshot.data!.length;
+                                    }
+                                    return Text(
+                                      '$count ', // The number of applications or 0
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: AppColors.greyTxtAlt,
+                                        height: 1.2,
+                                        fontSize: fontSize,
+                                      ),
+                                    );
+                                  },
+                                ),
                               ],
                             )),
                         Spacer(),

@@ -1,6 +1,5 @@
 import 'package:enreda_empresas/app/models/scope.dart';
 import 'package:enreda_empresas/app/models/size.dart';
-import 'package:enreda_empresas/app/models/socialEntitiesType.dart';
 import 'addressUser.dart';
 
 class Company {
@@ -115,7 +114,7 @@ class Company {
 
     String photo;
     try {
-      photo = data['logoPic']['src'];
+      photo = data['logo']['src'];
     } catch (e) {
       photo = '';
     }

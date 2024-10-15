@@ -141,6 +141,7 @@ abstract class Database {
      Future<void> setUserEnreda(UserEnreda userEnreda);
      Future<void> deleteUser(UserEnreda userEnreda);
      Future<void> uploadUserAvatar(String userId, Uint8List data);
+     Future<void> uploadCompanyLogo(String companyId, Uint8List data);
      Future<void> uploadLogoAvatar(String companyId, Uint8List data);
      Future<void> addContact(Contact contact);
      Future<void> setResource(Resource resource);
@@ -923,6 +924,24 @@ class FirestoreDatabase implements Database {
           },
         );
       }
+
+  @override
+  Future<void> uploadCompanyLogo(String companyId, Uint8List data) async {
+    var firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('companies/$companyId/logo');
+    UploadTask uploadTask = firebaseStorageRef.putData(data);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    taskSnapshot.ref.getDownloadURL().then(
+          (value) => {
+        _service.updateData(path: APIPath.logoCompany(companyId), data: {
+          "logo": {
+            'src': '$value',
+            'title': 'logo.jpg',
+          }
+        })
+      },
+    );
+  }
 
   @override
   Future<void> uploadLogoAvatar(String companyId, Uint8List data) async {

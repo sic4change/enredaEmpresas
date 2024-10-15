@@ -43,6 +43,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
     return resource.resourceId == null || resource.resourceId!.isEmpty ? Container() :
     resource.organizer == globals.currentUserCompany?.companyId ? SingleChildScrollView(
         child: RoundedContainer(
+          color: AppColors.white,
           child: Stack(
             children: [
               Padding(

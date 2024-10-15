@@ -675,6 +675,9 @@ class StringConst {
   static const String JOB_OFFER_MATCH = 'Match';
   static const String JOB_OFFER_REGISTERED_TITLE = 'participantes inscritos en esta ';
   static const String JOB_OFFER = 'oferta';
+  static const String PARTICIPANT_PROFILE = 'Perfil';
+  static const String PARTICIPANT_COMMENTS = 'Comentarios';
+  static const String PARTICIPANT_INTERVIEWS = 'Entrevistas';
 
 
   //Create entity errors
