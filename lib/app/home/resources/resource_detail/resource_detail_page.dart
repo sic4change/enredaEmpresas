@@ -155,197 +155,174 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
     double fontSizeTitle = responsiveSize(context, 14, 22, md: 18);
     double fontSizePromotor = responsiveSize(context, 12, 16, md: 14);
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Flex(
-            direction: Responsive.isMobile(context) ||
-                Responsive.isTablet(context) ||
-                Responsive.isDesktopS(context)
-                ? Axis.vertical
-                : Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                  flex: Responsive.isMobile(context) ||
-                      Responsive.isTablet(context) ||
-                      Responsive.isDesktopS(context)
-                      ? 0
-                      : 6,
-                  child: Stack(
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                          maxWidth: resource.organizer == globals.currentUserCompany?.companyId
-                              ? MediaQuery.of(context).size.width
-                              : MediaQuery.of(context).size.width * 0.5,
-                        ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          border: Border.all(
-                              color: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight2.withOpacity(0.2),
-                              width: 1),
-                          borderRadius: BorderRadius.circular(Consts.padding),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(ImagePath.RECTANGLE_RESOURCE),
-                                  fit: BoxFit.cover,
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.5,
+            ),
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: AppColors.white,
+              border: Border.all(
+                  color: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight2.withOpacity(0.2),
+                  width: 1),
+              borderRadius: BorderRadius.circular(Consts.padding),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImagePath.RECTANGLE_RESOURCE),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(Consts.padding),
+                        bottomLeft: Radius.circular(Consts.padding)),
+                  ),
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                      children: [
+                        Responsive.isMobile(context)
+                            ? const SpaceH8()
+                            : const SpaceH20(),
+                        resource.organizerImage == null ||
+                            resource.organizerImage!.isEmpty
+                            ? Container()
+                            : Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1.0, color: AppColors.greyLight),
+                                borderRadius: BorderRadius.circular(
+                                  100,
                                 ),
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(Consts.padding),
-                                    bottomLeft: Radius.circular(Consts.padding)),
-                              ),
-                              margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Column(
-                                  children: [
-                                    Responsive.isMobile(context)
-                                        ? const SpaceH8()
-                                        : const SpaceH20(),
-                                    resource.organizerImage == null ||
-                                        resource.organizerImage!.isEmpty
-                                        ? Container()
-                                        : Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 1.0, color: AppColors.greyLight),
-                                            borderRadius: BorderRadius.circular(
-                                              100,
-                                            ),
-                                            color: AppColors.greyLight),
-                                        child: CircleAvatar(
-                                          radius:
-                                          Responsive.isMobile(context) ? 28 : 40,
-                                          backgroundColor: AppColors.white,
-                                          backgroundImage:
-                                          NetworkImage(resource.organizerImage!),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10, right: 30.0, left: 30.0),
-                                      child: Text(
-                                        resource.title,
-                                        textAlign: TextAlign.center,
-                                        maxLines:
-                                        Responsive.isMobile(context) ? 2 : 1,
-                                        style: textTheme.bodySmall?.copyWith(
-                                          letterSpacing: 1.2,
-                                          color: AppColors.white,
-                                          height: 1.5,
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: fontSizeTitle,
-                                        ),
-                                      ),
-                                    ),
-                                    const SpaceH4(),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          resource.promotor != null
-                                              ? resource.promotor != ""
-                                              ? resource.promotor!
-                                              : resource.organizerName!
-                                              : resource.organizerName!,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            letterSpacing: 1.2,
-                                            fontSize: fontSizePromotor,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    resource.resourceId == null || resource.resourceId!.isEmpty ? SpaceH20() :
-                                    resource.organizer == globals.currentUserCompany?.companyId ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                                          child: EnredaButtonIcon(
-                                            onPressed: () => {
-                                              setState(() {
-                                                ManageOffersPage.selectedIndex.value = 2;
-                                              })
-                                            },
-                                            buttonColor: Colors.white,
-                                            padding: const EdgeInsets.all(0),
-                                            width: 80,
-                                            height: 10,
-                                            widget: Icon(
-                                              Icons.edit_outlined,
-                                              color: AppColors.greyTxtAlt,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                                          child: EnredaButtonIcon(
-                                            onPressed: () => _confirmDeleteResource(context, resource),
-                                            buttonColor: Colors.white,
-                                            padding: const EdgeInsets.all(0),
-                                            width: 80,
-                                            height: 10,
-                                            widget: Icon(
-                                              Icons.delete_outline,
-                                              color: AppColors.greyTxtAlt,
-                                            ),
-
-                                          ),
-                                        ),
-                                        buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white),
-                                        SizedBox(width: 10),
-                                      ],
-                                    ) : Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white),
-                                        SizedBox(width: 10),
-                                      ],
-                                    ),
-                                  ]
-                              ),
+                                color: AppColors.greyLight),
+                            child: CircleAvatar(
+                              radius:
+                              Responsive.isMobile(context) ? 28 : 40,
+                              backgroundColor: AppColors.white,
+                              backgroundImage:
+                              NetworkImage(resource.organizerImage!),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                              child: _buildBoxes(resource),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, right: 30.0, left: 30.0),
+                          child: Text(
+                            resource.title,
+                            textAlign: TextAlign.center,
+                            maxLines:
+                            Responsive.isMobile(context) ? 2 : 1,
+                            style: textTheme.bodySmall?.copyWith(
+                              letterSpacing: 1.2,
+                              color: AppColors.white,
+                              height: 1.5,
+                              fontWeight: FontWeight.w300,
+                              fontSize: fontSizeTitle,
                             ),
-                            Flex(
-                              direction: Responsive.isMobile(context) ||
-                                  Responsive.isTablet(context) ||
-                                  Responsive.isDesktopS(context)
-                                  ? Axis.vertical
-                                  : Axis.horizontal,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                    flex: Responsive.isMobile(context) ||
-                                        Responsive.isTablet(context) ||
-                                        Responsive.isDesktopS(context)
-                                        ? 0
-                                        : 4,
-                                    child: _buildDetailResource(
-                                        context, resource, jobOffer)),
-                              ],
+                          ),
+                        ),
+                        const SpaceH4(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              resource.promotor != null
+                                  ? resource.promotor != ""
+                                  ? resource.promotor!
+                                  : resource.organizerName!
+                                  : resource.organizerName!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                letterSpacing: 1.2,
+                                fontSize: fontSizePromotor,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.white,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  )),
-            ],
+                        resource.resourceId == null || resource.resourceId!.isEmpty ? SpaceH20() :
+                        resource.organizer == globals.currentUserCompany?.companyId ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                              child: EnredaButtonIcon(
+                                onPressed: () => {
+                                  setState(() {
+                                    ManageOffersPage.selectedIndex.value = 2;
+                                  })
+                                },
+                                buttonColor: Colors.white,
+                                padding: const EdgeInsets.all(0),
+                                width: 80,
+                                height: 10,
+                                widget: Icon(
+                                  Icons.edit_outlined,
+                                  color: AppColors.greyTxtAlt,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                              child: EnredaButtonIcon(
+                                onPressed: () => _confirmDeleteResource(context, resource),
+                                buttonColor: Colors.white,
+                                padding: const EdgeInsets.all(0),
+                                width: 80,
+                                height: 10,
+                                widget: Icon(
+                                  Icons.delete_outline,
+                                  color: AppColors.greyTxtAlt,
+                                ),
+
+                              ),
+                            ),
+                            buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white),
+                            SizedBox(width: 10),
+                          ],
+                        ) : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white),
+                            SizedBox(width: 10),
+                          ],
+                        ),
+                      ]
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  child: _buildBoxes(resource),
+                ),
+                Flex(
+                  direction: Responsive.isMobile(context) ||
+                      Responsive.isTablet(context) ||
+                      Responsive.isDesktopS(context)
+                      ? Axis.vertical
+                      : Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        flex: Responsive.isMobile(context) ||
+                            Responsive.isTablet(context) ||
+                            Responsive.isDesktopS(context)
+                            ? 0
+                            : 4,
+                        child: _buildDetailResource(
+                            context, resource, jobOffer)),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

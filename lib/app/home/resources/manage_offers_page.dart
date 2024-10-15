@@ -49,6 +49,7 @@ class _ManageOffersPageState extends State<ManageOffersPage> {
         valueListenable: ManageOffersPage.selectedIndex,
         builder: (context, selectedIndex, child) {
           return RoundedContainer(
+            color: AppColors.grey80,
             borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
             contentPadding: const EdgeInsets.only(left: 0, right: Sizes.kDefaultPaddingDouble,
                 bottom: Sizes.kDefaultPaddingDouble, top: Sizes.kDefaultPaddingDouble),

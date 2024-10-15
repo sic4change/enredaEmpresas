@@ -29,7 +29,9 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
+import '../../models/company.dart';
 import '../../utils/responsive.dart';
 
 class PersonalData extends StatefulWidget {
@@ -50,6 +52,8 @@ class _PersonalDataState extends State<PersonalData> {
   String _lastName = '';
   String _photo = '';
   String _phone = '';
+  String _logoCompany = '';
+  String _organizer = '';
   final String _gender = '';
   DateTime? _birthday;
   String _postalCode = '';
@@ -82,26 +86,39 @@ class _PersonalDataState extends State<PersonalData> {
                   _firstName = userEnreda?.firstName ?? '';
                   _lastName = userEnreda?.lastName ?? '';
                   _photo = userEnreda?.photo ?? '';
+                  _organizer = userEnreda?.companyId ?? '';
                   if (_phone.isEmpty) _phone = userEnreda?.phone ?? '';
                   _phoneCode =
                       '${userEnreda?.phone?[0]}${userEnreda?.phone?[1]}${userEnreda?.phone?[2]}';
                   _birthday = _birthday ?? userEnreda?.birthday;
                   _postalCode = userEnreda?.address?.postalCode ?? '';
-                  return RoundedContainer(
-                      borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
-                      margin: Responsive.isMobile(context) ? EdgeInsets.all(0) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
-                      contentPadding: Responsive.isMobile(context) ? EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2) :
-                        EdgeInsets.all(Sizes.kDefaultPaddingDouble),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            _buildMainDataContainer(context, userEnreda!),
-                            const SpaceH40(),
-                            _buildMyParameters(context, userEnreda!),
-                            const SpaceH20(),
-                          ],
-                        ),
-                      ));
+                  return StreamBuilder<Company>(
+                    stream: database.companyStream(_organizer),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                            child: CircularProgressIndicator());
+                      }
+                      final company = snapshot.data;
+                      _logoCompany = company?.photo ?? '';
+                      globals.organizerCurrentResource = company;
+                      return RoundedContainer(
+                          borderColor: Responsive.isMobile(context) ? Colors.transparent : AppColors.greyLight,
+                          margin: Responsive.isMobile(context) ? EdgeInsets.all(0) : EdgeInsets.all(Sizes.kDefaultPaddingDouble),
+                          contentPadding: Responsive.isMobile(context) ? EdgeInsets.all(Sizes.kDefaultPaddingDouble / 2) :
+                            EdgeInsets.all(Sizes.kDefaultPaddingDouble),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                _buildMainDataContainer(context, userEnreda!, company!),
+                                const SpaceH40(),
+                                _buildMyParameters(context, userEnreda!),
+                                const SpaceH20(),
+                              ],
+                            ),
+                          ));
+                    },
+                  );
                 } else {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -126,7 +143,7 @@ class _PersonalDataState extends State<PersonalData> {
     );
   }
 
-  Widget _buildMainDataContainer(BuildContext context, UserEnreda userEnreda) {
+  Widget _buildMainDataContainer(BuildContext context, UserEnreda userEnreda, Company company) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
@@ -141,13 +158,13 @@ class _PersonalDataState extends State<PersonalData> {
                   color: AppColors.greyDark2),),
           ),
         ),
-        _buildForm(context, userEnreda),
+        _buildForm(context, userEnreda, company),
         _buildSaveDataButton(context, userEnreda),
       ],
     );
   }
 
-  Widget _buildForm(BuildContext context, UserEnreda userEnreda) {
+  Widget _buildForm(BuildContext context, UserEnreda userEnreda, Company company) {
     final textTheme = Theme.of(context).textTheme;
     double fontSize = responsiveSize(context, 14, 16, md: 15);
     return Form(
@@ -156,7 +173,7 @@ class _PersonalDataState extends State<PersonalData> {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: InkWell(
-            mouseCursor: MaterialStateMouseCursor.clickable,
+            mouseCursor: WidgetStateMouseCursor.clickable,
             onTap: () => !kIsWeb
                 ? _displayPickImageDialog()
                 : _onImageButtonPressed(ImageSource.gallery),
@@ -175,7 +192,7 @@ class _PersonalDataState extends State<PersonalData> {
                       borderRadius:
                       const BorderRadius.all(Radius.circular(60)),
                       child: Center(
-                        child: _photo == ""
+                        child: _logoCompany == ""
                             ? Container(
                           color: Colors.transparent,
                           height: 120,
@@ -188,14 +205,14 @@ class _PersonalDataState extends State<PersonalData> {
                             height: 120,
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
-                            imageUrl: _photo),
+                            imageUrl: _logoCompany),
                       ),
                     )
                         : ClipRRect(
                       borderRadius:
                       const BorderRadius.all(Radius.circular(60)),
                       child: Center(
-                        child: _photo == ""
+                        child: _logoCompany == ""
                             ? Container(
                           color: Colors.transparent,
                           height: 120,
@@ -208,7 +225,7 @@ class _PersonalDataState extends State<PersonalData> {
                           width: 120,
                           height: 120,
                           fit: BoxFit.cover,
-                          image: _photo,
+                          image: _logoCompany,
                         ),
                       ),
                     ),
@@ -321,6 +338,228 @@ class _PersonalDataState extends State<PersonalData> {
     );
   }
 
+  Widget _buildMyProfilePhoto(UserEnreda? userEnreda) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: Sizes.mainPadding),
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Theme(
+            data: ThemeData(
+              iconTheme: IconThemeData(color: AppColors.white),
+            ),
+            child: InkWell(
+              mouseCursor: WidgetStateMouseCursor.clickable,
+              onTap: () => !kIsWeb? _displayPickImageDialog()
+                  : _onImageButtonPressed(ImageSource.gallery),
+              child: Container(
+                width: 120,
+                height: 120,
+                color: Colors.transparent,
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(120),
+                      ),
+                      child:
+                      !kIsWeb ?
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(60)),
+                        child:
+                        Center(
+                          child:
+                          _photo == "" ?
+                          Container(
+                            color:  Colors.transparent,
+                            height: 120,
+                            width: 120,
+                            child: Image.asset(ImagePath.USER_DEFAULT),
+                          ):
+                          CachedNetworkImage(
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                              imageUrl: _photo),
+                        ),
+                      ):
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(60)),
+                        child:
+                        Center(
+                          child:
+                          _photo == "" ?
+                          Container(
+                            color:  Colors.transparent,
+                            height: 120,
+                            width: 120,
+                            child: Image.asset(ImagePath.USER_DEFAULT),
+                          ):
+                          FadeInImage.assetNetwork(
+                            placeholder: ImagePath.USER_DEFAULT,
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
+                            image: _photo,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 6,
+                      top: 6,
+                      child: Container(
+                        padding: const EdgeInsets.all(2.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.blue, width: 1.0),
+                        ),
+                        child: Icon(
+                          Icons.mode_edit_outlined,
+                          size: 22,
+                          color: AppColors.primary900,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _displayPickImageDialog() async {
+    final textTheme = Theme.of(context).textTheme;
+    return showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 150,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16.0, left: 24.0),
+              child: Row(
+                children: <Widget>[
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.camera,
+                          color: Colors.indigo,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          _onImageButtonPressed(ImageSource.camera);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      Text(
+                        'Cámara',
+                        style: textTheme.bodySmall?.copyWith(fontSize: 12.0),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Column(children: [
+                    IconButton(
+                        icon: Icon(
+                          Icons.photo,
+                          color: Colors.indigo,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          _onImageButtonPressed(ImageSource.gallery);
+                          Navigator.of(context).pop();
+                        }),
+                    Text(
+                      'Galería',
+                      style: textTheme.bodySmall?.copyWith(fontSize: 12.0),
+                    ),
+                  ]),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<XFile?> _cropImage({required XFile imageFile}) async {
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+        sourcePath: imageFile.path,
+        uiSettings: [
+          WebUiSettings(
+              context: context,
+              presentStyle: WebPresentStyle.dialog,
+              viewwMode: WebViewMode.mode_1,
+              dragMode: WebDragMode.move,
+              size: const CropperSize(
+                width: 520,
+                height: 520,
+              ),
+              cropBoxMovable: true,
+              cropBoxResizable: true,
+              movable: true,
+              toggleDragModeOnDblclick: true,
+              translations: WebTranslations(
+                title: 'Recortar imagen',
+                rotateLeftTooltip: 'Rotar 90 grados a la izquierda',
+                rotateRightTooltip: 'Rotar 90 grados a la derecha',
+                cancelButton: 'Cancelar',
+                cropButton: 'Recortar',
+              )
+          ),
+          AndroidUiSettings(
+            toolbarTitle: 'Recortar imagen',
+            toolbarColor: AppColors.white,
+            toolbarWidgetColor: AppColors.primary900,
+            activeControlsWidgetColor: AppColors.primaryColor,
+            initAspectRatio: CropAspectRatioPreset.original,
+            hideBottomControls: false,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: 'Recortar imagen',
+            doneButtonTitle: 'Listo',
+            cancelButtonTitle: 'Cancelar',
+            resetAspectRatioEnabled: true,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio4x3,
+            ],
+          ),
+        ]
+    );
+    if(croppedImage == null) return null;
+    return XFile(croppedImage.path);
+  }
+
+  Future<void> _onImageButtonPressed(ImageSource source) async {
+    try {
+      XFile? pickedFile = await _imagePicker.pickImage(
+        source: source,
+      );
+      if (pickedFile != null) {
+        //pickedFile = await _cropImage(imageFile: pickedFile);
+
+          final database = Provider.of<Database>(context, listen: false);
+          await database.uploadCompanyLogo(userEnreda!.companyId!, await pickedFile!.readAsBytes()); //TODO check null
+      }
+    } catch (e) {
+      print(e);
+      setState(() {
+        //_pickImageError = e;
+      });
+    }
+  }
+
   void _onCountryChange(CountryCode countryCode) {
     _phoneCode = countryCode.toString();
   }
@@ -418,112 +657,112 @@ class _PersonalDataState extends State<PersonalData> {
     });
   }
 
-  Future<void> _displayPickImageDialog() async {
-    final textTheme = Theme.of(context).textTheme;
-    return showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 150,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, left: 24.0),
-              child: Row(
-                children: <Widget>[
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.camera,
-                          color: Colors.indigo,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          _onImageButtonPressed(ImageSource.camera);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      Text(
-                        'Cámara',
-                        style: textTheme.bodyMedium?.copyWith(fontSize: 12.0),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Column(children: [
-                    IconButton(
-                        icon: const Icon(
-                          Icons.photo,
-                          color: Colors.indigo,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          _onImageButtonPressed(ImageSource.gallery);
-                          Navigator.of(context).pop();
-                        }),
-                    Text(
-                      'Galería',
-                      style: textTheme.bodyMedium?.copyWith(fontSize: 12.0),
-                    ),
-                  ]),
-                ],
-              ),
-            ),
-          );
-        });
-  }
+  // Future<void> _displayPickImageDialog() async {
+  //   final textTheme = Theme.of(context).textTheme;
+  //   return showModalBottomSheet(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Container(
+  //           height: 150,
+  //           child: Padding(
+  //             padding: const EdgeInsets.only(top: 16.0, left: 24.0),
+  //             child: Row(
+  //               children: <Widget>[
+  //                 Column(
+  //                   children: [
+  //                     IconButton(
+  //                       icon: const Icon(
+  //                         Icons.camera,
+  //                         color: Colors.indigo,
+  //                         size: 30,
+  //                       ),
+  //                       onPressed: () {
+  //                         _onImageButtonPressed(ImageSource.camera);
+  //                         Navigator.of(context).pop();
+  //                       },
+  //                     ),
+  //                     Text(
+  //                       'Cámara',
+  //                       style: textTheme.bodyMedium?.copyWith(fontSize: 12.0),
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 const SizedBox(
+  //                   width: 16,
+  //                 ),
+  //                 Column(children: [
+  //                   IconButton(
+  //                       icon: const Icon(
+  //                         Icons.photo,
+  //                         color: Colors.indigo,
+  //                         size: 30,
+  //                       ),
+  //                       onPressed: () {
+  //                         _onImageButtonPressed(ImageSource.gallery);
+  //                         Navigator.of(context).pop();
+  //                       }),
+  //                   Text(
+  //                     'Galería',
+  //                     style: textTheme.bodyMedium?.copyWith(fontSize: 12.0),
+  //                   ),
+  //                 ]),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 
-  Future<XFile?> _cropImage({required XFile imageFile}) async {
-    CroppedFile? croppedImage = await ImageCropper().cropImage(
-        sourcePath: imageFile.path,
-        uiSettings: [
-          WebUiSettings(
-              context: context,
-              presentStyle: WebPresentStyle.dialog,
-              viewwMode: WebViewMode.mode_1,
-              dragMode: WebDragMode.move,
-              size: const CropperSize(
-                width: 520,
-                height: 520,
-              ),
-              cropBoxMovable: true,
-              cropBoxResizable: true,
-              movable: true,
-              toggleDragModeOnDblclick: true,
-              translations: WebTranslations(
-                title: 'Recortar imagen',
-                rotateLeftTooltip: 'Rotar 90 grados a la izquierda',
-                rotateRightTooltip: 'Rotar 90 grados a la derecha',
-                cancelButton: 'Cancelar',
-                cropButton: 'Recortar',
-              )
-          ),
-        ]
-    );
-    if(croppedImage == null) return null;
-    return XFile(croppedImage.path);
-  }
+  // Future<XFile?> _cropImage({required XFile imageFile}) async {
+  //   CroppedFile? croppedImage = await ImageCropper().cropImage(
+  //       sourcePath: imageFile.path,
+  //       uiSettings: [
+  //         WebUiSettings(
+  //             context: context,
+  //             presentStyle: WebPresentStyle.dialog,
+  //             viewwMode: WebViewMode.mode_1,
+  //             dragMode: WebDragMode.move,
+  //             size: const CropperSize(
+  //               width: 520,
+  //               height: 520,
+  //             ),
+  //             cropBoxMovable: true,
+  //             cropBoxResizable: true,
+  //             movable: true,
+  //             toggleDragModeOnDblclick: true,
+  //             translations: WebTranslations(
+  //               title: 'Recortar imagen',
+  //               rotateLeftTooltip: 'Rotar 90 grados a la izquierda',
+  //               rotateRightTooltip: 'Rotar 90 grados a la derecha',
+  //               cancelButton: 'Cancelar',
+  //               cropButton: 'Recortar',
+  //             )
+  //         ),
+  //       ]
+  //   );
+  //   if(croppedImage == null) return null;
+  //   return XFile(croppedImage.path);
+  // }
 
-  Future<void> _onImageButtonPressed(ImageSource source) async {
-    try {
-      XFile? pickedFile = await _imagePicker.pickImage(
-        source: source,
-      );
-      if (pickedFile != null) {
-        pickedFile = await _cropImage(imageFile: pickedFile);
-        setState(() async {
-          final database = Provider.of<Database>(context, listen: false);
-          await database.uploadUserAvatar(
-              _userId, await pickedFile!.readAsBytes());
-        });
-      }
-    } catch (e) {
-      setState(() {
-        //_pickImageError = e;
-      });
-    }
-  }
+  // Future<void> _onImageButtonPressed(ImageSource source) async {
+  //   try {
+  //     XFile? pickedFile = await _imagePicker.pickImage(
+  //       source: source,
+  //     );
+  //     if (pickedFile != null) {
+  //       pickedFile = await _cropImage(imageFile: pickedFile);
+  //       setState(() async {
+  //         final database = Provider.of<Database>(context, listen: false);
+  //         await database.uploadUserAvatar(
+  //             _userId, await pickedFile!.readAsBytes());
+  //       });
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       //_pickImageError = e;
+  //     });
+  //   }
+  // }
 
   Widget _buildMyParameters(BuildContext context, UserEnreda user) {
     final textTheme = Theme.of(context).textTheme;

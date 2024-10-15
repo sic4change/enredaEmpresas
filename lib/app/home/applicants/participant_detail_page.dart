@@ -92,10 +92,25 @@ late JobOfferApplication currentApplication;
                         color: Colors.red),
                   ),
                   SizedBox(width: 10,),
-                  Padding(
+                  currentApplication.status == 'pre-selected' ? Padding(
                     padding: EdgeInsets.only(right: Sizes.mainPadding, top: Sizes.mainPadding),
                     child: CustomButton(
-                        text: 'Enviar a preseleccionados',
+                        text: 'Mover a finalistas',
+                        onTap: () async {
+                          currentApplication.status = 'selected';
+                          await database.setJobOfferApplication(currentApplication);
+                          showAlertDialog(context,
+                            title: StringConst.SAVE_SUCCEED,
+                            content: StringConst.JOB_OFFER_PRE_SELECTED_CONFIRMATION,
+                            defaultActionText: StringConst.FORM_CONFIRM,).then((value) {
+                            ApplicantsListPage.selectedIndex.value = 1;
+                          });
+                        },
+                        color: AppColors.primaryColor),
+                  ) : Padding(
+                    padding: EdgeInsets.only(right: Sizes.mainPadding, top: Sizes.mainPadding),
+                    child: CustomButton(
+                        text: 'Mover a preseleccionados',
                         onTap: () async {
                           currentApplication.status = 'pre-selected';
                           await database.setJobOfferApplication(currentApplication);
