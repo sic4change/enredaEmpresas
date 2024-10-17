@@ -6,7 +6,6 @@ import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/enreda_button.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/common_widgets/user_avatar.dart';
-import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/home/resources/resource_competencies_stream.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/box_item_data.dart';
 import 'package:enreda_empresas/app/home/resources/resource_detail/invite_users_page.dart';
@@ -32,6 +31,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 import '../../../models/jobOfferCriteria.dart';
+import '../builders/list_item_builder.dart';
 import '../manage_offers_page.dart';
 
 class ResourceDetailPage extends StatefulWidget {

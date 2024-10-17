@@ -310,16 +310,10 @@ class _ResourceListTileState extends State<ResourceListTile> {
         }
 
       case StringConst.ONLINE_FOR_COUNTRY:
-      /*return StringConst.ONLINE_FOR_COUNTRY
-            .replaceAll('país', resource.countryName!);*/
 
       case StringConst.ONLINE_FOR_PROVINCE:
-      /*return StringConst.ONLINE_FOR_PROVINCE.replaceAll(
-            'provincia', '${resource.provinceName!}, ${resource.countryName!}');*/
 
       case StringConst.ONLINE_FOR_CITY:
-      /*return StringConst.ONLINE_FOR_CITY.replaceAll('ciudad',
-            '${resource.cityName!}, ${resource.provinceName!}, ${resource.countryName!}');*/
 
       case StringConst.ONLINE:
         return StringConst.ONLINE;

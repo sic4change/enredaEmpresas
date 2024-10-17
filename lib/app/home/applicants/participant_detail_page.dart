@@ -13,7 +13,6 @@ import '../../models/jobOfferApplication.dart';
 import '../../models/jobOfferCriteria.dart';
 import '../../models/userEnreda.dart';
 import '../../services/database.dart';
-import '../../utils/adaptative.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';

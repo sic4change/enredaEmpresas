@@ -34,7 +34,7 @@ class EnredaMethodologyPage extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
-                    child: CustomTextBoldTitle(title: StringConst.ENREDA_METHODOLOGY.toUpperCase(),),
+                    child: CustomTextBoldTitle(title: StringConst.CALENDAR.toUpperCase(),),
                   ),
                   Divider(color: AppColors.greyLight2.withOpacity(0.3),),
                   Padding(
@@ -48,7 +48,7 @@ class EnredaMethodologyPage extends StatelessWidget {
                               builder: (context) =>
                                   MyPreviewPdf(
                                     url: StringConst.MANUAL_METHODOLOGY_PDF,
-                                    title: StringConst.MANUAL_METHODOLOGY,
+                                    title: StringConst.CALENDAR,
                                   )),
                         );
                       },

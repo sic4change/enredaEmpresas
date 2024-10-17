@@ -73,6 +73,7 @@ abstract class Database {
      Stream<List<Resource>> myDraftResourcesStream(String companyId);
      Stream<List<Resource>> myActiveResourcesStream(String companyId);
      Stream<List<Resource>> myFinishedResourcesStream(String companyId);
+     Stream<List<Resource>> myAllResourcesStream(String companyId);
      Stream<JobOffer> jobOfferStreamById(String jobOfferId);
      Stream<List<Resource>> myLimitResourcesStream(String companyId, int i);
      Stream<List<Resource>> participantsResourcesStream(String? userId, String? organizerId);
@@ -287,6 +288,16 @@ class FirestoreDatabase implements Database {
         queryBuilder: (query) => query
             .where('organizer', isEqualTo: companyId)
             .where('status', isEqualTo: 'finished'), // TODO: cloud function to exclude 'finished' status in automatic updates
+        builder: (data, documentId) => Resource.fromMap(data, documentId),
+        sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
+      );
+
+  @override
+  Stream<List<Resource>> myAllResourcesStream(String companyId) =>
+      _service.collectionStream(
+        path: APIPath.resources(),
+        queryBuilder: (query) => query
+            .where('organizer', isEqualTo: companyId),
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );

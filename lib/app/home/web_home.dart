@@ -56,6 +56,14 @@ class WebHome extends StatefulWidget {
     ResourcesListPage.selectedIndex.value = 1;
   }
 
+  static goJobOfferDetail() {
+    WebHome.selectedIndex.value = 2; // Select empty Container
+    WebHome.controller.selectIndex(1);
+    ManageOffersPage.selectedIndex.value = 3;
+    ResourcesListPage.selectedIndex.value = 1;
+  }
+
+
   static goToParticipants() {
     WebHome.selectedIndex.value = 2; // Select empty Container
     WebHome.controller.selectIndex(1);
