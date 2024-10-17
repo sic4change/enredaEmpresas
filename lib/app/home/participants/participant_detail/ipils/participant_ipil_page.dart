@@ -24,7 +24,7 @@ import '../../../../common_widgets/alert_dialog.dart';
 import '../../../../common_widgets/empty-list.dart';
 import '../../../../common_widgets/enreda_button.dart';
 import '../../../../models/ipilReinforcement.dart';
-import '../../../resources/list_item_builder.dart';
+import '../../../resources/builders/list_item_builder.dart';
 import 'create_ipil_form.dart';
 import 'expandable_ipil.dart';
 

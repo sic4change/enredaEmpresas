@@ -1,7 +1,5 @@
-import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
-import 'package:enreda_empresas/app/home/resources/resources_page.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/company.dart';
 import 'package:enreda_empresas/app/models/country.dart';
@@ -19,7 +17,7 @@ import '../../common_widgets/no_resources_illustration.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
-
+import 'builders/list_item_builder_grid.dart';
 
 class ActiveResourcesPage extends StatefulWidget {
   @override

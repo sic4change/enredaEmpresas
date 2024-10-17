@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:enreda_empresas/app/home/participants/participant_detail/documentation/popup_menu_actions.dart';
 import 'package:enreda_empresas/app/home/participants/participant_detail/documentation/user_profile_picture.dart';
@@ -11,10 +10,9 @@ import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/services/database.dart';
 import '../../../../models/documentCategory.dart';
 import '../../../../models/documentationParticipant.dart';
-import '../../../../services/auth.dart';
 import '../../../../utils/responsive.dart';
 import '../../../../values/values.dart';
-import '../../../resources/list_item_builder.dart';
+import '../../../resources/builders/list_item_builder.dart';
 import 'add_documents_form.dart';
 import 'custom_menu_entry.dart';
 import 'menu_item.dart';

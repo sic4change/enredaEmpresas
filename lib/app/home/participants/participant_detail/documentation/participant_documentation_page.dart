@@ -1,7 +1,6 @@
 
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/home/participants/participant_detail/documentation/expandable_document_category.dart';
-import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/models/documentCategory.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/database.dart';
@@ -10,6 +9,8 @@ import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../resources/builders/list_item_builder.dart';
 
 class ParticipantDocumentationPage extends StatefulWidget {
   ParticipantDocumentationPage({required this.participantUser, super.key});

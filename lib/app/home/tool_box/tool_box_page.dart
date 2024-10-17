@@ -74,9 +74,9 @@ class _ToolBoxPageState extends State<ToolBoxPage> {
                                       ToolBoxPage.selectedIndex.value = 1;
                                     })
                                   },
-                                  child: selectedIndex != 0 ? CustomTextMedium(text: StringConst.TOOL_BOX) :
-                                  CustomTextMediumBold(text: StringConst.TOOL_BOX) ),
-                              selectedIndex == 1 ? CustomTextMediumBold(text: '> ${StringConst.ENREDA_METHODOLOGY}',) :
+                                  child: selectedIndex != 0 ? CustomTextMedium(text: StringConst.RESOURCES_CALENDAR) :
+                                  CustomTextMediumBold(text: StringConst.RESOURCES_CALENDAR) ),
+                              selectedIndex == 1 ? CustomTextMediumBold(text: '> ${StringConst.ENREDA_CALENDAR}',) :
                               selectedIndex == 2 ? CustomTextMediumBold(text:'> ${StringConst.WORKFLOW}') : Container()
                             ],
                           ),
@@ -95,7 +95,7 @@ class _ToolBoxPageState extends State<ToolBoxPage> {
                             })
                           },
                           child: CustomStepperButton(
-                            child: CustomTextBold(title: StringConst.ENREDA_METHODOLOGY, color: AppColors.turquoiseBlue,),
+                            child: CustomTextBold(title: StringConst.CALENDAR, color: AppColors.turquoiseBlue,),
                             color: ToolBoxPage.selectedIndex.value == 1 ? AppColors.yellow : AppColors.white,
                           ),
                         ),

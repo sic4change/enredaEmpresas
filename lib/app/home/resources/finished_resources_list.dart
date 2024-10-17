@@ -1,4 +1,3 @@
-import 'package:enreda_empresas/app/home/resources/list_item_builder_grid.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/models/city.dart';
@@ -18,6 +17,7 @@ import '../../models/jobOffer.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
+import 'builders/list_item_builder_grid.dart';
 
 
 class FinishedResourcesPage extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:enreda_empresas/app/home/resources/empty_content.dart';
+import 'package:enreda_empresas/app/home/resources/builders/empty_content.dart';
 import 'package:flutter/material.dart';
 
 

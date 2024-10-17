@@ -1,31 +1,36 @@
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
-import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
-import 'package:enreda_empresas/app/models/city.dart';
-import 'package:enreda_empresas/app/models/company.dart';
-import 'package:enreda_empresas/app/models/country.dart';
-import 'package:enreda_empresas/app/models/jobOffer.dart';
-import 'package:enreda_empresas/app/models/province.dart';
-import 'package:enreda_empresas/app/models/resource.dart';
-import 'package:enreda_empresas/app/models/userEnreda.dart';
-import 'package:enreda_empresas/app/services/auth.dart';
-import 'package:enreda_empresas/app/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
-
 import '../../common_widgets/no_resources_illustration.dart';
+import '../../models/city.dart';
+import '../../models/company.dart';
+import '../../models/country.dart';
+import '../../models/jobOffer.dart';
+import '../../models/province.dart';
+import '../../models/resource.dart';
+import '../../models/userEnreda.dart';
+import '../../services/auth.dart';
+import '../../services/database.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
+import '../web_home.dart';
+import 'builders/list_item _horizontal_builder.dart';
 import 'builders/list_item_builder_grid.dart';
+import 'manage_offers_page.dart';
+import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 
+class AllResourcesList extends StatefulWidget {
+  const AllResourcesList({
+    Key? key, this.controller,
+  }) : super(key: key);
+  final ScrollController? controller;
 
-class DraftResourcesPage extends StatefulWidget {
   @override
-  State<DraftResourcesPage> createState() => _DraftResourcesPageState();
+  State<AllResourcesList> createState() => _AllResourcesListState();
 }
 
-class _DraftResourcesPageState extends State<DraftResourcesPage> {
+class _AllResourcesListState extends State<AllResourcesList> {
   @override
   Widget build(BuildContext context) {
     return _buildContents(context);
@@ -36,7 +41,7 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
     final database = Provider.of<Database>(context, listen: false);
     return Container(
       height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.symmetric(horizontal: Sizes.mainPadding * 2),
+      width: MediaQuery.of(context).size.width,
       child: StreamBuilder<UserEnreda>(
           stream: database.userEnredaStreamByUserId(auth.currentUser!.uid),
           builder: (context, snapshot) {
@@ -46,13 +51,12 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
             if (snapshot.hasData) {
               var user = snapshot.data!;
               return StreamBuilder<List<Resource>>(
-                  stream: database.myDraftResourcesStream(user.companyId!),
+                  stream: database.myAllResourcesStream(user.companyId!),
                   builder: (context, snapshot) {
                     return snapshot.hasData && snapshot.data!.isNotEmpty
-                        ?  ListItemBuilderGrid<Resource>(
+                        ?  ListItemBuilderHorizontal<Resource>(
                       snapshot: snapshot,
-                      fitSmallerLayout: false,
-                      mainAxisExtentValue : Responsive.isMobile(context)? 191.0 : 248,
+                      scrollController: widget.controller,
                       itemBuilder: (context, resource) {
                         if (!snapshot.hasData) {
                           return const Center(
@@ -100,7 +104,7 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
                                                               setState(() {
                                                                 globals.currentResource = resource;
                                                                 globals.currentJobOffer = jobOffer;
-                                                                ManageOffersPage.selectedIndex.value = 1;
+                                                                WebHome.goJobOfferDetail();
                                                               }),
                                                         ),
                                                       );
@@ -116,9 +120,8 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
                         }
                         return const Center(child: CircularProgressIndicator());
                       },
-                      emptyTitle: 'Sin recursos',
-                      emptyMessage: 'Aún no has creado ningún recurso',
-                      scrollController: ScrollController(),
+                      emptyTitle: 'Sin ofertas',
+                      emptyMessage: 'Aún no has creado ninguna oferta',
                     ) :
                     snapshot.connectionState == ConnectionState.waiting ?
                     Padding(
@@ -126,8 +129,8 @@ class _DraftResourcesPageState extends State<DraftResourcesPage> {
                       child: Center(child: CircularProgressIndicator(),),
                     ) :
                     NoResourcesIllustration(
-                      title: StringConst.NO_RESOURCES_TITLE_DRAFT,
-                      subtitle: StringConst.NO_RESOURCES_DESCRIPTION_DRAFT,
+                      title: StringConst.NO_RESOURCES_TITLE,
+                      subtitle: StringConst.NO_RESOURCES_DESCRIPTION,
                       imagePath: ImagePath.FAVORITES_ILLUSTRATION,
                     );
                   });

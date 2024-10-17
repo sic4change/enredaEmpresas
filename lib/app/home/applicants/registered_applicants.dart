@@ -1,7 +1,6 @@
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/resources/list_item_builder.dart';
 import 'package:enreda_empresas/app/models/jobOffer.dart';
 import 'package:enreda_empresas/app/models/jobOfferApplication.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
@@ -19,6 +18,7 @@ import '../../common_widgets/circle_widget.dart';
 import '../../models/city.dart';
 import '../../models/country.dart';
 import '../../models/province.dart';
+import '../resources/builders/list_item_builder.dart';
 import 'applicants_list_page.dart';
 
 class RegisteredApplicantsListPage extends StatefulWidget {
@@ -40,8 +40,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
   }
 
   Widget _buildParticipantDetailWeb(BuildContext context, Resource resource, JobOffer jobOffer) {
-    return resource.resourceId == null || resource.resourceId!.isEmpty ? Container() :
-    resource.organizer == globals.currentUserCompany?.companyId ? SingleChildScrollView(
+    return SingleChildScrollView(
         child: RoundedContainer(
           color: AppColors.white,
           child: Stack(
@@ -89,7 +88,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
               ),
             ],
           ),
-        )) : Container();
+        ));
   }
 
   Widget _buildParticipantsList(BuildContext context, Resource resource) {
@@ -116,7 +115,7 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         'Preseleccionado',
         'Seleccionado',
         'Descartado',
-        'Registrado',
+        'No visto',
       ];
 
       int index = _getStatusIndex(status);
@@ -125,6 +124,24 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         return textValues[index];
       } else {
         return '';
+      }
+    }
+
+    Color _getDisplayColor(String status) {
+      List<Color> colorValues = [
+        AppColors.primaryColor,
+        AppColors.darkYellow,
+        AppColors.primaryColor,
+        AppColors.red,
+        AppColors.greyTxtAlt,
+      ];
+
+      int index = _getStatusIndex(status);
+
+      if (index >= 0 && index < colorValues.length) {
+        return colorValues[index];
+      } else {
+        return AppColors.greyTxtAlt;
       }
     }
 
@@ -182,10 +199,13 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                                         const SpaceW20(),
                                         SizedBox(
                                             width: 100,
-                                            child: CustomTextSmall(text: '${DateFormat('dd/MM/yyyy').format(application.createdate!)}')),
+                                            child: CustomTextSmall(
+                                                text: '${DateFormat('dd/MM/yyyy').format(application.createdate!)}')),
                                         const SpaceW20(),
                                         SizedBox(
-                                            width: 150, child: CustomTextSmallBold(title: _getDisplayText(application.status!))),
+                                            width: 150, child: CustomTextSmallBold(
+                                          title: _getDisplayText(application.status!),
+                                          color: _getDisplayColor(application.status!),)),
                                         const SpaceW20(),
                                         SizedBox(
                                           width: 200,
@@ -296,16 +316,10 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
         }
 
       case StringConst.ONLINE_FOR_COUNTRY:
-      /*return StringConst.ONLINE_FOR_COUNTRY
-            .replaceAll('país', resource.countryName!);*/
 
       case StringConst.ONLINE_FOR_PROVINCE:
-      /*return StringConst.ONLINE_FOR_PROVINCE.replaceAll(
-            'provincia', '${resource.provinceName!}, ${resource.countryName!}');*/
 
       case StringConst.ONLINE_FOR_CITY:
-      /*return StringConst.ONLINE_FOR_CITY.replaceAll('ciudad',
-            '${resource.cityName!}, ${resource.provinceName!}, ${resource.countryName!}');*/
 
       case StringConst.ONLINE:
         return StringConst.ONLINE;

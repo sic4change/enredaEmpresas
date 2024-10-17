@@ -20,6 +20,7 @@ class StringConst {
   static const String EMAIL_URL = "mailto:<$DEV_EMAIL>?subject=&body=";
 
   static const String MY_RESOURCES = "Mis ofertas ";
+  static const String MANAGE_OFFERS = "Gestión de ofertas";
   static const String MY_JOB_OFFERS = "Gestión de Ofertas & Candidatos ";
   static const String RESOURCES_PARTICIPANT = "Se ha inscrito a los siguientes recursos:";
   static const String FAVORITES = "Favoritos";
@@ -569,6 +570,7 @@ class StringConst {
   static const String WELCOME_COMPANY = "Te damos la bienvenida a Enreda Empresa";
   static const String WELCOME_TEXT = "Esta es tu ventana de administración. \nSegún tu rol, puedes visualizar, editar y eliminar todos los recursos disponibles en esta web. Por favor, procede con precaución.";
   static const String RESOURCES_CREATED_BY = "Recursos creados";
+  static const String RESOURCES_CALENDAR = "Calendario ";
 
 
   static const String LOREM_IMPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque, tortor amet, adipiscing felis nullam. Aliquet commodo est pretium vitae hendrerit fames vitae. Orci, feugiat consectetur aliquet sodales mus sodales a urna.\n\n'
@@ -698,6 +700,8 @@ class StringConst {
   //ToolBox
   static const String TOOL_BOX = 'Caja de Herramientas ';
   static const String ENREDA_METHODOLOGY = 'Metodología Enreda';
+  static const String CALENDAR = 'Calendario';
+  static const String ENREDA_CALENDAR = 'Calendario de Entrevistas';
   static const String ENREDA_METHODOLOGY_TITLE = 'Accede al Manual de Intervención y descubre cómo nuestra metodología transforma vidas, ayudando a las personas a construir un futuro mejor.';
   static const String WORKFLOW = 'Workflow de intervención';
   static const String MANUAL_METHODOLOGY = 'Manual de Intervención de Metodología';

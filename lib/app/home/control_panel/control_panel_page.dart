@@ -1,8 +1,6 @@
 import 'package:enreda_empresas/app/common_widgets/custom_text.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
-import 'package:enreda_empresas/app/common_widgets/spaces.dart';
-import 'package:enreda_empresas/app/home/participants/my_participants_list.dart';
-import 'package:enreda_empresas/app/home/resources/build_collapsed_resources.dart';
+import 'package:enreda_empresas/app/home/resources/my_resources_list.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/home/tool_box/tool_box_page.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
@@ -34,6 +32,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
   Widget myWelcomePageDesktop(BuildContext context){
     final textTheme = Theme.of(context).textTheme;
     return RoundedContainer(
+        color: AppColors.altWhite,
         contentPadding: const EdgeInsets.only(left: 0, right: Sizes.kDefaultPaddingDouble,
             bottom: Sizes.kDefaultPaddingDouble, top: Sizes.kDefaultPaddingDouble),
         child: SingleChildScrollView(
@@ -46,7 +45,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                   child: CustomTextMediumBold(text: StringConst.CONTROL_PANEL),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 50.0, right: 10.0, left: 30.0, bottom: 340.0,),
+                  margin: const EdgeInsets.only(top: 50.0, right: 10.0, left: 30.0, bottom: 30.0,),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,
@@ -94,197 +93,9 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                       Spacer()
                     ]
                   )),
-                Positioned(
-                    top: 50,
-                    right: 50,
-                    child: Container(
-                        width: 250,
-                        height: 250,
-                        child: Image.asset(ImagePath.CONTROL_ILLUSTRATION,))),
-                Container(
-                    margin: const EdgeInsets.only(top: 320.0, right: 50.0, left: 0, bottom: 10.0,),
-                    child: Image.asset(ImagePath.LOGO_LINES)),
-                Container(
-                    margin: const EdgeInsets.only(top: 350.0, left: 30, right: 10, bottom: 20.0,),
-                    height: 500,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.rectangle,
-                    ),
-                    child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Flex(
-                              direction: Axis.vertical,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Flex(
-                                    direction: Axis.horizontal,
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              height: double.infinity,
-                                              width: double.infinity,
-                                              margin: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primary100,
-                                                shape: BoxShape.rectangle,
-                                                borderRadius: BorderRadius.circular(15.0),
-                                              ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 30.0, top: 0),
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    SpaceH20(),
-                                                    Container(
-                                                      width: 300,
-                                                      child: Text(StringConst.DRAWER_ENTITIES,
-                                                        style: textTheme.displaySmall?.copyWith(
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: Responsive.isMobile(context) ? 25 : 35.0,
-                                                            color: AppColors.white),),
-                                                    ),
-                                                    SpaceH16(),
-                                                    InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            WebHome.goToEntities();
-                                                          });
-                                                        },
-                                                        child: CustomTextBold(title: StringConst.SEE_MORE)),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              top: -20,
-                                              right: 0,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    WebHome.goToEntities();
-                                                  });
-                                                },
-                                                child: Container(
-                                                  width: 200,
-                                                    child: Image.asset(ImagePath.CONTROL_PANEL_CALENDAR, fit: BoxFit.fitHeight,)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Responsive.isMobile(context) || Responsive.isDesktopS(context) ? Container() :
-                                      Expanded(
-                                          flex: 2,
-                                          child: Container()),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 20,),
-                                Expanded(
-                                  flex: 1,
-                                  child: Stack(
-                                    children: [
-                                      RoundedContainer(
-                                        color: AppColors.yellow,
-                                        borderWith: 1,
-                                        height: double.infinity,
-                                        borderColor: AppColors.greyLight2.withOpacity(0.3),
-                                        contentPadding: EdgeInsets.all(0.0),
-                                        margin: EdgeInsets.only(bottom: 0.0),
-                                        width: double.infinity,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    WebHome.goToolBox();
-                                                    ToolBoxPage.selectedIndex.value = 1;
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.only(left: 20, top: 15.0),
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SpaceH40(),
-                                                        CustomTextBoldTitle(title: StringConst.ENREDA_METHODOLOGY),
-                                                        CustomTextMedium(text: StringConst.ENREDA_METHODOLOGY_TITLE),
-                                                      ],
-                                                    ),
-                                                  )),
-                                            ),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Container()),
-                                          ],
-                                        ),),
-                                      Positioned(
-                                        bottom: 10,
-                                        top: -20,
-                                        right: 0,
-                                        child: Container(
-                                          margin: const EdgeInsets.only(right: 20.0),
-                                          height: 230,
-                                            width: 230,
-                                            child: Image.asset(ImagePath.CONTROL_METHODOLOGY,)),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 20,),
-                          Responsive.isMobile(context) || Responsive.isDesktopS(context) ? SizedBox(height: 30,) : Container(),
-                          Expanded(
-                              flex: Responsive.isMobile(context) ? 0 : 1,
-                              child: InkWell(
-                                onTap: () {
-                                  WebHome.goJobOffers();
-                                  ManageOffersPage.selectedIndex.value = 0;
-                                },
-                                hoverColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                child: RoundedContainer(
-                                  color: Colors.white,
-                                  borderWith: 1,
-                                  borderColor: AppColors.greyLight2.withOpacity(0.3),
-                                  contentPadding: EdgeInsets.all(10.0),
-                                  margin: EdgeInsets.zero,
-                                  child: Stack(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
-                                        child: CustomTextBoldTitle(title: StringConst.MY_RESOURCES),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(top: 50.0),
-                                        height: double.infinity,
-                                        width: double.infinity,
-                                        child: CollapsedResourcesList(itemsNumber: 3,),),
-                                    ],
-                                  ),
-                                ),
-                              )
-                          )
-                        ]
-                    )),
               ],
             ),
-            MyParticipantsScrollPage(),
+            AllResourcesScrollPage(),
           ],
       ),
         ),
@@ -354,7 +165,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomTextBoldTitle(title: StringConst.ENREDA_METHODOLOGY),
+                              CustomTextBoldTitle(title: StringConst.CALENDAR),
                               CustomTextMedium(text: StringConst.ENREDA_METHODOLOGY_TITLE),
                             ],
                           ),
@@ -376,10 +187,6 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
                       child: CustomTextBoldTitle(title: StringConst.MY_RESOURCES),
                     ),
-                    // Container(
-                    //   margin: const EdgeInsets.only(top: 40.0),
-                    //   width: double.infinity,
-                    //   child: CollapsedResourcesList(itemsNumber: Responsive.isDesktopS(context) ? 2 : 1,),),
                   ],
                 ),
               ),
@@ -439,7 +246,7 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
               ),
             ),
             SizedBox(height: 40,),
-            MyParticipantsScrollPage(),
+            AllResourcesScrollPage(),
           ],
         ),
       ),
