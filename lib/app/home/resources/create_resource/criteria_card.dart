@@ -1,3 +1,4 @@
+import 'package:enreda_empresas/app/common_widgets/info_button.dart';
 import 'package:enreda_empresas/app/models/jobOfferCriteria.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class CriteriaCard extends StatefulWidget {
   final Function(List<String>, String) onListFieldChange;
   final Set<Competency>? selectedCompetencies;
   final bool? validator;
+  final String infoText;
 
   CriteriaCard({
     Key? key,
@@ -34,7 +36,8 @@ class CriteriaCard extends StatefulWidget {
     required this.onTextFieldChange,
     required this.onListFieldChange,
     this.selectedCompetencies,
-    this.validator
+    this.validator,
+    required this.infoText,
   }) : super(key: key);
 
   @override
@@ -108,11 +111,20 @@ class _CriteriaCardState extends State<CriteriaCard> {
                   Padding(
                     padding: EdgeInsets.all(Sizes.kDefaultPaddingDouble),
                     child: Center(
-                      child: Text(
-                        jobOfferCriteria.name!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                jobOfferCriteria.name!,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          InfoButton(title: widget.infoText)
+                        ],
                       ),
                     ),
                   ),

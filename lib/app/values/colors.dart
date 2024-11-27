@@ -16,7 +16,6 @@ class AppColors {
   static const Color primary030 = Color(0xFFDBF1F1);
   static const Color primary020 = Color(0xFFCDDBDF);
   static const Color primary010 = Color(0xFFEEFAFA);
-  static const Color secondaryColor = Color(0xfffcfcff);
 
   //accent Colors
   static const Color accentColor = Color(0xFFF7F7F7);
@@ -54,6 +53,7 @@ class AppColors {
   static const Color blueDark = Color(0xFF002185);
   static const Color blueAlt = Color(0xFF5F7ED9);
   static const Color bluePetrol = Color(0xFF054D5E);
+  static const Color blueLightInfo = Color(0xFFEDFAF9);
 
   //Yellow
   static const Color lightYellow = Color(0xFFFFDCB1);
@@ -120,4 +120,19 @@ class AppColors {
   //Red
   static const Color red = Color(0xFFF1291A);
   static const Color red050 = Color(0xFFD32D50);
+
+  //Evaluation gradient
+
+  static const Color redGradient = Color(0xFFE81616);
+  static const Color orangeGradient = Color(0xFFFF9100);
+  static const Color greenGradient = Color(0xFF24F18F);
+
+  static const Gradient sliderGradient = LinearGradient(
+      colors: <Color> [
+        AppColors.redGradient,
+        AppColors.orangeGradient,
+        AppColors.greenGradient,
+      ]
+  );
+
 }

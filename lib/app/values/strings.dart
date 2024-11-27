@@ -845,7 +845,15 @@ class StringConst {
   static const String DERIVATION_ADDRESSED = 'Dirigido a:';
   static const String DERIVATION_OBJECTIVE = 'Con el objetivo de:';
 
-  static List<DropdownMenuItem<String>> YES_NO_SELECTION =
+  static const String OFFER_CREATION_INFO_DESCRIPTION = 'Detalla las funciones principales del puesto, las habilidades necesarias y la misión del rol dentro de la empresa. Proporciona una visión clara del tipo de trabajo que se realizará.';
+  static const String OFFER_CREATION_INFO_RESPONSIBILITIES = 'Especifica las tareas diarias y los deberes que el empleado deberá cumplir. Incluye tanto las responsabilidades principales como las secundarias que se esperan en el puesto.';
+  static const String OFFER_CREATION_INFO_FORMATION = 'Indica el nivel de formación mínima que necesitas para este puesto (por ejemplo, título universitario, máster, formación técnica). Ajusta la barra de porcentaje para indicar la importancia de este requisito en relación con los demás.';
+  static const String OFFER_CREATION_INFO_EXPERIENCE = 'Especifica la experiencia laboral mínima que consideras relevante para el puesto (por ejemplo, 2 años en una posición similar). Ajusta la barra de porcentaje para establecer qué tan crucial es este criterio en comparación con otros.';
+  static const String OFFER_CREATION_INFO_COMPETENCIES = 'Selecciona las competencias específicas que el candidato debe tener (por ejemplo, trabajo en equipo, liderazgo). Ajusta la barra para mostrar qué tan relevante es esta categoría en la evaluación total."';
+  static const String OFFER_CREATION_INFO_LANGUAGES = 'Indica los idiomas necesarios para este puesto, y especifica el nivel (por ejemplo, inglés avanzado). Usa la barra de porcentaje para asignar la relevancia de este requisito respecto al resto.';
+
+
+      static List<DropdownMenuItem<String>> YES_NO_SELECTION =
   ['Si', 'No'].map<DropdownMenuItem<String>>((String value) {
     return DropdownMenuItem<String>(
       value: value,

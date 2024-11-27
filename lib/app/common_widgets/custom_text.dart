@@ -163,6 +163,7 @@ class CustomTextSmallBold extends StatelessWidget {
     double fontSize = responsiveSize(context, 13, 15, md: 14);
     TextTheme textTheme = Theme.of(context).textTheme;
     return Text(
+      textAlign: TextAlign.center,
       title,
       style: textTheme.titleSmall?.copyWith(
           height: height,

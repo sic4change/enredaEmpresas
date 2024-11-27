@@ -125,6 +125,7 @@ class ImagePath {
   static const String ICON_LOCATION = '$imageDir/location.png';
   static const String ICON_INSCRIPTION = '$imageDir/icon-inscription.png';
   static const String ICON_INVITATION = '$imageDir/icon-invitation.png';
+  static const String ICON_INFO = '$imageDir/info-icon.png';
 
 
   // Participant details

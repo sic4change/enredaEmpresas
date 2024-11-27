@@ -180,10 +180,10 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
     _formattedStartDate = "";
     _formattedEndDate = "";
     criteria = [
-      Criteria(criteriaId: '8NUZxq3TCK4Q98S5ZDYB', requirementText: '', weight: 0),
-      Criteria(criteriaId: 'RR2kOQfkmuSgFdHg7BWp', requirementText: '', weight: 0),
-      Criteria(criteriaId: 'xxxP0JVB9xkwjdrXk1vE', requirementText: '', weight: 0),
-      Criteria(criteriaId: '89QFQO49uloGU3vXaA2Z', competencies: [], weight: 0),
+      Criteria(criteriaId: '8NUZxq3TCK4Q98S5ZDYB', requirementText: '', weight: 0, infoText: StringConst.OFFER_CREATION_INFO_FORMATION),
+      Criteria(criteriaId: 'RR2kOQfkmuSgFdHg7BWp', requirementText: '', weight: 0, infoText: StringConst.OFFER_CREATION_INFO_EXPERIENCE),
+      Criteria(criteriaId: 'xxxP0JVB9xkwjdrXk1vE', requirementText: '', weight: 0, infoText: StringConst.OFFER_CREATION_INFO_LANGUAGES),
+      Criteria(criteriaId: '89QFQO49uloGU3vXaA2Z', competencies: [], weight: 0, infoText: StringConst.OFFER_CREATION_INFO_COMPETENCIES),
     ];
   }
 
@@ -375,12 +375,12 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         CustomFormField(
           child: FormField(
             builder: (FormFieldState<dynamic> field) {
-              return customTextFormMultiline(
+              return customTextFormMultilineInfo(
                   context,
                   _resourceDescription!,
                   '',
                   StringConst.FORM_COMPANY_ERROR,
-                  descriptionSetState, 4000);
+                  descriptionSetState, 4000, infoText: StringConst.OFFER_CREATION_INFO_DESCRIPTION);
             }
           ),
           label: StringConst.DESCRIPTION,
@@ -388,12 +388,12 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         CustomFormField(
           child: FormField(
               builder: (FormFieldState<dynamic> field) {
-                return customTextFormMultiline(
+                return customTextFormMultilineInfo(
                     context,
                     _resourceResponsibilities!,
                     '',
                     StringConst.FORM_COMPANY_ERROR,
-                    responsibilitiesSetState, 2000);
+                    responsibilitiesSetState, 2000, infoText: StringConst.OFFER_CREATION_INFO_RESPONSIBILITIES);
               }
           ),
           label: StringConst.RESPONSIBILITIES,
@@ -411,9 +411,6 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           ),
           label: StringConst.FUNCTIONS,
         ),
-        CustomFormField(
-          child: customTextFormField(context, _otherRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
-          label: StringConst.FORM_OTHER_REQUIREMENTS,),
         CustomFlexRowColumn(
             childLeft: CustomFormField(
               padding: const EdgeInsets.all(0),
@@ -519,6 +516,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
             children: criteria.map((c) => CriteriaCard(
               criteria: c,
               criteriaValuesSum: criteriaValuesSum,
+              infoText: c.infoText!,
               onSliderChange: () {
                 setState(() {
                   final sum = criteria.map((e) => e.weight).reduce((value, element) => value + element);
@@ -578,6 +576,10 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
               child: CustomTextBoldCenter(
                 title: criteriaValuesSum.round() == 0 ? "-" : criteriaValuesSum.round().toString(), color: AppColors.primary900,
               )),
+        SizedBox(height: 20,),
+        CustomFormField(
+          child: customTextFormField(context, _otherRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
+          label: StringConst.FORM_OTHER_REQUIREMENTS,),
         SizedBox(height: 20,),
         CustomTextMediumForm(text: StringConst.FORM_OFFER),
         CustomFlexRowColumn(

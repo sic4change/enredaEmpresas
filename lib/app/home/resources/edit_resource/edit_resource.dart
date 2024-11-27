@@ -168,10 +168,10 @@ class _EditResourceState extends State<EditResource> {
     textEditingControllerCompetenciesCategories = TextEditingController();
     textEditingControllerCompetenciesSubCategories = TextEditingController();
     criteria = [
-      Criteria(criteriaId: globals.currentJobOffer?.criteria?[0].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[0].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[0].weight ?? 0),
-      Criteria(criteriaId: globals.currentJobOffer?.criteria?[1].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[1].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[1].weight ?? 0),
-      Criteria(criteriaId: globals.currentJobOffer?.criteria?[2].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[2].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[2].weight ?? 0),
-      Criteria(criteriaId: globals.currentJobOffer?.criteria?[3].criteriaId ?? '', competencies: globals.currentJobOffer?.criteria?[3].competencies ?? [], weight: globals.currentJobOffer?.criteria?[3].weight ?? 0),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[0].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[0].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[0].weight ?? 0, infoText: StringConst.OFFER_CREATION_INFO_FORMATION),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[1].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[1].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[1].weight ?? 0, infoText: StringConst.OFFER_CREATION_INFO_EXPERIENCE),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[2].criteriaId ?? '', requirementText: globals.currentJobOffer?.criteria?[2].requirementText ?? '', weight: globals.currentJobOffer?.criteria?[2].weight ?? 0, infoText: StringConst.OFFER_CREATION_INFO_LANGUAGES),
+      Criteria(criteriaId: globals.currentJobOffer?.criteria?[3].criteriaId ?? '', competencies: globals.currentJobOffer?.criteria?[3].competencies ?? [], weight: globals.currentJobOffer?.criteria?[3].weight ?? 0, infoText: StringConst.OFFER_CREATION_INFO_COMPETENCIES),
     ];
     criteriaValuesSum = criteria.map((e) => e.weight).reduce((value, element) => value + element);
   }
@@ -448,9 +448,6 @@ class _EditResourceState extends State<EditResource> {
               ),
               label: StringConst.FUNCTIONS,
             ),
-            CustomFormField(
-              child: customTextFormField(context, _otherRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
-              label: StringConst.FORM_OTHER_REQUIREMENTS,),
             CustomFlexRowColumn(
               childLeft: CustomFormField(
                 padding: const EdgeInsets.all(0),
@@ -575,6 +572,7 @@ class _EditResourceState extends State<EditResource> {
                 runSpacing: 16.0,
                 children: criteria.map((c) => CriteriaCard(
                   criteria: c,
+                  infoText: c.infoText!,
                   criteriaValuesSum: criteriaValuesSum,
                   onSliderChange: () {
                     setState(() {
@@ -637,6 +635,10 @@ class _EditResourceState extends State<EditResource> {
                 child: CustomTextBoldCenter(
                   title: criteriaValuesSum.round() == 0 ? "-" : criteriaValuesSum.round().toString(), color: AppColors.primary900,
                 )),
+            SizedBox(height: 20,),
+            CustomFormField(
+              child: customTextFormField(context, _otherRequirements!, '', StringConst.FORM_COMPANY_ERROR, resourceRequirementsSetState),
+              label: StringConst.FORM_OTHER_REQUIREMENTS,),
             SizedBox(height: 20,),
             CustomTextMediumForm(text: StringConst.FORM_OFFER),
             CustomFlexRowColumn(

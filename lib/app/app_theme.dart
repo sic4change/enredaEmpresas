@@ -58,7 +58,7 @@ class AppTheme {
   // static const _superBold = FontWeight.w900;
   static const _bold = FontWeight.w700;
   // static const _semiBold = FontWeight.w600;
-  // static const _medium = FontWeight.w500;
+  static const _medium = FontWeight.w500;
   static const _regular = FontWeight.w400;
   static const _light = FontWeight.w300;
 
@@ -129,11 +129,12 @@ class AppTheme {
       fontStyle: FontStyle.normal,
       fontWeight: _regular,
     ),
-    labelMedium: GoogleFonts.outfit(
-      fontSize: Sizes.TEXT_SIZE_16,
-      color: AppColors.black,
+    //For info button text
+    labelMedium: GoogleFonts.inter(
+      fontSize: Sizes.TEXT_SIZE_14,
+      color: AppColors.greyTxtAlt,
       fontStyle: FontStyle.normal,
-      fontWeight: _regular,
+      fontWeight: _medium,
     ),
     bodySmall: GoogleFonts.outfit(
       fontSize: Sizes.TEXT_SIZE_12,

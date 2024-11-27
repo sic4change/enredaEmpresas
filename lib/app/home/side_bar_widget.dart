@@ -106,7 +106,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       showToggleButton: false,
       headerBuilder: (context, extended) {
         return Container(
-          height: isSmallScreen ? 342 : 320,
+          height: isSmallScreen ? 342 : 350,
           child: Padding(
             padding: isSmallScreen ? EdgeInsets.only(top: 10.0, left: 0, right: 0) : EdgeInsets.only(top: 20),
             child: Column(

@@ -1,5 +1,8 @@
 import 'package:enreda_empresas/app/common_widgets/alert_dialog.dart';
 import 'package:enreda_empresas/app/common_widgets/rounded_container.dart';
+import 'package:enreda_empresas/app/common_widgets/slider_evaluation.dart';
+import 'package:enreda_empresas/app/models/jobOffer.dart';
+import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:flutter/material.dart';
 import 'package:enreda_empresas/app/home/resources/global.dart' as globals;
 import 'package:provider/provider.dart';
@@ -47,7 +50,7 @@ void initState() {
 
   @override
   Widget build(BuildContext context) {
-    final database = Provider.of<Database>(context, listen: false);
+    final database = Provider.of<Database>(context, listen: true);
     return ValueListenableBuilder<int>(
       valueListenable: ParticipantDetailPage.selectedIndex,
       builder: (context, selectedIndex, child) {
@@ -260,35 +263,63 @@ void initState() {
     final database = Provider.of<Database>(context, listen: false);
     return Column(
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-          child: FutureBuilder<List<MapEntry<JobOfferCriteria, int>>>(
-            future: _getSortedEvaluations(currentApplication.evaluations, database),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Text('No evaluations found');
-              } else {
-                return Flex(
-                  direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: snapshot.data!.map((entry) {
-                    var jobOfferCriteria = entry.key;
-                    int weight = entry.value;
-                    Widget displayText = CustomTextSmallBold(
-                      title: '${StringConst.JOB_OFFER_EVALUATION.toUpperCase()} ${jobOfferCriteria.name!.toUpperCase()}',
-                      color: AppColors.primary900,
+        StreamBuilder<JobOffer>(
+          stream: database.jobOfferStreamById(currentApplication.jobOfferId),
+          builder: (context, snapshot) {
+            double weightCompetencies = 100;
+            double weightAcademic = 100;
+            double weightExperience = 100;
+            double weightLanguages = 100;
+            if(snapshot.hasData){
+              weightCompetencies = snapshot.data!.criteria![3].weight;
+              weightAcademic = snapshot.data!.criteria![0].weight;
+              weightExperience = snapshot.data!.criteria![1].weight;
+              weightLanguages = snapshot.data!.criteria![2].weight;
+            }
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+              child: FutureBuilder<List<MapEntry<JobOfferCriteria, int>>>(
+                future: _getSortedEvaluations(currentApplication.evaluations, database),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text('No evaluations found');
+                  } else {
+                    return Flex(
+                      direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: snapshot.data!.map((entry) {
+                        var jobOfferCriteria = entry.key;
+                        double weight = 0;
+                        switch(entry.key.name){
+                          case "Competencias":
+                            weight = entry.value/weightCompetencies;
+                            break;
+                          case "Formación":
+                            weight = entry.value/weightAcademic;
+                            break;
+                          case "Experiencia":
+                            weight = entry.value/weightExperience;
+                            break;
+                          case "Idiomas":
+                            weight = entry.value/weightLanguages;
+                        }
+                        Widget displayText = CustomTextSmallBold(
+                          title: '${StringConst.JOB_OFFER_EVALUATION.toUpperCase()} ${jobOfferCriteria.name!.toUpperCase()}',
+                          color: AppColors.primary900,
+                        );
+                        return _buildEvaluationResults(displayText, weight);
+                      }).toList(),
                     );
-                    return _buildEvaluationResults(displayText, weight);
-                  }).toList(),
-                );
-              }
-            },
-          ),
+                  }
+                },
+              ),
+            );
+          }
         ),
         MyCurriculumPage(),
       ]
@@ -296,29 +327,23 @@ void initState() {
   }
 
 
-Widget _buildEvaluationResults(Widget title, int label) {
+Widget _buildEvaluationResults(Widget title, double label) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10.0),
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        color: AppColors.primary100,
-        border: Border.all(color: AppColors.primary100),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.transparent,
+        border: Border.all(color: AppColors.violet),
       ),
-      width: 270,
+      width: widthOfScreen(context)/7,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           title,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomTextMediumBold(text: label.toString()),
-              CustomTextMedium(text: ' / 100'),
-            ],
-          ),
+          SliderEvaluation(weight: label),
         ],
       ),
     ),

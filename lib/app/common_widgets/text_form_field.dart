@@ -1,5 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
+import 'package:enreda_empresas/app/common_widgets/info_button.dart';
 import 'package:enreda_empresas/app/common_widgets/spaces.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/values/values.dart';
@@ -92,6 +93,46 @@ Widget customTextFormMultiline(BuildContext context, String formValue, String la
       labelStyle: textTheme.bodyLarge?.copyWith(
         color: AppColors.greyDark,
       ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5.0),
+        borderSide: const BorderSide(
+          color: AppColors.greyUltraLight,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5.0),
+        borderSide: const BorderSide(
+          color: AppColors.greyUltraLight,
+          width: 1.0,
+        ),
+      ),
+    ),
+    initialValue: formValue,
+    validator: (value) {
+      if (value!.isEmpty) {
+        return errorText;
+      } else if (value.length < 100) {
+        return 'El texto debe tener al menos 100 caracteres';
+      }
+      return null;
+    },
+    onSaved: (String? val) => functionSetState(val),
+    textCapitalization: TextCapitalization.sentences,
+    minLines: 3,
+    maxLines: 3,
+    style: textTheme.bodyMedium?.copyWith(
+      color: AppColors.greyDark,
+    ),
+  );
+}
+
+Widget customTextFormMultilineInfo(BuildContext context, String formValue, String labelText, String errorText, functionSetState, int? maxLength, {String infoText = ''}) {
+  TextTheme textTheme = Theme.of(context).textTheme;
+  return TextFormField(
+    maxLength: maxLength,
+    keyboardType: TextInputType.multiline,
+    decoration: InputDecoration(
+      suffixIcon: infoText != '' ? InfoButton(title: infoText) : Container(),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5.0),
         borderSide: const BorderSide(
