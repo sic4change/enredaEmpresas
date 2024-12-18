@@ -236,8 +236,8 @@ void initState() {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildChoiceChip(0, StringConst.PARTICIPANT_PROFILE),
-                        _buildChoiceChip(1, StringConst.PARTICIPANT_COMMENTS),
-                        _buildChoiceChip(2, StringConst.PARTICIPANT_INTERVIEWS),
+                        //_buildChoiceChip(1, StringConst.PARTICIPANT_COMMENTS),
+                        //_buildChoiceChip(2, StringConst.PARTICIPANT_INTERVIEWS),
                       ],
                     ),
                   ),

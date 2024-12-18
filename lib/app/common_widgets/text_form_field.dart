@@ -9,13 +9,14 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 
-Widget customTextFormField(BuildContext context, String formValue, String labelText, String errorText, functionSetState) {
+Widget customTextFormField(BuildContext context, String formValue, String labelText, String errorText, functionSetState, {String hintText = ""}) {
   TextTheme textTheme = Theme.of(context).textTheme;
   return TextFormField(
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        labelText: labelText,
+        //labelText: labelText,
+        hintText: hintText,
         focusColor: AppColors.lilac,
         labelStyle: textTheme.bodyLarge?.copyWith(
           color: AppColors.greyDark,

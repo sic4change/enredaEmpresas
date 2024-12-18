@@ -45,18 +45,18 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                   child: CustomTextMediumBold(text: StringConst.CONTROL_PANEL),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 50.0, right: 10.0, left: 30.0, bottom: 30.0,),
+                  margin: const EdgeInsets.only(top: 50.0, right: 10.0, left: 30.0, bottom: 30.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,
                     border: Border.all(color: AppColors.greyLight2.withOpacity(0.3), width: 1),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: Flex(
-                    direction: Responsive.isMobile(context) ? Axis.vertical : Axis.horizontal,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        flex: Responsive.isMobile(context) ? 0 : 2,
+                        flex: 2,
                         child: Padding(
                           padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 0, bottom: 20.0),
                           child: Column(
@@ -64,35 +64,55 @@ class _ControlPanelPageState extends State<ControlPanelPage> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: Text('Hola ${widget.user?.firstName},',
+                                child: Text(
+                                  'Hola ${widget.user?.firstName},',
                                   style: textTheme.displaySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Responsive.isMobile(context) ? 30 : 42.0,
-                                      color: AppColors.turquoiseBlue),),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Responsive.isMobile(context) ? 30 : 42.0,
+                                    color: AppColors.turquoiseBlue,
+                                  ),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: Text(StringConst.WELCOME_COMPANY,
+                                child: Text(
+                                  StringConst.WELCOME_COMPANY,
                                   style: textTheme.headlineMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: Responsive.isMobile(context) ? 30 : 42.0,
-                                      color: Colors.black),),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Responsive.isMobile(context) ? 30 : 42.0,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 20.0),
-                                child: Text(StringConst.WELCOME_TEXT,
+                                child: Text(
+                                  StringConst.WELCOME_TEXT,
                                   style: textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Responsive.isMobile(context) ? 15 : 18.0,
-                                      color: AppColors.greyAlt),),
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: Responsive.isMobile(context) ? 15 : 18.0,
+                                    color: AppColors.greyAlt,
+                                  ),
+                                ),
                               )
                             ],
                           ),
                         ),
                       ),
-                      Spacer()
-                    ]
-                  )),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: SizedBox(
+                          width: 220,
+                          child: Image.asset(
+                            ImagePath.CONTROL_ILLUSTRATION,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
               ],
             ),
             AllResourcesScrollPage(),

@@ -269,8 +269,8 @@ class _ResourceListTileState extends State<ResourceListTile> {
                         Spacer(),
                         Container(
                             margin: const EdgeInsets.only(left: 15.0),
-                            child: buildShare(
-                                context, widget.resource, AppColors.darkGray, AppColors.greyTxtAlt, Colors.transparent),
+                            child: widget.resource.status != 'edition' ? buildShare(
+                                context, widget.resource, AppColors.darkGray, AppColors.greyTxtAlt, Colors.transparent) : Container(),
                         ),
                         SizedBox(width: 15,)
                       ],

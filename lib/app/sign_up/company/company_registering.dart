@@ -30,6 +30,7 @@ import 'package:enreda_empresas/app/values/values.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_widgets/custom_drop_down.dart';
@@ -61,7 +62,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   String? _companyId;
   String? _name;
   String? _cifGroup;
-  String? _groupCompany;
+  String? _cifNumber;
   String? _mission;
   String? _linkedin;
   String? _otherSocialMedia;
@@ -80,6 +81,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   int usersIds = 0;
   int currentStep = 0;
   bool _isChecked = false;
+  bool _checkCIF = false;
 
   List<String> countries = [];
   List<String> provinces = [];
@@ -96,6 +98,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   SocialEntityCategory? _selectedSocialEntityCategory;
   String? _companyCategoryName;
   String? _companyCategoryId;
+  String? _otherCategory;
   String phoneCode = '+34';
   String initialCountryCode = 'ES';
   TextTheme? textTheme;
@@ -119,7 +122,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
     _companyId = "";
     _name = "";
     _cifGroup = "";
-    _groupCompany = "";
+    _cifNumber = "";
     _mission = "";
     _linkedin = "";
     _otherSocialMedia = "";
@@ -127,6 +130,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
     _subGeographicZone = "";
     _companyCategoryName = "";
     _companyCategoryId = "";
+    _otherCategory = "";
     _emailCompany = "";
     _emailContact = "";
     _firstName = "";
@@ -179,8 +183,10 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
         companyId: _companyId,
         name: _name!,
         cifGroup: _cifGroup!,
+        cifNumber: _cifNumber,
         mission: _mission,
         category: _companyCategoryId,
+        otherCategory: _otherCategory,
         geographicZone : _geographicZone,
         subGeographicZone : _subGeographicZone,
         email: _emailCompany,
@@ -264,6 +270,9 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
               CustomFormField(
                 child: customTextFormField(context, _name!, '', StringConst.FORM_GENERIC_ERROR, _name_setState),
                 label: StringConst.FORM_COMPANY_NAME,),
+              CustomFormField(
+                child: customTextFormField(context, _cifNumber!, '', StringConst.FORM_GENERIC_ERROR, _cifNumber_setState),
+                label: StringConst.FORM_CIF_NUMBER,),
               filesList.length == 0 ? FilePickerForm(
                 context: context,
                 label: StringConst.FORM_COMPANY_CIF,
@@ -304,15 +313,39 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
                   );
                 },
               ),
-              CustomFormField(
-                child: customTextFormField(context, _mission!, '', StringConst.FORM_GENERIC_ERROR, _mission_setState),
-                label: StringConst.FORM_COMPANY_MISSION,),
-              CustomFormField(
-                child: customTextFormFieldNotValidator(context, _groupCompany!, '', _groupCompany_setState),
-                label: StringConst.FORM_COMPANY_GROUP,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    value: _checkCIF,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        _checkCIF = newValue ?? false;
+                      });
+                    },
+                  ),
+                  Text(
+                    StringConst.FORM_CHECK_TEXT,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.inter().fontFamily,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.greyAlt,
+                    ),
+                  ),
+                ],
+              ),
+              _checkCIF ?
               CustomFormField(
                 child: customTextFormFieldNotValidator(context, _cifGroup!, '', _cifGroup_setState),
-                label: StringConst.FORM_COMPANY_CIF_GROUP,),
+                label: StringConst.FORM_COMPANY_CIF_GROUP,)
+                  : Container(),
+              CustomFormField(
+                child: customTextFormField(context, _mission!, '', StringConst.FORM_GENERIC_ERROR, _mission_setState, hintText: StringConst.FORM_COMPANY_MISSION_HINT),
+                label: StringConst.FORM_COMPANY_MISSION,),
+              /*CustomFormField(
+                child: customTextFormFieldNotValidator(context, _groupCompany!, '', _groupCompany_setState),
+                label: StringConst.FORM_COMPANY_GROUP,),*/
               CustomFormField(
                 child: streamBuilderDropdownSocialEntityCategory(context, _selectedSocialEntityCategory, buildResourceCategoryStreamBuilderSetState),
                 label: StringConst.FORM_COMPANY_CATEGORY,),
@@ -335,13 +368,15 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
               //       validator: (value) => value != null ? null : StringConst.FORM_GENERIC_ERROR,
               //     )
               // ),
+              _companyCategoryName == "Otras" ?
+                  CustomFormField(child: customTextFormField(context, _otherCategory!, '', StringConst.FORM_GENERIC_ERROR, _otherCategory_setState), label: StringConst.FORM_COMPANY_OTHER_CATEGORY) : Container(),
               CustomFlexRowColumn(
-                  childLeft: streamBuilderForCountryCreate(context, selectedCountry, _buildCountryStreamBuilder_setState),
-                  childRight: streamBuilderForProvinceCreate(context, selectedCountry, selectedProvince, _buildProvinceStreamBuilder_setState)
+                  childLeft: CustomFormField(child: streamBuilderForCountryCreate(context, selectedCountry, _buildCountryStreamBuilder_setState), label: StringConst.FORM_COUNTRY, padding: EdgeInsets.zero,),
+                  childRight: CustomFormField(child: streamBuilderForProvinceCreate(context, selectedCountry, selectedProvince, _buildProvinceStreamBuilder_setState), label: StringConst.FORM_PROVINCE, padding: EdgeInsets.zero,)
               ),
               CustomFlexRowColumn(
-                childLeft: streamBuilderForCityCreate(context, selectedCountry, selectedProvince, selectedCity, _buildCityStreamBuilder_setState),
-                childRight: customTextFormField(context, _postalCode!, StringConst.FORM_POSTAL_CODE, StringConst.POSTAL_CODE_ERROR, _postalCode_setState),
+                childLeft: CustomFormField(child: streamBuilderForCityCreate(context, selectedCountry, selectedProvince, selectedCity, _buildCityStreamBuilder_setState), label: StringConst.FORM_CITY, padding: EdgeInsets.zero,),
+                childRight: CustomFormField(child: customTextFormField(context, _postalCode!, StringConst.FORM_POSTAL_CODE, StringConst.POSTAL_CODE_ERROR, _postalCode_setState), label: StringConst.FORM_POSTAL_CODE, padding: EdgeInsets.zero,),
               ),
               CustomFlexRowColumn(
                   contentPadding: const EdgeInsets.all(0),
@@ -618,12 +653,16 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
     setState(() => _name = val!);
   }
 
+  void _cifNumber_setState(String? val) {
+    setState(() => _cifNumber = val!);
+  }
+
   void _cifGroup_setState(String? val) {
     setState(() => _cifGroup = val!);
   }
 
-  void _groupCompany_setState(String? val) {
-    setState(() => _groupCompany = val!);
+  void _otherCategory_setState(String? val) {
+    setState(() => _otherCategory = val!);
   }
 
   void _mission_setState(String? val) {

@@ -462,6 +462,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
             childRight: CustomFormField(
               padding: const EdgeInsets.all(0),
               child: TextFormField(
+                enabled: _formattedStartDate != "",
                 controller: textEditingControllerDateEndInput,
                 validator: (value) => value!.isNotEmpty
                     ? null
@@ -491,8 +492,8 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-                    firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                    initialDate: _start!.add(Duration(days: 1)),
+                    firstDate: _start!.add(Duration(days: 1)),
                     lastDate: DateTime(DateTime.now().year + 10, DateTime.now().month, DateTime.now().day),
                   );
                   if (pickedDate != null) {

@@ -1,13 +1,15 @@
 class Interest {
-  Interest({this.interestId, required this.name});
+  Interest({this.interestId, this.order, required this.name});
 
   final String? interestId;
   final String name;
+  final int? order;
 
   factory Interest.fromMap(Map<String, dynamic> data, String documentId) {
     return Interest(
       interestId: data['interestId'],
       name: data['name'],
+      order: data['order'] ?? 0,
     );
   }
 
@@ -23,6 +25,7 @@ class Interest {
     return {
       'interestId': interestId,
       'name': name,
+      'order': order,
     };
   }
 

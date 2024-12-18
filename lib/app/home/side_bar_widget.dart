@@ -156,7 +156,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       items: [
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PANEL), width: 20,), label: StringConst.DRAWER_CONTROL_PANEL, onTap: _setSelectedControlPanel),
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_RESOURCES), width: 20,), label: StringConst.DRAWER_MY_JOB_OFFERS, onTap: _setSelectedMyJobOffers),
-        SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_CALENDAR, onTap: _setSelectedControlPanel),
+        //SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_ENTITY), width: 20,), label: StringConst.DRAWER_CALENDAR, onTap: _setSelectedControlPanel),
         SidebarXItem(iconWidget: Container(child: Image.asset(ImagePath.ICON_PROFILE_PRIMARY), width: 20,), label: StringConst.MY_PROFILE, onTap: _setSelectedMyProfile)
       ],
     );

@@ -276,7 +276,7 @@ class FirestoreDatabase implements Database {
         path: APIPath.resources(),
         queryBuilder: (query) => query
             .where('organizer', isEqualTo: companyId)
-            .where('status', isNotEqualTo: 'edition'), // TODO: when add 'finished' status add isNotEqualTo to 'finished' and 'edition'
+            .where('status', isEqualTo: 'Disponible'), // TODO: when add 'finished' status add isNotEqualTo to 'finished' and 'edition'
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
@@ -287,7 +287,7 @@ class FirestoreDatabase implements Database {
         path: APIPath.resources(),
         queryBuilder: (query) => query
             .where('organizer', isEqualTo: companyId)
-            .where('status', isEqualTo: 'finished'), // TODO: cloud function to exclude 'finished' status in automatic updates
+            .where('status', isEqualTo: 'No disponible'), // TODO: cloud function to exclude 'finished' status in automatic updates
         builder: (data, documentId) => Resource.fromMap(data, documentId),
         sort: (rhs, lhs) => lhs.createdate.compareTo(rhs.createdate),
       );
@@ -538,7 +538,7 @@ class FirestoreDatabase implements Database {
       return _service.collectionStream(
         path: APIPath.provinces(),
         builder: (data, documentId) => Province.fromMap(data, documentId),
-        queryBuilder: (query) => query.where('countryId', isEqualTo: countryId),
+        queryBuilder: (query) => query.where('countryId', isEqualTo: countryId).where('active', isEqualTo: true),
         sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
       );
     }
@@ -825,7 +825,7 @@ class FirestoreDatabase implements Database {
       path: APIPath.interests(),
       queryBuilder: (query) => query.where('name', isNotEqualTo: null),
       builder: (data, documentId) => Interest.fromMap(data, documentId),
-      sort: (lhs, rhs) => lhs.name.compareTo(rhs.name),
+      sort: (lhs, rhs) => lhs.order!.compareTo(rhs.order!),
     );
 
 

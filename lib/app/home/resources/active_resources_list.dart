@@ -1,3 +1,4 @@
+import 'package:enreda_empresas/app/home/applicants/applicants_list_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/models/city.dart';
@@ -99,6 +100,7 @@ class _ActiveResourcesPageState extends State<ActiveResourcesPage> {
                                                               setState(() {
                                                                 globals.currentResource = resource;
                                                                 globals.currentJobOffer = jobOffer;
+                                                                ApplicantsListPage.selectedIndex.value = 0;
                                                                 if(jobOffer.status == 'progress') {
                                                                   ManageOffersPage.selectedIndex.value = 3;
                                                                 } else

@@ -94,7 +94,7 @@ class _ResourcesListPageState extends State<ResourcesListPage> {
                         },
                         child: CustomStepperIconButton(
                           child: CustomTextBold(title: StringConst.ACTIVE_RESOURCES, color: ResourcesListPage.selectedIndex.value == 1 ? AppColors.primary500 : AppColors.greyTxtAlt,),
-                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 1 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
+                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 1 ? Image.asset(ImagePath.ICON_OFFER_PROCESS_ON) : Image.asset(ImagePath.ICON_OFFER_PROCESS_OFF),),
                           color: ResourcesListPage.selectedIndex.value == 1 ? AppColors.primary050 : AppColors.offWhite,
                         ),
                       ),
@@ -107,7 +107,7 @@ class _ResourcesListPageState extends State<ResourcesListPage> {
                         },
                         child: CustomStepperIconButton(
                           child: CustomTextBold(title: StringConst.DRAFT_RESOURCES, color: ResourcesListPage.selectedIndex.value == 2 ? AppColors.primary500 : AppColors.greyTxtAlt,),
-                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 2 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
+                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 2 ? Image.asset(ImagePath.ICON_OFFER_DRAFT_ON) : Image.asset(ImagePath.ICON_OFFER_DRAFT_OFF),),
                           color: ResourcesListPage.selectedIndex.value == 2 ? AppColors.primary050 : AppColors.offWhite,
                         ),
                       ),
@@ -120,7 +120,7 @@ class _ResourcesListPageState extends State<ResourcesListPage> {
                         },
                         child: CustomStepperIconButton(
                           child: CustomTextBold(title: StringConst.FINISHED_RESOURCES, color: ResourcesListPage.selectedIndex.value == 3 ? AppColors.primary500 : AppColors.greyTxtAlt,),
-                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 3 ? Image.asset(ImagePath.ICON_INSCRIPTION) : Image.asset(ImagePath.ICON_INVITATION),),
+                          icon: SizedBox(width: 21, child: ResourcesListPage.selectedIndex.value == 3 ? Image.asset(ImagePath.ICON_OFFER_END_ON) : Image.asset(ImagePath.ICON_OFFER_END_OFF),),
                           color: ResourcesListPage.selectedIndex.value == 3 ? AppColors.primary050 : AppColors.offWhite,
                         ),
                       ),

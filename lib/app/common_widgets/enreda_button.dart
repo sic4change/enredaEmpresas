@@ -21,6 +21,8 @@ class EnredaButton extends StatelessWidget {
     this.opensUrl = false,
     this.url = "",
     this.linkTarget = LinkTarget.blank,
+    this.borderColor = Colors.transparent,
+    this.borderWidth = 1,
   });
 
   final VoidCallback? onPressed;
@@ -30,27 +32,47 @@ class EnredaButton extends StatelessWidget {
   final TextStyle? titleStyle;
   final Color titleColor;
   final Color buttonColor;
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadius borderRadius;
   final EdgeInsetsGeometry padding;
   final String url;
   final LinkTarget linkTarget;
   final bool opensUrl;
+  final Color borderColor;
+  final double borderWidth;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: borderRadius,
-      child: MaterialButton(
-        minWidth: width,
-        height: height,
-        onPressed: opensUrl ? () {} : onPressed,
-        color: buttonColor,
-        child: Padding(
-          padding: padding,
-          child: buildChild(context),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: borderColor, // Cambia el color del borde aquí
+            width: borderWidth, // Define el ancho del borde
+          ),
+          borderRadius: borderRadius, // Asegúrate de que coincida con ClipRRect
+        ),
+        child: Material(
+          color: buttonColor, // Color del fondo del botón
+          borderRadius: borderRadius,
+          child: InkWell(
+            onTap: opensUrl ? () {} : onPressed,
+            borderRadius: borderRadius,
+            hoverColor: Colors.transparent, // Desactiva el color de hover
+            highlightColor: Colors.transparent, // Desactiva el color al presionar
+            splashColor: Colors.transparent, // Desactiva el efecto de salpicadura
+            child: Container(
+              width: width,
+              height: height,
+              alignment: Alignment.center, // Asegura el contenido centrado
+              padding: padding,
+              child: buildChild(context),
+            ),
+          ),
         ),
       ),
     );
+
   }
 
   Widget buildChild(BuildContext context) {

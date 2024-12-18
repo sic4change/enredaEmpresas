@@ -1,3 +1,4 @@
+import 'package:enreda_empresas/app/home/applicants/applicants_list_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
 import 'package:enreda_empresas/app/models/city.dart';
@@ -98,6 +99,7 @@ class _FinishedResourcesPageState extends State<FinishedResourcesPage> {
                                                           resource: resource,
                                                           onTap: () =>
                                                               setState(() {
+                                                                ApplicantsListPage.selectedIndex.value = 0;
                                                                 globals.currentResource = resource;
                                                                 globals.currentJobOffer = jobOffer;
                                                                 ManageOffersPage.selectedIndex.value = 1;

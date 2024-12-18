@@ -1,3 +1,4 @@
+import 'package:enreda_empresas/app/home/applicants/applicants_list_page.dart';
 import 'package:enreda_empresas/app/home/resources/resource_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -100,12 +101,27 @@ class _AllResourcesListState extends State<AllResourcesList> {
                                                         key: Key('resource-${resource.resourceId}'),
                                                         child: ResourceListTile(
                                                           resource: resource,
-                                                          onTap: () =>
-                                                              setState(() {
-                                                                globals.currentResource = resource;
-                                                                globals.currentJobOffer = jobOffer;
-                                                                WebHome.goJobOfferDetail();
-                                                              }),
+                                                          onTap: () async {
+                                                            await setGlobalParameters(context, resource);
+                                                            setState(() {
+                                                              globals
+                                                                  .currentResource =
+                                                                  resource;
+                                                              globals
+                                                                  .currentJobOffer =
+                                                                  jobOffer;
+                                                              ApplicantsListPage.selectedIndex.value = 0;
+                                                              if (resource
+                                                                  .status ==
+                                                                  'edition') {
+                                                                WebHome
+                                                                    .goJobOfferDetailEditable();
+                                                              } else {
+                                                                WebHome
+                                                                    .goJobOfferDetail();
+                                                              }
+                                                            });
+                                                          }
                                                         ),
                                                       );
                                                     }
@@ -139,4 +155,82 @@ class _AllResourcesListState extends State<AllResourcesList> {
           }),
     );
   }
+
+  Future<void> setGlobalParameters(BuildContext context, Resource resource) async {
+    final database = Provider.of<Database>(context, listen: false);
+
+    // Set initial resource values
+    resource.setResourceTypeName();
+    resource.setResourceCategoryName();
+    globals.interestsCurrentResource = resource.interests ?? [];
+    globals.selectedInterestsCurrentResource = {};
+    globals.interestsNamesCurrentResource = '';
+    globals.selectedCompetenciesCurrentResource = {};
+    globals.competenciesNamesCurrentResource = '';
+
+    // Organizer
+    if (resource.organizer != null) {
+      await database.companyStream(resource.organizer).first.then((organization) {
+        globals.organizerCurrentResource = organization;
+        resource.organizerName = organization?.name ?? '';
+        resource.organizerImage = organization?.photo ?? '';
+      }).catchError((error) {
+        globals.organizerCurrentResource = null;
+        resource.organizerName = '';
+        resource.organizerImage = '';
+      });
+    }
+
+    // Address details
+    if (resource.address != null) {
+      if (resource.address!.country != null) {
+        await database.countryStream(resource.address!.country).first.then((country) {
+          resource.countryName = country?.name ?? '';
+        }).catchError((error) {
+          resource.countryName = '';
+        });
+      }
+
+      if (resource.address!.province != null) {
+        await database.provinceStream(resource.address!.province).first.then((province) {
+          resource.provinceName = province?.name ?? '';
+        }).catchError((error) {
+          resource.provinceName = '';
+        });
+      }
+
+      if (resource.address!.city != null) {
+        await database.cityStream(resource.address!.city).first.then((city) {
+          resource.cityName = city?.name ?? '';
+        }).catchError((error) {
+          resource.cityName = '';
+        });
+      }
+    }
+
+    // Interests
+    final interestsLocal = resource.interests ?? [];
+    if (interestsLocal.isNotEmpty) {
+      await database.resourcesInterestsStream(interestsLocal).first.then((interests) {
+        globals.selectedInterestsCurrentResource = interests.toSet();
+        globals.interestsNamesCurrentResource = interests.map((item) => item.name).join(' / ');
+      }).catchError((error) {
+        globals.selectedInterestsCurrentResource = {};
+        globals.interestsNamesCurrentResource = '';
+      });
+    }
+
+    // Competencies
+    final competenciesLocal = resource.competencies ?? [];
+    if (competenciesLocal.isNotEmpty) {
+      await database.resourcesCompetenciesStream(competenciesLocal).first.then((competencies) {
+        globals.selectedCompetenciesCurrentResource = competencies.toSet();
+        globals.competenciesNamesCurrentResource = competencies.map((item) => item.name).join(' / ');
+      }).catchError((error) {
+        globals.selectedCompetenciesCurrentResource = {};
+        globals.competenciesNamesCurrentResource = '';
+      });
+    }
+  }
+
 }

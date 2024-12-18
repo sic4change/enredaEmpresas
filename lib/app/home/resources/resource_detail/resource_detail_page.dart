@@ -252,7 +252,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                         resource.organizer == globals.currentUserCompany?.companyId ? Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Padding(
+                            /*Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                               child: EnredaButtonIcon(
                                 onPressed: () => {
@@ -269,7 +269,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                   color: AppColors.greyTxtAlt,
                                 ),
                               ),
-                            ),
+                            ),*/
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                               child: EnredaButtonIcon(
@@ -285,13 +285,13 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
 
                               ),
                             ),
-                            buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white),
+                            resource.status != 'edition' ? buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white) : Container(),
                             SizedBox(width: 10),
                           ],
                         ) : Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white),
+                            resource.status != 'edition' ?  buildShare(context, resource, AppColors.darkGray, AppColors.darkGray, Colors.white) : Container(),
                             SizedBox(width: 10),
                           ],
                         ),
@@ -389,7 +389,7 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
                                     ),
                                   ),
                                 ),
-                                buildShare(context, resource, AppColors.darkGray, AppColors.white, Colors.transparent),
+                                resource.status != 'edition' ? buildShare(context, resource, AppColors.darkGray, AppColors.white, Colors.transparent) : Container(),
                                 SpaceW8(),
                               ],
                             ))

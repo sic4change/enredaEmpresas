@@ -156,6 +156,17 @@ class ImagePath {
   static const String CONTROL_PANEL = '$imageDir/panelcontrol-min.png';
   static const String CONTROL_PANEL_CALENDAR = '$imageDir/Illustration-calendar.png';
   static const String CONTROL_CHECKED_BOOK = '$imageDir/book_checked.png';
-  static const String CONTROL_ILLUSTRATION = '$imageDir/company_illustration.png';
+  static const String CONTROL_ILLUSTRATION = '$imageDir/ilustracion-01-dashboard-emp.png';
   static const String CONTROL_METHODOLOGY = '$imageDir/methodology_image.png';
+
+  //Offer status icons
+  static const String ICON_OFFER_PROCESS_ON = '$imageDir/icon-oferta-proceso-on.png';
+  static const String ICON_OFFER_PROCESS_OFF = '$imageDir/icon-oferta-proceso-off.png';
+  static const String ICON_OFFER_END_ON = '$imageDir/icon-oferta-fin-on.png';
+  static const String ICON_OFFER_END_OFF = '$imageDir/icon-oferta-fin-off.png';
+  static const String ICON_OFFER_DRAFT_ON = '$imageDir/icon-oferta-borrador-on.png';
+  static const String ICON_OFFER_DRAFT_OFF = '$imageDir/icon-oferta-borrador-off.png';
+
+
+
 }

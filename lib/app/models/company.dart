@@ -8,6 +8,7 @@ class Company {
     required this.name,
     this.cifGroup,
     this.cifDocument,
+    this.cifNumber,
     this.groupCompany,
     this.mission,
     this.email,
@@ -28,6 +29,7 @@ class Company {
     this.actionScope,
     this.category,
     this.subCategory,
+    this.otherCategory,
     this.entityPhone,
     this.entityMobilePhone,
     this.contactPhone,
@@ -51,6 +53,7 @@ class Company {
   final String name;
   final String? cifGroup;
   final String? cifDocument;
+  final String? cifNumber;
   final String? groupCompany;
   final String? mission;
   final String? email;
@@ -71,6 +74,7 @@ class Company {
   final String? actionScope;
   final String? category;
   final String? subCategory;
+  final String? otherCategory;
   final String? entityPhone;
   final String? entityMobilePhone;
   final String? contactPhone;
@@ -107,6 +111,7 @@ class Company {
 
     final String name = data['name'];
     final String? cifGroup = data['cifGroup'] ?? '';
+    final String? cifNumber = data['cifNumber'] ?? '';
     final String? groupCompany = data['groupCompany'] ?? '';
     final String? mission = data['mission'] ?? '';
     final String? companyId = data['companyId'];
@@ -136,6 +141,7 @@ class Company {
     final String actionScope = data['actionScope'] ?? '';
     final String category = data['category'] ?? '';
     final String subCategory = data['subCategory'] ?? '';
+    final String otherCategory = data['otherCategory'] ?? '';
     final String entityPhone = data['entityPhone'] ?? '';
     final String entityMobilePhone = data['entityMobilePhone'] ?? '';
     final String contactPhone = data['contactPhone'] ?? '';
@@ -162,6 +168,7 @@ class Company {
         name: name,
         cifGroup: cifGroup,
         cifDocument: cifDocument,
+        cifNumber: cifNumber,
         groupCompany: groupCompany,
         mission: mission,
         email: email,
@@ -172,6 +179,7 @@ class Company {
         actionScope: actionScope,
         category: category,
         subCategory: subCategory,
+        otherCategory: otherCategory,
         entityPhone: entityPhone,
         entityMobilePhone: entityMobilePhone,
         contactPhone: contactPhone,
@@ -202,6 +210,7 @@ class Company {
       'name': name,
       'cifGroup': cifGroup,
       'cifDocument': cifDocument,
+      'cifNumber': cifNumber,
       'groupCompany': groupCompany,
       'mission': mission,
       'email': email,
@@ -211,6 +220,7 @@ class Company {
       'actionScope': actionScope,
       'category' : category,
       'subCategory': subCategory,
+      'otherCategory': otherCategory,
       'entityPhone': entityPhone,
       'entityMobilePhone': entityMobilePhone,
       'contactPhone': contactPhone,
@@ -239,6 +249,7 @@ class Company {
     String? name,
     String? cifGroup,
     String? cifDocument,
+    String? cifNumber,
     String? groupCompany,
     String? mission,
     String? email,
@@ -248,6 +259,7 @@ class Company {
     String? actionScope,
     String? category,
     String? subCategory,
+    String? otherCategory,
     String? entityPhone,
     String? entityMobilePhone,
     String? contactPhone,
@@ -276,6 +288,7 @@ class Company {
         name: name ?? this.name,
         cifGroup: cifGroup ?? this.cifGroup,
         cifDocument: cifDocument ?? this.cifDocument,
+        cifNumber: cifNumber ?? this.cifNumber,
         groupCompany: groupCompany ?? this.groupCompany,
         mission: mission ?? this.mission,
         email: email ?? this.email,
@@ -285,6 +298,7 @@ class Company {
         actionScope: actionScope ?? this.actionScope,
         category: category ?? this.category,
         subCategory: subCategory ?? this.subCategory,
+        otherCategory: otherCategory ?? this.otherCategory,
         entityPhone: entityPhone ?? this.entityPhone,
         entityMobilePhone: entityMobilePhone ?? this.entityMobilePhone,
         contactPhone: contactPhone ?? this.contactPhone,

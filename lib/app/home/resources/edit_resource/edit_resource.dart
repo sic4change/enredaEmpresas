@@ -14,6 +14,7 @@ import 'package:enreda_empresas/app/home/resources/validating_form_controls/stre
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_interests.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_province.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_resource_category.dart';
+import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/models/addressUser.dart';
 import 'package:enreda_empresas/app/models/city.dart';
 import 'package:enreda_empresas/app/models/competency.dart';
@@ -229,8 +230,12 @@ class _EditResourceState extends State<EditResource> {
                     if (currentStep == 0)
                       EnredaButton(
                         buttonTitle:
-                        StringConst.CANCEL,
+                        StringConst.GO_BACK,
                         width: contactBtnWidth,
+                        buttonColor: Colors.transparent,
+                        borderColor: AppColors.blue050,
+                        borderWidth: 1,
+                        titleColor: AppColors.blue050,
                         onPressed: onStepCancel,
                         padding: EdgeInsets.all(0.0),
                       ),
@@ -241,8 +246,10 @@ class _EditResourceState extends State<EditResource> {
                         : EnredaButton(
                       buttonTitle: StringConst.FORM_SAVE_FOR_LATER,
                       width: contactBtnWidth,
-                      buttonColor: AppColors.primaryColor,
-                      titleColor: AppColors.white,
+                      buttonColor: Colors.transparent,
+                      borderColor: AppColors.blue050,
+                      borderWidth: 1,
+                      titleColor: AppColors.blue050,
                       onPressed: onStepSaveForLater,
                     ),
                     SizedBox(width: Sizes.kDefaultPaddingDouble),
@@ -1103,7 +1110,8 @@ class _EditResourceState extends State<EditResource> {
 
   onStepCancel() {
     setState(() {
-      ManageOffersPage.selectedIndex.value = 1;
+      ManageOffersPage.selectedIndex.value = 0;
+      WebHome.selectedIndex.value = 2;
     });
   }
 
@@ -1129,7 +1137,8 @@ class _EditResourceState extends State<EditResource> {
           defaultActionText: StringConst.FORM_ACCEPT,
         ).then((value) {
           setState(() {
-            ManageOffersPage.selectedIndex.value = 1;
+            ManageOffersPage.selectedIndex.value = 0;
+            WebHome.selectedIndex.value = 2;
           });
         },
         );

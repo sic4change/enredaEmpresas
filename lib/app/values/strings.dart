@@ -277,6 +277,7 @@ class StringConst {
   static const String QUIT_RESOURCE = 'NO ME INTERESA PARTICIPAR';
   static const String ENTER = 'Entrar';
   static const String CANCEL = 'Cancelar';
+  static const String GO_BACK = 'Volver atrás';
   static const String ADD = 'Añadir';
   static const String ADD_DOC = 'Añadir documento';
   static const String ADD_FILE = 'Sube un archivo';
@@ -345,7 +346,9 @@ class StringConst {
   static const String FORM_COMPANY_CIF_GROUP = "Cif del grupo";
   static const String FORM_COMPANY_GROUP = "¿Tu empresa pertenece a un grupo?";
   static const String FORM_COMPANY_MISSION = "Misión de la empresa";
+  static const String FORM_COMPANY_MISSION_HINT ="Describe brevemente la misión, visión o propósito de tu empresa.";
   static const String FORM_COMPANY_CATEGORY = "Tipología de la empresa";
+  static const String FORM_COMPANY_OTHER_CATEGORY = "Otra categoría";
   static const String FORM_CONTACT_NAME = "Nombre de la persona de contacto";
   static const String FORM_CONTACT_LASTNAME = "Apellidos de la persona de contacto";
   static const String FORM_CONTACT_INFO = "Información de contacto";
@@ -568,7 +571,7 @@ class StringConst {
   static const String MY_PARTICIPANTS = "Mis Participantes";
   static String allParticipants(String socialEntityName) => "Todos los participantes inscritos en $socialEntityName";
   static const String WELCOME_COMPANY = "Te damos la bienvenida a Enreda Empresa";
-  static const String WELCOME_TEXT = "Esta es tu ventana de administración. \nSegún tu rol, puedes visualizar, editar y eliminar todos los recursos disponibles en esta web. Por favor, procede con precaución.";
+  static const String WELCOME_TEXT = "Esta es tu ventana de administración. \nSegún tu rol, puedes visualizar, editar y eliminar todos los recursos disponibles en esta web.";
   static const String RESOURCES_CREATED_BY = "Recursos creados";
   static const String RESOURCES_CALENDAR = "Calendario ";
 
@@ -609,6 +612,8 @@ class StringConst {
   static const String FORM_MISSING_DOCUMENT = 'Añadir documento';
   static const String FORM_MISSING_FILE_TITLE = 'Documento faltante';
   static const String FORM_MISSING_FILE= 'Añadir archivo de Cif de la empresa';
+  static const String FORM_CIF_NUMBER = "Número de CIF de la empresa";
+  static const String FORM_CHECK_TEXT = "Si tu empresa forma parte de un grupo empresarial, marca esta casilla para añadir el CIF del grupo.";
   static const String INITIAL_FORM = "Ficha de ingreso";
   static const String INITIAL_FORM_DATA = "Datos del formulario de inscripción";
   static const String RESOURCES_JOINED = "Se ha inscrito en los siguientes recursos:";
