@@ -8,6 +8,7 @@ import 'package:enreda_empresas/app/common_widgets/show_exception_alert_dialog.d
 import 'package:enreda_empresas/app/common_widgets/text_form_field.dart';
 import 'package:enreda_empresas/app/home/resources/create_resource/criteria_card.dart';
 import 'package:enreda_empresas/app/home/resources/manage_offers_page.dart';
+import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_category_create.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_categories.dart';
 import 'package:enreda_empresas/app/home/resources/validating_form_controls/stream_builder_competencies_sub_categories.dart';
@@ -289,11 +290,7 @@ class _EditResourceState extends State<EditResource> {
               child: customTextFormField(context, _resourceTitle!, '', StringConst.FORM_COMPANY_ERROR, nameSetState),
               label: StringConst.FORM_TITLE,),
             CustomFormField(
-              child: streamBuilderDropdownResourceCategory(
-                  context,
-                  selectedResourceCategory,
-                  buildResourceCategoryStreamBuilderSetState,
-                  resource),
+              child: streamBuilderDropdownResourceCategoryCreate(context, selectedResourceCategory, buildResourceCategoryStreamBuilderSetState),
               label: StringConst.FORM_RESOURCE_CATEGORY,),
             CustomFormField(
               child: Column(
@@ -437,7 +434,7 @@ class _EditResourceState extends State<EditResource> {
                         _resourceResponsibilities!,
                         '',
                         StringConst.FORM_COMPANY_ERROR,
-                        responsibilitiesSetState, 2000);
+                        responsibilitiesSetState, 2000, characterValidator: 0);
                   }
               ),
               label: StringConst.RESPONSIBILITIES,

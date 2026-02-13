@@ -81,7 +81,7 @@ Widget customTextFormFieldNotValidator(BuildContext context, String formValue, S
   );
 }
 
-Widget customTextFormMultiline(BuildContext context, String formValue, String labelText, String errorText, functionSetState, int? maxLength) {
+Widget customTextFormMultiline(BuildContext context, String formValue, String labelText, String errorText, functionSetState, int? maxLength, {characterValidator = 100}) {
   TextTheme textTheme = Theme.of(context).textTheme;
   return TextFormField(
     maxLength: maxLength,
@@ -112,7 +112,7 @@ Widget customTextFormMultiline(BuildContext context, String formValue, String la
     validator: (value) {
       if (value!.isEmpty) {
         return errorText;
-      } else if (value.length < 100) {
+      } else if (value.length < characterValidator) {
         return 'El texto debe tener al menos 100 caracteres';
       }
       return null;
@@ -127,7 +127,7 @@ Widget customTextFormMultiline(BuildContext context, String formValue, String la
   );
 }
 
-Widget customTextFormMultilineInfo(BuildContext context, String formValue, String labelText, String errorText, functionSetState, int? maxLength, {String infoText = ''}) {
+Widget customTextFormMultilineInfo(BuildContext context, String formValue, String labelText, String errorText, functionSetState, int? maxLength, {String infoText = '', int characterValidator = 100}) {
   TextTheme textTheme = Theme.of(context).textTheme;
   return TextFormField(
     maxLength: maxLength,
@@ -152,7 +152,7 @@ Widget customTextFormMultilineInfo(BuildContext context, String formValue, Strin
     validator: (value) {
       if (value!.isEmpty) {
         return errorText;
-      } else if (value.length < 100) {
+      } else if (value.length < characterValidator) {
         return 'El texto debe tener al menos 100 caracteres';
       }
       return null;

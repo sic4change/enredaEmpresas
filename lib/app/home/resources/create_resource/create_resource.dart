@@ -393,7 +393,7 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
                     _resourceResponsibilities!,
                     '',
                     StringConst.FORM_COMPANY_ERROR,
-                    responsibilitiesSetState, 2000, infoText: StringConst.OFFER_CREATION_INFO_RESPONSIBILITIES);
+                    responsibilitiesSetState, 2000, infoText: StringConst.OFFER_CREATION_INFO_RESPONSIBILITIES, characterValidator: 0);
               }
           ),
           label: StringConst.RESPONSIBILITIES,
