@@ -923,9 +923,18 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
           place: _place,
           postalCode: _postalCode,
         );
+        
+        String combinedDescription = _resourceDescription!;
+        if (_resourceResponsibilities != null && _resourceResponsibilities!.isNotEmpty) {
+          combinedDescription += '\n\n**Responsabilidades del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceResponsibilities';
+        }
+        if (_resourceFunctions != null && _resourceFunctions!.isNotEmpty) {
+          combinedDescription += '\n\n**Funciones del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceFunctions';
+        }
+
         globals.currentResource = Resource(
           title: _resourceTitle!,
-          description: _resourceDescription!,
+          description: combinedDescription,
           resourceId: "",
           address: address,
           assistants: "",
@@ -981,9 +990,18 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         place: _place,
         postalCode: _postalCode,
       );
+      
+      String combinedDescription = _resourceDescription!;
+      if (_resourceResponsibilities != null && _resourceResponsibilities!.isNotEmpty) {
+        combinedDescription += '\n\n**Responsabilidades del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceResponsibilities';
+      }
+      if (_resourceFunctions != null && _resourceFunctions!.isNotEmpty) {
+        combinedDescription += '\n\n**Funciones del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceFunctions';
+      }
+
       globals.currentResource = Resource(
         title: _resourceTitle!,
-        description: _resourceDescription!,
+        description: combinedDescription,
         resourceId: "",
         address: address,
         assistants: "",
@@ -1007,6 +1025,17 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         likes: [],
         createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
         status: "edition",
+      );
+      globals.currentJobOffer = JobOffer(
+        jobOfferId: '',
+        resourceId: '',
+        responsibilities: _resourceResponsibilities,
+        criteria: criteria,
+        functions: _resourceFunctions,
+        otherRequirements: _otherRequirements,
+        createdate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        status: 'edition',
+        organizerId: globals.currentUserCompany!.companyId!,
       );
     });
     setState(() => isLoadingSave = true);
