@@ -926,10 +926,10 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
         
         String combinedDescription = _resourceDescription!;
         if (_resourceResponsibilities != null && _resourceResponsibilities!.isNotEmpty) {
-          combinedDescription += '\n\n**Responsabilidades del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceResponsibilities';
+          combinedDescription += '\n\n**${StringConst.RESPONSIBILITIES}**\n$_resourceResponsibilities';
         }
         if (_resourceFunctions != null && _resourceFunctions!.isNotEmpty) {
-          combinedDescription += '\n\n**Funciones del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceFunctions';
+          combinedDescription += '\n\n**${StringConst.FUNCTIONS}**\n$_resourceFunctions';
         }
 
         globals.currentResource = Resource(
@@ -993,10 +993,10 @@ class _CreateJobOfferState extends State<CreateJobOffer> {
       
       String combinedDescription = _resourceDescription!;
       if (_resourceResponsibilities != null && _resourceResponsibilities!.isNotEmpty) {
-        combinedDescription += '\n\n**Responsabilidades del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceResponsibilities';
+        combinedDescription += '\n\n**${StringConst.RESPONSIBILITIES}**\n$_resourceResponsibilities';
       }
       if (_resourceFunctions != null && _resourceFunctions!.isNotEmpty) {
-        combinedDescription += '\n\n**Funciones del puesto**\n¿Qué harás en tu día a día?\n\n$_resourceFunctions';
+        combinedDescription += '\n\n**${StringConst.FUNCTIONS}**\n$_resourceFunctions';
       }
 
       globals.currentResource = Resource(

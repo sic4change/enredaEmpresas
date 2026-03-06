@@ -473,7 +473,6 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
   }
 
   Widget _buildDetailResource(BuildContext context, Resource resource, JobOffer jobOffer) {
-    TextTheme textTheme = Theme.of(context).textTheme;
     final database = Provider.of<Database>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -481,63 +480,29 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextSmallBold(
-            title: StringConst.FORM_DESCRIPTION.toUpperCase(), color: AppColors.primary900,
-          ),
           const SizedBox(height: 10,),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              resource.description,
-              textAlign: TextAlign.left,
-              style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.greyTxtAlt,
-                height: 1.5,
-              ),
-            ),
+            child: _buildDescriptionWithSections(context, resource.description),
           ),
-          jobOffer.responsibilities != null ? Text(
-            StringConst.RESPONSIBILITIES,
-          ) : Container(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              jobOffer.responsibilities ?? '',
-              textAlign: TextAlign.left,
-              style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.greyTxtAlt,
-                height: 1.5,
-              ),
-            ),
-          ),
-          jobOffer.functions != null ? Text(
-            StringConst.FUNCTIONS,
-          ) : Container(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              jobOffer.functions ?? '',
-              textAlign: TextAlign.left,
-              style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.greyTxtAlt,
-                height: 1.5,
-              ),
-            ),
-          ),
-          jobOffer.otherRequirements != null ? Text(
-            StringConst.OTHER_REQUIREMENTS,
-          ) : Container(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              jobOffer.otherRequirements ?? '',
-              textAlign: TextAlign.left,
-              style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.greyTxtAlt,
-                height: 1.5,
-              ),
-            ),
-          ),
+          jobOffer.otherRequirements != null && jobOffer.otherRequirements!.isNotEmpty
+              ? CustomTextSmallBold(
+                  title: StringConst.OTHER_REQUIREMENTS.toUpperCase(), color: AppColors.primary900,
+                )
+              : Container(),
+          jobOffer.otherRequirements != null && jobOffer.otherRequirements!.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    jobOffer.otherRequirements!,
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.greyTxtAlt,
+                      height: 1.5,
+                    ),
+                  ),
+                )
+              : Container(),
           CustomTextSmallBold(title: StringConst.CRITERIA_JOB_OFFER.toUpperCase(), color: AppColors.primary900),
           SizedBox(height: 10),
           ListView.builder(
@@ -583,6 +548,66 @@ class _ResourceDetailPageState extends State<ResourceDetailPage> {
       ),
     );
   }
+
+  /// Parses [description] for `**Title**` section markers and renders them
+  /// as styled bold headers (using [CustomTextSmallBold]) above their body text.
+  Widget _buildDescriptionWithSections(BuildContext context, String description) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final List<Widget> widgets = [];
+
+    // Split on double-newline + **marker** pattern
+    final parts = description.split(RegExp(r'\n\n(?=\*\*)'));
+
+    for (final part in parts) {
+      if (part.startsWith('**')) {
+        // Extract title between **...**
+        final endMarker = part.indexOf('**', 2);
+        if (endMarker != -1) {
+          final title = part.substring(2, endMarker);
+          final body = part.substring(endMarker + 2).trimLeft();
+          widgets.add(const SizedBox(height: 12));
+          widgets.add(CustomTextSmallBold(
+            title: title.toUpperCase(),
+            color: AppColors.primary900,
+          ));
+          widgets.add(const SizedBox(height: 6));
+          if (body.isNotEmpty) {
+            widgets.add(Text(
+              body,
+              textAlign: TextAlign.left,
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.greyTxtAlt,
+                height: 1.5,
+              ),
+            ));
+          }
+          continue;
+        }
+      }
+      // Plain description text (no marker)
+      if (part.trim().isNotEmpty) {
+        widgets.add(CustomTextSmallBold(
+          title: StringConst.FORM_DESCRIPTION.toUpperCase(),
+          color: AppColors.primary900,
+        ));
+        widgets.add(const SizedBox(height: 6));
+        widgets.add(Text(
+          part,
+          textAlign: TextAlign.left,
+          style: textTheme.bodyMedium?.copyWith(
+            color: AppColors.greyTxtAlt,
+            height: 1.5,
+          ),
+        ));
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
+    );
+  }
+
 
   Widget _buildInformationResource(BuildContext context, Resource resource) {
     return Column(
