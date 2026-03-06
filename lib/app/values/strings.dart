@@ -439,10 +439,11 @@ class StringConst {
   static const String FORM_UPDATE = "Actualizar";
   static const String FORM_NEXT = "Siguiente";
   static const String FORM_BACK = "Atrás";
-  static const String FORM_ACCEPTANCE = "Si es conforme, pulse en 'ACEPTAR'. Puede volver 'ATRÁS' y modificar la información.";
+  static const String FORM_ACCEPTANCE = "Si está conforme con la información proporcionada, por favor, pulse en 'ACEPTAR'. En cualquier otro caso, puede volver 'ATRÁS' y modificar la información.";
   static const String FORM_ACCEPTANCE_ERROR = "Debe aceptar las Políticas y Condiciones";
   static const String FORM_ACCEPT_SENTENCE = "Acepto las ";
   static const String FORM_ACCEPT_SENTENCE_Y = " y ";
+  static const String FORM_NEWSLETTER = "Acepto suscribirme a la newsletter con fines de promoción";
   static const String FORM_SUCCESS = "¡Registro exitoso!";
   static const String FORM_SUCCESS_MAIL = "Por favor revisa tu correo electrónico.";
   static const String FORM_SUCCESS_CREATED = "La oferta de empleo fue creada exitosamente.";

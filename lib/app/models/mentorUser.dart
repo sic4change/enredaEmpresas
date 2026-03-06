@@ -13,6 +13,7 @@ class MentorUser {
     this.role,
     this.phone,
     this.postalCode,
+    this.newsletter,
   });
 
   String? email;
@@ -26,6 +27,7 @@ class MentorUser {
   final String? role;
   final String? phone;
   final String? postalCode;
+  final bool? newsletter;
 
   factory MentorUser.fromMap(Map<String, dynamic> data, String documentId) {
 
@@ -44,6 +46,7 @@ class MentorUser {
       address: address,
       role: data['role'],
       phone: data['phone'],
+      newsletter: data['newsletter'] ?? false,
     );
   }
 
@@ -56,6 +59,7 @@ class MentorUser {
       'address': address?.toMap(),
       'role' : role,
       'phone': phone,
+      'newsletter': newsletter,
     };
   }
 }

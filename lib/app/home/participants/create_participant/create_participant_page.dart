@@ -26,6 +26,7 @@ import 'package:enreda_empresas/app/home/participants/create_participant/validat
 import 'package:enreda_empresas/app/home/participants/create_participant/validating_form_controls/stream_builder_specificInterests.dart';
 import 'package:enreda_empresas/app/home/participants/create_participant/validating_form_controls/stream_builder_timeSearching.dart';
 import 'package:enreda_empresas/app/home/participants/create_participant/validating_form_controls/stream_builder_timeSpentWeekly.dart';
+import 'package:enreda_empresas/app/sign_up/validating_form_controls/checkbox_newsletter_form.dart';
 import 'package:enreda_empresas/app/home/participants/create_participant/validating_form_controls/unemployed_revision_form.dart';
 import 'package:enreda_empresas/app/home/web_home.dart';
 import 'package:enreda_empresas/app/models/ability.dart';
@@ -78,6 +79,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
   final _formKeyInterests = GlobalKey<FormState>();
   final _checkFieldKey = GlobalKey<FormState>();
   final _checkFieldKeyDataProtectionPolicy = GlobalKey<FormState>();
+  final _newsletterKey = GlobalKey<FormState>();
 
   String? _email, _firstName, _lastName, _phone;
   DateTime? _birthday;
@@ -90,6 +92,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
   int currentStep = 0;
   bool _isChecked = false;
   bool _isCheckedDataProtectionPolicy = false;
+  bool _isNewsletterChecked = false;
 
   List<String> countries = [];
   List<String> provinces = [];
@@ -634,10 +637,18 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
             padding: Responsive.isMobile(context) ? EdgeInsets.all(0) : const EdgeInsets.symmetric(horizontal: Sizes.kDefaultPaddingDouble * 2),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 checkboxForm(context, _checkFieldKey, _isChecked, functionSetState),
+                const SizedBox(height: 10),
                 checkboxDataForm(context, _checkFieldKeyDataProtectionPolicy, _isCheckedDataProtectionPolicy, functionDataSetState),
+                const SizedBox(height: 10),
+                checkboxNewsletterForm(
+                  context: context,
+                  formKey: _newsletterKey,
+                  isChecked: _isNewsletterChecked,
+                  onToggle: functionSetNewsletterState,
+                ),
               ],
             ),
           )
@@ -765,6 +776,7 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
           assignedEntityId: selectedSocialEntity!.companyId ?? null,
           assignedById: user.userId,
           checkAgreeCV: _isCheckedDataProtectionPolicy,
+          newsletter: _isNewsletterChecked,
           belongOrganization: _belongOrganization,
           gamificationFlags: {
             UserEnreda.FLAG_SIGN_UP: true,
@@ -814,6 +826,12 @@ class _CreateParticipantPageState extends State<CreateParticipantPage> {
   void functionSetState(bool? val) {
     setState(() {
       _isChecked = val!;
+    });
+  }
+
+  void functionSetNewsletterState(bool? val) {
+    setState(() {
+      _isNewsletterChecked = val!;
     });
   }
 

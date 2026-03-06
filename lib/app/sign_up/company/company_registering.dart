@@ -23,6 +23,7 @@ import 'package:enreda_empresas/app/sign_up/validating_form_controls/checkbox_fo
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_city.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_country.dart';
 import 'package:enreda_empresas/app/sign_up/validating_form_controls/stream_builder_province.dart';
+import 'package:enreda_empresas/app/sign_up/validating_form_controls/checkbox_newsletter_form.dart';
 import 'package:enreda_empresas/app/utils/adaptative.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
@@ -57,6 +58,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   final _formKey = GlobalKey<FormState>();
   final _formKeyContact = GlobalKey<FormState>();
   final _checkFieldKey = GlobalKey<FormState>();
+  final _newsletterKey = GlobalKey<FormState>();
   String? _emailContact;
   String? _emailCompany;
   String? _companyId;
@@ -81,6 +83,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   int usersIds = 0;
   int currentStep = 0;
   bool _isChecked = false;
+  bool _isNewsletterChecked = false;
   bool _checkCIF = false;
 
   List<String> countries = [];
@@ -204,6 +207,7 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
         phone: _phoneWithCode,
         address: address,
         role: 'Empresa',
+        newsletter: _isNewsletterChecked,
       );
       try {
         final database = Provider.of<Database>(context, listen: false);
@@ -604,11 +608,18 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
               _emailContact!,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               checkboxForm(context, _checkFieldKey, _isChecked, functionSetState),
+              const SizedBox(height: 10),
+              checkboxNewsletterForm(
+                context: context,
+                formKey: _newsletterKey,
+                isChecked: _isNewsletterChecked,
+                onToggle: functionSetNewsletterState,
+              ),
             ],
           )
         ],
@@ -619,6 +630,12 @@ class _CompanyRegisteringState extends State<CompanyRegistering> {
   void functionSetState(bool? val) {
     setState(() {
       _isChecked = val!;
+    });
+  }
+
+  void functionSetNewsletterState(bool? val) {
+    setState(() {
+      _isNewsletterChecked = val!;
     });
   }
 

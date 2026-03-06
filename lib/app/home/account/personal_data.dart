@@ -23,6 +23,7 @@ import 'package:enreda_empresas/app/utils/functions.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:enreda_empresas/app/sign_up/validating_form_controls/checkbox_newsletter_form.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,6 +65,9 @@ class _PersonalDataState extends State<PersonalData> {
   Country? selectedCountry;
   Province? selectedProvince;
   City? selectedCity;
+  bool _isNewsletterChecked = false;
+  bool _didLoadNewsletter = false;
+  final _newsletterKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +96,10 @@ class _PersonalDataState extends State<PersonalData> {
                       '${userEnreda?.phone?[0]}${userEnreda?.phone?[1]}${userEnreda?.phone?[2]}';
                   _birthday = _birthday ?? userEnreda?.birthday;
                   _postalCode = userEnreda?.address?.postalCode ?? '';
+                  if (!_didLoadNewsletter) {
+                    _isNewsletterChecked = userEnreda?.newsletter ?? false;
+                    _didLoadNewsletter = true;
+                  }
                   return StreamBuilder<Company>(
                     stream: database.companyStream(_organizer),
                     builder: (context, snapshot) {
@@ -584,6 +592,7 @@ class _PersonalDataState extends State<PersonalData> {
           phone: _phone,
           gender: _gender,
           birthday: _birthday,
+          newsletter: _isNewsletterChecked,
       );
       try {
         final database = Provider.of<Database>(context, listen: false);
@@ -630,6 +639,12 @@ class _PersonalDataState extends State<PersonalData> {
   void buildCityStreamBuilderSetState(City? city) {
     setState(() {
       selectedCity = city;
+    });
+  }
+
+  void functionSetNewsletterState(bool? val) {
+    setState(() {
+      _isNewsletterChecked = val!;
     });
   }
 
@@ -786,6 +801,16 @@ class _PersonalDataState extends State<PersonalData> {
                     style: textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                       color: AppColors.penBlue),
+                  ),
+                ),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: checkboxNewsletterForm(
+                    context: context,
+                    formKey: _newsletterKey,
+                    isChecked: _isNewsletterChecked,
+                    onToggle: functionSetNewsletterState,
                   ),
                 ),
                 const Divider(),

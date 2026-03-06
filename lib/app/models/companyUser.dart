@@ -14,6 +14,7 @@ class CompanyUser {
     this.role,
     this.phone,
     this.postalCode,
+    this.newsletter,
   });
 
   String? email;
@@ -28,6 +29,7 @@ class CompanyUser {
   final String? role;
   final String? phone;
   final String? postalCode;
+  final bool? newsletter;
 
 
   factory CompanyUser.fromMap(Map<String, dynamic> data, String documentId) {
@@ -48,6 +50,7 @@ class CompanyUser {
       address: address,
       role: data['role'],
       phone: data['phone'],
+      newsletter: data['newsletter'] ?? false,
     );
   }
 
@@ -61,6 +64,7 @@ class CompanyUser {
       'address': address?.toMap(),
       'role' : role,
       'phone': phone,
+      'newsletter': newsletter,
     };
   }
 }
