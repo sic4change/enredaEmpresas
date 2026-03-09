@@ -443,7 +443,7 @@ class StringConst {
   static const String FORM_ACCEPTANCE_ERROR = "Debe aceptar las Políticas y Condiciones";
   static const String FORM_ACCEPT_SENTENCE = "Acepto las ";
   static const String FORM_ACCEPT_SENTENCE_Y = " y ";
-  static const String FORM_NEWSLETTER = "Acepto suscribirme a la newsletter con fines de promoción";
+  static const String FORM_NEWSLETTER = "Acepto recibir información y comunicaciones por parte de SIC4Change";
   static const String FORM_SUCCESS = "¡Registro exitoso!";
   static const String FORM_SUCCESS_MAIL = "Por favor revisa tu correo electrónico.";
   static const String FORM_SUCCESS_CREATED = "La oferta de empleo fue creada exitosamente.";
