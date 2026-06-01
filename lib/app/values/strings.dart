@@ -681,6 +681,13 @@ class StringConst {
   static const String JOB_OFFER_PRE_SELECTED_CONFIRMATION = 'El postulante ha sido preseleccionado';
   static const String JOB_OFFER_EVALUATION = 'Evaluación';
   static const String JOB_OFFER_MATCH = 'Match';
+  // Surfaced on the applicants list + detail page when the participant's
+  // profile is effectively empty (no competencies, abilities, or aboutMe).
+  // Replaces the bogus server-side match% so técnicos see the underlying
+  // data-quality problem instead of a misleading high score. See
+  // lib/app/utils/profile_completeness.dart and the plan in
+  // ~/.claude/plans/there-are-several-minor-peppy-reef.md.
+  static const String PROFILE_INCOMPLETE = 'Perfil incompleto';
   static const String JOB_OFFER_REGISTERED_TITLE = 'participantes inscritos en esta ';
   static const String JOB_OFFER = 'oferta';
   static const String PARTICIPANT_PROFILE = 'Perfil';

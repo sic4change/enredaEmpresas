@@ -16,6 +16,7 @@ import '../../models/jobOfferApplication.dart';
 import '../../models/jobOfferCriteria.dart';
 import '../../models/userEnreda.dart';
 import '../../services/database.dart';
+import '../../utils/profile_completeness.dart';
 import '../../utils/responsive.dart';
 import '../../values/strings.dart';
 import '../../values/values.dart';
@@ -224,7 +225,16 @@ void initState() {
                         ),
                         GamificationItem(
                           imagePath: ImagePath.GAMIFICATION_CHAT_ICON,
-                          progress: currentApplication.match!,
+                          // Defensive guard for the server-side match-score
+                          // bug: when the participant's profile is
+                          // effectively empty, clamp the displayed progress
+                          // to 0 instead of the bogus stored percentage.
+                          // See lib/app/utils/profile_completeness.dart.
+                          // Also drops the `match!` bang — `match` is
+                          // nullable in Firestore.
+                          progress: isProfileEffectivelyEmpty(currentParticipant)
+                              ? 0
+                              : (currentApplication.match ?? 0).toDouble(),
                           title: StringConst.JOB_OFFER_MATCH.toUpperCase(),
                         ),
                       ],

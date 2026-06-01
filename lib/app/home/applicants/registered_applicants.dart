@@ -6,6 +6,7 @@ import 'package:enreda_empresas/app/models/jobOfferApplication.dart';
 import 'package:enreda_empresas/app/models/resource.dart';
 import 'package:enreda_empresas/app/models/userEnreda.dart';
 import 'package:enreda_empresas/app/services/database.dart';
+import 'package:enreda_empresas/app/utils/profile_completeness.dart';
 import 'package:enreda_empresas/app/utils/responsive.dart';
 import 'package:enreda_empresas/app/values/strings.dart';
 import 'package:enreda_empresas/app/values/values.dart';
@@ -218,10 +219,30 @@ class _RegisteredApplicantsListPageState extends State<RegisteredApplicantsListP
                                         const SpaceW20(),
                                         Container(
                                           width: 50,
-                                          child:  GradientCircleWidget(
-                                            text: '${application.match!}%',
-                                            size: 50,
-                                          ),
+                                          // Defensive guard for the
+                                          // server-side match-score bug:
+                                          // if the participant's profile is
+                                          // effectively empty, suppress the
+                                          // bogus stored percentage and show
+                                          // "—" with a tooltip explaining
+                                          // why. See
+                                          // lib/app/utils/profile_completeness.dart.
+                                          // Also drops the `match!` bang —
+                                          // `match` is nullable in Firestore.
+                                          child: isProfileEffectivelyEmpty(user)
+                                              ? Tooltip(
+                                                  message: StringConst
+                                                      .PROFILE_INCOMPLETE,
+                                                  child: GradientCircleWidget(
+                                                    text: '—',
+                                                    size: 50,
+                                                  ),
+                                                )
+                                              : GradientCircleWidget(
+                                                  text:
+                                                      '${application.match ?? 0}%',
+                                                  size: 50,
+                                                ),
                                         ),
                                         const SpaceW20(),
                                       ],
